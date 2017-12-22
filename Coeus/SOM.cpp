@@ -5,10 +5,14 @@ using namespace Coeus;
 
 SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation)
 {
+	_dim_x = p_dim_x;
+	_dim_y = p_dim_y;
+
 	NeuralGroup* input = add_group(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false);
 	NeuralGroup* lattice = add_group(p_dim_x * p_dim_y, p_activation, false);
 
-	add_connection(input, lattice, Connection::GLOROT_UNIFORM, 0.1);
+	_input = input->getOutput();
+	_weights = add_connection(input, lattice, Connection::UNIFORM, 0.1)->get_weights();
 
 	_lattice = _outputGroup;
 }
@@ -40,19 +44,16 @@ void SOM::activate(Tensor* p_input) {
 			break;
 	}
 
-	_groups[_lattice]->setOutput(output);
+	_groups[_lattice]->setOutput(*output);
 	delete output;
 }
 
 double SOM::calc_distance(const int p_index) {
-	Tensor* input = _groups[_inputGroup]->getOutput();
-	Tensor* weights = get_connection(_inputGroup, _lattice)->get_weights();
-
 	int dim = _groups[_inputGroup]->getDim();
 	double s = 0;
 
 	for (int i = 0; i < dim; i++) {
-		s += pow(input->at(i) - weights->at(p_index, i), 2);
+		s += pow(_input->at(i) - _weights->at(p_index, i), 2);
 	}
 
 	return sqrt(s);
@@ -74,7 +75,7 @@ Tensor* SOM::calc_distance() {
 		arr[l] = sqrt(s);
 	}
 
-	return new Tensor({ _dimX, _dimY}, arr);
+	return new Tensor({ _dim_x, _dim_y}, arr);
 }
 
 int SOM::find_winner(Tensor* p_input) {
@@ -82,7 +83,7 @@ int SOM::find_winner(Tensor* p_input) {
 	double neuron_dist = 0;
 	_winner = 0;
 
-	_groups[_inputGroup]->setOutput(p_input);
+	_groups[_inputGroup]->setOutput(*p_input);
 
 	for (int i = 0; i < _groups[_lattice]->getDim(); i++) {
 		neuron_dist = calc_distance(i);
@@ -96,7 +97,7 @@ int SOM::find_winner(Tensor* p_input) {
 }
 
 void SOM::get_position(const int p_index, int& p_x, int& p_y) const {
-	p_x = p_index % _dimX;
-	p_y = p_index / _dimX;
+	p_x = p_index % _dim_x;
+	p_y = p_index / _dim_x;
 
 }

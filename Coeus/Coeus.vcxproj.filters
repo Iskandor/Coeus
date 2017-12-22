@@ -66,6 +66,9 @@
     <ClCompile Include="SOM_learning.cpp">
       <Filter>Source Files\Algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="SOM_analyzer.cpp">
+      <Filter>Source Files\Algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files\Network\SOM</Filter>
     </ClInclude>
     <ClInclude Include="SOM_learning.h">
+      <Filter>Header Files\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="SOM_analyzer.h">
       <Filter>Header Files\Algorithm</Filter>
     </ClInclude>
   </ItemGroup>

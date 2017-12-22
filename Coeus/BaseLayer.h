@@ -18,7 +18,7 @@ public:
 
 protected:
 	NeuralGroup* add_group(int p_dim, NeuralGroup::ACTIVATION p_activation, bool p_bias);
-	void add_connection(NeuralGroup* p_in_group, NeuralGroup* p_out_group, Connection::INIT p_init, double p_limit);
+	Connection* add_connection(NeuralGroup* p_in_group, NeuralGroup* p_out_group, Connection::INIT p_init, double p_limit);
 
 	Connection* get_connection(string p_input_group, string p_output_group);
 

@@ -17,15 +17,22 @@ namespace Coeus
 		NeuralGroup* get_lattice() { return _groups[_lattice]; }
 		Connection*  get_lattice_connection() { return _connections[_inputGroup + "_" + _lattice]; }
 
-	protected:
 		virtual double calc_distance(int p_index);
+
+		int dim_x() { return _dim_x; }
+		int dim_y() { return _dim_y; }
+
+	protected:		
 		virtual Tensor* calc_distance();		
 
 		string _lattice;
 
+		Tensor* _input;
+		Tensor* _weights;
+
 		int _winner;
-		int _dimX;
-		int _dimY;
+		int _dim_x;
+		int _dim_y;
 	};
 }
 

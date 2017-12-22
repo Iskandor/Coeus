@@ -1,11 +1,17 @@
 #include "SOM_learning.h"
 #include "FLAB.h"
+#include <algorithm>
 
 using namespace Coeus;
 
 
 SOM_learning::SOM_learning(SOM* p_som) {
 	_som = p_som;
+	_som_analyzer = new SOM_analyzer(p_som);
+
+	_sigma0 = sqrt(max(_som->dim_x(), _som->dim_y()));
+	
+	_lambda = 1;
 
 	const int dim_input = _som->get_input_group()->getDim();
 	const int dim_lattice = _som->get_lattice()->getDim();
@@ -14,6 +20,7 @@ SOM_learning::SOM_learning(SOM* p_som) {
 
 SOM_learning::~SOM_learning()
 {
+	delete _som_analyzer;
 }
 
 void SOM_learning::init_training(const double p_alpha, const double p_epochs) {
@@ -29,6 +36,7 @@ void SOM_learning::train(Tensor* p_input) {
 	const int dim_input = _som->get_input_group()->getDim();
 	const int dim_lattice = _som->get_lattice()->getDim();
 	Tensor* wi = _som->get_lattice_connection()->get_weights();
+	Tensor* in = _som->get_input_group()->getOutput();
 
 	double theta = 0;
 
@@ -37,13 +45,14 @@ void SOM_learning::train(Tensor* p_input) {
 	int x2;
 	int y2;
 
+	_som_analyzer->update(winner);
 	_som->get_position(winner, x1, y1);
 
 	for (int i = 0; i < dim_lattice; i++) {
 		_som->get_position(i, x2, y2);
 		theta = calc_neighborhood(x1, y1, x2, y2, GAUSSIAN);
 		for (int j = 0; j < dim_input; j++) {
-			_delta_w.set(i, j, theta * _alpha * (_som->get_input_group()->getOutput()->at(j) - wi->at(i, j)));
+			_delta_w.set(i, j, theta * _alpha * (in->at(j) - wi->at(i, j)));
 		}
 	}
 
@@ -51,6 +60,7 @@ void SOM_learning::train(Tensor* p_input) {
 }
 
 void SOM_learning::param_decay() {
+	_som_analyzer->end_epoch();
 	_iteration++;
 	_sigma = _sigma0 * exp(-_iteration / _lambda);
 	_alpha = _alpha0 * exp(-_iteration / _lambda);
@@ -76,5 +86,5 @@ double SOM_learning::euclidean_distance(const int p_x1, const int p_y1, const in
 }
 
 double SOM_learning::gaussian_distance(const double p_d, const double p_sigma) const {
-	return exp(-pow(p_d, 2) / 2 * p_sigma) / (p_sigma * sqrt(2 * PI));
+	return exp(-pow(p_d, 2) / (2 * pow(p_sigma, 2))) / (p_sigma * sqrt(2 * PI));
 }

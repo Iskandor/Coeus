@@ -44,12 +44,15 @@ Tensor::Tensor(const Tensor& p_copy) {
 		_shape[i] = p_copy._shape[i];
 	}
 	
-	_arr = p_copy._arr;
+	_arr = static_cast<double*>(calloc(_size, sizeof(double)));
+	memcpy(_arr, p_copy._arr, sizeof(double) * static_cast<size_t>(_size));
 }
 
 Tensor::~Tensor() {
 	if (_shape != nullptr) delete _shape;
+	_shape = nullptr;
 	if (_arr != nullptr) delete _arr;
+	_arr = nullptr;
 }
 
 Tensor Tensor::Zero(const initializer_list<int> p_shape) {

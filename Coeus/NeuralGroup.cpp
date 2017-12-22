@@ -78,7 +78,7 @@ void NeuralGroup::activate() {
 	_ap.fill(0);
 }
 
-void NeuralGroup::setOutput(Tensor *p_output) {
-    _output = Tensor(*p_output);
+void NeuralGroup::setOutput(Tensor &p_output) {
+    _output = Tensor(p_output);
 }
 

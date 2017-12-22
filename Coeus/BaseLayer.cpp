@@ -10,7 +10,7 @@ BaseLayer::BaseLayer()
 
 BaseLayer::~BaseLayer()
 {
-	for(auto it = _groups.begin(); it != _groups.end(); ++it) {
+	for (auto it = _groups.begin(); it != _groups.end(); ++it) {
 		delete (*it).second;
 	}
 
@@ -26,7 +26,7 @@ NeuralGroup* BaseLayer::add_group(const int p_dim, const NeuralGroup::ACTIVATION
 	return g;
 }
 
-void BaseLayer::add_connection(NeuralGroup* p_inGroup, NeuralGroup* p_outGroup, const Connection::INIT p_init, const double p_limit) {
+Connection* BaseLayer::add_connection(NeuralGroup* p_inGroup, NeuralGroup* p_outGroup, const Connection::INIT p_init, const double p_limit) {
 	Connection* c = new Connection(p_inGroup->getDim(), p_outGroup->getDim(), p_inGroup->getId(), p_outGroup->getId());
 	c->init(p_init, p_limit);
 
@@ -36,12 +36,12 @@ void BaseLayer::add_connection(NeuralGroup* p_inGroup, NeuralGroup* p_outGroup, 
 
 	set<string> controll_set;
 
-	for(auto it = _graph.begin(); it != _graph.end(); ++it) {
-		if ((*it).second.empty()) {
-			_inputGroup = (*it).first;
+	for (auto it = _groups.begin(); it != _groups.end(); ++it) {
+		if (_graph.find(it->first) == _graph.end()) {
+			_inputGroup = it->first;
 		}
 		else {
-			for (auto ag = (*it).second.begin(); ag != (*it).second.end(); ++ag) {
+			for (auto ag = _graph[it->first].begin(); ag != _graph[it->first].end(); ++ag) {
 				controll_set.insert(*ag);
 			}
 		}
@@ -52,6 +52,8 @@ void BaseLayer::add_connection(NeuralGroup* p_inGroup, NeuralGroup* p_outGroup, 
 			_outputGroup = (*it).first;
 		}
 	}
+
+	return c;
 }
 
 Connection* BaseLayer::get_connection(const string p_input_group, const string p_output_group) {
