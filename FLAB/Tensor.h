@@ -5,7 +5,7 @@ using namespace std;
 
 namespace FLAB {
 
-class Tensor
+class __declspec(dllexport) Tensor
 {
 private:
 	double *_arr = nullptr;

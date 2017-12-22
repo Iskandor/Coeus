@@ -5,7 +5,7 @@ using namespace std;
 
 namespace Coeus {
 
-class Connection
+class __declspec(dllexport) Connection
 {
 public:
     enum INIT {

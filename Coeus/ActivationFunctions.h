@@ -2,7 +2,7 @@
 
 namespace Coeus
 {
-	class ActivationFunctions
+	class __declspec(dllexport) ActivationFunctions
 	{
 	public:
 		static double linear(double p_x);

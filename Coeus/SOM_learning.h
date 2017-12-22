@@ -3,7 +3,7 @@
 
 namespace Coeus
 {
-	class SOM_learning
+	class __declspec(dllexport) SOM_learning
 	{
 	public:
 

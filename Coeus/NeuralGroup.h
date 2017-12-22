@@ -8,7 +8,7 @@ using namespace FLAB;
 
 namespace Coeus {
 
-class NeuralGroup
+class __declspec(dllexport) NeuralGroup
 {
 public:
     enum ACTIVATION {

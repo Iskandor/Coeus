@@ -7,7 +7,7 @@ const char kBase64Alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"
     "0123456789+/";
 
-class Base64 {
+class __declspec(dllexport) Base64 {
  public:
   static bool Encode(const std::string &in, std::string *out) {
     int i = 0, j = 0;

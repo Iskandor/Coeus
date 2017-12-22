@@ -13,7 +13,7 @@ using namespace std;
 
 namespace FLAB {
 
-class RandomGenerator {
+class __declspec(dllexport) RandomGenerator {
 public:
     static RandomGenerator& getInstance();
     RandomGenerator(RandomGenerator const&) = delete;

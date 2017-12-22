@@ -5,7 +5,7 @@
 namespace Coeus
 {
 	
-class IDGen
+class __declspec(dllexport) IDGen
 {
 public:
 	static IDGen& instance();

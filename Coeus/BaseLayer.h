@@ -8,7 +8,7 @@ using namespace std;
 
 namespace Coeus {
 
-class BaseLayer
+class __declspec(dllexport) BaseLayer
 {
 public:
 	BaseLayer();

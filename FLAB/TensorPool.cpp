@@ -2,12 +2,9 @@
 
 using namespace FLAB;
 
-TensorPool* TensorPool::getInstance() {
-	if (_instance == nullptr) {
-		_instance = new TensorPool();
-	}
-
-	return _instance;
+TensorPool& TensorPool::instance() {
+	static TensorPool instance;
+	return instance;
 }
 
 double* TensorPool::get(const unsigned int p_size) {

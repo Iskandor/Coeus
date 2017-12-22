@@ -6,18 +6,16 @@ using namespace std;
 
 namespace FLAB {
 
-	class TensorPool
+	class __declspec(dllexport) TensorPool
 	{
 	public:
-		static TensorPool* getInstance();
+		static TensorPool& instance();
 
 		double* get(unsigned int p_size);
 		void	release(double* p_buffer);
 	private:
 		TensorPool();
 		~TensorPool();
-
-		static TensorPool* _instance;
 
 		map<unsigned int, stack<double*>*> _pool;
 	};
