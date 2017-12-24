@@ -1,5 +1,6 @@
 #include "SOM.h"
 #include "ActivationFunctions.h"
+#include <iostream>
 
 using namespace Coeus;
 
@@ -49,7 +50,7 @@ void SOM::activate(Tensor* p_input) {
 }
 
 double SOM::calc_distance(const int p_index) {
-	int dim = _groups[_inputGroup]->getDim();
+	const int dim = _groups[_inputGroup]->getDim();
 	double s = 0;
 
 	for (int i = 0; i < dim; i++) {

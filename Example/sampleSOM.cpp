@@ -18,8 +18,8 @@ void sampleSOM() {
 
     SOM somNetwork(13, 8, 8, NeuralGroup::SIGMOID);
 	SOM_learning learner(&somNetwork);
-    double epochs = 2000;
-	learner.init_training(0.01, epochs);
+    double epochs = 1000;
+	learner.init_training(0.1, epochs);
 
     for(int t = 0; t < epochs; t++) {
         dataset.permute();

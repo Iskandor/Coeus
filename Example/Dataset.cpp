@@ -90,5 +90,5 @@ void Dataset::normalize() {
 }
 
 void Dataset::permute() {
-    random_shuffle(_buffer.begin(), _buffer.end());
+    //random_shuffle(_buffer.begin(), _buffer.end());
 }

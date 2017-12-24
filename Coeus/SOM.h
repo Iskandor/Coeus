@@ -19,8 +19,8 @@ namespace Coeus
 
 		virtual double calc_distance(int p_index);
 
-		int dim_x() { return _dim_x; }
-		int dim_y() { return _dim_y; }
+		int dim_x() const { return _dim_x; }
+		int dim_y() const { return _dim_y; }
 
 	protected:		
 		virtual Tensor* calc_distance();		
