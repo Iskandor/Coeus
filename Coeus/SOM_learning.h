@@ -24,7 +24,7 @@ namespace Coeus
 
 
 	private:
-		double calc_neighborhood(int p_x1, int p_y1, int p_x2, int p_y2, NEIGHBORHOOD_TYPE p_type) const;
+		double calc_neighborhood(double p_d, NEIGHBORHOOD_TYPE p_type) const;
 		double euclidean_distance(int p_x1, int p_y1, int p_x2, int p_y2) const;
 		double gaussian_distance(double p_d, double p_sigma = 1) const;
 
@@ -37,7 +37,8 @@ namespace Coeus
 
 		SOM* _som;
 		SOM_analyzer* _som_analyzer;
-		Tensor _delta_w;
+		Tensor	_delta_w;
+		Tensor	_dist_matrix;
 	};
 
 }

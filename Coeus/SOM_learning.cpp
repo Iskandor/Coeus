@@ -17,6 +17,21 @@ SOM_learning::SOM_learning(SOM* p_som) {
 	const int dim_input = _som->get_input_group()->getDim();
 	const int dim_lattice = _som->get_lattice()->getDim();
 	_delta_w = Tensor::Zero({ dim_lattice, dim_input });
+
+	_dist_matrix = Tensor::Zero({ dim_lattice, dim_lattice });
+
+	int x1;
+	int y1;
+	int x2;
+	int y2;
+
+	for (int i = 0; i < dim_lattice; i++) {
+		_som->get_position(i, x1, y1);
+		for (int j = 0; j < dim_lattice; j++) {
+			_som->get_position(j, x2, y2);
+			_dist_matrix.set(i, j, euclidean_distance(x1, y1, x2, y2));
+		}
+	}
 }
 
 SOM_learning::~SOM_learning()
@@ -41,19 +56,10 @@ void SOM_learning::train(Tensor* p_input) {
 
 	double theta = 0;
 
-	int x1;
-	int y1;
-	int x2;
-	int y2;
-
 	_som_analyzer->update(winner);
-	_som->get_position(winner, x1, y1);
-	_delta_w.fill(0);
-
 
 	for (int i = 0; i < dim_lattice; i++) {
-		_som->get_position(i, x2, y2);
-		theta = calc_neighborhood(x1, y1, x2, y2, GAUSSIAN);
+		theta = calc_neighborhood(_dist_matrix.at(winner, i), GAUSSIAN);
 		for (int j = 0; j < dim_input; j++) {
 			_delta_w.set(i, j, theta * _alpha * (in->at(j) - wi->at(i, j)));
 		}
@@ -69,16 +75,16 @@ void SOM_learning::param_decay() {
 	_alpha = _alpha0 * exp(-_iteration / _lambda);
 }
 
-double SOM_learning::calc_neighborhood(const int p_x1, const int p_y1, const int p_x2, const int p_y2, const NEIGHBORHOOD_TYPE p_type) const {
+double SOM_learning::calc_neighborhood(const double p_d, const NEIGHBORHOOD_TYPE p_type) const {
 	double result = 0;
 
 	switch (p_type) {
-	case EUCLIDEAN:
-		result = 1.0 / euclidean_distance(p_x1, p_y1, p_x2, p_y2);
-		break;
-	case GAUSSIAN:
-		result = gaussian_distance(euclidean_distance(p_x1, p_y1, p_x2, p_y2), _sigma);
-		break;
+		case EUCLIDEAN:
+			result = 1.0 / p_d;
+			break;
+		case GAUSSIAN:
+			result = gaussian_distance(p_d, _sigma);
+			break;
 	}
 
 	return result;

@@ -1,6 +1,7 @@
 #include "SOM.h"
 #include "ActivationFunctions.h"
 #include <iostream>
+#include "Connection.h"
 
 using namespace Coeus;
 
@@ -9,18 +10,18 @@ SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const Neur
 	_dim_x = p_dim_x;
 	_dim_y = p_dim_y;
 
-	NeuralGroup* input = add_group(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false);
-	NeuralGroup* lattice = add_group(p_dim_x * p_dim_y, p_activation, false);
+	_input_group = new NeuralGroup(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false);
+	_output_group = new NeuralGroup(p_dim_x * p_dim_y, p_activation, false);
 
-	_input = input->getOutput();
-	_weights = add_connection(input, lattice, Connection::UNIFORM, 0.1)->get_weights();
-
-	_lattice = _outputGroup;
+	_input_lattice = new Connection(_input_group->getDim(), _output_group->getDim(), _input_group->getId(), _output_group->getId());
+	_input_lattice->init(Connection::UNIFORM, 0.1);
 }
 
 
 SOM::~SOM()
 {
+	if (_input_lattice != nullptr) delete _input_lattice;
+	_input_lattice = nullptr;
 }
 
 void SOM::activate(Tensor* p_input) {
@@ -28,7 +29,7 @@ void SOM::activate(Tensor* p_input) {
 
 	Tensor* output = calc_distance();
 
-	switch (_groups[_lattice]->getActivationFunction()) {
+	switch (_output_group->getActivationFunction()) {
 		case NeuralGroup::LINEAR:
 			output->apply(ActivationFunctions::linear);
 			break;
@@ -45,27 +46,27 @@ void SOM::activate(Tensor* p_input) {
 			break;
 	}
 
-	_groups[_lattice]->setOutput(*output);
+	_output_group->setOutput(*output);
 	delete output;
 }
 
 double SOM::calc_distance(const int p_index) {
-	const int dim = _groups[_inputGroup]->getDim();
+	const int dim = _input_group->getDim();
 	double s = 0;
 
 	for (int i = 0; i < dim; i++) {
-		s += pow(_input->at(i) - _weights->at(p_index, i), 2);
+		s += pow(_input_group->getOutput()->at(i) - _input_lattice->get_weights()->at(p_index, i), 2);
 	}
 
 	return sqrt(s);
 }
 
 Tensor* SOM::calc_distance() {
-	Tensor* input = _groups[_inputGroup]->getOutput();
-	Tensor* weights = get_connection(_inputGroup, _lattice)->get_weights();
+	Tensor* input = _input_group->getOutput();
+	Tensor* weights = _input_lattice->get_weights();
 
-	const int l_dim = _groups[_lattice]->getDim();
-	const int i_dim = _groups[_inputGroup]->getDim();
+	const int l_dim = _output_group->getDim();
+	const int i_dim = _input_group->getDim();
 	double* arr = new double[l_dim];
 
 	for(int l = 0; l < l_dim; l++) {
@@ -84,9 +85,9 @@ int SOM::find_winner(Tensor* p_input) {
 	double neuron_dist = 0;
 	_winner = 0;
 
-	_groups[_inputGroup]->setOutput(*p_input);
+	_input_group->setOutput(*p_input);
 
-	for (int i = 0; i < _groups[_lattice]->getDim(); i++) {
+	for (int i = 0; i < _output_group->getDim(); i++) {
 		neuron_dist = calc_distance(i);
 		if (winner_dist > neuron_dist) {
 			_winner = i;

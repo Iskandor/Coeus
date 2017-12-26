@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseLayer.h"
+#include "Connection.h"
 
 namespace Coeus
 {
@@ -13,9 +14,9 @@ namespace Coeus
 		virtual int find_winner(Tensor* p_input);
 		void get_position(int p_index, int& p_x, int& p_y) const;
 
-		NeuralGroup* get_input_group() { return _groups[_inputGroup]; }
-		NeuralGroup* get_lattice() { return _groups[_lattice]; }
-		Connection*  get_lattice_connection() { return _connections[_inputGroup + "_" + _lattice]; }
+		NeuralGroup* get_input_group() const { return _input_group; }
+		NeuralGroup* get_lattice() const { return _output_group; }
+		Connection*  get_lattice_connection() const { return _input_lattice; }
 
 		virtual double calc_distance(int p_index);
 
@@ -25,10 +26,7 @@ namespace Coeus
 	protected:		
 		virtual Tensor* calc_distance();		
 
-		string _lattice;
-
-		Tensor* _input;
-		Tensor* _weights;
+		Connection* _input_lattice;
 
 		int _winner;
 		int _dim_x;
