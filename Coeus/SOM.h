@@ -16,7 +16,7 @@ namespace Coeus
 
 		NeuralGroup* get_input_group() const { return _input_group; }
 		NeuralGroup* get_lattice() const { return _output_group; }
-		Connection*  get_lattice_connection() const { return _input_lattice; }
+		Connection*  get_input_lattice() const { return _input_lattice; }
 
 		virtual double calc_distance(int p_index);
 

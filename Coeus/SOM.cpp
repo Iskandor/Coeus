@@ -65,11 +65,10 @@ Tensor* SOM::calc_distance() {
 	Tensor* input = _input_group->getOutput();
 	Tensor* weights = _input_lattice->get_weights();
 
-	const int l_dim = _output_group->getDim();
 	const int i_dim = _input_group->getDim();
-	double* arr = new double[l_dim];
+	double* arr = new double[_dim_x * _dim_y];
 
-	for(int l = 0; l < l_dim; l++) {
+	for(int l = 0; l < _dim_x * _dim_y; l++) {
 		double s = 0;
 		for (int i = 0; i < i_dim; i++) {
 			s += pow(input->at(i) - weights->at(l, i), 2);
