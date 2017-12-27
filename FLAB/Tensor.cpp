@@ -2,6 +2,7 @@
 #include <cstdarg>
 #include <cstdlib>
 #include "RandomGenerator.h"
+#include "TensorPool.h"
 
 using namespace FLAB;
 
@@ -10,7 +11,7 @@ Tensor::Tensor(): _rank(0), _shape(nullptr), _size(0) {
 
 Tensor::Tensor(const initializer_list<int> p_shape, INIT p_init, double p_value) {
 	init_shape(p_shape);
-	_arr = static_cast<double*>(calloc(_size, sizeof(double)));
+	_arr = TensorPool::instance().get(_size);
 	fill(p_init, p_value);
 }
 
@@ -26,7 +27,7 @@ Tensor::Tensor(int p_rank, int* p_shape, double* p_data) {
 
 Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<double> p_inputs) {
 	init_shape(p_shape);
-	_arr = static_cast<double*>(calloc(_size, sizeof(double)));
+	_arr = TensorPool::instance().get(_size);
 
 	int i = 0;
 	for(auto v = p_inputs.begin(); v != p_inputs.end(); v++) {
@@ -36,6 +37,14 @@ Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<double> p_i
 }
 
 Tensor::Tensor(const Tensor& p_copy) {
+	if (_shape != nullptr) {
+		delete _shape;
+	}
+
+	if (_arr != nullptr) {
+		TensorPool::instance().release(_arr, _size);
+	}
+
 	_rank = p_copy._rank;
 	_shape = new int[_rank];
 	_size = p_copy._size;
@@ -44,14 +53,14 @@ Tensor::Tensor(const Tensor& p_copy) {
 		_shape[i] = p_copy._shape[i];
 	}
 	
-	_arr = static_cast<double*>(calloc(_size, sizeof(double)));
+	_arr = TensorPool::instance().get(_size);
 	memcpy(_arr, p_copy._arr, sizeof(double) * static_cast<size_t>(_size));
 }
 
 Tensor::~Tensor() {
 	if (_shape != nullptr) delete _shape;
 	_shape = nullptr;
-	if (_arr != nullptr) delete _arr;
+	if (_arr != nullptr) TensorPool::instance().release(_arr, _size);
 	_arr = nullptr;
 }
 
@@ -72,6 +81,14 @@ Tensor Tensor::Random(const initializer_list<int> p_shape, double p_limit) {
 }
 
 void Tensor::operator=(const Tensor& p_copy) {
+	if (_shape != nullptr) {
+		delete _shape;
+	}
+
+	if (_arr != nullptr) {
+		TensorPool::instance().release(_arr, _size);
+	}
+
 	_rank = p_copy._rank;
 	_shape = new int[_rank];
 	_size = p_copy._size;
@@ -80,12 +97,12 @@ void Tensor::operator=(const Tensor& p_copy) {
 		_shape[i] = p_copy._shape[i];
 	}
 
-	_arr = static_cast<double*>(calloc(_size, sizeof(double)));
+	_arr = TensorPool::instance().get(_size);
 	memcpy(_arr, p_copy._arr, sizeof(double) * static_cast<size_t>(_size));
 }
 
 Tensor Tensor::operator+(const Tensor& p_tensor) {
-	double* arr = new double[_size];
+	double* arr = TensorPool::instance().get(_size);
 
 	for(int i = 0; i < _size; i++) {
 		arr[i] = _arr[i] + p_tensor._arr[i];
@@ -101,7 +118,7 @@ void Tensor::operator+=(const Tensor& p_tensor) {
 }
 
 Tensor Tensor::operator-(const Tensor& p_tensor) {
-	double* arr = new double[_size];
+	double* arr = TensorPool::instance().get(_size);
 
 	for (int i = 0; i < _size; i++) {
 		arr[i] = _arr[i] - p_tensor._arr[i];
@@ -122,7 +139,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 	int* shape = nullptr;
 	
 	if (this->_rank == 1 && p_tensor._rank == 1) {
-		arr = new double[this->_size * p_tensor._size];
+		arr = TensorPool::instance().get(this->_size * p_tensor._size);
 		rank = 2;
 		shape = new int[rank];
 		shape[0] = _size;
@@ -136,7 +153,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 	}
 
 	if (this->_rank == 2 && p_tensor._rank == 1) {
-		arr = new double[p_tensor._size];
+		arr = TensorPool::instance().get(p_tensor._size);
 		rank = 1;
 		shape = new int[rank];
 		shape[0] = p_tensor._size;
@@ -149,7 +166,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 	}
 
 	if (this->_rank == 2 && p_tensor._rank == 2) {
-		arr = new double[_shape[0] * p_tensor._shape[1]];
+		arr = TensorPool::instance().get(_shape[0] * p_tensor._shape[1]);
 		rank = 2;
 		shape = new int[rank];
 		shape[0] = _shape[0];
@@ -168,7 +185,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 }
 
 Tensor Tensor::operator*(const double p_const) {
-	double* arr = new double[_size];
+	double* arr = TensorPool::instance().get(_size);
 
 	for (int i = 0; i < _size; i++) {
 		arr[i] = _arr[i] * p_const;
@@ -185,7 +202,7 @@ void Tensor::operator*=(const double p_const) {
 
 Tensor Tensor::apply(double(*f)(double))
 {
-	double* arr = new double[_size];
+	double* arr = TensorPool::instance().get(_size);
 
 	for (int i = 0; i < _size; i++) {
 		arr[i] = f(_arr[i]);
@@ -258,4 +275,22 @@ void Tensor::fill(const INIT p_init, const double p_value) const {
 			for (int i = 0; i < _size; i++) _arr[i] = RandomGenerator::getInstance().random(-p_value, p_value);
 			break;
 	}
+}
+
+Tensor Tensor::Concat(Tensor& p_tensor1, Tensor& p_tensor2) {
+	double *res = TensorPool::instance().get(p_tensor1._size + p_tensor2._size);
+
+	int index = 0;
+
+	for (int i = 0; i < p_tensor1._size; i++) {
+		res[index] = p_tensor1._arr[i];
+		index++;
+	}
+
+	for (int i = 0; i < p_tensor2._size; i++) {
+		res[index] = p_tensor2._arr[i];
+		index++;
+	}
+
+	return Tensor({ p_tensor1._size + p_tensor2._size }, res);
 }

@@ -5,6 +5,7 @@ using namespace Coeus;
 MSOM::MSOM(int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation, double p_alpha, double p_beta) : SOM(p_input_dim, p_dim_x, p_dim_y, p_activation) {
 	_context_group = new NeuralGroup(p_input_dim, NeuralGroup::LINEAR, false);
 	_context_lattice = new Connection(_context_group->getDim(), _output_group->getDim(), _context_group->getId(), _output_group->getId());
+	_context_lattice->init(Connection::UNIFORM, 0.1);
 	_alpha = p_alpha;
 	_beta = p_beta;
 }
@@ -63,14 +64,10 @@ Tensor* MSOM::calc_distance() {
 	for (int l = 0; l < _dim_x * _dim_y; l++) {
 
 		double dx = 0;
-
-		for (int i = 0; i < dim; i++) {
-			dx += pow(xt->at(i) - xi->at(l, i), 2);
-		}
-
 		double dc = 0;
 
 		for (int i = 0; i < dim; i++) {
+			dx += pow(xt->at(i) - xi->at(l, i), 2);
 			dc += pow(ct->at(i) - ci->at(l, i), 2);
 		}
 

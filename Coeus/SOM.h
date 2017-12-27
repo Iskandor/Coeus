@@ -23,6 +23,8 @@ namespace Coeus
 		int dim_x() const { return _dim_x; }
 		int dim_y() const { return _dim_y; }
 
+		int get_winner() const { return _winner; }
+
 	protected:		
 		virtual Tensor* calc_distance();		
 

@@ -15,16 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Dataset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sampleSOM.cpp">
+    <ClCompile Include="ModelMNS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringUtils.cpp">
+    <ClCompile Include="ModelMNS2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,13 +35,13 @@
     <ClInclude Include="Dataset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DatasetConfig.h">
+    <ClInclude Include="ModelMNS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StringUtils.h">
+    <ClInclude Include="ModelMNS2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="samples.h">
+    <ClInclude Include="Sequence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

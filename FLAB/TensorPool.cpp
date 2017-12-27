@@ -24,18 +24,19 @@ double* TensorPool::get(const unsigned int p_size) {
 		}
 	}
 
+	_counter++;
+
 	return result;
 }
 
-void TensorPool::release(double* p_buffer) {
-	const unsigned int size = sizeof(p_buffer) / sizeof(double);
-
-	_pool[size]->push(p_buffer);
-
+void TensorPool::release(double* p_buffer, unsigned int p_size) {
+	_pool[p_size]->push(p_buffer);
+	_counter--;
 }
 
 TensorPool::TensorPool()
 {
+	_counter = 0;
 }
 
 

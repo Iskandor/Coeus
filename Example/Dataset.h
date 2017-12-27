@@ -1,31 +1,36 @@
 //
-// Created by mpechac on 10. 3. 2016.
+// Created by user on 5. 11. 2017.
 //
 
-#ifndef LIBNEURONET_DATASET_H
-#define LIBNEURONET_DATASET_H
+#ifndef NEURONET_DATASET_H
+#define NEURONET_DATASET_H
 
-#include <vector>
-#include "DatasetConfig.h"
-#include <Tensor.h>
+#include <map>
+#include "Sequence.h"
 
 using namespace std;
-using namespace FLAB;
+
+namespace MNS {
 
 class Dataset {
+
 public:
     Dataset();
     ~Dataset();
 
-    void load(string p_filename, DatasetConfig p_format);
-    void normalize();
+    void loadData(string p_filename_v, string p_filename_m);
+    vector<Sequence*>* permute();
 
-    vector<pair<Tensor*, Tensor*>>* getData() { return &_buffer; };
-    void permute();
-protected:
-    virtual void parseLine(string p_line, string p_delim);
 private:
-    DatasetConfig _config;
-    vector<pair<Tensor*, Tensor*>> _buffer;
+    map<int, map<int, Sequence*>> _buffer;
+    vector<Sequence*> _permBuffer;
+
+    void parseLines(vector<string> p_vLines, vector<string> p_mLines);
+
 };
-#endif //LIBNEURONET_DATASET_H
+
+}
+
+
+
+#endif //NEURONET_DATASET_H

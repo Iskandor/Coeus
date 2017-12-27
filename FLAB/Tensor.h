@@ -33,6 +33,7 @@ public:
 	static Tensor Ones(const initializer_list<int> p_shape);
 	static Tensor Value(const initializer_list<int> p_shape, double p_value);
 	static Tensor Random(const initializer_list<int> p_shape, double p_limit);
+	static Tensor Concat(Tensor& p_vector1, Tensor& p_vector2);
 
 	void operator = (const Tensor& p_tensor);
 	Tensor operator + (const Tensor& p_tensor);
@@ -56,6 +57,7 @@ private:
 	void init_shape(int p_rank, int* p_shape);
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, double p_value) const;
+	
 };
 
 }

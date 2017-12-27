@@ -1,0 +1,428 @@
+//
+// Created by user on 14. 12. 2017.
+//
+
+#include <fstream>
+#include <chrono>
+#include "ModelMNS2.h"
+#include "MSOM_learning.h"
+#include "SOM_learning.h"
+#include <iostream>
+#include <string>
+
+using namespace MNS;
+
+ModelMNS2::ModelMNS2() {
+    _F5 = nullptr;
+    _STS = nullptr;
+    _PF = nullptr;
+}
+
+ModelMNS2::~ModelMNS2() {
+    delete _F5;
+    delete _STS;
+    delete _PF;
+}
+
+void ModelMNS2::init() {
+    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
+
+    _F5 = new MSOM(16 + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::KEXPONENTIAL, 0.3, 0.5);
+    _STS = new MSOM(40 + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::KEXPONENTIAL, 0.3, 0.7);
+    _PF = new SOM(_sizeF5*_sizeF5 + _sizeSTS * _sizeSTS, _sizePF, _sizePF, NeuralGroup::KEXPONENTIAL);
+
+	_F5input = Tensor::Zero({ 16 + _sizePF * _sizePF });
+	_STSinput = Tensor::Zero({ 40 + _sizePF * _sizePF });
+	_PFinput = Tensor::Zero({ _sizeF5 *_sizeF5 + _sizeSTS * _sizeSTS });
+}
+
+void ModelMNS2::run(int p_epochs) {
+	MSOM_learning F5_learner(_F5);
+	F5_learner.init_training(0.01, 0.01, p_epochs);
+	MSOM_learning STS_learner(_STS);
+    STS_learner.init_training(0.1, 0.1, p_epochs);
+	SOM_learning PF_learner(_PF);
+    PF_learner.init_training(0.1, p_epochs);
+
+	for(int t = 0; t < p_epochs; t++) {
+        cout << "Epoch " << t << endl;
+        vector<Sequence*> * train_data = _data.permute();
+
+        auto start = chrono::system_clock::now();
+        for(int i = 0; i < train_data->size(); i++) {
+            for(int j = 0; j < train_data->at(i)->getMotorData()->size(); j++) {
+                prepareInputF5(train_data->at(i)->getMotorData()->at(j));
+                F5_learner.train(&_F5input);
+                if (j == train_data->at(i)->getMotorData()->size() - 1) {
+                    _F5->activate(&_F5input);
+                }
+            }
+            _F5->reset_context();
+            for(int p = 0; p < PERSPS; p++) {
+                for(int j = 0; j < train_data->at(i)->getVisualData(p)->size(); j++) {
+                    prepareInputSTS(train_data->at(i)->getVisualData(p)->at(j));
+                    STS_learner.train(&_STSinput);
+                    if (j == train_data->at(i)->getVisualData(p)->size() - 1) {
+                        _STS->activate(&_STSinput);
+                    }
+                }
+                _STS->reset_context();
+                prepareInputPF();
+                PF_learner.train(&_PFinput);
+                _PF->activate(&_PFinput);
+            }
+        }
+
+        auto end = chrono::system_clock::now();
+        chrono::duration<double> elapsed_seconds = end-start;
+        cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+        cout << " F5 qError: " << F5_learner.analyzer()->q_error() << " WD: " << F5_learner.analyzer()->winner_diff() << endl;
+        cout << "STS qError: " << STS_learner.analyzer()->q_error() << " WD: " << STS_learner.analyzer()->winner_diff() << endl;
+        cout << " PF qError: " << PF_learner.analyzer()->q_error() << " WD: " << PF_learner.analyzer()->winner_diff() << endl;
+		F5_learner.param_decay();
+		STS_learner.param_decay();
+		PF_learner.param_decay();
+    }
+}
+
+void ModelMNS2::save() {
+    const string timestamp = to_string(time(nullptr));
+
+    //NetworkUtils::saveNetwork(timestamp + "_F5.json", _F5);
+    //NetworkUtils::saveNetwork(timestamp + "_STS.json", _STS);
+    //NetworkUtils::saveNetwork(timestamp + "_PF.json", _PF);
+}
+
+void ModelMNS2::load(string p_timestamp) {
+    //_F5 = (MSOM*)NetworkUtils::loadNetwork(p_timestamp + "_F5.json");
+    //_STS = (MSOM*)NetworkUtils::loadNetwork(p_timestamp + "_STS.json");
+    //_PF = (SOM*)NetworkUtils::loadNetwork(p_timestamp + "_PF.json");
+}
+
+void ModelMNS2::prepareInputSTS(Tensor *p_input) {
+    _STSinput = Tensor::Concat(*_PF->get_output(), *p_input);
+}
+
+void ModelMNS2::prepareInputF5(Tensor *p_input) {
+    _F5input = Tensor::Concat(*_PF->get_output(), *p_input);
+}
+
+void ModelMNS2::prepareInputPF() {
+    _PFinput = Tensor::Concat(*_STS->get_output(), *_F5->get_output());
+}
+
+void ModelMNS2::testDistance() {
+    const string timestamp = to_string(time(nullptr));
+
+    vector<Sequence*>* trainData = _data.permute();
+
+    double winRateF5_Motor[_sizeF5 * _sizeF5][GRASPS];
+    double winRateSTS_Visual[_sizeSTS * _sizeSTS][PERSPS];
+    double winRateSTS_Motor[_sizeSTS * _sizeSTS][GRASPS];
+    double winRatePF_Visual[_sizePF * _sizePF][PERSPS];
+    double winRatePF_Motor[_sizePF * _sizePF][GRASPS];
+
+    for(int i = 0; i < _sizeF5 * _sizeF5; i++) {
+        for(int j = 0; j < 3; j++) {
+            winRateF5_Motor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < _sizeSTS * _sizeSTS; i++) {
+        for(int j = 0; j < PERSPS; j++) {
+            winRateSTS_Visual[i][j] = 0;
+        }
+        for(int j = 0; j < GRASPS; j++) {
+            winRateSTS_Motor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < _sizePF * _sizePF; i++) {
+        for(int j = 0; j < PERSPS; j++) {
+            winRatePF_Visual[i][j] = 0;
+        }
+        for(int j = 0; j < GRASPS; j++) {
+            winRatePF_Motor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < trainData->size(); i++) {
+        for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+            prepareInputF5(trainData->at(i)->getMotorData()->at(j));
+            _F5->activate(&_F5input);
+        }
+        for(int n = 0; n < _F5->get_lattice()->getDim(); n++) {
+            winRateF5_Motor[n][trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
+        }
+        _F5->reset_context();
+
+        for(int p = 0; p < PERSPS; p++) {
+            for(int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
+                prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
+                _STS->activate(&_STSinput);
+
+            }
+            for(int n = 0; n < _STS->get_lattice()->getDim(); n++) {
+                winRateSTS_Visual[n][p] += _STS->get_output()->at(n);
+                winRateSTS_Motor[n][trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
+            }
+            _STS->reset_context();
+            prepareInputPF();
+            _PF->activate(&_PFinput);
+
+            for(int n = 0; n < _PF->get_lattice()->getDim(); n++) {
+                winRatePF_Visual[n][p] += _PF->get_output()->at(n);
+                winRatePF_Motor[n][trainData->at(i)->getGrasp() - 1] += _PF->get_output()->at(n);
+            }
+        }
+    }
+
+    ofstream motFile(timestamp + "_F5.mot");
+
+    if (motFile.is_open()) {
+        motFile << _sizeF5 << "," << _sizeF5 << endl;
+        for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
+            for (int j = 0; j < GRASPS; j++) {
+                if (j == GRASPS - 1) {
+                    motFile << winRateF5_Motor[i][j];
+                }
+                else {
+                    motFile << winRateF5_Motor[i][j] << ",";
+                }
+            }
+            if (i < _sizeF5 * _sizeF5 - 1) motFile << endl;
+        }
+    }
+
+    motFile.close();
+
+    ofstream STSvisFile(timestamp + "_STS.vis");
+
+    if (STSvisFile.is_open()) {
+        STSvisFile << _sizeSTS << "," << _sizeSTS << endl;
+        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
+            for (int j = 0; j < PERSPS; j++) {
+                if (j == PERSPS - 1) {
+                    STSvisFile << winRateSTS_Visual[i][j];
+                }
+                else {
+                    STSvisFile << winRateSTS_Visual[i][j] << ",";
+                }
+            }
+            if (i < _sizeSTS * _sizeSTS - 1) STSvisFile << endl;
+        }
+    }
+
+    STSvisFile.close();
+
+    ofstream STSmotFile(timestamp + "_STS.mot");
+
+    if (STSmotFile.is_open()) {
+        STSmotFile << _sizeSTS << "," << _sizeSTS << endl;
+        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
+            for (int j = 0; j < GRASPS; j++) {
+                if (j == GRASPS - 1) {
+                    STSmotFile << winRateSTS_Motor[i][j];
+                }
+                else {
+                    STSmotFile << winRateSTS_Motor[i][j] << ",";
+                }
+            }
+            if (i < _sizeSTS * _sizeSTS - 1) STSmotFile << endl;
+        }
+    }
+
+    STSmotFile.close();
+
+    ofstream PFvisFile(timestamp + "_PF.vis");
+
+    if (PFvisFile.is_open()) {
+        PFvisFile << _sizePF << "," << _sizePF << endl;
+        for (int i = 0; i < _sizePF * _sizePF; i++) {
+            for (int j = 0; j < PERSPS; j++) {
+                if (j == PERSPS - 1) {
+                    PFvisFile << winRatePF_Visual[i][j];
+                }
+                else {
+                    PFvisFile << winRatePF_Visual[i][j] << ",";
+                }
+            }
+            if (i < _sizePF * _sizePF - 1) PFvisFile << endl;
+        }
+    }
+
+    PFvisFile.close();
+
+    ofstream PFmotFile(timestamp + "_PF.mot");
+
+    if (PFmotFile.is_open()) {
+        PFmotFile << _sizePF << "," << _sizePF << endl;
+        for (int i = 0; i < _sizePF * _sizePF; i++) {
+            for (int j = 0; j < GRASPS; j++) {
+                if (j == GRASPS - 1) {
+                    PFmotFile << winRatePF_Motor[i][j];
+                }
+                else {
+                    PFmotFile << winRatePF_Motor[i][j] << ",";
+                }
+            }
+            if (i < _sizePF * _sizePF - 1) PFmotFile << endl;
+        }
+    }
+
+    PFmotFile.close();
+}
+
+void ModelMNS2::testFinalWinners() {
+    const string timestamp = to_string(time(nullptr));
+
+    vector<Sequence*>* trainData = _data.permute();
+    int winRateF5_Motor[_sizeF5 * _sizeF5][GRASPS];
+    int winRateSTS_Visual[_sizeSTS * _sizeSTS][PERSPS];
+    int winRateSTS_Motor[_sizeSTS * _sizeSTS][GRASPS];
+    int winRatePF_Visual[_sizePF * _sizePF][PERSPS];
+    int winRatePF_Motor[_sizePF * _sizePF][GRASPS];
+    
+
+    for(int i = 0; i < _sizeF5 * _sizeF5; i++) {
+        for(int j = 0; j < 3; j++) {
+            winRateF5_Motor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < _sizeSTS * _sizeSTS; i++) {
+        for(int j = 0; j < PERSPS; j++) {
+            winRateSTS_Visual[i][j] = 0;
+        }
+        for(int j = 0; j < GRASPS; j++) {
+            winRateSTS_Motor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < _sizePF * _sizePF; i++) {
+        for(int j = 0; j < PERSPS; j++) {
+            winRatePF_Visual[i][j] = 0;
+        }
+        for(int j = 0; j < GRASPS; j++) {
+            winRatePF_Motor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < trainData->size(); i++) {
+        for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+            prepareInputF5(trainData->at(i)->getMotorData()->at(j));
+            _F5->activate(&_F5input);
+        }
+        winRateF5_Motor[_F5->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+        _F5->reset_context();
+        for(int p = 0; p < PERSPS; p++) {
+            for(int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
+                prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
+                _STS->activate(&_STSinput);
+            }
+            winRateSTS_Visual[_STS->get_winner()][p]++;
+            winRateSTS_Motor[_STS->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+            _STS->reset_context();
+
+            prepareInputPF();
+            _PF->activate(&_PFinput);
+            winRatePF_Visual[_PF->get_winner()][p]++;
+            winRatePF_Motor[_PF->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+        }
+    }
+
+    ofstream motFile(timestamp + "_F5.mot");
+
+    if (motFile.is_open()) {
+        motFile << _sizeF5 << "," << _sizeF5 << endl;
+        for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
+            for (int j = 0; j < GRASPS; j++) {
+                if (j == GRASPS - 1) {
+                    motFile << winRateF5_Motor[i][j];
+                }
+                else {
+                    motFile << winRateF5_Motor[i][j] << ",";
+                }
+            }
+            if (i < _sizeF5 * _sizeF5 - 1) motFile << endl;
+        }
+    }
+
+    motFile.close();
+
+    ofstream STSvisFile(timestamp + "_STS.vis");
+
+    if (STSvisFile.is_open()) {
+        STSvisFile << _sizeSTS << "," << _sizeSTS << endl;
+        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
+            for (int j = 0; j < PERSPS; j++) {
+                if (j == PERSPS - 1) {
+                    STSvisFile << winRateSTS_Visual[i][j];
+                }
+                else {
+                    STSvisFile << winRateSTS_Visual[i][j] << ",";
+                }
+            }
+            if (i < _sizeSTS * _sizeSTS - 1) STSvisFile << endl;
+        }
+    }
+
+    STSvisFile.close();
+
+    ofstream STSmotFile(timestamp + "_STS.mot");
+
+    if (STSmotFile.is_open()) {
+        STSmotFile << _sizeSTS << "," << _sizeSTS << endl;
+        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
+            for (int j = 0; j < GRASPS; j++) {
+                if (j == GRASPS - 1) {
+                    STSmotFile << winRateSTS_Motor[i][j];
+                }
+                else {
+                    STSmotFile << winRateSTS_Motor[i][j] << ",";
+                }
+            }
+            if (i < _sizeSTS * _sizeSTS - 1) STSmotFile << endl;
+        }
+    }
+
+    STSmotFile.close();
+
+    ofstream PFvisFile(timestamp + "_PF.vis");
+
+    if (PFvisFile.is_open()) {
+        PFvisFile << _sizePF << "," << _sizePF << endl;
+        for (int i = 0; i < _sizePF * _sizePF; i++) {
+            for (int j = 0; j < PERSPS; j++) {
+                if (j == PERSPS - 1) {
+                    PFvisFile << winRatePF_Visual[i][j];
+                }
+                else {
+                    PFvisFile << winRatePF_Visual[i][j] << ",";
+                }
+            }
+            if (i < _sizePF * _sizePF - 1) PFvisFile << endl;
+        }
+    }
+
+    PFvisFile.close();
+
+    ofstream PFmotFile(timestamp + "_PF.mot");
+
+    if (PFmotFile.is_open()) {
+        PFmotFile << _sizePF << "," << _sizePF << endl;
+        for (int i = 0; i < _sizePF * _sizePF; i++) {
+            for (int j = 0; j < GRASPS; j++) {
+                if (j == GRASPS - 1) {
+                    PFmotFile << winRatePF_Motor[i][j];
+                }
+                else {
+                    PFmotFile << winRatePF_Motor[i][j] << ",";
+                }
+            }
+            if (i < _sizePF * _sizePF - 1) PFmotFile << endl;
+        }
+    }
+
+    PFmotFile.close();
+}

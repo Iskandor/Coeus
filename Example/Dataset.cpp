@@ -1,94 +1,127 @@
 //
-// Created by mpechac on 10. 3. 2016.
+// Created by user on 5. 11. 2017.
 //
 
 #include <fstream>
 #include <algorithm>
 #include "Dataset.h"
-#include "StringUtils.h"
+#include <string>
+
+using namespace MNS;
 
 Dataset::Dataset() {
+
 }
 
 Dataset::~Dataset() {
-	for (auto it = _buffer.begin(); it != _buffer.end(); it++) {
-		pair<Tensor*, Tensor*> p = *it;
-		delete p.first;
-		delete p.second;
-	}
+    for(auto it = _buffer.begin(); it != _buffer.end(); ++it) {
+        for(auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
+            delete it2->second;
+        }
+    }
 }
 
-void Dataset::load(string p_filename, DatasetConfig p_format) {
+void Dataset::loadData(string p_filename_v, string p_filename_m) {
     string line;
-    ifstream file(p_filename);
-    _config = p_format;
-    if (file.is_open())
+
+    ifstream v_file(p_filename_v);
+    vector<string> v_lines;
+
+    if (v_file.is_open())
     {
-        while ( getline (file,line) )
+        while ( getline (v_file, line) )
         {
-            if (line[0] != '@' && StringUtils::trim(line).length() > 0) {
-                parseLine(line, _config.delimiter);
-            }
+            v_lines.push_back(line);
         }
-        file.close();
+        v_file.close();
+    }
+
+    ifstream m_file(p_filename_m);
+    vector<string> m_lines;
+
+    if (m_file.is_open())
+    {
+        while ( getline (m_file, line) )
+        {
+            m_lines.push_back(line);
+        }
+        m_file.close();
+    }
+
+    parseLines(v_lines, m_lines);
+
+    for(auto it = _buffer.begin(); it != _buffer.end(); ++it) {
+        for(auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
+            _permBuffer.push_back(it2->second);
+        }
     }
 }
 
-void Dataset::parseLine(string p_line, string p_delim) {
+void Dataset::parseLines(vector<string> p_vLines, vector<string> p_mLines) {
+    int step0 = 0;
     vector<string> tokens;
-    vector<string> targets;
-    int index = 0;
-    size_t pos = 0;
-    string token;
 
-    if (p_delim == "") {
-        tokens.push_back(StringUtils::trim(p_line));
-    }
-    else {
-        while ((pos = p_line.find(p_delim)) != std::string::npos) {
-            token = p_line.substr(0, pos);
-            if (index >= _config.targetPos && index < _config.targetPos + _config.targetDim) {
-                targets.push_back(StringUtils::trim(token));
-            }
-            else {
-                tokens.push_back(StringUtils::trim(token));
-            }
-            p_line.erase(0, pos + p_delim.length());
+    for(int i = 0; i < p_mLines.size(); i++) {
+        tokens.clear();
+        size_t pos = 0;
+        string token;
+
+        while ((pos = p_mLines[i].find(";")) != std::string::npos) {
+            token = p_mLines[i].substr(0, pos);
+            tokens.push_back(token);
+            p_mLines[i].erase(0, pos + 1);
         }
+
+        int s = stoi(tokens[0]);
+        int g = stoi(tokens[1]);
+        int step1 = stoi(tokens[2]);
+
+        if (step0 == 0 || step0 > step1 ) {
+            _buffer[s][g] = new Sequence(s,g);
+        }
+
+		Tensor *data = new Tensor({ static_cast<int>(tokens.size() - 3) }, Tensor::ZERO);
+
+        for(int t = 3; t < (int) (tokens.size()); t++) {
+            data->set(t - 3, stod(tokens[t]));
+        }
+
+        _buffer[s][g]->addMotorData(data);
+
+        step0 = step1;
     }
 
-	double *input = new double[_config.inDim];
-	double *target = new double[_config.targetDim];
+    for(int i = 0; i < p_vLines.size(); i++) {
+        tokens.clear();
+        size_t pos = 0;
+        string token;
 
-    for(int i = 0; i < _config.inDim; i++) {
-		input[i] = stod(tokens[i]);
+        while ((pos = p_vLines[i].find(";")) != std::string::npos) {
+            token = p_vLines[i].substr(0, pos);
+            tokens.push_back(token);
+            p_vLines[i].erase(0, pos + 1);
+        }
+
+        int s = stoi(tokens[0]);
+        int g = stoi(tokens[1]);
+        int p = stoi(tokens[2]);
+        //int step1 = stoi(tokens[3]);
+
+		Tensor *data = new Tensor({ static_cast<int>(tokens.size() - 4) }, Tensor::ZERO);
+
+        //cout << tokens.size() - 4 << endl;
+
+        for(int t = 4; t < (int) (tokens.size()); t++) {
+            data->set(t - 4, stod(tokens[t]));
+        }
+
+        _buffer[s][g]->addVisualData(p, data);
     }
-
-    for(int i = 0; i < targets.size(); i++) {
-        target[i] = stod(targets[i]);
-    }
-
-	_buffer.push_back(pair<Tensor*, Tensor*>(new Tensor({ _config.inDim }, input), new Tensor({ _config.targetDim }, target)));
 }
 
-void Dataset::normalize() {
-	Tensor max = Tensor::Zero({ _config.inDim });
-
-    for(int i = 0; i < _buffer.size(); i++) {
-        for(int j = 0; j < _config.inDim; j++) {
-            if (max.at(j) < _buffer[i].first->at(j)) {
-                max.set(j, _buffer[i].first->at(j));
-            }
-        }
-    }
-
-    for(int i = 0; i < _buffer.size(); i++) {
-        for (int j = 0; j < _config.inDim; j++) {
-            _buffer[i].first->set(j, _buffer[i].first->at(j) / max.at(j));
-        }
-    }
+vector<Sequence*>* Dataset::permute() {
+    random_shuffle(_permBuffer.begin(), _permBuffer.end());
+    return &_permBuffer;
 }
 
-void Dataset::permute() {
-    //random_shuffle(_buffer.begin(), _buffer.end());
-}
+

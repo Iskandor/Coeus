@@ -79,6 +79,6 @@ void NeuralGroup::activate() {
 }
 
 void NeuralGroup::setOutput(Tensor &p_output) {
-    _output = Tensor(p_output);
+    _output = p_output;
 }
 
