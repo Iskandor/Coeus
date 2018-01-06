@@ -23,7 +23,6 @@ namespace Coeus
 
 	protected:
 		void calc_distance() override;
-		double calc_distance_task(int p_index) const;
 		void update_context() const;
 
 		NeuralGroup* _context_group;

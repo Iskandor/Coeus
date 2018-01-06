@@ -1,6 +1,5 @@
 #include "SOM.h"
 #include "ActivationFunctions.h"
-#include <iostream>
 #include "Connection.h"
 #include "IOUtils.h"
 
@@ -46,16 +45,16 @@ void SOM::activate(Tensor* p_input) {
 
 	switch (_output_group->getActivationFunction()) {
 		case NeuralGroup::LINEAR:
-			_dist.apply(ActivationFunctions::linear);
+			_dist = _dist.apply(ActivationFunctions::linear);
 			break;
 		case NeuralGroup::EXPONENTIAL:
-			_dist.apply(ActivationFunctions::exponential);
+			_dist = _dist.apply(ActivationFunctions::exponential);
 			break;
 		case NeuralGroup::KEXPONENTIAL:
-			_dist.apply(ActivationFunctions::kexponential);
+			_dist = _dist.apply(ActivationFunctions::kexponential);
 			break;
 		case NeuralGroup::GAUSS:
-			_dist.apply(ActivationFunctions::gauss);
+			_dist = _dist.apply(ActivationFunctions::gauss);
 			break;
 		default:
 			break;
@@ -76,29 +75,19 @@ double SOM::calc_distance(const int p_index) {
 }
 
 void SOM::calc_distance() {
-	Tensor* input = _input_group->getOutput();
-	Tensor* weights = _input_lattice->get_weights();
-
-	const int i_dim = _input_group->getDim();
-
 	for(int l = 0; l < _dim_x * _dim_y; l++) {
-		double s = 0;
-		for (int i = 0; i < i_dim; i++) {
-			s += pow(input->at(i) - weights->at(l, i), 2);
-		}
-		_dist.set(l, sqrt(s));
+		_dist.set(l, calc_distance(l));
 	}
 }
 
 int SOM::find_winner(Tensor* p_input) {
 	double winner_dist = INFINITY;
-	double neuron_dist = 0;
 	_winner = 0;
 
 	_input_group->setOutput(*p_input);
 
 	for (int i = 0; i < _output_group->getDim(); i++) {
-		neuron_dist = calc_distance(i);
+		const double neuron_dist = calc_distance(i);
 		if (winner_dist > neuron_dist) {
 			_winner = i;
 			winner_dist = neuron_dist;
@@ -106,7 +95,6 @@ int SOM::find_winner(Tensor* p_input) {
 	}
 
 	/*
-	_input_group->setOutput(*p_input);
 	calc_distance();
 	_winner = _dist.max_index();
 	*/

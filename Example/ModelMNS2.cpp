@@ -9,6 +9,7 @@
 #include "SOM_learning.h"
 #include <iostream>
 #include <string>
+#include "IOUtils.h"
 
 using namespace MNS;
 
@@ -27,9 +28,9 @@ ModelMNS2::~ModelMNS2() {
 void ModelMNS2::init() {
     _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
 
-    _F5 = new MSOM(16 + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::KEXPONENTIAL, 0.3, 0.5);
-    _STS = new MSOM(40 + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::KEXPONENTIAL, 0.3, 0.7);
-    _PF = new SOM(_sizeF5*_sizeF5 + _sizeSTS * _sizeSTS, _sizePF, _sizePF, NeuralGroup::KEXPONENTIAL);
+    _F5 = new MSOM(16 + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, 0.3, 0.5);
+    _STS = new MSOM(40 + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, 0.3, 0.7);
+    _PF = new SOM(_sizeF5*_sizeF5 + _sizeSTS * _sizeSTS, _sizePF, _sizePF, NeuralGroup::EXPONENTIAL);
 
 	_F5input = Tensor::Zero({ 16 + _sizePF * _sizePF });
 	_STSinput = Tensor::Zero({ 40 + _sizePF * _sizePF });
@@ -88,15 +89,15 @@ void ModelMNS2::run(int p_epochs) {
 void ModelMNS2::save() {
     const string timestamp = to_string(time(nullptr));
 
-    //NetworkUtils::saveNetwork(timestamp + "_F5.json", _F5);
-    //NetworkUtils::saveNetwork(timestamp + "_STS.json", _STS);
-    //NetworkUtils::saveNetwork(timestamp + "_PF.json", _PF);
+    IOUtils::save_network(timestamp + "_F5.json", _F5);
+	IOUtils::save_network(timestamp + "_STS.json", _STS);
+	IOUtils::save_network(timestamp + "_PF.json", _PF);
 }
 
 void ModelMNS2::load(string p_timestamp) {
-    //_F5 = (MSOM*)NetworkUtils::loadNetwork(p_timestamp + "_F5.json");
-    //_STS = (MSOM*)NetworkUtils::loadNetwork(p_timestamp + "_STS.json");
-    //_PF = (SOM*)NetworkUtils::loadNetwork(p_timestamp + "_PF.json");
+    _F5 = (MSOM*)IOUtils::load_network(p_timestamp + "_F5.json");
+    _STS = (MSOM*)IOUtils::load_network(p_timestamp + "_STS.json");
+    _PF = (SOM*)IOUtils::load_network(p_timestamp + "_PF.json");
 }
 
 void ModelMNS2::prepareInputSTS(Tensor *p_input) {
