@@ -8,6 +8,7 @@ namespace Coeus
 	{
 	public:
 		SOM(int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation);
+		SOM(nlohmann::json p_data);
 		~SOM();
 
 		void activate(Tensor *p_input) override;
@@ -26,13 +27,15 @@ namespace Coeus
 		int get_winner() const { return _winner; }
 
 	protected:		
-		virtual Tensor* calc_distance();		
+		virtual void calc_distance();		
 
 		Connection* _input_lattice;
 
 		int _winner;
 		int _dim_x;
 		int _dim_y;
+
+		Tensor _dist;
 	};
 }
 

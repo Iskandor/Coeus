@@ -2,11 +2,13 @@
 #include "ActivationFunctions.h"
 #include <iostream>
 #include "Connection.h"
+#include "IOUtils.h"
 
 using namespace Coeus;
 
 SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation)
 {
+	_type = TYPE::SOM;
 	_dim_x = p_dim_x;
 	_dim_y = p_dim_y;
 
@@ -15,6 +17,19 @@ SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const Neur
 
 	_input_lattice = new Connection(_input_group->getDim(), _output_group->getDim(), _input_group->getId(), _output_group->getId());
 	_input_lattice->init(Connection::UNIFORM, 0.1);
+
+	_dist = Tensor::Zero({ _dim_x * _dim_y });
+}
+
+SOM::SOM(nlohmann::json p_data) {
+	_type = TYPE::SOM;
+
+	_dim_x = p_data["dim_x"].get<int>();
+	_dim_y = p_data["dim_y"].get<int>();
+
+	_input_group = IOUtils::read_neural_group(p_data["groups"]["input"]);
+	_output_group = IOUtils::read_neural_group(p_data["groups"]["lattice"]);
+	_input_lattice = IOUtils::read_connection(p_data["connections"]["input_lattice"]);
 }
 
 
@@ -27,27 +42,26 @@ SOM::~SOM()
 void SOM::activate(Tensor* p_input) {
 	find_winner(p_input);
 
-	Tensor* output = calc_distance();
+	calc_distance();
 
 	switch (_output_group->getActivationFunction()) {
 		case NeuralGroup::LINEAR:
-			output->apply(ActivationFunctions::linear);
+			_dist.apply(ActivationFunctions::linear);
 			break;
 		case NeuralGroup::EXPONENTIAL:
-			output->apply(ActivationFunctions::exponential);
+			_dist.apply(ActivationFunctions::exponential);
 			break;
 		case NeuralGroup::KEXPONENTIAL:
-			output->apply(ActivationFunctions::kexponential);
+			_dist.apply(ActivationFunctions::kexponential);
 			break;
 		case NeuralGroup::GAUSS:
-			output->apply(ActivationFunctions::gauss);
+			_dist.apply(ActivationFunctions::gauss);
 			break;
 		default:
 			break;
 	}
 
-	_output_group->setOutput(*output);
-	delete output;
+	_output_group->setOutput(_dist);
 }
 
 double SOM::calc_distance(const int p_index) {
@@ -61,22 +75,19 @@ double SOM::calc_distance(const int p_index) {
 	return sqrt(s);
 }
 
-Tensor* SOM::calc_distance() {
+void SOM::calc_distance() {
 	Tensor* input = _input_group->getOutput();
 	Tensor* weights = _input_lattice->get_weights();
 
 	const int i_dim = _input_group->getDim();
-	double* arr = new double[_dim_x * _dim_y];
 
 	for(int l = 0; l < _dim_x * _dim_y; l++) {
 		double s = 0;
 		for (int i = 0; i < i_dim; i++) {
 			s += pow(input->at(i) - weights->at(l, i), 2);
 		}
-		arr[l] = sqrt(s);
+		_dist.set(l, sqrt(s));
 	}
-
-	return new Tensor({ _dim_x, _dim_y}, arr);
 }
 
 int SOM::find_winner(Tensor* p_input) {
@@ -93,6 +104,12 @@ int SOM::find_winner(Tensor* p_input) {
 			winner_dist = neuron_dist;
 		}
 	}
+
+	/*
+	_input_group->setOutput(*p_input);
+	calc_distance();
+	_winner = _dist.max_index();
+	*/
 
 	return _winner;
 }

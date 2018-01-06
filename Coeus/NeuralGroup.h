@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
-#include "../FLAB/Tensor.h"
+#include <Tensor.h>
+#include "json.hpp"
 
 using namespace std;
 using namespace FLAB;
@@ -26,6 +26,7 @@ public:
     };
 
     NeuralGroup(int p_dim, ACTIVATION p_activationFunction, bool p_bias);
+	explicit NeuralGroup(nlohmann::json p_data);
     NeuralGroup(NeuralGroup& p_copy);
     ~NeuralGroup(void);
 

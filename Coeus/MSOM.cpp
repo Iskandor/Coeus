@@ -1,4 +1,8 @@
+#include <iostream>
 #include "MSOM.h"
+#include "IOUtils.h"
+#include <future>
+#include "ThreadPool.h"
 
 using namespace Coeus;
 
@@ -8,6 +12,16 @@ MSOM::MSOM(int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_
 	_context_lattice->init(Connection::UNIFORM, 0.1);
 	_alpha = p_alpha;
 	_beta = p_beta;
+	_type = TYPE::MSOM;
+}
+
+MSOM::MSOM(nlohmann::json p_data) : SOM(p_data) {
+	_type = TYPE::MSOM;
+	_alpha = p_data["alpha"].get<double>();
+	_beta = p_data["beta"].get<double>();
+
+	_context_group = IOUtils::read_neural_group(p_data["groups"]["context"]);
+	_context_lattice = IOUtils::read_connection(p_data["connections"]["context_lattice"]);
 }
 
 MSOM::~MSOM()
@@ -32,14 +46,10 @@ double MSOM::calc_distance(const int p_index) {
 	Tensor* ct = _context_group->getOutput();
 
 	double dx = 0;
-
-	for (int i = 0; i < dim; i++) {
-		dx += pow(xt->at(i) - xi->at(p_index, i), 2);
-	}
-
 	double dc = 0;
 
 	for (int i = 0; i < dim; i++) {
+		dx += pow(xt->at(i) - xi->at(p_index, i), 2);
 		dc += pow(ct->at(i) - ci->at(p_index, i), 2);
 	}
 
@@ -51,30 +61,60 @@ void MSOM::reset_context() const {
 	_context_group->getOutput()->fill(0);
 }
 
-Tensor* MSOM::calc_distance() {
-	const int dim = _input_group->getDim();
+void MSOM::calc_distance() {
+	int i = 0;
+	vector< future<double> > results;
 
+	ThreadPool pool(4);
+
+	for (int l = 0; l < _dim_x * _dim_y; l++) {
+		results.emplace_back(
+			pool.enqueue(
+				[this] (int p_index) 
+				{
+					const int dim = _input_group->getDim();
+					Tensor* xi = _input_lattice->get_weights();
+					Tensor* ci = _context_lattice->get_weights();
+					Tensor* xt = _input_group->getOutput();
+					Tensor* ct = _context_group->getOutput();
+
+					double dx = 0;
+					double dc = 0;
+
+					for (int i = 0; i < dim; i++) {
+						dx += pow(xt->at(i) - xi->at(p_index, i), 2);
+						dc += pow(ct->at(i) - ci->at(p_index, i), 2);
+					}
+
+					return (1 - _alpha) * dx + _alpha * dc;
+				},
+				l
+			)
+		);
+	}
+
+	for (auto && result : results) {
+		_dist.set(i, result.get());
+		i++;
+	}
+}
+
+double MSOM::calc_distance_task(const int p_index) const {
+	const int dim = _input_group->getDim();
 	Tensor* xi = _input_lattice->get_weights();
 	Tensor* ci = _context_lattice->get_weights();
 	Tensor* xt = _input_group->getOutput();
 	Tensor* ct = _context_group->getOutput();
 
-	double* arr = new double[_dim_x * _dim_y];
+	double dx = 0;
+	double dc = 0;
 
-	for (int l = 0; l < _dim_x * _dim_y; l++) {
-
-		double dx = 0;
-		double dc = 0;
-
-		for (int i = 0; i < dim; i++) {
-			dx += pow(xt->at(i) - xi->at(l, i), 2);
-			dc += pow(ct->at(i) - ci->at(l, i), 2);
-		}
-
-		arr[l] = (1 - _alpha) * dx + _alpha * dc;
+	for (int i = 0; i < dim; i++) {
+		dx += pow(xt->at(i) - xi->at(p_index, i), 2);
+		dc += pow(ct->at(i) - ci->at(p_index, i), 2);
 	}
 
-	return new Tensor({ _dim_x, _dim_y }, arr);
+	return (1 - _alpha) * dx + _alpha * dc;
 }
 
 void MSOM::update_context() const {

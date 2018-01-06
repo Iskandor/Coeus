@@ -159,6 +159,7 @@
     <ClCompile Include="Coeus.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="IDGen.cpp" />
+    <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
     <ClCompile Include="NeuralGroup.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Base_SOM_learning.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="IDGen.h" />
+    <ClInclude Include="IOUtils.h" />
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
     <ClInclude Include="NeuralGroup.h" />
@@ -181,6 +183,7 @@
     <ClInclude Include="SOM.h" />
     <ClInclude Include="SOM_analyzer.h" />
     <ClInclude Include="SOM_learning.h" />
+    <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

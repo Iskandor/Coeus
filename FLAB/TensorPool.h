@@ -11,15 +11,17 @@ namespace FLAB {
 	public:
 		static TensorPool& instance();
 
-		double* get(unsigned int p_size);
-		void	release(double* p_buffer, unsigned int p_size);
+		double* get_dbl(unsigned int p_size);
+		int*	get_int(unsigned int p_size);
+		void	release(double* p_buffer, unsigned p_size);
+		void	release(int* p_buffer, unsigned p_size);
 	private:
 		TensorPool();
 		~TensorPool();
 
-		map<unsigned int, stack<double*>*> _pool;
+		map<unsigned int, stack<double*>*> _pool_dbl;
+		map<unsigned int, stack<int*>*> _pool_int;
 		int _counter;
 	};
 
 }
-

@@ -7,6 +7,7 @@ namespace Coeus
 	{
 	public:
 		MSOM(int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation, double p_alpha, double p_beta);
+		explicit MSOM(nlohmann::json p_data);
 		~MSOM();
 
 		void activate(Tensor *p_input) override;
@@ -17,8 +18,12 @@ namespace Coeus
 		NeuralGroup* get_context_group() const { return _context_group; }
 		Connection* get_context_lattice() const { return _context_lattice; }
 
+		double get_alpha() const { return _alpha; }
+		double get_beta() const { return _beta; }
+
 	protected:
-		Tensor* calc_distance() override;
+		void calc_distance() override;
+		double calc_distance_task(int p_index) const;
 		void update_context() const;
 
 		NeuralGroup* _context_group;

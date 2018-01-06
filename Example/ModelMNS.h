@@ -19,7 +19,7 @@ public:
 
     void init();
     void run(int p_epochs);
-    void save();
+    void save() const;
     void load(string p_timestamp);
 
     void testAllWinners();

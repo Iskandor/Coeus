@@ -13,6 +13,25 @@ Connection::Connection(const int p_in_dim, const int p_out_dim, const string p_i
 	_weights = nullptr;
 }
 
+Connection::Connection(nlohmann::json p_data) {
+	_id = p_data["id"].get<string>();
+	_in_id = p_data["in_id"].get<string>();
+	_out_id = p_data["out_id"].get<string>();
+	_in_dim = p_data["in_dim"].get<int>();
+	_out_dim = p_data["out_dim"].get<int>();
+
+	double* data = new double[_out_dim * _in_dim];
+
+	stringstream ss(p_data["weights"].get<string>());
+
+	ss.seekg(0,ios::end);
+	const streampos size = ss.tellg();
+	ss.seekg(0, ios::beg);
+	ss.read(reinterpret_cast<char*>(data), size);
+
+	_weights = new Tensor({_out_dim, _in_dim}, data);
+}
+
 Connection::Connection(Connection &p_copy) {
     _id = p_copy._id;
     _in_dim = p_copy._in_dim;

@@ -7,20 +7,20 @@ TensorPool& TensorPool::instance() {
 	return instance;
 }
 
-double* TensorPool::get(const unsigned int p_size) {
+double* TensorPool::get_dbl(const unsigned int p_size) {
 	double* result = nullptr;
 
-	if(_pool.find(p_size) == _pool.end()) {
-		_pool[p_size] = new stack<double*>();
+	if(_pool_dbl.find(p_size) == _pool_dbl.end()) {
+		_pool_dbl[p_size] = new stack<double*>();
 		result = static_cast<double*>(calloc(static_cast<size_t>(p_size), sizeof(double)));
 	}
 	else {
-		if (_pool[p_size]->empty()) {
+		if (_pool_dbl[p_size]->empty()) {
 			result = static_cast<double*>(calloc(static_cast<size_t>(p_size), sizeof(double)));
 		}
 		else {
-			result = _pool[p_size]->top();
-			_pool[p_size]->pop();
+			result = _pool_dbl[p_size]->top();
+			_pool_dbl[p_size]->pop();
 		}
 	}
 
@@ -29,8 +29,35 @@ double* TensorPool::get(const unsigned int p_size) {
 	return result;
 }
 
-void TensorPool::release(double* p_buffer, unsigned int p_size) {
-	_pool[p_size]->push(p_buffer);
+int* TensorPool::get_int(const unsigned int p_size) {
+	int* result = nullptr;
+
+	if (_pool_int.find(p_size) == _pool_int.end()) {
+		_pool_int[p_size] = new stack<int*>();
+		result = static_cast<int*>(calloc(static_cast<size_t>(p_size), sizeof(int)));
+	}
+	else {
+		if (_pool_int[p_size]->empty()) {
+			result = static_cast<int*>(calloc(static_cast<size_t>(p_size), sizeof(int)));
+		}
+		else {
+			result = _pool_int[p_size]->top();
+			_pool_int[p_size]->pop();
+		}
+	}
+
+	_counter++;
+
+	return result;
+}
+
+void TensorPool::release(double* p_buffer, const unsigned p_size) {
+	_pool_dbl[p_size]->push(p_buffer);
+	_counter--;
+}
+
+void TensorPool::release(int* p_buffer, const unsigned p_size) {
+	_pool_int[p_size]->push(p_buffer);
 	_counter--;
 }
 
@@ -42,8 +69,16 @@ TensorPool::TensorPool()
 
 TensorPool::~TensorPool()
 {
-	for(auto it = _pool.begin(); it != _pool.end(); ++it) {
+	for(auto it = _pool_dbl.begin(); it != _pool_dbl.end(); ++it) {
 		while(!(*it).second->empty()) {
+			free((*it).second->top());
+			(*it).second->pop();
+		}
+		delete (*it).second;
+	}
+
+	for (auto it = _pool_int.begin(); it != _pool_int.end(); ++it) {
+		while (!(*it).second->empty()) {
 			free((*it).second->top());
 			(*it).second->pop();
 		}

@@ -16,6 +16,7 @@ public:
     };
 
 	Connection(int p_inDim, int p_outDim, string p_inId, string p_outId);
+	explicit Connection(nlohmann::json p_data);
     Connection(Connection& p_copy);
     ~Connection(void);
 
@@ -28,6 +29,8 @@ public:
 	string get_id() const { return _id; };
 	string get_in_id() const { return _in_id; };
 	string get_out_id() const { return _out_id; };
+	int get_in_dim() const { return _in_dim; };
+	int get_out_dim() const { return _out_dim; };
 
 private:
 	

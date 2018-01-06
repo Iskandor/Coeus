@@ -79,6 +79,9 @@
       <Filter>Source Files\Algorithm</Filter>
     </ClCompile>
     <ClCompile Include="Base_SOM_learning.cpp">
+      <Filter>Source Files\Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="IOUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,7 +122,13 @@
     <ClInclude Include="MSOM_learning.h">
       <Filter>Header Files\Algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Base_SOM_learning.h">
+      <Filter>Header Files\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="IOUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

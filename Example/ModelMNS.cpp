@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include "MSOM_learning.h"
+#include "IOUtils.h"
 
 using namespace MNS;
 using namespace std;
@@ -476,15 +477,15 @@ void ModelMNS::free_test_buffer(double*** p_buffer, int p_size1, int p_size2, in
 }
 
 
-void ModelMNS::save() {
+void ModelMNS::save() const {
     const string timestamp = to_string(time(nullptr));
 
-    //NetworkUtils::saveNetwork(timestamp + "_pmc.json", _msomMotor);
-    //NetworkUtils::saveNetwork(timestamp + "_stsp.json", _msomVisual);
+    IOUtils::save_network(timestamp + "_pmc.json", _msomMotor);
+    IOUtils::save_network(timestamp + "_stsp.json", _msomVisual);
 }
 
 
 void ModelMNS::load(string p_timestamp) {
-    //_msomMotor = (MSOM*)NetworkUtils::loadNetwork(p_timestamp + "_pmc.json");
-    //_msomVisual = (MSOM*)NetworkUtils::loadNetwork(p_timestamp + "_stsp.json");
+    _msomMotor = (MSOM*)IOUtils::load_network(p_timestamp + "_pmc.json");
+    _msomVisual = (MSOM*)IOUtils::load_network(p_timestamp + "_stsp.json");
 }

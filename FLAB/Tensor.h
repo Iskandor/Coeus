@@ -44,10 +44,13 @@ public:
 	Tensor operator * (const double p_const);
 	void operator *= (const double p_const);
 
-	Tensor apply(double(*f)(double));
+	Tensor apply(double(*f)(double)) const;
 
-	void fill(double p_value);
+	int max_index() const;
 
+	void fill(double p_value) const;
+
+	int size() const { return _size; }
 	double at(int p_x) const;
 	double at(int p_y, int p_x) const;
 	void set(int p_x, double p_val) const;
