@@ -18,6 +18,7 @@ SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const Neur
 	_input_lattice->init(Connection::UNIFORM, 0.1);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
+	_input_mask = nullptr;
 }
 
 SOM::SOM(nlohmann::json p_data) {
@@ -68,7 +69,9 @@ double SOM::calc_distance(const int p_index) {
 	double s = 0;
 
 	for (int i = 0; i < dim; i++) {
-		s += pow(_input_group->getOutput()->at(i) - _input_lattice->get_weights()->at(p_index, i), 2);
+		if (_input_mask == nullptr || _input_mask[i] == 1) {
+			s += pow(_input_group->getOutput()->at(i) - _input_lattice->get_weights()->at(p_index, i), 2);
+		}
 	}
 
 	return sqrt(s);

@@ -49,12 +49,13 @@ double MSOM::calc_distance(const int p_index) {
 	double dc = 0;
 
 	for (int i = 0; i < dim; i++) {
-		dx += pow(xt->at(i) - xi->at(p_index, i), 2);
-		dc += pow(ct->at(i) - ci->at(p_index, i), 2);
+		if (_input_mask == nullptr || _input_mask[i] == 1) {
+			dx += pow(xt->at(i) - xi->at(p_index, i), 2);
+			dc += pow(ct->at(i) - ci->at(p_index, i), 2);
+		}
 	}
 
-	const double dt = (1 - _alpha) * dx + _alpha * dc;
-	return dt;
+	return (1 - _alpha) * dx + _alpha * dc;;
 }
 
 void MSOM::calc_distance() {

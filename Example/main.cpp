@@ -10,7 +10,7 @@ int main()
 
 	model.init();
 	model.run(2000);
-	//model.save();
+	model.save();
 
 	//model.load("1515267890");
 	//model.testFinalWinners();

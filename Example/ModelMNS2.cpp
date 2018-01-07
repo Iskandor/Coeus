@@ -28,13 +28,31 @@ ModelMNS2::~ModelMNS2() {
 void ModelMNS2::init() {
     _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
 
-    _F5 = new MSOM(16 + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, 0.3, 0.5);
-    _STS = new MSOM(40 + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, 0.3, 0.7);
-    _PF = new SOM(_sizeF5*_sizeF5 + _sizeSTS * _sizeSTS, _sizePF, _sizePF, NeuralGroup::EXPONENTIAL);
+    _F5 = new MSOM(_sizeF5input + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::KEXPONENTIAL, 0.3, 0.5);
+    _STS = new MSOM(_sizeSTSinput + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::KEXPONENTIAL, 0.3, 0.7);
+    _PF = new SOM(_sizeF5*_sizeF5 + _sizeSTS * _sizeSTS, _sizePF, _sizePF, NeuralGroup::KEXPONENTIAL);
 
-	_F5input = Tensor::Zero({ 16 + _sizePF * _sizePF });
-	_STSinput = Tensor::Zero({ 40 + _sizePF * _sizePF });
+	_F5input = Tensor::Zero({ _sizeF5input + _sizePF * _sizePF });
+	_STSinput = Tensor::Zero({ _sizeSTSinput + _sizePF * _sizePF });
 	_PFinput = Tensor::Zero({ _sizeF5 *_sizeF5 + _sizeSTS * _sizeSTS });
+
+	for(int i = 0; i < _sizeF5input + _sizePF * _sizePF; i++) {
+		if (i < _sizeF5input) {
+			_f5_mask[i] = 1;
+		}
+		else {
+			_f5_mask[i] = 0;
+		}
+	}
+
+	for (int i = 0; i < _sizeSTSinput + _sizePF * _sizePF; i++) {
+		if (i < _sizeSTSinput) {
+			_sts_mask[i] = 1;
+		}
+		else {
+			_sts_mask[i] = 0;
+		}
+	}
 }
 
 void ModelMNS2::run(int p_epochs) {
@@ -51,26 +69,17 @@ void ModelMNS2::run(int p_epochs) {
 
         auto start = chrono::system_clock::now();
         for(int i = 0; i < train_data->size(); i++) {
-            for(int j = 0; j < train_data->at(i)->getMotorData()->size(); j++) {
-                prepareInputF5(train_data->at(i)->getMotorData()->at(j));
-                F5_learner.train(&_F5input);
-                if (j == train_data->at(i)->getMotorData()->size() - 1) {
-                    _F5->activate(&_F5input);
-                }
-            }
-            _F5->reset_context();
+			preactivateF5(train_data->at(i)->getMotorData());
+			
             for(int p = 0; p < PERSPS; p++) {
-                for(int j = 0; j < train_data->at(i)->getVisualData(p)->size(); j++) {
-                    prepareInputSTS(train_data->at(i)->getVisualData(p)->at(j));
-                    STS_learner.train(&_STSinput);
-                    if (j == train_data->at(i)->getVisualData(p)->size() - 1) {
-                        _STS->activate(&_STSinput);
-                    }
-                }
-                _STS->reset_context();
+				preactivateSTS(train_data->at(i)->getVisualData(p));
+
                 prepareInputPF();
                 PF_learner.train(&_PFinput);
                 _PF->activate(&_PFinput);
+
+				trainSTS(STS_learner, train_data->at(i)->getVisualData(p));
+				trainF5(F5_learner, train_data->at(i)->getMotorData());
             }
         }
 
@@ -101,11 +110,11 @@ void ModelMNS2::load(string p_timestamp) {
 }
 
 void ModelMNS2::prepareInputSTS(Tensor *p_input) {
-    _STSinput = Tensor::Concat(*_PF->get_output(), *p_input);
+    _STSinput = Tensor::Concat(*p_input, *_PF->get_output());
 }
 
 void ModelMNS2::prepareInputF5(Tensor *p_input) {
-    _F5input = Tensor::Concat(*_PF->get_output(), *p_input);
+    _F5input = Tensor::Concat(*p_input, *_PF->get_output());
 }
 
 void ModelMNS2::prepareInputPF() {
@@ -426,4 +435,50 @@ void ModelMNS2::testFinalWinners() {
     }
 
     PFmotFile.close();
+}
+
+void ModelMNS2::preactivateF5(vector<Tensor*>* p_input) {
+	_F5->set_input_mask(_f5_mask);
+
+	for (int j = 0; j < p_input->size(); j++) {
+		prepareInputF5(p_input->at(j));
+		_F5->activate(&_F5input);
+	}
+	_F5->reset_context();
+
+	_F5->set_input_mask(nullptr);
+}
+
+void ModelMNS2::preactivateSTS(vector<Tensor*>* p_input) {
+	_STS->set_input_mask(_sts_mask);
+
+	for (int j = 0; j < p_input->size(); j++) {
+		prepareInputSTS(p_input->at(j));
+		_STS->activate(&_STSinput);
+	}
+	_STS->reset_context();
+
+	_STS->set_input_mask(nullptr);
+}
+
+void ModelMNS2::trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input) {
+	for (int j = 0; j < p_input->size(); j++) {
+		prepareInputF5(p_input->at(j));
+		p_F5_learner.train(&_F5input);
+		if (j == p_input->size() - 1) {
+			_F5->activate(&_F5input);
+		}
+	}
+	_F5->reset_context();
+}
+
+void ModelMNS2::trainSTS(MSOM_learning& p_STS_learner, vector<Tensor*>* p_input) {
+	for (int j = 0; j < p_input->size(); j++) {
+		prepareInputSTS(p_input->at(j));
+		p_STS_learner.train(&_STSinput);
+		if (j == p_input->size() - 1) {
+			_STS->activate(&_STSinput);
+		}
+	}
+	_STS->reset_context();
 }

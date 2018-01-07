@@ -25,6 +25,7 @@ namespace Coeus
 		int dim_y() const { return _dim_y; }
 
 		int get_winner() const { return _winner; }
+		void set_input_mask(int* p_mask) { _input_mask = p_mask; }
 
 	protected:		
 		virtual void calc_distance();		
@@ -35,7 +36,8 @@ namespace Coeus
 		int _dim_x;
 		int _dim_y;
 
-		Tensor _dist;
+		Tensor	_dist;
+		int*	_input_mask;
 	};
 }
 
