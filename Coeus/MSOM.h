@@ -13,6 +13,7 @@ namespace Coeus
 		void activate(Tensor *p_input) override;
 		double calc_distance(int p_index) override;
 
+		void update_context() const;
 		void reset_context() const;
 
 		NeuralGroup* get_context_group() const { return _context_group; }
@@ -22,8 +23,7 @@ namespace Coeus
 		double get_beta() const { return _beta; }
 
 	protected:
-		void calc_distance() override;
-		void update_context() const;
+		void calc_distance() override;		
 
 		NeuralGroup* _context_group;
 		Connection* _context_lattice;

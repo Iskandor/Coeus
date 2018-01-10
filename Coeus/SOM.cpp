@@ -1,5 +1,6 @@
 #include "SOM.h"
 #include "ActivationFunctions.h"
+#include <chrono>
 #include "Connection.h"
 #include "IOUtils.h"
 

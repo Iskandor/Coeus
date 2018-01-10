@@ -27,6 +27,7 @@ void MSOM_learning::train(Tensor* p_input) {
 	const int dim_input = _msom->get_input_group()->getDim();
 	const int dim_lattice = _msom->get_lattice()->getDim();
 
+	_msom->update_context();
 
 	Tensor* wi = _msom->get_input_lattice()->get_weights();
 	Tensor* ci = _msom->get_context_lattice()->get_weights();
@@ -40,8 +41,12 @@ void MSOM_learning::train(Tensor* p_input) {
 	for (int i = 0; i < dim_lattice; i++) {
 		theta = calc_neighborhood(_dist_matrix.at(winner, i), GAUSSIAN);
 		for (int j = 0; j < dim_input; j++) {
-			_delta_w.set(i, j, theta * _gamma1 * (in->at(j) - wi->at(i, j)));
-			_delta_c.set(i, j, theta * _gamma2 * (ct->at(j) - ci->at(i, j)));
+			double in1 = in->at(j);
+			double wi1 = wi->at(i, j);
+			double ct1 = ct->at(j);
+			double ci1 = ci->at(i, j);
+			_delta_w.set(i, j, theta * _gamma1 * (in1 - wi1));
+			_delta_c.set(i, j, theta * _gamma2 * (ct1 - ci1));
 		}
 	}
 

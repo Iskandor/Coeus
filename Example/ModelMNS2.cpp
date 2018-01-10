@@ -26,7 +26,7 @@ ModelMNS2::~ModelMNS2() {
 }
 
 void ModelMNS2::init() {
-    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
+    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
 
     _F5 = new MSOM(_sizeF5input + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::KEXPONENTIAL, 0.3, 0.5);
     _STS = new MSOM(_sizeSTSinput + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::KEXPONENTIAL, 0.3, 0.7);
@@ -465,9 +465,6 @@ void ModelMNS2::trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input) {
 	for (int j = 0; j < p_input->size(); j++) {
 		prepareInputF5(p_input->at(j));
 		p_F5_learner.train(&_F5input);
-		if (j == p_input->size() - 1) {
-			_F5->activate(&_F5input);
-		}
 	}
 	_F5->reset_context();
 }
@@ -476,9 +473,6 @@ void ModelMNS2::trainSTS(MSOM_learning& p_STS_learner, vector<Tensor*>* p_input)
 	for (int j = 0; j < p_input->size(); j++) {
 		prepareInputSTS(p_input->at(j));
 		p_STS_learner.train(&_STSinput);
-		if (j == p_input->size() - 1) {
-			_STS->activate(&_STSinput);
-		}
 	}
 	_STS->reset_context();
 }
