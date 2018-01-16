@@ -6,7 +6,7 @@
 
 using namespace FLAB;
 
-Tensor::Tensor(): _rank(0), _shape(nullptr), _size(0) {
+Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0) {
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, INIT p_init, double p_value) {
@@ -225,6 +225,7 @@ void Tensor::fill(const double p_value) const {
 	fill(VALUE, p_value);
 }
 
+
 double Tensor::at(int p_x) const {
 	return _arr[p_x];
 }
@@ -240,7 +241,6 @@ void Tensor::set(int p_x, double p_val) const {
 void Tensor::set(int p_y, int p_x, double p_val) const {
 	_arr[p_y * _shape[1] + p_x] = p_val;
 }
-
 
 void Tensor::init_shape(const int p_rank, int* p_shape) {
 	_rank = p_rank;

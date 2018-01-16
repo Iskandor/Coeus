@@ -34,19 +34,13 @@ void MSOM_learning::train(Tensor* p_input) {
 	Tensor* in = _msom->get_input_group()->getOutput();
 	Tensor* ct = _msom->get_context_group()->getOutput();
 
-	double theta = 0;
-
 	_som_analyzer->update(winner);
 
 	for (int i = 0; i < dim_lattice; i++) {
-		theta = calc_neighborhood(_dist_matrix.at(winner, i), GAUSSIAN);
+		const double theta = calc_neighborhood(_dist_matrix.at(winner, i), GAUSSIAN);
 		for (int j = 0; j < dim_input; j++) {
-			double in1 = in->at(j);
-			double wi1 = wi->at(i, j);
-			double ct1 = ct->at(j);
-			double ci1 = ci->at(i, j);
-			_delta_w.set(i, j, theta * _gamma1 * (in1 - wi1));
-			_delta_c.set(i, j, theta * _gamma2 * (ct1 - ci1));
+			_delta_w.set(i, j, theta * _gamma1 * (in->at(j) - wi->at(i, j)));
+			_delta_c.set(i, j, theta * _gamma2 * (ct->at(j) - ci->at(i, j)));
 		}
 	}
 

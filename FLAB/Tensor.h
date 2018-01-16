@@ -7,12 +7,6 @@ namespace FLAB {
 
 class __declspec(dllexport) Tensor
 {
-private:
-	double *_arr = nullptr;
-	int _rank;
-	int *_shape;
-	int _size;
-
 public:
 	enum INIT {
 		ZERO = 0,
@@ -51,6 +45,7 @@ public:
 	void fill(double p_value) const;
 
 	int size() const { return _size; }
+
 	double at(int p_x) const;
 	double at(int p_y, int p_x) const;
 	void set(int p_x, double p_val) const;
@@ -61,6 +56,10 @@ private:
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, double p_value) const;
 	
+	double *_arr;
+	int _rank;
+	int *_shape;
+	int _size;
 };
 
 }
