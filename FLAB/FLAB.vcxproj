@@ -149,11 +149,15 @@
   <ItemGroup>
     <ClInclude Include="FLAB.h" />
     <ClInclude Include="RandomGenerator.h" />
+    <ClInclude Include="sTensor.h" />
+    <ClInclude Include="sTensorPool.h" />
     <ClInclude Include="Tensor.h" />
     <ClInclude Include="TensorPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RandomGenerator.cpp" />
+    <ClCompile Include="sTensor.cpp" />
+    <ClCompile Include="sTensorPool.cpp" />
     <ClCompile Include="Tensor.cpp" />
     <ClCompile Include="TensorPool.cpp" />
   </ItemGroup>

@@ -38,6 +38,8 @@ private:
     void prepareInputSTS(Tensor* p_input);
     void prepareInputPF();
 
+	void save_results(string p_filename, int p_dim_x, int p_dim_y, double** p_data, int p_category) const;
+
 	static const int _sizeF5input = 16;
 	static const int _sizeSTSinput = 40;
     static const int _sizeF5 = 12;

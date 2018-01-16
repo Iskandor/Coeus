@@ -26,7 +26,7 @@ ModelMNS2::~ModelMNS2() {
 }
 
 void ModelMNS2::init() {
-    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
+    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
 
     _F5 = new MSOM(_sizeF5input + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::KEXPONENTIAL, 0.3, 0.5);
     _STS = new MSOM(_sizeSTSinput + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::KEXPONENTIAL, 0.3, 0.7);
@@ -103,10 +103,10 @@ void ModelMNS2::save() {
 	IOUtils::save_network(timestamp + "_PF.json", _PF);
 }
 
-void ModelMNS2::load(string p_timestamp) {
-    _F5 = (MSOM*)IOUtils::load_network(p_timestamp + "_F5.json");
-    _STS = (MSOM*)IOUtils::load_network(p_timestamp + "_STS.json");
-    _PF = (SOM*)IOUtils::load_network(p_timestamp + "_PF.json");
+void ModelMNS2::load(const string p_timestamp) {
+    _F5 = static_cast<MSOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_F5.json"));
+    _STS = static_cast<MSOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_STS.json"));
+    _PF = static_cast<SOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_PF.json"));
 }
 
 void ModelMNS2::prepareInputSTS(Tensor *p_input) {
@@ -121,12 +121,34 @@ void ModelMNS2::prepareInputPF() {
     _PFinput = Tensor::Concat(*_STS->get_output(), *_F5->get_output());
 }
 
+void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double** p_data, const int p_category) const {
+	ofstream file(p_filename);
+
+	if (file.is_open()) {
+		file << p_dim_x << "," << p_dim_y << endl;
+		for (int i = 0; i < p_dim_x * p_dim_y; i++) {
+			for (int j = 0; j < p_category; j++) {
+				if (j == p_category - 1) {
+					file << p_data[i][j];
+				}
+				else {
+					file << p_data[i][j] << ",";
+				}
+			}
+			if (i < p_dim_x * p_dim_y - 1) file << endl;
+		}
+	}
+
+	file.close();
+}
+
 void ModelMNS2::testDistance() {
     const string timestamp = to_string(time(nullptr));
 
     vector<Sequence*>* trainData = _data.permute();
 
     double winRateF5_Motor[_sizeF5 * _sizeF5][GRASPS];
+	double winRateF5_Visual[_sizeF5 * _sizeF5][PERSPS];
     double winRateSTS_Visual[_sizeSTS * _sizeSTS][PERSPS];
     double winRateSTS_Motor[_sizeSTS * _sizeSTS][GRASPS];
     double winRatePF_Visual[_sizePF * _sizePF][PERSPS];
@@ -136,6 +158,9 @@ void ModelMNS2::testDistance() {
         for(int j = 0; j < 3; j++) {
             winRateF5_Motor[i][j] = 0;
         }
+		for (int j = 0; j < PERSPS; j++) {
+			winRateF5_Visual[i][j] = 0;
+		}
     }
 
     for(int i = 0; i < _sizeSTS * _sizeSTS; i++) {
@@ -156,36 +181,43 @@ void ModelMNS2::testDistance() {
         }
     }
 
-    for(int i = 0; i < trainData->size(); i++) {
-        for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
-            prepareInputF5(trainData->at(i)->getMotorData()->at(j));
-            _F5->activate(&_F5input);
-        }
-        for(int n = 0; n < _F5->get_lattice()->getDim(); n++) {
-            winRateF5_Motor[n][trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
-        }
-        _F5->reset_context();
+	for (int i = 0; i < trainData->size(); i++) {
+		preactivateF5(trainData->at(i)->getMotorData());
 
-        for(int p = 0; p < PERSPS; p++) {
-            for(int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
-                prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
-                _STS->activate(&_STSinput);
+		for (int p = 0; p < PERSPS; p++) {
+			preactivateSTS(trainData->at(i)->getVisualData(p));
 
-            }
-            for(int n = 0; n < _STS->get_lattice()->getDim(); n++) {
-                winRateSTS_Visual[n][p] += _STS->get_output()->at(n);
-                winRateSTS_Motor[n][trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
-            }
-            _STS->reset_context();
-            prepareInputPF();
-            _PF->activate(&_PFinput);
+			prepareInputPF();
+			_PF->activate(&_PFinput);
 
-            for(int n = 0; n < _PF->get_lattice()->getDim(); n++) {
-                winRatePF_Visual[n][p] += _PF->get_output()->at(n);
-                winRatePF_Motor[n][trainData->at(i)->getGrasp() - 1] += _PF->get_output()->at(n);
-            }
-        }
-    }
+			for (int n = 0; n < _PF->get_lattice()->getDim(); n++) {
+				winRatePF_Visual[n][p] += _PF->get_output()->at(n);
+				winRatePF_Motor[n][trainData->at(i)->getGrasp() - 1] += _PF->get_output()->at(n);
+			}
+
+			for (int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
+				prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
+				_STS->activate(&_STSinput);
+			}
+			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
+				winRateSTS_Visual[n][p] += _STS->get_output()->at(n);
+				winRateSTS_Motor[n][trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
+			}
+			_STS->reset_context();
+
+			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+				prepareInputF5(trainData->at(i)->getMotorData()->at(j));
+				_F5->activate(&_F5input);
+			}
+			for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
+				winRateF5_Visual[n][p] += _F5->get_output()->at(n);
+				winRateF5_Motor[n][trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
+			}
+			_F5->reset_context();
+		}
+	}
+
+	//save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, reinterpret_cast<double**>(winRateF5_Motor), GRASPS);
 
     ofstream motFile(timestamp + "_F5.mot");
 
@@ -205,6 +237,25 @@ void ModelMNS2::testDistance() {
     }
 
     motFile.close();
+
+	ofstream visFile(timestamp + "_F5.vis");
+
+	if (visFile.is_open()) {
+		visFile << _sizeF5 << "," << _sizeF5 << endl;
+		for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
+			for (int j = 0; j < PERSPS; j++) {
+				if (j == PERSPS - 1) {
+					visFile << winRateF5_Visual[i][j];
+				}
+				else {
+					visFile << winRateF5_Visual[i][j] << ",";
+				}
+			}
+			if (i < _sizeF5 * _sizeF5 - 1) visFile << endl;
+		}
+	}
+
+	visFile.close();
 
     ofstream STSvisFile(timestamp + "_STS.vis");
 
@@ -288,6 +339,7 @@ void ModelMNS2::testFinalWinners() {
 
     vector<Sequence*>* trainData = _data.permute();
     int winRateF5_Motor[_sizeF5 * _sizeF5][GRASPS];
+	int winRateF5_Visual[_sizeF5 * _sizeF5][PERSPS];
     int winRateSTS_Visual[_sizeSTS * _sizeSTS][PERSPS];
     int winRateSTS_Motor[_sizeSTS * _sizeSTS][GRASPS];
     int winRatePF_Visual[_sizePF * _sizePF][PERSPS];
@@ -295,9 +347,12 @@ void ModelMNS2::testFinalWinners() {
     
 
     for(int i = 0; i < _sizeF5 * _sizeF5; i++) {
-        for(int j = 0; j < 3; j++) {
+        for(int j = 0; j < GRASPS; j++) {
             winRateF5_Motor[i][j] = 0;
         }
+		for (int j = 0; j < PERSPS; j++) {
+			winRateF5_Visual[i][j] = 0;
+		}
     }
 
     for(int i = 0; i < _sizeSTS * _sizeSTS; i++) {
@@ -318,28 +373,34 @@ void ModelMNS2::testFinalWinners() {
         }
     }
 
-    for(int i = 0; i < trainData->size(); i++) {
-        for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
-            prepareInputF5(trainData->at(i)->getMotorData()->at(j));
-            _F5->activate(&_F5input);
-        }
-        winRateF5_Motor[_F5->get_winner()][trainData->at(i)->getGrasp() - 1]++;
-        _F5->reset_context();
-        for(int p = 0; p < PERSPS; p++) {
-            for(int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
-                prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
-                _STS->activate(&_STSinput);
-            }
-            winRateSTS_Visual[_STS->get_winner()][p]++;
-            winRateSTS_Motor[_STS->get_winner()][trainData->at(i)->getGrasp() - 1]++;
-            _STS->reset_context();
+	for (int i = 0; i < trainData->size(); i++) {
+		preactivateF5(trainData->at(i)->getMotorData());
 
-            prepareInputPF();
-            _PF->activate(&_PFinput);
-            winRatePF_Visual[_PF->get_winner()][p]++;
-            winRatePF_Motor[_PF->get_winner()][trainData->at(i)->getGrasp() - 1]++;
-        }
-    }
+		for (int p = 0; p < PERSPS; p++) {
+			preactivateSTS(trainData->at(i)->getVisualData(p));
+
+			prepareInputPF();
+			_PF->activate(&_PFinput);
+			winRatePF_Visual[_PF->get_winner()][p]++;
+			winRatePF_Motor[_PF->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+
+			for (int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
+				prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
+				_STS->activate(&_STSinput);
+			}
+			winRateSTS_Visual[_STS->get_winner()][p]++;
+			winRateSTS_Motor[_STS->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+			_STS->reset_context();
+
+			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+				prepareInputF5(trainData->at(i)->getMotorData()->at(j));
+				_F5->activate(&_F5input);
+			}
+			winRateF5_Visual[_F5->get_winner()][p]++;
+			winRateF5_Motor[_F5->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+			_F5->reset_context();
+		}
+	}
 
     ofstream motFile(timestamp + "_F5.mot");
 
@@ -359,6 +420,25 @@ void ModelMNS2::testFinalWinners() {
     }
 
     motFile.close();
+
+	ofstream visFile(timestamp + "_F5.vis");
+
+	if (visFile.is_open()) {
+		visFile << _sizeF5 << "," << _sizeF5 << endl;
+		for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
+			for (int j = 0; j < PERSPS; j++) {
+				if (j == PERSPS - 1) {
+					visFile << winRateF5_Visual[i][j];
+				}
+				else {
+					visFile << winRateF5_Visual[i][j] << ",";
+				}
+			}
+			if (i < _sizeF5 * _sizeF5 - 1) visFile << endl;
+		}
+	}
+
+	visFile.close();
 
     ofstream STSvisFile(timestamp + "_STS.vis");
 

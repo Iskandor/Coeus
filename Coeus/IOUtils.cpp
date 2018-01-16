@@ -39,13 +39,19 @@ BaseLayer* IOUtils::load_network(const string p_filename) {
 	json data;
 	ifstream file;
 
-	file.open(p_filename);
-	file >> data;
-	file.close();
+	try {
+		file.open(p_filename);
+	}
+	catch (std::ios_base::failure& e) {
+		std::cerr << e.what() << '\n';
+	}
 
-	const BaseLayer::TYPE type = static_cast<BaseLayer::TYPE>(data["_type"].get<int>());
+	if (file.is_open()) {
+		file >> data;
+		
+		const BaseLayer::TYPE type = static_cast<BaseLayer::TYPE>(data["_type"].get<int>());
 
-	switch(type) {
+		switch (type) {
 		case BaseLayer::SOM:
 			result = read_som(data["_network"]);
 			break;
@@ -53,7 +59,9 @@ BaseLayer* IOUtils::load_network(const string p_filename) {
 			result = read_msom(data["_network"]);
 			break;
 		default:;
+		}
 	}
+	file.close();
 
 	return result;
 }

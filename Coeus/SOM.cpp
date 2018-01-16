@@ -31,6 +31,9 @@ SOM::SOM(nlohmann::json p_data) {
 	_input_group = IOUtils::read_neural_group(p_data["groups"]["input"]);
 	_output_group = IOUtils::read_neural_group(p_data["groups"]["lattice"]);
 	_input_lattice = IOUtils::read_connection(p_data["connections"]["input_lattice"]);
+
+	_dist = Tensor::Zero({ _dim_x * _dim_y });
+	_input_mask = nullptr;
 }
 
 
