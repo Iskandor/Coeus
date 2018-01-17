@@ -14,6 +14,7 @@ int main()
 	//model.save();
 
 	//model.load("1515883986");
+	//model.testAllWinners();
 	//model.testFinalWinners();
 	//model.testDistance();
 	//model.testBALData();

@@ -24,7 +24,7 @@ ModelMNS::~ModelMNS() {
 }
 
 void ModelMNS::init() {
-    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
+    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
 
     _msomMotor = new MSOM(16, _sizePMC, _sizePMC, NeuralGroup::EXPONENTIAL, 0.3, 0.5);
     _msomVisual = new MSOM(40, _sizeSTSp, _sizeSTSp, NeuralGroup::EXPONENTIAL, 0.3, 0.7);

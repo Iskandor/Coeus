@@ -26,7 +26,7 @@ ModelMNS2::~ModelMNS2() {
 }
 
 void ModelMNS2::init() {
-    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
+    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
 
     _F5 = new MSOM(_sizeF5input + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::KEXPONENTIAL, 0.3, 0.5);
     _STS = new MSOM(_sizeSTSinput + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::KEXPONENTIAL, 0.3, 0.7);
@@ -69,10 +69,14 @@ void ModelMNS2::run(int p_epochs) {
 
         auto start = chrono::system_clock::now();
         for(int i = 0; i < train_data->size(); i++) {
-			preactivateF5(train_data->at(i)->getMotorData());
+			_F5->set_input_mask(_f5_mask);
+			activateF5(train_data->at(i)->getMotorData());
+			_F5->set_input_mask(nullptr);
 			
             for(int p = 0; p < PERSPS; p++) {
-				preactivateSTS(train_data->at(i)->getVisualData(p));
+				_STS->set_input_mask(_sts_mask);
+				activateSTS(train_data->at(i)->getVisualData(p));
+				_STS->set_input_mask(nullptr);
 
                 prepareInputPF();
                 PF_learner.train(&_PFinput);
@@ -80,6 +84,18 @@ void ModelMNS2::run(int p_epochs) {
 
 				trainSTS(STS_learner, train_data->at(i)->getVisualData(p));
 				trainF5(F5_learner, train_data->at(i)->getMotorData());
+
+				for (int s = 0; s < 40; s++) {
+					activateSTS(train_data->at(i)->getVisualData(p));
+					activateF5(train_data->at(i)->getMotorData());
+
+					prepareInputPF();
+					PF_learner.train(&_PFinput);
+					_PF->activate(&_PFinput);
+
+					trainSTS(STS_learner, train_data->at(i)->getVisualData(p));
+					trainF5(F5_learner, train_data->at(i)->getMotorData());
+				}
             }
         }
 
@@ -182,10 +198,14 @@ void ModelMNS2::testDistance() {
     }
 
 	for (int i = 0; i < trainData->size(); i++) {
-		preactivateF5(trainData->at(i)->getMotorData());
+		_F5->set_input_mask(_f5_mask);
+		activateF5(trainData->at(i)->getMotorData());
+		_F5->set_input_mask(nullptr);
 
 		for (int p = 0; p < PERSPS; p++) {
-			preactivateSTS(trainData->at(i)->getVisualData(p));
+			_STS->set_input_mask(_sts_mask);
+			activateSTS(trainData->at(i)->getVisualData(p));
+			_STS->set_input_mask(nullptr);
 
 			prepareInputPF();
 			_PF->activate(&_PFinput);
@@ -374,10 +394,14 @@ void ModelMNS2::testFinalWinners() {
     }
 
 	for (int i = 0; i < trainData->size(); i++) {
-		preactivateF5(trainData->at(i)->getMotorData());
+		_F5->set_input_mask(_f5_mask);
+		activateF5(trainData->at(i)->getMotorData());
+		_F5->set_input_mask(nullptr);
 
 		for (int p = 0; p < PERSPS; p++) {
-			preactivateSTS(trainData->at(i)->getVisualData(p));
+			_STS->set_input_mask(_sts_mask);
+			activateSTS(trainData->at(i)->getVisualData(p));
+			_STS->set_input_mask(nullptr);
 
 			prepareInputPF();
 			_PF->activate(&_PFinput);
@@ -517,28 +541,23 @@ void ModelMNS2::testFinalWinners() {
     PFmotFile.close();
 }
 
-void ModelMNS2::preactivateF5(vector<Tensor*>* p_input) {
-	_F5->set_input_mask(_f5_mask);
-
+void MNS::ModelMNS2::activateF5(vector<Tensor*>* p_input)
+{
 	for (int j = 0; j < p_input->size(); j++) {
 		prepareInputF5(p_input->at(j));
 		_F5->activate(&_F5input);
 	}
 	_F5->reset_context();
 
-	_F5->set_input_mask(nullptr);
 }
 
-void ModelMNS2::preactivateSTS(vector<Tensor*>* p_input) {
-	_STS->set_input_mask(_sts_mask);
-
+void MNS::ModelMNS2::activateSTS(vector<Tensor*>* p_input)
+{
 	for (int j = 0; j < p_input->size(); j++) {
 		prepareInputSTS(p_input->at(j));
 		_STS->activate(&_STSinput);
 	}
 	_STS->reset_context();
-
-	_STS->set_input_mask(nullptr);
 }
 
 void ModelMNS2::trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input) {

@@ -28,6 +28,8 @@ namespace Coeus
 		Tensor	_delta_c;
 
 		MSOM* _msom;
+
+		
 	};
 }
 

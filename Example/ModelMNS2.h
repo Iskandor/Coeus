@@ -29,8 +29,8 @@ public:
 
 private:
 
-	void preactivateF5(vector<Tensor*>* p_input);
-	void preactivateSTS(vector<Tensor*>* p_input);
+	void activateF5(vector<Tensor*>* p_input);
+	void activateSTS(vector<Tensor*>* p_input);
 	void trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input);
 	void trainSTS(MSOM_learning& p_STS_learner, vector<Tensor*>* p_input);
 

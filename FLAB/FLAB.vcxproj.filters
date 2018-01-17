@@ -30,12 +30,6 @@
     <ClInclude Include="FLAB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sTensor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sTensorPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tensor.cpp">
@@ -45,12 +39,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RandomGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sTensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sTensorPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

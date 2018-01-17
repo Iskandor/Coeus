@@ -225,6 +225,17 @@ void Tensor::fill(const double p_value) const {
 	fill(VALUE, p_value);
 }
 
+double FLAB::Tensor::sum()
+{
+	double s = 0;
+
+	for (int i = 0; i < _size; i++) {
+		s += _arr[i];
+	}
+
+	return s;
+}
+
 
 double Tensor::at(int p_x) const {
 	return _arr[p_x];

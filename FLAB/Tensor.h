@@ -44,6 +44,8 @@ public:
 
 	void fill(double p_value) const;
 
+	double sum();
+
 	int size() const { return _size; }
 
 	double at(int p_x) const;
