@@ -137,7 +137,7 @@ void ModelMNS2::prepareInputPF() {
     _PFinput = Tensor::Concat(*_STS->get_output(), *_F5->get_output());
 }
 
-void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double** p_data, const int p_category) const {
+void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) const {
 	ofstream file(p_filename);
 
 	if (file.is_open()) {
@@ -145,10 +145,10 @@ void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const i
 		for (int i = 0; i < p_dim_x * p_dim_y; i++) {
 			for (int j = 0; j < p_category; j++) {
 				if (j == p_category - 1) {
-					file << p_data[i][j];
+					file << p_data[i * p_category + j];
 				}
 				else {
-					file << p_data[i][j] << ",";
+					file << p_data[i * p_category + j] << ",";
 				}
 			}
 			if (i < p_dim_x * p_dim_y - 1) file << endl;
@@ -163,39 +163,12 @@ void ModelMNS2::testDistance() {
 
     vector<Sequence*>* trainData = _data.permute();
 
-    double winRateF5_Motor[_sizeF5 * _sizeF5][GRASPS];
-	double winRateF5_Visual[_sizeF5 * _sizeF5][PERSPS];
-    double winRateSTS_Visual[_sizeSTS * _sizeSTS][PERSPS];
-    double winRateSTS_Motor[_sizeSTS * _sizeSTS][GRASPS];
-    double winRatePF_Visual[_sizePF * _sizePF][PERSPS];
-    double winRatePF_Motor[_sizePF * _sizePF][GRASPS];
-
-    for(int i = 0; i < _sizeF5 * _sizeF5; i++) {
-        for(int j = 0; j < 3; j++) {
-            winRateF5_Motor[i][j] = 0;
-        }
-		for (int j = 0; j < PERSPS; j++) {
-			winRateF5_Visual[i][j] = 0;
-		}
-    }
-
-    for(int i = 0; i < _sizeSTS * _sizeSTS; i++) {
-        for(int j = 0; j < PERSPS; j++) {
-            winRateSTS_Visual[i][j] = 0;
-        }
-        for(int j = 0; j < GRASPS; j++) {
-            winRateSTS_Motor[i][j] = 0;
-        }
-    }
-
-    for(int i = 0; i < _sizePF * _sizePF; i++) {
-        for(int j = 0; j < PERSPS; j++) {
-            winRatePF_Visual[i][j] = 0;
-        }
-        for(int j = 0; j < GRASPS; j++) {
-            winRatePF_Motor[i][j] = 0;
-        }
-    }
+    double* winRateF5_Motor = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * GRASPS, sizeof(double)));
+	double* winRateF5_Visual = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * PERSPS, sizeof(double)));
+    double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
+    double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
+    double* winRatePF_Visual = static_cast<double*>(calloc(_sizePF * _sizePF * PERSPS, sizeof(double)));
+    double* winRatePF_Motor = static_cast<double*>(calloc(_sizePF * _sizePF * GRASPS, sizeof(double)));
 
 	for (int i = 0; i < trainData->size(); i++) {
 		_F5->set_input_mask(_f5_mask);
@@ -211,8 +184,8 @@ void ModelMNS2::testDistance() {
 			_PF->activate(&_PFinput);
 
 			for (int n = 0; n < _PF->get_lattice()->getDim(); n++) {
-				winRatePF_Visual[n][p] += _PF->get_output()->at(n);
-				winRatePF_Motor[n][trainData->at(i)->getGrasp() - 1] += _PF->get_output()->at(n);
+				winRatePF_Visual[n * PERSPS + p] += _PF->get_output()->at(n);
+				winRatePF_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _PF->get_output()->at(n);
 			}
 
 			for (int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
@@ -220,8 +193,8 @@ void ModelMNS2::testDistance() {
 				_STS->activate(&_STSinput);
 			}
 			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
-				winRateSTS_Visual[n][p] += _STS->get_output()->at(n);
-				winRateSTS_Motor[n][trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
+				winRateSTS_Visual[n * PERSPS + p] += _STS->get_output()->at(n);
+				winRateSTS_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
 			}
 			_STS->reset_context();
 
@@ -230,169 +203,33 @@ void ModelMNS2::testDistance() {
 				_F5->activate(&_F5input);
 			}
 			for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
-				winRateF5_Visual[n][p] += _F5->get_output()->at(n);
-				winRateF5_Motor[n][trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
+				winRateF5_Visual[n * PERSPS + p] += _F5->get_output()->at(n);
+				winRateF5_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
 			}
 			_F5->reset_context();
 		}
 	}
 
-	//save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, reinterpret_cast<double**>(winRateF5_Motor), GRASPS);
-
-    ofstream motFile(timestamp + "_F5.mot");
-
-    if (motFile.is_open()) {
-        motFile << _sizeF5 << "," << _sizeF5 << endl;
-        for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
-            for (int j = 0; j < GRASPS; j++) {
-                if (j == GRASPS - 1) {
-                    motFile << winRateF5_Motor[i][j];
-                }
-                else {
-                    motFile << winRateF5_Motor[i][j] << ",";
-                }
-            }
-            if (i < _sizeF5 * _sizeF5 - 1) motFile << endl;
-        }
-    }
-
-    motFile.close();
-
-	ofstream visFile(timestamp + "_F5.vis");
-
-	if (visFile.is_open()) {
-		visFile << _sizeF5 << "," << _sizeF5 << endl;
-		for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
-			for (int j = 0; j < PERSPS; j++) {
-				if (j == PERSPS - 1) {
-					visFile << winRateF5_Visual[i][j];
-				}
-				else {
-					visFile << winRateF5_Visual[i][j] << ",";
-				}
-			}
-			if (i < _sizeF5 * _sizeF5 - 1) visFile << endl;
-		}
-	}
-
-	visFile.close();
-
-    ofstream STSvisFile(timestamp + "_STS.vis");
-
-    if (STSvisFile.is_open()) {
-        STSvisFile << _sizeSTS << "," << _sizeSTS << endl;
-        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
-            for (int j = 0; j < PERSPS; j++) {
-                if (j == PERSPS - 1) {
-                    STSvisFile << winRateSTS_Visual[i][j];
-                }
-                else {
-                    STSvisFile << winRateSTS_Visual[i][j] << ",";
-                }
-            }
-            if (i < _sizeSTS * _sizeSTS - 1) STSvisFile << endl;
-        }
-    }
-
-    STSvisFile.close();
-
-    ofstream STSmotFile(timestamp + "_STS.mot");
-
-    if (STSmotFile.is_open()) {
-        STSmotFile << _sizeSTS << "," << _sizeSTS << endl;
-        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
-            for (int j = 0; j < GRASPS; j++) {
-                if (j == GRASPS - 1) {
-                    STSmotFile << winRateSTS_Motor[i][j];
-                }
-                else {
-                    STSmotFile << winRateSTS_Motor[i][j] << ",";
-                }
-            }
-            if (i < _sizeSTS * _sizeSTS - 1) STSmotFile << endl;
-        }
-    }
-
-    STSmotFile.close();
-
-    ofstream PFvisFile(timestamp + "_PF.vis");
-
-    if (PFvisFile.is_open()) {
-        PFvisFile << _sizePF << "," << _sizePF << endl;
-        for (int i = 0; i < _sizePF * _sizePF; i++) {
-            for (int j = 0; j < PERSPS; j++) {
-                if (j == PERSPS - 1) {
-                    PFvisFile << winRatePF_Visual[i][j];
-                }
-                else {
-                    PFvisFile << winRatePF_Visual[i][j] << ",";
-                }
-            }
-            if (i < _sizePF * _sizePF - 1) PFvisFile << endl;
-        }
-    }
-
-    PFvisFile.close();
-
-    ofstream PFmotFile(timestamp + "_PF.mot");
-
-    if (PFmotFile.is_open()) {
-        PFmotFile << _sizePF << "," << _sizePF << endl;
-        for (int i = 0; i < _sizePF * _sizePF; i++) {
-            for (int j = 0; j < GRASPS; j++) {
-                if (j == GRASPS - 1) {
-                    PFmotFile << winRatePF_Motor[i][j];
-                }
-                else {
-                    PFmotFile << winRatePF_Motor[i][j] << ",";
-                }
-            }
-            if (i < _sizePF * _sizePF - 1) PFmotFile << endl;
-        }
-    }
-
-    PFmotFile.close();
+	save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, winRateF5_Motor, GRASPS);
+	save_results(timestamp + "_F5.vis", _sizeF5, _sizeF5, winRateF5_Visual, PERSPS);
+	save_results(timestamp + "_STS.mot", _sizeSTS, _sizeSTS, winRateSTS_Motor, GRASPS);
+	save_results(timestamp + "_STS.vis", _sizeSTS, _sizeSTS, winRateSTS_Visual, PERSPS);
+	save_results(timestamp + "_PF.mot", _sizePF, _sizePF, winRatePF_Motor, GRASPS);
+	save_results(timestamp + "_PF.vis", _sizePF, _sizePF, winRatePF_Visual, PERSPS);
 }
 
 void ModelMNS2::testFinalWinners() {
     const string timestamp = to_string(time(nullptr));
 
     vector<Sequence*>* trainData = _data.permute();
-    int winRateF5_Motor[_sizeF5 * _sizeF5][GRASPS];
-	int winRateF5_Visual[_sizeF5 * _sizeF5][PERSPS];
-    int winRateSTS_Visual[_sizeSTS * _sizeSTS][PERSPS];
-    int winRateSTS_Motor[_sizeSTS * _sizeSTS][GRASPS];
-    int winRatePF_Visual[_sizePF * _sizePF][PERSPS];
-    int winRatePF_Motor[_sizePF * _sizePF][GRASPS];
-    
 
-    for(int i = 0; i < _sizeF5 * _sizeF5; i++) {
-        for(int j = 0; j < GRASPS; j++) {
-            winRateF5_Motor[i][j] = 0;
-        }
-		for (int j = 0; j < PERSPS; j++) {
-			winRateF5_Visual[i][j] = 0;
-		}
-    }
-
-    for(int i = 0; i < _sizeSTS * _sizeSTS; i++) {
-        for(int j = 0; j < PERSPS; j++) {
-            winRateSTS_Visual[i][j] = 0;
-        }
-        for(int j = 0; j < GRASPS; j++) {
-            winRateSTS_Motor[i][j] = 0;
-        }
-    }
-
-    for(int i = 0; i < _sizePF * _sizePF; i++) {
-        for(int j = 0; j < PERSPS; j++) {
-            winRatePF_Visual[i][j] = 0;
-        }
-        for(int j = 0; j < GRASPS; j++) {
-            winRatePF_Motor[i][j] = 0;
-        }
-    }
-
+	double* winRateF5_Motor = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * GRASPS, sizeof(double)));
+	double* winRateF5_Visual = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * PERSPS, sizeof(double)));
+	double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
+	double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
+	double* winRatePF_Visual = static_cast<double*>(calloc(_sizePF * _sizePF * PERSPS, sizeof(double)));
+	double* winRatePF_Motor = static_cast<double*>(calloc(_sizePF * _sizePF * GRASPS, sizeof(double)));
+ 
 	for (int i = 0; i < trainData->size(); i++) {
 		_F5->set_input_mask(_f5_mask);
 		activateF5(trainData->at(i)->getMotorData());
@@ -405,140 +242,33 @@ void ModelMNS2::testFinalWinners() {
 
 			prepareInputPF();
 			_PF->activate(&_PFinput);
-			winRatePF_Visual[_PF->get_winner()][p]++;
-			winRatePF_Motor[_PF->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+			winRatePF_Visual[_PF->get_winner() * PERSPS + p]++;
+			winRatePF_Motor[_PF->get_winner() * GRASPS + trainData->at(i)->getGrasp() - 1]++;
 
 			for (int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
 				prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
 				_STS->activate(&_STSinput);
 			}
-			winRateSTS_Visual[_STS->get_winner()][p]++;
-			winRateSTS_Motor[_STS->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+			winRateSTS_Visual[_STS->get_winner() * PERSPS + p]++;
+			winRateSTS_Motor[_STS->get_winner() * GRASPS + trainData->at(i)->getGrasp() - 1]++;
 			_STS->reset_context();
 
 			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
 				prepareInputF5(trainData->at(i)->getMotorData()->at(j));
 				_F5->activate(&_F5input);
 			}
-			winRateF5_Visual[_F5->get_winner()][p]++;
-			winRateF5_Motor[_F5->get_winner()][trainData->at(i)->getGrasp() - 1]++;
+			winRateF5_Visual[_F5->get_winner() * PERSPS + p]++;
+			winRateF5_Motor[_F5->get_winner() * GRASPS + trainData->at(i)->getGrasp() - 1]++;
 			_F5->reset_context();
 		}
 	}
 
-    ofstream motFile(timestamp + "_F5.mot");
-
-    if (motFile.is_open()) {
-        motFile << _sizeF5 << "," << _sizeF5 << endl;
-        for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
-            for (int j = 0; j < GRASPS; j++) {
-                if (j == GRASPS - 1) {
-                    motFile << winRateF5_Motor[i][j];
-                }
-                else {
-                    motFile << winRateF5_Motor[i][j] << ",";
-                }
-            }
-            if (i < _sizeF5 * _sizeF5 - 1) motFile << endl;
-        }
-    }
-
-    motFile.close();
-
-	ofstream visFile(timestamp + "_F5.vis");
-
-	if (visFile.is_open()) {
-		visFile << _sizeF5 << "," << _sizeF5 << endl;
-		for (int i = 0; i < _sizeF5 * _sizeF5; i++) {
-			for (int j = 0; j < PERSPS; j++) {
-				if (j == PERSPS - 1) {
-					visFile << winRateF5_Visual[i][j];
-				}
-				else {
-					visFile << winRateF5_Visual[i][j] << ",";
-				}
-			}
-			if (i < _sizeF5 * _sizeF5 - 1) visFile << endl;
-		}
-	}
-
-	visFile.close();
-
-    ofstream STSvisFile(timestamp + "_STS.vis");
-
-    if (STSvisFile.is_open()) {
-        STSvisFile << _sizeSTS << "," << _sizeSTS << endl;
-        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
-            for (int j = 0; j < PERSPS; j++) {
-                if (j == PERSPS - 1) {
-                    STSvisFile << winRateSTS_Visual[i][j];
-                }
-                else {
-                    STSvisFile << winRateSTS_Visual[i][j] << ",";
-                }
-            }
-            if (i < _sizeSTS * _sizeSTS - 1) STSvisFile << endl;
-        }
-    }
-
-    STSvisFile.close();
-
-    ofstream STSmotFile(timestamp + "_STS.mot");
-
-    if (STSmotFile.is_open()) {
-        STSmotFile << _sizeSTS << "," << _sizeSTS << endl;
-        for (int i = 0; i < _sizeSTS * _sizeSTS; i++) {
-            for (int j = 0; j < GRASPS; j++) {
-                if (j == GRASPS - 1) {
-                    STSmotFile << winRateSTS_Motor[i][j];
-                }
-                else {
-                    STSmotFile << winRateSTS_Motor[i][j] << ",";
-                }
-            }
-            if (i < _sizeSTS * _sizeSTS - 1) STSmotFile << endl;
-        }
-    }
-
-    STSmotFile.close();
-
-    ofstream PFvisFile(timestamp + "_PF.vis");
-
-    if (PFvisFile.is_open()) {
-        PFvisFile << _sizePF << "," << _sizePF << endl;
-        for (int i = 0; i < _sizePF * _sizePF; i++) {
-            for (int j = 0; j < PERSPS; j++) {
-                if (j == PERSPS - 1) {
-                    PFvisFile << winRatePF_Visual[i][j];
-                }
-                else {
-                    PFvisFile << winRatePF_Visual[i][j] << ",";
-                }
-            }
-            if (i < _sizePF * _sizePF - 1) PFvisFile << endl;
-        }
-    }
-
-    PFvisFile.close();
-
-    ofstream PFmotFile(timestamp + "_PF.mot");
-
-    if (PFmotFile.is_open()) {
-        PFmotFile << _sizePF << "," << _sizePF << endl;
-        for (int i = 0; i < _sizePF * _sizePF; i++) {
-            for (int j = 0; j < GRASPS; j++) {
-                if (j == GRASPS - 1) {
-                    PFmotFile << winRatePF_Motor[i][j];
-                }
-                else {
-                    PFmotFile << winRatePF_Motor[i][j] << ",";
-                }
-            }
-            if (i < _sizePF * _sizePF - 1) PFmotFile << endl;
-        }
-    }
-
-    PFmotFile.close();
+	save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, winRateF5_Motor, GRASPS);
+	save_results(timestamp + "_F5.vis", _sizeF5, _sizeF5, winRateF5_Visual, PERSPS);
+	save_results(timestamp + "_STS.mot", _sizeSTS, _sizeSTS, winRateSTS_Motor, GRASPS);
+	save_results(timestamp + "_STS.vis", _sizeSTS, _sizeSTS, winRateSTS_Visual, PERSPS);
+	save_results(timestamp + "_PF.mot", _sizePF, _sizePF, winRatePF_Motor, GRASPS);
+	save_results(timestamp + "_PF.vis", _sizePF, _sizePF, winRatePF_Visual, PERSPS);
 }
 
 void MNS::ModelMNS2::activateF5(vector<Tensor*>* p_input)
