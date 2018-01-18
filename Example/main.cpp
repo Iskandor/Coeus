@@ -10,10 +10,11 @@ int main()
 	MNS::ModelMNS2 model;
 
 	model.init();
-	model.run(200);
+	//model.run(200);
 	//model.save();
 
-	//model.load("1515883986");
+	model.load("1515883986");
+	model.testMirror();
 	//model.testAllWinners();
 	//model.testFinalWinners();
 	//model.testDistance();

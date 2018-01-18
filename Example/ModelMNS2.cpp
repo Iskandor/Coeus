@@ -34,14 +34,16 @@ void ModelMNS2::init() {
 
 	_F5input = Tensor::Zero({ _sizeF5input + _sizePF * _sizePF });
 	_STSinput = Tensor::Zero({ _sizeSTSinput + _sizePF * _sizePF });
-	_PFinput = Tensor::Zero({ _sizeF5 *_sizeF5 + _sizeSTS * _sizeSTS });
+	_PFinput = Tensor::Zero({ _sizeSTS * _sizeSTS + _sizeF5 *_sizeF5 });
 
 	for(int i = 0; i < _sizeF5input + _sizePF * _sizePF; i++) {
 		if (i < _sizeF5input) {
-			_f5_mask[i] = 1;
+			_f5_mask_pre[i] = 1;
+			_f5_mask_post[i] = 0;
 		}
 		else {
-			_f5_mask[i] = 0;
+			_f5_mask_pre[i] = 0;
+			_f5_mask_post[i] = 1;
 		}
 	}
 
@@ -51,6 +53,15 @@ void ModelMNS2::init() {
 		}
 		else {
 			_sts_mask[i] = 0;
+		}
+	}
+
+	for(int i = 0; i < _sizeSTS * _sizeSTS + _sizeF5 *_sizeF5; i++) {
+		if (i < _sizeSTS * _sizeSTS) {
+			_pf_mask[i] = 1;
+		}
+		else {
+			_pf_mask[i] = 0;
 		}
 	}
 }
@@ -69,7 +80,7 @@ void ModelMNS2::run(int p_epochs) {
 
         auto start = chrono::system_clock::now();
         for(int i = 0; i < train_data->size(); i++) {
-			_F5->set_input_mask(_f5_mask);
+			_F5->set_input_mask(_f5_mask_pre);
 			activateF5(train_data->at(i)->getMotorData());
 			_F5->set_input_mask(nullptr);
 			
@@ -171,7 +182,7 @@ void ModelMNS2::testDistance() {
     double* winRatePF_Motor = static_cast<double*>(calloc(_sizePF * _sizePF * GRASPS, sizeof(double)));
 
 	for (int i = 0; i < trainData->size(); i++) {
-		_F5->set_input_mask(_f5_mask);
+		_F5->set_input_mask(_f5_mask_pre);
 		activateF5(trainData->at(i)->getMotorData());
 		_F5->set_input_mask(nullptr);
 
@@ -180,33 +191,29 @@ void ModelMNS2::testDistance() {
 			activateSTS(trainData->at(i)->getVisualData(p));
 			_STS->set_input_mask(nullptr);
 
-			prepareInputPF();
-			_PF->activate(&_PFinput);
+			for(int s = 0; s < 5; s++) {
+				activatePF();
+
+				activateSTS(trainData->at(i)->getVisualData(p));
+
+				activateF5(trainData->at(i)->getMotorData());
+			}
 
 			for (int n = 0; n < _PF->get_lattice()->getDim(); n++) {
 				winRatePF_Visual[n * PERSPS + p] += _PF->get_output()->at(n);
 				winRatePF_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _PF->get_output()->at(n);
 			}
 
-			for (int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
-				prepareInputSTS(trainData->at(i)->getVisualData(p)->at(j));
-				_STS->activate(&_STSinput);
-			}
 			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
 				winRateSTS_Visual[n * PERSPS + p] += _STS->get_output()->at(n);
 				winRateSTS_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
 			}
-			_STS->reset_context();
 
-			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
-				prepareInputF5(trainData->at(i)->getMotorData()->at(j));
-				_F5->activate(&_F5input);
-			}
+
 			for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
 				winRateF5_Visual[n * PERSPS + p] += _F5->get_output()->at(n);
 				winRateF5_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
 			}
-			_F5->reset_context();
 		}
 	}
 
@@ -231,7 +238,7 @@ void ModelMNS2::testFinalWinners() {
 	double* winRatePF_Motor = static_cast<double*>(calloc(_sizePF * _sizePF * GRASPS, sizeof(double)));
  
 	for (int i = 0; i < trainData->size(); i++) {
-		_F5->set_input_mask(_f5_mask);
+		_F5->set_input_mask(_f5_mask_pre);
 		activateF5(trainData->at(i)->getMotorData());
 		_F5->set_input_mask(nullptr);
 
@@ -240,8 +247,7 @@ void ModelMNS2::testFinalWinners() {
 			activateSTS(trainData->at(i)->getVisualData(p));
 			_STS->set_input_mask(nullptr);
 
-			prepareInputPF();
-			_PF->activate(&_PFinput);
+			activatePF();
 			winRatePF_Visual[_PF->get_winner() * PERSPS + p]++;
 			winRatePF_Motor[_PF->get_winner() * GRASPS + trainData->at(i)->getGrasp() - 1]++;
 
@@ -271,6 +277,66 @@ void ModelMNS2::testFinalWinners() {
 	save_results(timestamp + "_PF.vis", _sizePF, _sizePF, winRatePF_Visual, PERSPS);
 }
 
+void ModelMNS2::testMirror() {
+	const string timestamp = to_string(time(nullptr));
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	double* winRateF5_Motor = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * GRASPS, sizeof(double)));
+	double* winRateF5_Visual = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * PERSPS, sizeof(double)));
+	double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
+	double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
+	double* winRatePF_Visual = static_cast<double*>(calloc(_sizePF * _sizePF * PERSPS, sizeof(double)));
+	double* winRatePF_Motor = static_cast<double*>(calloc(_sizePF * _sizePF * GRASPS, sizeof(double)));
+
+	for (int i = 0; i < 1; i++) {
+		for (int p = 0; p < 1; p++) {
+			_STS->set_input_mask(_sts_mask);
+			activateSTS(trainData->at(i)->getVisualData(p));
+			_PF->set_input_mask(_pf_mask);
+			activatePF();
+			_F5->set_input_mask(_f5_mask_post);
+			activateF5(trainData->at(i)->getMotorData());
+			_PF->set_input_mask(nullptr);
+			activatePF();
+			_STS->set_input_mask(nullptr);
+			activateSTS(trainData->at(i)->getVisualData(p));
+
+			for(int s = 0; s < 5; s++) {
+				_PF->set_input_mask(nullptr);
+				activatePF();
+				_F5->set_input_mask(_f5_mask_post);
+				activateF5(trainData->at(i)->getMotorData());
+				_STS->set_input_mask(nullptr);
+				activateSTS(trainData->at(i)->getVisualData(p));
+			}	
+
+			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
+				winRateSTS_Visual[n * PERSPS + p] += _STS->get_output()->at(n);
+				winRateSTS_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
+			}
+		
+			
+			for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
+				winRateF5_Visual[n * PERSPS + p] += _F5->get_output()->at(n);
+				winRateF5_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
+			}
+
+			for (int n = 0; n < _PF->get_lattice()->getDim(); n++) {
+				winRatePF_Visual[n * PERSPS + p] += _PF->get_output()->at(n);
+				winRatePF_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _PF->get_output()->at(n);
+			}		
+		}
+	}
+
+	save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, winRateF5_Motor, GRASPS);
+	save_results(timestamp + "_F5.vis", _sizeF5, _sizeF5, winRateF5_Visual, PERSPS);
+	save_results(timestamp + "_STS.mot", _sizeSTS, _sizeSTS, winRateSTS_Motor, GRASPS);
+	save_results(timestamp + "_STS.vis", _sizeSTS, _sizeSTS, winRateSTS_Visual, PERSPS);
+	save_results(timestamp + "_PF.mot", _sizePF, _sizePF, winRatePF_Motor, GRASPS);
+	save_results(timestamp + "_PF.vis", _sizePF, _sizePF, winRatePF_Visual, PERSPS);
+}
+
 void MNS::ModelMNS2::activateF5(vector<Tensor*>* p_input)
 {
 	for (int j = 0; j < p_input->size(); j++) {
@@ -288,6 +354,11 @@ void MNS::ModelMNS2::activateSTS(vector<Tensor*>* p_input)
 		_STS->activate(&_STSinput);
 	}
 	_STS->reset_context();
+}
+
+void ModelMNS2::activatePF() {
+	prepareInputPF();
+	_PF->activate(&_PFinput);
 }
 
 void ModelMNS2::trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input) {

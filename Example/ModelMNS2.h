@@ -26,11 +26,13 @@ public:
 
     void testDistance();
     void testFinalWinners();
+	void testMirror();
 
 private:
 
 	void activateF5(vector<Tensor*>* p_input);
 	void activateSTS(vector<Tensor*>* p_input);
+	void activatePF();
 	void trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input);
 	void trainSTS(MSOM_learning& p_STS_learner, vector<Tensor*>* p_input);
 
@@ -57,8 +59,10 @@ private:
     Tensor _STSinput;
 	Tensor _PFinput;
 
-	int _f5_mask[_sizeF5input + _sizePF * _sizePF];
+	int _f5_mask_pre[_sizeF5input + _sizePF * _sizePF];
+	int _f5_mask_post[_sizeF5input + _sizePF * _sizePF];
 	int _sts_mask[_sizeSTSinput + _sizePF * _sizePF];
+	int _pf_mask[_sizeF5 * _sizeF5 + _sizeSTS * _sizeSTS];
 };
 
 }
