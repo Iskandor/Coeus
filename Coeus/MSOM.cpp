@@ -58,6 +58,16 @@ double MSOM::calc_distance(const int p_index) {
 	return (1 - _alpha) * dx + _alpha * dc;;
 }
 
+MSOM * Coeus::MSOM::clone()
+{
+	MSOM* result = new MSOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction(), _alpha, _beta);
+
+	result->_input_lattice = new Connection(*_input_lattice);
+	result->_context_lattice = new Connection(*_context_lattice);
+
+	return result;
+}
+
 void MSOM::calc_distance() {
 	for (int l = 0; l < _dim_x * _dim_y; l++) {
 		_dist.set(l, calc_distance(l));

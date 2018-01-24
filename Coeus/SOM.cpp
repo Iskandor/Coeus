@@ -81,6 +81,15 @@ double SOM::calc_distance(const int p_index) {
 	return sqrt(s);
 }
 
+SOM * Coeus::SOM::clone()
+{
+	SOM* result = new SOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
+
+	result->_input_lattice = new Connection(*_input_lattice);
+
+	return result;
+}
+
 void SOM::calc_distance() {
 	for(int l = 0; l < _dim_x * _dim_y; l++) {
 		_dist.set(l, calc_distance(l));
