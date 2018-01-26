@@ -7,14 +7,14 @@ using namespace std;
 
 int main()
 {
-	MNS::ModelMNS2 model;
+	MNS::ModelMNS model;
 
 	model.init();
-	//model.run(200);
-	//model.save();
+	model.run(200);
+	model.save();
 
-	model.load("1515883986");
-	model.testMirror();
+	//model.load("1515883986");
+	//model.testMirror();
 	//model.testAllWinners();
 	//model.testFinalWinners();
 	//model.testDistance();

@@ -22,6 +22,9 @@ namespace Coeus
 		double get_alpha() const { return _alpha; }
 		double get_beta() const { return _beta; }
 
+		MSOM* clone();
+		void override_params(BaseLayer* p_source) override;
+
 	protected:
 		void calc_distance() override;		
 

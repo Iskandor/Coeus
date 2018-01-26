@@ -28,6 +28,7 @@ namespace Coeus
 		void set_input_mask(int* p_mask) { _input_mask = p_mask; }
 
 		SOM* clone();
+		void override_params(BaseLayer* p_source) override;
 
 	protected:		
 		virtual void calc_distance();		

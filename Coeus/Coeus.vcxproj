@@ -162,33 +162,39 @@
     <ClCompile Include="ActivationFunctions.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="Base_SOM_learning.cpp" />
+    <ClCompile Include="Base_SOM_params.cpp" />
     <ClCompile Include="Coeus.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="IDGen.cpp" />
     <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
+    <ClCompile Include="MSOM_params.cpp" />
     <ClCompile Include="NeuralGroup.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="SOM.cpp" />
     <ClCompile Include="SOM_analyzer.cpp" />
     <ClCompile Include="SOM_learning.cpp" />
+    <ClCompile Include="SOM_params.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />
     <ClInclude Include="Base_SOM_learning.h" />
+    <ClInclude Include="Base_SOM_params.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
+    <ClInclude Include="MSOM_params.h" />
     <ClInclude Include="NeuralGroup.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="SOM.h" />
     <ClInclude Include="SOM_analyzer.h" />
     <ClInclude Include="SOM_learning.h" />
+    <ClInclude Include="SOM_params.h" />
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>

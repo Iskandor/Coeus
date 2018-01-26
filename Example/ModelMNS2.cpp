@@ -67,6 +67,7 @@ void ModelMNS2::init() {
 }
 
 void ModelMNS2::run(int p_epochs) {
+	/*
 	MSOM_learning F5_learner(_F5);
 	F5_learner.init_training(0.01, 0.01, p_epochs);
 	MSOM_learning STS_learner(_STS);
@@ -118,8 +119,9 @@ void ModelMNS2::run(int p_epochs) {
         cout << " PF qError: " << PF_learner.analyzer()->q_error() << " WD: " << PF_learner.analyzer()->winner_diff() << endl;
 		F5_learner.param_decay();
 		STS_learner.param_decay();
-		PF_learner.param_decay();
+		PF_learner.param_decay();		
     }
+	*/
 }
 
 void ModelMNS2::save() {

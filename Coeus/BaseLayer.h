@@ -18,6 +18,7 @@ public:
 	virtual ~BaseLayer();
 
 	virtual void activate(Tensor* p_input) = 0;
+	virtual void override_params(BaseLayer* p_source) = 0;
 
 	Tensor* get_output() const { return _output_group->getOutput(); }
 	TYPE	type() const { return _type; }

@@ -4,12 +4,9 @@
 
 using namespace Coeus;
 
-Base_SOM_learning::Base_SOM_learning(SOM* p_som) {
-	_som_analyzer = new SOM_analyzer(p_som);
-
-	_sigma0 = sqrt(max(p_som->dim_x(), p_som->dim_y()));
-
-	_lambda = 1;
+Base_SOM_learning::Base_SOM_learning(SOM* p_som, Base_SOM_params* p_params, SOM_analyzer* p_som_analyzer) {
+	_som_analyzer = p_som_analyzer;
+	_params = p_params;
 
 	const int dim_input = p_som->get_input_group()->getDim();
 	const int dim_lattice = p_som->get_lattice()->getDim();
@@ -35,18 +32,6 @@ Base_SOM_learning::Base_SOM_learning(SOM* p_som) {
 
 Base_SOM_learning::~Base_SOM_learning()
 {
-	delete _som_analyzer;
-}
-
-void Base_SOM_learning::param_decay() {
-	_iteration++;
-	_sigma = _sigma0 * exp(-_iteration / _lambda);
-}
-
-void Base_SOM_learning::init_training(const double p_epochs) {
-	_iteration = 0;
-	_lambda = p_epochs / log(_sigma0);
-	_sigma = _sigma0 * exp(-_iteration / _lambda);
 }
 
 double Base_SOM_learning::calc_neighborhood(const double p_d, const NEIGHBORHOOD_TYPE p_type) const {
@@ -57,7 +42,7 @@ double Base_SOM_learning::calc_neighborhood(const double p_d, const NEIGHBORHOOD
 		result = 1.0 / p_d;
 		break;
 	case GAUSSIAN:
-		result = gaussian_distance(p_d, _sigma);
+		result = gaussian_distance(p_d, _params->sigma());
 		break;
 	}
 

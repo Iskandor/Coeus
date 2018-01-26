@@ -24,7 +24,7 @@ ModelMNS::~ModelMNS() {
 }
 
 void ModelMNS::init() {
-    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
+    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
 
     _msomMotor = new MSOM(16, _sizePMC, _sizePMC, NeuralGroup::EXPONENTIAL, 0.3, 0.5);
     _msomVisual = new MSOM(40, _sizeSTSp, _sizeSTSp, NeuralGroup::EXPONENTIAL, 0.3, 0.7);
@@ -32,10 +32,17 @@ void ModelMNS::init() {
 }
 
 void ModelMNS::run(int p_epochs) {
-	MSOM_learning F5_learner(_msomMotor);
-	F5_learner.init_training(0.01, 0.01, p_epochs);
-	MSOM_learning STS_learner(_msomVisual);
-	STS_learner.init_training(0.1, 0.1, p_epochs);
+	SOM_analyzer F5_analyzer(_msomMotor);
+	SOM_analyzer STS_analyzer(_msomVisual);
+
+	MSOM_params F5_params(_msomMotor);
+	F5_params.init_training(0.01, 0.01, p_epochs);
+
+	MSOM_params STS_params(_msomVisual);
+	STS_params.init_training(0.1, 0.1, p_epochs);
+
+	MSOM_learning F5_learner(_msomMotor, &F5_params, &F5_analyzer);
+	MSOM_learning STS_learner(_msomVisual, &STS_params, &STS_analyzer);
 
     vector<Sequence*>* trainData = nullptr;
 
@@ -59,10 +66,12 @@ void ModelMNS::run(int p_epochs) {
         auto end = chrono::system_clock::now();
         chrono::duration<double> elapsed_seconds = end-start;
         cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-        cout << " PMC qError: " << F5_learner.analyzer()->q_error() << " WD: " << F5_learner.analyzer()->winner_diff() << endl;
-        cout << "STSp qError: " << STS_learner.analyzer()->q_error() << " WD: " << STS_learner.analyzer()->winner_diff() << endl;
-		F5_learner.param_decay();
-		STS_learner.param_decay();
+        cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff() << endl;
+        cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff() << endl;
+		F5_analyzer.end_epoch();
+		STS_analyzer.end_epoch();
+		F5_params.param_decay();
+		STS_params.param_decay();
     }
 }
 

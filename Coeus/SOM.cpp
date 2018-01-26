@@ -90,6 +90,13 @@ SOM * Coeus::SOM::clone()
 	return result;
 }
 
+void Coeus::SOM::override_params(BaseLayer * p_source)
+{
+	SOM* som = static_cast<SOM*>(p_source);
+
+	_input_lattice->set_weights(som->get_input_lattice()->get_weights());
+}
+
 void SOM::calc_distance() {
 	for(int l = 0; l < _dim_x * _dim_y; l++) {
 		_dist.set(l, calc_distance(l));
