@@ -24,7 +24,7 @@ ModelMNS::~ModelMNS() {
 }
 
 void ModelMNS::init() {
-    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
+    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
 
     _msomMotor = new MSOM(16, _sizePMC, _sizePMC, NeuralGroup::EXPONENTIAL, 0.3, 0.5);
     _msomVisual = new MSOM(40, _sizeSTSp, _sizeSTSp, NeuralGroup::EXPONENTIAL, 0.3, 0.7);
@@ -33,9 +33,9 @@ void ModelMNS::init() {
 
 void ModelMNS::run(int p_epochs) {
 	MSOM_learning F5_learner(_msomMotor);
-	F5_learner.init_training(0.01, 0.01, p_epochs);
+	F5_learner.init_training(0.001, 0.001, p_epochs);
 	MSOM_learning STS_learner(_msomVisual);
-	STS_learner.init_training(0.1, 0.1, p_epochs);
+	STS_learner.init_training(0.001, 0.001, p_epochs);
 
     vector<Sequence*>* trainData = nullptr;
 
@@ -56,6 +56,10 @@ void ModelMNS::run(int p_epochs) {
                 _msomVisual->reset_context();
             }
         }
+
+		F5_learner.update();
+		STS_learner.update();
+
         auto end = chrono::system_clock::now();
         chrono::duration<double> elapsed_seconds = end-start;
         cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
