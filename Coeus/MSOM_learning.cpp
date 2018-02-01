@@ -70,8 +70,6 @@ void MSOM_learning::merge(vector<MSOM_learning*>& p_learners) {
 	_msom->get_input_lattice()->update_weights(_delta_w);
 	_msom->get_context_lattice()->update_weights(_delta_c);
 
-	Tensor dw = *_msom->get_input_lattice()->get_weights() - *p_learners[0]->_msom->get_input_lattice()->get_weights();
-
 	_delta_w.fill(0);
 	_delta_c.fill(0);
 }

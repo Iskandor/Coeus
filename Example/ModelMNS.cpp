@@ -54,7 +54,7 @@ void ModelMNS::run(const int p_epochs) {
 		F5_thread[i] = new MSOM_learning(_msomMotor->clone(), &F5_params, &F5_analyzer);
 	}
 
-	vector<MSOM_learning*> STS_thread(trainData->size());
+	vector<MSOM_learning*> STS_thread(trainData->size() * PERSPS);
 
 	for (int i = 0; i < trainData->size() * PERSPS; i++) {
 		STS_thread[i] = new MSOM_learning(_msomVisual->clone(), &STS_params, &STS_analyzer);

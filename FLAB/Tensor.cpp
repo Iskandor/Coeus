@@ -333,3 +333,17 @@ Tensor Tensor::Concat(Tensor& p_tensor1, Tensor& p_tensor2) {
 
 	return Tensor({ p_tensor1._size + p_tensor2._size }, res);
 }
+
+void Tensor::Concat(Tensor* p_result, Tensor* p_tensor1, Tensor* p_tensor2) {
+	int index = 0;
+
+	for (int i = 0; i < p_tensor1->_size; i++) {
+		p_result->_arr[index] = p_tensor1->_arr[i];
+		index++;
+	}
+
+	for (int i = 0; i < p_tensor2->_size; i++) {
+		p_result->_arr[index] = p_tensor2->_arr[i];
+		index++;
+	}
+}

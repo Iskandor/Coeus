@@ -20,6 +20,8 @@ namespace Coeus
 		void merge(vector<MSOM_learning*> &p_learners);
 		void reset_context() const;
 
+		MSOM* msom() const { return _msom; }
+
 	private:
 		Tensor	_delta_w;
 		Tensor	_delta_c;

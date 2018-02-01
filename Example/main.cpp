@@ -2,15 +2,17 @@
 //#include <vld.h>
 #include "ModelMNS.h"
 #include "ModelMNS2.h"
+#include "ModelMNS3.h"
+
 
 using namespace std;
 
 int main()
 {
-	MNS::ModelMNS model;
+	MNS::ModelMNS3 model;
 
 	model.init();
-	model.run(200);
+	model.run(5);
 	model.save();
 
 	//model.load("1515883986");
