@@ -56,7 +56,7 @@ void ModelMNS::run(const int p_epochs) {
 
 	vector<MSOM_learning*> STS_thread(trainData->size());
 
-	for (int i = 0; i < trainData->size(); i++) {
+	for (int i = 0; i < trainData->size() * PERSPS; i++) {
 		STS_thread[i] = new MSOM_learning(_msomVisual->clone(), &STS_params, &STS_analyzer);
 	}
 
@@ -68,18 +68,18 @@ void ModelMNS::run(const int p_epochs) {
 
 		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
         //for(int i = 0; i < trainData->size(); i++) {
-			F5_thread[i]->init_msom(_msomMotor);
-            for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
-				F5_thread[i]->train(trainData->at(i)->getMotorData()->at(j));
-            }
-            //_msomMotor->reset_context();
+			for (int p = 0; p < PERSPS; p++) {
+				F5_thread[i]->init_msom(_msomMotor);
+				for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+					F5_thread[i]->train(trainData->at(i)->getMotorData()->at(j));
+				}
+				F5_thread[i]->reset_context();
 
-			STS_thread[i]->init_msom(_msomVisual);
-            for(int p = 0; p < PERSPS; p++) {
+				STS_thread[i * PERSPS + p]->init_msom(_msomVisual);
                 for(int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
-					STS_thread[i]->train(trainData->at(i)->getVisualData(p)->at(j));
+					STS_thread[i * PERSPS + p]->train(trainData->at(i)->getVisualData(p)->at(j));
                 }
-                //_msomVisual->reset_context();
+				STS_thread[i * PERSPS + p]->reset_context();
             }
         //}
 		});

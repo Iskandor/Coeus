@@ -215,6 +215,10 @@ int Tensor::max_index() const {
 	return max;
 }
 
+void Tensor::override(Tensor* p_tensor) const {
+	memcpy(_arr, p_tensor->_arr, sizeof(double) * static_cast<size_t>(_size));
+}
+
 void Tensor::fill(const double p_value) const {
 	fill(VALUE, p_value);
 }

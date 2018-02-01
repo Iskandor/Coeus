@@ -22,9 +22,9 @@ public:
 
     void init(INIT p_init, double p_limit);
     void init(Tensor* p_weights);
-    void set_weights(Tensor* p_weights);
+    void set_weights(Tensor* p_weights) const;
     Tensor* get_weights() const { return _weights; };
-	void update_weights(Tensor& p_delta_w);
+	void update_weights(Tensor& p_delta_w) const;
 
 	string get_id() const { return _id; };
 	string get_in_id() const { return _in_id; };

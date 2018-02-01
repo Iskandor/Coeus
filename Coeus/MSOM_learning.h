@@ -18,6 +18,7 @@ namespace Coeus
 		void init_msom(MSOM* p_source) const;
 		void train(Tensor *p_input) override;
 		void merge(vector<MSOM_learning*> &p_learners);
+		void reset_context() const;
 
 	private:
 		Tensor	_delta_w;

@@ -41,6 +41,7 @@ public:
 	Tensor apply(double(*f)(double)) const;
 
 	int max_index() const;
+	void override(Tensor* p_tensor) const;
 
 	void fill(double p_value) const;
 

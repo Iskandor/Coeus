@@ -75,10 +75,10 @@ void Connection::identity() {
 	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ONES);
 }
 
-void Connection::set_weights(Tensor *p_weights) {
-    _weights = new Tensor(*p_weights);
+void Connection::set_weights(Tensor *p_weights) const {
+    _weights->override(p_weights);
 }
 
-void Connection::update_weights(Tensor& p_delta_w) {
+void Connection::update_weights(Tensor& p_delta_w) const {
 	*_weights += p_delta_w;
 }

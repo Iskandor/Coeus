@@ -75,3 +75,7 @@ void MSOM_learning::merge(vector<MSOM_learning*>& p_learners) {
 	_delta_w.fill(0);
 	_delta_c.fill(0);
 }
+
+void MSOM_learning::reset_context() const {
+	_msom->reset_context();
+}
