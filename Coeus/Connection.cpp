@@ -36,7 +36,8 @@ Connection::Connection(Connection &p_copy) {
     _id = p_copy._id;
     _in_dim = p_copy._in_dim;
     _out_dim = p_copy._out_dim;
-	if (_weights != nullptr) delete _weights;
+	_in_id = p_copy._in_id;
+	_out_id = p_copy._out_id;
     _weights = new Tensor(*p_copy._weights);
 }
 
@@ -75,7 +76,6 @@ void Connection::identity() {
 }
 
 void Connection::set_weights(Tensor *p_weights) {
-    delete _weights;
     _weights = new Tensor(*p_weights);
 }
 

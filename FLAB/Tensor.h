@@ -44,7 +44,7 @@ public:
 
 	void fill(double p_value) const;
 
-	double sum();
+	double sum() const;
 
 	int size() const { return _size; }
 
@@ -54,6 +54,10 @@ public:
 	void set(int p_y, int p_x, double p_val) const;
 
 private:
+	static double* alloc_arr(int p_size);
+	static int* alloc_shape(int p_size);
+	void free_arr() const;
+	void free_shape() const;
 	void init_shape(int p_rank, int* p_shape);
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, double p_value) const;

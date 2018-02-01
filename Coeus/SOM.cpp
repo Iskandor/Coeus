@@ -81,8 +81,7 @@ double SOM::calc_distance(const int p_index) {
 	return sqrt(s);
 }
 
-SOM * Coeus::SOM::clone()
-{
+SOM * SOM::clone() const {
 	SOM* result = new SOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
 
 	result->_input_lattice = new Connection(*_input_lattice);
@@ -90,7 +89,7 @@ SOM * Coeus::SOM::clone()
 	return result;
 }
 
-void Coeus::SOM::override_params(BaseLayer * p_source)
+void SOM::override_params(BaseLayer * p_source)
 {
 	SOM* som = static_cast<SOM*>(p_source);
 
@@ -116,12 +115,7 @@ int SOM::find_winner(Tensor* p_input) {
 			winner_dist = neuron_dist;
 		}
 	}
-
-	/*
-	calc_distance();
-	_winner = _dist.max_index();
-	*/
-
+	
 	return _winner;
 }
 

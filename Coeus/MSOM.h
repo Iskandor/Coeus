@@ -22,7 +22,7 @@ namespace Coeus
 		double get_alpha() const { return _alpha; }
 		double get_beta() const { return _beta; }
 
-		MSOM* clone();
+		MSOM* clone() const override;
 		void override_params(BaseLayer* p_source) override;
 
 	protected:

@@ -14,6 +14,8 @@ namespace Coeus
 		void train(Tensor *p_input) override;
 
 	private:
+		Tensor	_delta_w;
+
 		SOM* _som;
 	};
 

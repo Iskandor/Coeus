@@ -58,17 +58,13 @@ double MSOM::calc_distance(const int p_index) {
 	return (1 - _alpha) * dx + _alpha * dc;;
 }
 
-MSOM * Coeus::MSOM::clone()
-{
-	MSOM* result = new MSOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction(), _alpha, _beta);
-
-	result->_input_lattice = new Connection(*_input_lattice);
-	result->_context_lattice = new Connection(*_context_lattice);
+MSOM * MSOM::clone() const {
+	MSOM* result = static_cast<MSOM*>(IOUtils::load_layer(IOUtils::save_layer((BaseLayer*)this)));
 
 	return result;
 }
 
-void Coeus::MSOM::override_params(BaseLayer * p_source)
+void MSOM::override_params(BaseLayer * p_source)
 {
 	SOM::override_params(p_source);
 

@@ -27,7 +27,7 @@ namespace Coeus
 		int get_winner() const { return _winner; }
 		void set_input_mask(int* p_mask) { _input_mask = p_mask; }
 
-		SOM* clone();
+		virtual SOM* clone() const;
 		void override_params(BaseLayer* p_source) override;
 
 	protected:		

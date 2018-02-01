@@ -2,9 +2,8 @@
 
 using namespace Coeus;
 
-SOM_analyzer::SOM_analyzer(SOM* p_som)
+SOM_analyzer::SOM_analyzer()
 {
-	_som = p_som;
 	_q_error = 0;
 }
 
@@ -13,10 +12,10 @@ SOM_analyzer::~SOM_analyzer()
 {
 }
 
-void SOM_analyzer::update(const int p_winner)
+void SOM_analyzer::update(SOM* p_som, const int p_winner)
 {
 	_winner_set.insert(p_winner);
-	_q_error += _som->calc_distance(p_winner);
+	_q_error += p_som->calc_distance(p_winner);
 }
 
 void SOM_analyzer::end_epoch()
@@ -25,7 +24,6 @@ void SOM_analyzer::end_epoch()
 	_q_error = 0;
 }
 
-double SOM_analyzer::winner_diff()
-{
-	return (double)_winner_set.size() / (double)_som->get_lattice()->getDim();
+double SOM_analyzer::winner_diff(const int p_size) const {
+	return static_cast<double>(_winner_set.size()) / static_cast<double>(p_size);
 }

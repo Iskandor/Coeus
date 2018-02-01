@@ -26,8 +26,7 @@ namespace Coeus
 
 		Base_SOM_params* _params;
 		SOM_analyzer* _som_analyzer;
-
-		Tensor	_delta_w;
+		
 		Tensor	_dist_matrix;
 
 	};

@@ -11,21 +11,45 @@ IOUtils::~IOUtils()
 {
 }
 
-void IOUtils::save_network(const string p_filename, BaseLayer* p_layer) {
+json IOUtils::save_layer(BaseLayer* p_layer) {
 	json data;
 
 	data["_header"] = "Coeus";
 	data["_type"] = p_layer->type();
 
 	switch (p_layer->type()) {
-		case BaseLayer::SOM:		
-			data["_network"] = write_som(static_cast<SOM*>(p_layer));
+	case BaseLayer::SOM:
+		data["_network"] = write_som(static_cast<SOM*>(p_layer));
 		break;
-		case BaseLayer::MSOM: 
-			data["_network"] = write_msom(static_cast<MSOM*>(p_layer));
+	case BaseLayer::MSOM:
+		data["_network"] = write_msom(static_cast<MSOM*>(p_layer));
 		break;
-		default:;
+	default:;
 	}
+
+	return data;
+}
+
+BaseLayer* IOUtils::load_layer(json p_data) {
+	BaseLayer* result = nullptr;
+
+	const BaseLayer::TYPE type = static_cast<BaseLayer::TYPE>(p_data["_type"].get<int>());
+
+	switch (type) {
+	case BaseLayer::SOM:
+		result = read_som(p_data["_network"]);
+		break;
+	case BaseLayer::MSOM:
+		result = read_msom(p_data["_network"]);
+		break;
+	default:;
+	}
+
+	return result;
+}
+
+void IOUtils::save_network(const string p_filename, BaseLayer* p_layer) {
+	json data = save_layer(p_layer);
 
 	ofstream file;
 	file.open(p_filename);
@@ -49,17 +73,7 @@ BaseLayer* IOUtils::load_network(const string p_filename) {
 	if (file.is_open()) {
 		file >> data;
 		
-		const BaseLayer::TYPE type = static_cast<BaseLayer::TYPE>(data["_type"].get<int>());
-
-		switch (type) {
-		case BaseLayer::SOM:
-			result = read_som(data["_network"]);
-			break;
-		case BaseLayer::MSOM:
-			result = read_msom(data["_network"]);
-			break;
-		default:;
-		}
+		result = load_layer(data);
 	}
 	file.close();
 
