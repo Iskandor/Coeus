@@ -11,6 +11,7 @@
 #include <string>
 #include "IOUtils.h"
 #include <ppl.h>
+#include <concrtrm.h>
 #include "Config.h"
 
 using namespace MNS;
@@ -19,12 +20,25 @@ using namespace std;
 
 ModelMNS3::ModelMNS3() {
     _F5 = nullptr;
-    _STS = nullptr;
+    _STS = nullptr;	
 }
 
 ModelMNS3::~ModelMNS3() {
     delete _F5;
     delete _STS;
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	for (int i = 0; i < trainData->size(); i++) {
+		delete _F5input[i];
+	}
+	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+		delete _STSinput[i];
+	}
+
+	delete _F5input;
+	delete _STSinput;
+
 }
 
 void ModelMNS3::init() {
@@ -69,6 +83,9 @@ void ModelMNS3::init() {
 void ModelMNS3::run(int p_epochs) {
 	cout << "Epochs: " << p_epochs << endl;
 	cout << "Settling: " << Config::instance().settling << endl;
+	cout << "CPUs: " << GetProcessorCount() << endl;
+	cout << "Initializing learning module...";
+
 
 	SOM_analyzer F5_analyzer;
 	SOM_analyzer STS_analyzer;
@@ -95,6 +112,8 @@ void ModelMNS3::run(int p_epochs) {
 	for (int i = 0; i < trainData->size() * PERSPS; i++) {
 		STS_thread[i] = new MSOM_learning(_STS->clone(), &STS_params, &STS_analyzer);
 	}
+
+	cout << "done" << endl;
 
 	for (int t = 0; t < p_epochs; t++) {
 		cout << "Epoch " << t << endl;
@@ -134,6 +153,13 @@ void ModelMNS3::run(int p_epochs) {
 		STS_analyzer.end_epoch();
 		F5_params.param_decay();
 		STS_params.param_decay();
+	}
+
+	for (int i = 0; i < trainData->size(); i++) {
+		delete F5_thread[i];
+	}
+	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+		delete STS_thread[i];
 	}
 }
 

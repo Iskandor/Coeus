@@ -9,12 +9,18 @@ SOM_learning::SOM_learning(SOM* p_som, SOM_params* p_params, SOM_analyzer* p_ana
 	const int dim_lattice = p_som->get_lattice()->getDim();
 
 	_delta_w = Tensor::Zero({ dim_lattice, dim_input });
+	_batch_delta_w = Tensor::Zero({ dim_lattice, dim_input });
 	_som = p_som;
 }
 
 SOM_learning::~SOM_learning()
 {	
 }
+
+void SOM_learning::init_som(SOM * p_source) const {
+	_som->override_params(p_source);
+}
+
 void SOM_learning::train(Tensor* p_input) {
 	const int winner = _som->find_winner(p_input);	
 	const int dim_input = _som->get_input_group()->getDim();
@@ -35,4 +41,17 @@ void SOM_learning::train(Tensor* p_input) {
 	}
 
 	_som->get_input_lattice()->update_weights(_delta_w);
+}
+
+void SOM_learning::merge(vector<SOM_learning*>& p_learners) {
+
+	for (auto it = p_learners.begin(); it != p_learners.end(); ++it) {
+		_delta_w += (*it)->_batch_delta_w;
+
+		(*it)->_batch_delta_w.fill(0);
+	}
+
+	_som->get_input_lattice()->update_weights(_delta_w);
+
+	_delta_w.fill(0);
 }

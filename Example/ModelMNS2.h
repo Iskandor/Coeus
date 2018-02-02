@@ -55,9 +55,9 @@ private:
     MSOM    *_STS;
     SOM     *_PF;
 
-	Tensor _F5input;
-    Tensor _STSinput;
-	Tensor _PFinput;
+	Tensor** _F5input;
+    Tensor** _STSinput;
+	Tensor** _PFinput;
 
 	int _f5_mask_pre[_sizeF5input + _sizePF * _sizePF];
 	int _f5_mask_post[_sizeF5input + _sizePF * _sizePF];

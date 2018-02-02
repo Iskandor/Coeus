@@ -10,8 +10,11 @@
 #include <iostream>
 #include <string>
 #include "IOUtils.h"
+#include "Config.h"
+#include <concrtrm.h>
 
 using namespace MNS;
+using namespace Concurrency;
 
 ModelMNS2::ModelMNS2() {
     _F5 = nullptr;
@@ -23,6 +26,20 @@ ModelMNS2::~ModelMNS2() {
     delete _F5;
     delete _STS;
     delete _PF;
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	for (int i = 0; i < trainData->size(); i++) {
+		delete _F5input[i];
+	}
+	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+		delete _STSinput[i];
+		delete _PFinput[i];
+	}
+
+	delete _F5input;
+	delete _STSinput;
+	delete _PFinput;
 }
 
 void ModelMNS2::init() {
@@ -31,10 +48,6 @@ void ModelMNS2::init() {
     _F5 = new MSOM(_sizeF5input + _sizePF * _sizePF, _sizeF5, _sizeF5, NeuralGroup::KEXPONENTIAL, 0.3, 0.5);
     _STS = new MSOM(_sizeSTSinput + _sizePF * _sizePF, _sizeSTS, _sizeSTS, NeuralGroup::KEXPONENTIAL, 0.3, 0.7);
     _PF = new SOM(_sizeF5*_sizeF5 + _sizeSTS * _sizeSTS, _sizePF, _sizePF, NeuralGroup::KEXPONENTIAL);
-
-	_F5input = Tensor::Zero({ _sizeF5input + _sizePF * _sizePF });
-	_STSinput = Tensor::Zero({ _sizeSTSinput + _sizePF * _sizePF });
-	_PFinput = Tensor::Zero({ _sizeSTS * _sizeSTS + _sizeF5 *_sizeF5 });
 
 	for(int i = 0; i < _sizeF5input + _sizePF * _sizePF; i++) {
 		if (i < _sizeF5input) {
@@ -64,9 +77,63 @@ void ModelMNS2::init() {
 			_pf_mask[i] = 0;
 		}
 	}
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	_F5input = new Tensor*[trainData->size()];
+	_STSinput = new Tensor*[trainData->size() * PERSPS];
+	_PFinput = new Tensor*[trainData->size() * PERSPS];
+
+	for (int i = 0; i < trainData->size(); i++) {
+		_F5input[i] = new Tensor({ _sizeF5input + _sizeSTS * _sizeSTS }, Tensor::ZERO);		
+	}
+	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+		_STSinput[i] = new Tensor({ _sizeSTSinput + _sizeF5 * _sizeF5 }, Tensor::ZERO);
+		_PFinput[i] = new Tensor({ _sizeSTS * _sizeSTS + _sizeF5 *_sizeF5 }, Tensor::ZERO);
+	}
+
+	
 }
 
 void ModelMNS2::run(int p_epochs) {
+	cout << "Epochs: " << p_epochs << endl;
+	cout << "Settling: " << Config::instance().settling << endl;
+	cout << "CPUs: " << GetProcessorCount() << endl;
+	cout << "Initializing learning module...";
+
+	SOM_analyzer F5_analyzer;
+	SOM_analyzer STS_analyzer;
+	SOM_analyzer PF_analyzer;
+
+	MSOM_params F5_params(_F5);
+	F5_params.init_training(Config::instance().f5_config.gamma1, Config::instance().f5_config.gamma2, p_epochs);
+
+	MSOM_params STS_params(_STS);
+	STS_params.init_training(Config::instance().sts_config.gamma1, Config::instance().sts_config.gamma2, p_epochs);
+
+	SOM_params PF_params(_PF);
+	PF_params.init_training(Config::instance().pf_config.alpha, p_epochs);
+
+	MSOM_learning F5_learner(_F5, &F5_params, &F5_analyzer);
+	MSOM_learning STS_learner(_STS, &STS_params, &STS_analyzer);
+	SOM_learning PF_learner(_PF, &PF_params, &PF_analyzer);
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	vector<MSOM_learning*> F5_thread(trainData->size());
+
+	for (int i = 0; i < trainData->size(); i++) {
+		F5_thread[i] = new MSOM_learning(_F5->clone(), &F5_params, &F5_analyzer);
+	}
+
+	vector<MSOM_learning*> STS_thread(trainData->size() * PERSPS);
+
+	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+		STS_thread[i] = new MSOM_learning(_STS->clone(), &STS_params, &STS_analyzer);
+	}
+
+	cout << "done" << endl;
+
 	/*
 	MSOM_learning F5_learner(_F5);
 	F5_learner.init_training(0.01, 0.01, p_epochs);

@@ -3,3 +3,5 @@ Debug
 .vs
 /Coeus.VC.db
 /*.opendb
+Win32
+Release
