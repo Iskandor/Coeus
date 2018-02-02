@@ -1,18 +1,21 @@
 
-//#include <vld.h>
+#include "Config.h"
 #include "ModelMNS.h"
 #include "ModelMNS2.h"
 #include "ModelMNS3.h"
 
 
 using namespace std;
+using namespace MNS;
 
 int main()
 {
-	MNS::ModelMNS3 model;
+	Config::instance().Load("../data/config3.json");
+
+	ModelMNS3 model;
 
 	model.init();
-	model.run(2000);
+	model.run(Config::instance().epoch);
 	model.save();
 
 	//model.load("1515883986");
@@ -21,6 +24,8 @@ int main()
 	//model.testFinalWinners();
 	//model.testDistance();
 	//model.testBALData();
+
+	system("pause");
 
 	return 0;
 }

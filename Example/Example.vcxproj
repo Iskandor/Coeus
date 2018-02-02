@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelMNS.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Sequence.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="ModelMNS.h" />
     <ClInclude Include="ModelMNS2.h" />

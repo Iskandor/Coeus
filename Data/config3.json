@@ -1,0 +1,27 @@
+{
+  "f5": {
+    "dim_x": 12,
+    "dim_y": 12,
+    "alpha": 0.3,
+    "beta": 0.5,
+    "gamma1": 0.001,
+    "gamma2": 0.001
+  },
+  "sts": {
+    "dim_x": 16,
+    "dim_y": 16,
+    "alpha": 0.3,
+    "beta": 0.7,
+    "gamma1": 0.001,
+    "gamma2": 0.001
+  },
+  "pf": {
+    "dim_x": 14,
+    "dim_y": 14,
+    "alpha": 0.1
+  },
+  "epochs": 2000,
+  "settling": 10,
+  "motor_data": "../data/Trajectories.3.md",
+  "visual_data": "../data/Trajectories.3.vd"
+}

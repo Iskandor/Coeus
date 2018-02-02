@@ -11,6 +11,7 @@
 #include <string>
 #include "IOUtils.h"
 #include <ppl.h>
+#include "Config.h"
 
 using namespace MNS;
 using namespace Concurrency;
@@ -27,10 +28,10 @@ ModelMNS3::~ModelMNS3() {
 }
 
 void ModelMNS3::init() {
-    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
+    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
 
-    _F5 = new MSOM(_sizeF5input + _sizeSTS * _sizeSTS, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, 0.3, 0.5);
-    _STS = new MSOM(_sizeSTSinput + _sizeF5 * _sizeF5, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, 0.3, 0.7);
+    _F5 = new MSOM(_sizeF5input + _sizeSTS * _sizeSTS, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, Config::instance().f5_config.alpha, Config::instance().f5_config.beta);
+    _STS = new MSOM(_sizeSTSinput + _sizeF5 * _sizeF5, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, Config::instance().sts_config.alpha, Config::instance().sts_config.beta);
 
 	for(int i = 0; i < _sizeF5input + _sizeSTS * _sizeSTS; i++) {
 		if (i < _sizeF5input) {
@@ -66,14 +67,17 @@ void ModelMNS3::init() {
 }
 
 void ModelMNS3::run(int p_epochs) {
+	cout << "Epochs: " << p_epochs << endl;
+	cout << "Settling: " << Config::instance().settling << endl;
+
 	SOM_analyzer F5_analyzer;
 	SOM_analyzer STS_analyzer;
 
 	MSOM_params F5_params(_F5);
-	F5_params.init_training(0.01, 0.01, p_epochs);
+	F5_params.init_training(Config::instance().f5_config.gamma1, Config::instance().f5_config.gamma2, p_epochs);
 
 	MSOM_params STS_params(_STS);
-	STS_params.init_training(0.01, 0.01, p_epochs);
+	STS_params.init_training(Config::instance().sts_config.gamma1, Config::instance().sts_config.gamma2, p_epochs);
 
 	MSOM_learning F5_learner(_F5, &F5_params, &F5_analyzer);
 	MSOM_learning STS_learner(_STS, &STS_params, &STS_analyzer);
@@ -111,7 +115,7 @@ void ModelMNS3::run(int p_epochs) {
 				activateSTS(i, STS_thread[i * PERSPS + p]->msom(), trainData->at(i)->getVisualData(p));
 				STS_thread[i * PERSPS + p]->msom()->set_input_mask(nullptr);
 
-				for(int s = 0; s < 10; s++) {
+				for(int s = 0; s < Config::instance().settling; s++) {
 					trainF5(i, F5_thread[i], trainData->at(i)->getMotorData());
 					trainSTS(i * PERSPS + p, STS_thread[i * PERSPS + p], trainData->at(i)->getVisualData(p));
 				}
