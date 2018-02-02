@@ -64,10 +64,9 @@ void Dataset::parseLines(vector<string> p_vLines, vector<string> p_mLines) {
     for(int i = 0; i < p_mLines.size(); i++) {
         tokens.clear();
         size_t pos = 0;
-        string token;
 
-        while ((pos = p_mLines[i].find(";")) != std::string::npos) {
-            token = p_mLines[i].substr(0, pos);
+	    while ((pos = p_mLines[i].find(";")) != std::string::npos) {
+            string token = p_mLines[i].substr(0, pos);
             tokens.push_back(token);
             p_mLines[i].erase(0, pos + 1);
         }
@@ -94,10 +93,9 @@ void Dataset::parseLines(vector<string> p_vLines, vector<string> p_mLines) {
     for(int i = 0; i < p_vLines.size(); i++) {
         tokens.clear();
         size_t pos = 0;
-        string token;
 
-        while ((pos = p_vLines[i].find(";")) != std::string::npos) {
-            token = p_vLines[i].substr(0, pos);
+	    while ((pos = p_vLines[i].find(";")) != std::string::npos) {
+            string token = p_vLines[i].substr(0, pos);
             tokens.push_back(token);
             p_vLines[i].erase(0, pos + 1);
         }
@@ -120,7 +118,7 @@ void Dataset::parseLines(vector<string> p_vLines, vector<string> p_mLines) {
 }
 
 vector<Sequence*>* Dataset::permute() {
-    random_shuffle(_permBuffer.begin(), _permBuffer.end());
+    //random_shuffle(_permBuffer.begin(), _permBuffer.end());
     return &_permBuffer;
 }
 

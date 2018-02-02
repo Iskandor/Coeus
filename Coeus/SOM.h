@@ -27,6 +27,9 @@ namespace Coeus
 		int get_winner() const { return _winner; }
 		void set_input_mask(int* p_mask) { _input_mask = p_mask; }
 
+		virtual SOM* clone() const;
+		void override_params(BaseLayer* p_source) override;
+
 	protected:		
 		virtual void calc_distance();		
 

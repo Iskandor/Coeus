@@ -28,6 +28,7 @@ public:
 	static Tensor Value(const initializer_list<int> p_shape, double p_value);
 	static Tensor Random(const initializer_list<int> p_shape, double p_limit);
 	static Tensor Concat(Tensor& p_vector1, Tensor& p_vector2);
+	static void Concat(Tensor* p_result, Tensor* p_vector1, Tensor* p_vector2);
 
 	void operator = (const Tensor& p_tensor);
 	Tensor operator + (const Tensor& p_tensor);
@@ -41,10 +42,11 @@ public:
 	Tensor apply(double(*f)(double)) const;
 
 	int max_index() const;
+	void override(Tensor* p_tensor) const;
 
 	void fill(double p_value) const;
 
-	double sum();
+	double sum() const;
 
 	int size() const { return _size; }
 
@@ -54,6 +56,10 @@ public:
 	void set(int p_y, int p_x, double p_val) const;
 
 private:
+	static double* alloc_arr(int p_size);
+	static int* alloc_shape(int p_size);
+	void free_arr() const;
+	void free_shape() const;
 	void init_shape(int p_rank, int* p_shape);
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, double p_value) const;

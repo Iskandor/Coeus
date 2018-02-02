@@ -81,6 +81,21 @@ double SOM::calc_distance(const int p_index) {
 	return sqrt(s);
 }
 
+SOM * SOM::clone() const {
+	SOM* result = new SOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
+
+	result->_input_lattice = new Connection(*_input_lattice);
+
+	return result;
+}
+
+void SOM::override_params(BaseLayer * p_source)
+{
+	SOM* som = static_cast<SOM*>(p_source);
+
+	_input_lattice->set_weights(som->get_input_lattice()->get_weights());
+}
+
 void SOM::calc_distance() {
 	for(int l = 0; l < _dim_x * _dim_y; l++) {
 		_dist.set(l, calc_distance(l));
@@ -100,12 +115,7 @@ int SOM::find_winner(Tensor* p_input) {
 			winner_dist = neuron_dist;
 		}
 	}
-
-	/*
-	calc_distance();
-	_winner = _dist.max_index();
-	*/
-
+	
 	return _winner;
 }
 

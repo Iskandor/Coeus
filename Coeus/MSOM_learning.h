@@ -2,6 +2,7 @@
 
 #include <Tensor.h>
 #include "MSOM.h"
+#include "MSOM_params.h"
 #include "Base_SOM_learning.h"
 
 using namespace FLAB;
@@ -11,25 +12,24 @@ namespace Coeus
 	class __declspec(dllexport) MSOM_learning : public Base_SOM_learning
 	{
 	public:
-		explicit MSOM_learning(MSOM *p_msom);
+		explicit MSOM_learning(MSOM *p_msom, MSOM_params *p_params, SOM_analyzer* p_analyzer);
 		~MSOM_learning();
 
-		void init_training(double p_gamma1, double p_gamma2, double p_epochs);
-
+		void init_msom(MSOM* p_source) const;
 		void train(Tensor *p_input) override;
-		void param_decay() override;
+		void merge(vector<MSOM_learning*> &p_learners);
+		void reset_context() const;
+
+		MSOM* msom() const { return _msom; }
 
 	private:
-		double _gamma1_0;
-		double _gamma1;
-		double _gamma2_0;
-		double _gamma2;
-
+		Tensor	_delta_w;
 		Tensor	_delta_c;
 
-		MSOM* _msom;
+		Tensor	_batch_delta_w;
+		Tensor	_batch_delta_c;
 
-		
+		MSOM* _msom;
 	};
 }
 

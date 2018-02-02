@@ -2,24 +2,27 @@
 
 using namespace Coeus;
 
-MSOM_learning::MSOM_learning(MSOM* p_msom): Base_SOM_learning(p_msom), _gamma1_0(0), _gamma1(0), _gamma2_0(0), _gamma2(0) {
+MSOM_learning::MSOM_learning(MSOM* p_msom, MSOM_params *p_params, SOM_analyzer* p_analyzer): Base_SOM_learning(p_msom, p_params, p_analyzer) {
 	_msom = p_msom;
 
+	const int dim_input = _msom->get_input_group()->getDim();
 	const int dim_context = _msom->get_context_group()->getDim();
 	const int dim_lattice = _msom->get_lattice()->getDim();
-	_delta_c = Tensor::Zero({ dim_lattice, dim_context });
+
+	_delta_w = Tensor::Zero({ dim_lattice, dim_input });
+	_delta_c = Tensor::Zero({ dim_lattice, dim_context });	
+
+	_batch_delta_w = Tensor::Zero({ dim_lattice, dim_input });
+	_batch_delta_c = Tensor::Zero({ dim_lattice, dim_context });
+
 }
 
 MSOM_learning::~MSOM_learning()
 {
 }
 
-void MSOM_learning::init_training(const double p_gamma1, const double p_gamma2, const double p_epochs) {
-	Base_SOM_learning::init_training(p_epochs);
-	_gamma1_0 = p_gamma1;
-	_gamma2_0 = p_gamma2;
-	_gamma1 = _gamma1_0 * exp(-_iteration / _lambda);
-	_gamma2 = _gamma2_0 * exp(-_iteration / _lambda);
+void MSOM_learning::init_msom(MSOM * p_source) const {
+	_msom->override_params(p_source);
 }
 
 void MSOM_learning::train(Tensor* p_input) {
@@ -34,23 +37,43 @@ void MSOM_learning::train(Tensor* p_input) {
 	Tensor* in = _msom->get_input_group()->getOutput();
 	Tensor* ct = _msom->get_context_group()->getOutput();
 
-	_som_analyzer->update(winner);
+	_som_analyzer->update(_msom, winner);
+
+	const double gamma1 = static_cast<MSOM_params*>(_params)->gamma1();
+	const double gamma2 = static_cast<MSOM_params*>(_params)->gamma2();
 
 	for (int i = 0; i < dim_lattice; i++) {
 		const double theta = calc_neighborhood(_dist_matrix.at(winner, i), GAUSSIAN);
 		for (int j = 0; j < dim_input; j++) {
-			_delta_w.set(i, j, theta * _gamma1 * (in->at(j) - wi->at(i, j)));
-			_delta_c.set(i, j, theta * _gamma2 * (ct->at(j) - ci->at(i, j)));
+			_delta_w.set(i, j, theta * gamma1 * (in->at(j) - wi->at(i, j)));
+			_delta_c.set(i, j, theta * gamma2 * (ct->at(j) - ci->at(i, j)));
 		}
 	}
 
 	_msom->get_input_lattice()->update_weights(_delta_w);
 	_msom->get_context_lattice()->update_weights(_delta_c);
+
+	_batch_delta_w += _delta_w;
+	_batch_delta_c += _delta_c;
 }
 
-void MSOM_learning::param_decay() {
-	_som_analyzer->end_epoch();
-	Base_SOM_learning::param_decay();
-	_gamma1 = _gamma1_0 * exp(-_iteration / _lambda);
-	_gamma2 = _gamma2_0 * exp(-_iteration / _lambda);
+void MSOM_learning::merge(vector<MSOM_learning*>& p_learners) {
+
+	for(auto it = p_learners.begin(); it != p_learners.end(); ++it) {
+		_delta_w += (*it)->_batch_delta_w;
+		_delta_c += (*it)->_batch_delta_c;
+
+		(*it)->_batch_delta_w.fill(0);
+		(*it)->_batch_delta_c.fill(0);
+	}
+
+	_msom->get_input_lattice()->update_weights(_delta_w);
+	_msom->get_context_lattice()->update_weights(_delta_c);
+
+	_delta_w.fill(0);
+	_delta_c.fill(0);
+}
+
+void MSOM_learning::reset_context() const {
+	_msom->reset_context();
 }

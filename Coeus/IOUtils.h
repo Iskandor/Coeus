@@ -16,6 +16,9 @@ namespace Coeus
 		IOUtils();
 		~IOUtils();
 
+		static json save_layer(BaseLayer* p_layer);
+		static BaseLayer* load_layer(json p_data);
+
 		static void save_network(string p_filename, BaseLayer* p_layer);
 		static BaseLayer* load_network(string p_filename);
 

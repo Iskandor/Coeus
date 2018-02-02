@@ -36,6 +36,8 @@ Connection::Connection(Connection &p_copy) {
     _id = p_copy._id;
     _in_dim = p_copy._in_dim;
     _out_dim = p_copy._out_dim;
+	_in_id = p_copy._in_id;
+	_out_id = p_copy._out_id;
     _weights = new Tensor(*p_copy._weights);
 }
 
@@ -73,11 +75,10 @@ void Connection::identity() {
 	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ONES);
 }
 
-void Connection::set_weights(Tensor *p_weights) {
-    delete _weights;
-    _weights = new Tensor(*p_weights);
+void Connection::set_weights(Tensor *p_weights) const {
+    _weights->override(p_weights);
 }
 
-void Connection::update_weights(Tensor& p_delta_w) {
+void Connection::update_weights(Tensor& p_delta_w) const {
 	*_weights += p_delta_w;
 }

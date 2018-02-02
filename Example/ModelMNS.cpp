@@ -9,9 +9,11 @@
 #include <string>
 #include "MSOM_learning.h"
 #include "IOUtils.h"
+#include <ppl.h>
 
 using namespace MNS;
 using namespace std;
+using namespace concurrency;
 
 ModelMNS::ModelMNS() {
     _msomMotor = nullptr;
@@ -31,42 +33,69 @@ void ModelMNS::init() {
 
 }
 
-void ModelMNS::run(int p_epochs) {
-	MSOM_learning F5_learner(_msomMotor);
-	F5_learner.init_training(0.001, 0.001, p_epochs);
-	MSOM_learning STS_learner(_msomVisual);
-	STS_learner.init_training(0.001, 0.001, p_epochs);
+void ModelMNS::run(const int p_epochs) {
+	SOM_analyzer F5_analyzer;
+	SOM_analyzer STS_analyzer;
 
-    vector<Sequence*>* trainData = nullptr;
+	MSOM_params F5_params(_msomMotor);
+	F5_params.init_training(0.01, 0.01, p_epochs);
+
+	MSOM_params STS_params(_msomVisual);
+	STS_params.init_training(0.1, 0.1, p_epochs);
+
+	MSOM_learning F5_learner(_msomMotor, &F5_params, &F5_analyzer);
+	MSOM_learning STS_learner(_msomVisual, &STS_params, &STS_analyzer);
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	vector<MSOM_learning*> F5_thread(trainData->size());
+
+	for(int i = 0; i < trainData->size(); i++) {
+		F5_thread[i] = new MSOM_learning(_msomMotor->clone(), &F5_params, &F5_analyzer);
+	}
+
+	vector<MSOM_learning*> STS_thread(trainData->size() * PERSPS);
+
+	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+		STS_thread[i] = new MSOM_learning(_msomVisual->clone(), &STS_params, &STS_analyzer);
+	}
 
     for(int t = 0; t < p_epochs; t++) {
         cout << "Epoch " << t << endl;
         trainData = _data.permute();
 
-        auto start = chrono::system_clock::now();
-        for(int i = 0; i < trainData->size(); i++) {
-            for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
-				F5_learner.train(trainData->at(i)->getMotorData()->at(j));
-            }
-            _msomMotor->reset_context();
-            for(int p = 0; p < PERSPS; p++) {
+	    const auto start = chrono::system_clock::now();
+
+		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
+        //for(int i = 0; i < trainData->size(); i++) {
+			for (int p = 0; p < PERSPS; p++) {
+				F5_thread[i]->init_msom(_msomMotor);
+				for(int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+					F5_thread[i]->train(trainData->at(i)->getMotorData()->at(j));
+				}
+				F5_thread[i]->reset_context();
+
+				STS_thread[i * PERSPS + p]->init_msom(_msomVisual);
                 for(int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
-					STS_learner.train(trainData->at(i)->getVisualData(p)->at(j));
+					STS_thread[i * PERSPS + p]->train(trainData->at(i)->getVisualData(p)->at(j));
                 }
-                _msomVisual->reset_context();
+				STS_thread[i * PERSPS + p]->reset_context();
             }
-        }
+        //}
+		});
 
-		F5_learner.update();
-		STS_learner.update();
+		F5_learner.merge(F5_thread);
+		STS_learner.merge(STS_thread);
 
-        auto end = chrono::system_clock::now();
+	    const auto end = chrono::system_clock::now();
         chrono::duration<double> elapsed_seconds = end-start;
         cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-        cout << " PMC qError: " << F5_learner.analyzer()->q_error() << " WD: " << F5_learner.analyzer()->winner_diff() << endl;
-        cout << "STSp qError: " << STS_learner.analyzer()->q_error() << " WD: " << STS_learner.analyzer()->winner_diff() << endl;
-		F5_learner.param_decay();
-		STS_learner.param_decay();
+        cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff(_msomMotor->get_lattice()->getDim()) << endl;
+        cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff(_msomVisual->get_lattice()->getDim()) << endl;
+		F5_analyzer.end_epoch();
+		STS_analyzer.end_epoch();
+		F5_params.param_decay();
+		STS_params.param_decay();
     }
 }
 

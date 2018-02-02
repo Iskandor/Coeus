@@ -2,19 +2,21 @@
 //#include <vld.h>
 #include "ModelMNS.h"
 #include "ModelMNS2.h"
+#include "ModelMNS3.h"
+
 
 using namespace std;
 
 int main()
 {
-	MNS::ModelMNS2 model;
+	MNS::ModelMNS3 model;
 
 	model.init();
-	//model.run(2000);
-	//model.save();
+	model.run(2000);
+	model.save();
 
-	model.load("1516558254");
-	model.testMirror();
+	//model.load("1515883986");
+	//model.testMirror();
 	//model.testAllWinners();
 	//model.testFinalWinners();
 	//model.testDistance();
