@@ -27,7 +27,7 @@ ModelMNS3::~ModelMNS3() {
 }
 
 void ModelMNS3::init() {
-    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
+    _data.loadData("./data/Trajectories.3.vd", "./data/Trajectories.3.md");
 
     _F5 = new MSOM(_sizeF5input + _sizeSTS * _sizeSTS, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, 0.3, 0.5);
     _STS = new MSOM(_sizeSTSinput + _sizeF5 * _sizeF5, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, 0.3, 0.7);
@@ -73,7 +73,7 @@ void ModelMNS3::run(int p_epochs) {
 	F5_params.init_training(0.01, 0.01, p_epochs);
 
 	MSOM_params STS_params(_STS);
-	STS_params.init_training(0.1, 0.1, p_epochs);
+	STS_params.init_training(0.01, 0.01, p_epochs);
 
 	MSOM_learning F5_learner(_F5, &F5_params, &F5_analyzer);
 	MSOM_learning STS_learner(_STS, &STS_params, &STS_analyzer);
@@ -111,7 +111,7 @@ void ModelMNS3::run(int p_epochs) {
 				activateSTS(i, STS_thread[i * PERSPS + p]->msom(), trainData->at(i)->getVisualData(p));
 				STS_thread[i * PERSPS + p]->msom()->set_input_mask(nullptr);
 
-				for (int s = 0; s < 10; s++) {
+				for(int s = 0; s < 10; s++) {
 					trainF5(i, F5_thread[i], trainData->at(i)->getMotorData());
 					trainSTS(i * PERSPS + p, STS_thread[i * PERSPS + p], trainData->at(i)->getVisualData(p));
 				}

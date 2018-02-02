@@ -12,7 +12,7 @@ int main()
 	MNS::ModelMNS3 model;
 
 	model.init();
-	model.run(5);
+	model.run(2000);
 	model.save();
 
 	//model.load("1515883986");
