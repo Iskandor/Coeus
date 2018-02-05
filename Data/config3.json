@@ -4,16 +4,16 @@
     "dim_y": 12,
     "alpha": 0.3,
     "beta": 0.5,
-    "gamma1": 0.001,
-    "gamma2": 0.001
+    "gamma1": 0.01,
+    "gamma2": 0.01
   },
   "sts": {
     "dim_x": 16,
     "dim_y": 16,
     "alpha": 0.3,
     "beta": 0.7,
-    "gamma1": 0.001,
-    "gamma2": 0.001
+    "gamma1": 0.01,
+    "gamma2": 0.01
   },
   "pf": {
     "dim_x": 14,

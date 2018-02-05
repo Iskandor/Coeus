@@ -30,15 +30,15 @@ public:
 
 private:
 
-	void activateF5(vector<Tensor*>* p_input);
-	void activateSTS(vector<Tensor*>* p_input);
-	void activatePF();
-	void trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input);
-	void trainSTS(MSOM_learning& p_STS_learner, vector<Tensor*>* p_input);
+	void activateF5(int p_index, MSOM* p_msom, vector<Tensor*>* p_input);
+	void activateSTS(int p_index, MSOM* p_msom, vector<Tensor*>* p_input);
+	void activatePF(int p_index, SOM* p_som);
+	void trainF5(int p_index, MSOM_learning* p_F5_learner, vector<Tensor*>* p_input);
+	void trainSTS(int p_index, MSOM_learning* p_STS_learner, vector<Tensor*>* p_input);
 
-    void prepareInputF5(Tensor* p_input);
-    void prepareInputSTS(Tensor* p_input);
-    void prepareInputPF();
+    void prepareInputF5(int p_index, Tensor* p_input);
+    void prepareInputSTS(int p_index, Tensor* p_input);
+    void prepareInputPF(int p_index);
 
 	void save_results(string p_filename, int p_dim_x, int p_dim_y, double* p_data, int p_category) const;
 

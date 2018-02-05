@@ -15,10 +15,10 @@ int main()
 	ModelMNS3 model;
 
 	model.init();
+	//model.init("1517840926");
 	model.run(Config::instance().epoch);
 	model.save();
 
-	//model.load("1515883986");
 	//model.testMirror();
 	//model.testAllWinners();
 	//model.testFinalWinners();

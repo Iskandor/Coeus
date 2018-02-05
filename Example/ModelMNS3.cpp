@@ -19,8 +19,12 @@ using namespace Concurrency;
 using namespace std;
 
 ModelMNS3::ModelMNS3() {
-    _F5 = nullptr;
-    _STS = nullptr;	
+	_F5 = nullptr;
+	_STS = nullptr;
+
+	_f5_mask_pre = nullptr;
+	_f5_mask_post = nullptr;
+	_sts_mask = nullptr;
 }
 
 ModelMNS3::~ModelMNS3() {
@@ -29,23 +33,34 @@ ModelMNS3::~ModelMNS3() {
 
 	vector<Sequence*>* trainData = _data.permute();
 
-	for (int i = 0; i < trainData->size(); i++) {
-		delete _F5input[i];
-	}
-	for (int i = 0; i < trainData->size() * PERSPS; i++) {
-		delete _STSinput[i];
-	}
-
-	delete _F5input;
-	delete _STSinput;
+	delete[] _f5_mask_pre;
+	delete[] _f5_mask_post;
+	delete[] _sts_mask;
 
 }
 
-void ModelMNS3::init() {
-    _data.loadData("../data/Trajectories.3.vd", "../data/Trajectories.3.md");
+void ModelMNS3::init(string p_timestamp) {
+    _data.loadData( Config::instance().visual_data, Config::instance().motor_data);
 
-    _F5 = new MSOM(_sizeF5input + _sizeSTS * _sizeSTS, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, Config::instance().f5_config.alpha, Config::instance().f5_config.beta);
-    _STS = new MSOM(_sizeSTSinput + _sizeF5 * _sizeF5, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, Config::instance().sts_config.alpha, Config::instance().sts_config.beta);
+	if (p_timestamp.empty()) {
+		_sizeSTS = Config::instance().sts_config.dim_x;
+		_sizeF5 = Config::instance().f5_config.dim_x;
+
+		_F5 = new MSOM(_sizeF5input + _sizeSTS * _sizeSTS, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, Config::instance().f5_config.alpha, Config::instance().f5_config.beta);
+		_STS = new MSOM(_sizeSTSinput + _sizeF5 * _sizeF5, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, Config::instance().sts_config.alpha, Config::instance().sts_config.beta);
+	}
+	else {
+		load(p_timestamp);
+
+		_sizeSTS = _STS->dim_x();
+		_sizeF5 = _F5->dim_x();
+	}
+
+
+
+	_f5_mask_pre = new int[_sizeF5input + _sizeSTS * _sizeSTS];
+	_f5_mask_post = new int[_sizeF5input + _sizeSTS * _sizeSTS];
+	_sts_mask = new int[_sizeSTSinput + _sizeF5 * _sizeF5];
 
 	for(int i = 0; i < _sizeF5input + _sizeSTS * _sizeSTS; i++) {
 		if (i < _sizeF5input) {
@@ -68,19 +83,9 @@ void ModelMNS3::init() {
 	}
 
 	vector<Sequence*>* trainData = _data.permute();
-
-	_F5input = new Tensor*[trainData->size()];
-	_STSinput = new Tensor*[trainData->size() * PERSPS];
-
-	for (int i = 0; i < trainData->size(); i++) {
-		_F5input[i] = new Tensor({ _sizeF5input + _sizeSTS * _sizeSTS }, Tensor::ZERO);
-	}
-	for (int i = 0; i < trainData->size() * PERSPS; i++) {
-		_STSinput[i] = new Tensor({ _sizeSTSinput + _sizeF5 * _sizeF5 }, Tensor::ZERO);
-	}
 }
 
-void ModelMNS3::run(int p_epochs) {
+void ModelMNS3::run(const int p_epochs) {
 	cout << "Epochs: " << p_epochs << endl;
 	cout << "Settling: " << Config::instance().settling << endl;
 	cout << "CPUs: " << GetProcessorCount() << endl;
@@ -107,9 +112,9 @@ void ModelMNS3::run(int p_epochs) {
 		F5_thread[i] = new MSOM_learning(_F5->clone(), &F5_params, &F5_analyzer);
 	}
 
-	vector<MSOM_learning*> STS_thread(trainData->size() * PERSPS);
+	vector<MSOM_learning*> STS_thread(trainData->size());
 
-	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+	for (int i = 0; i < trainData->size(); i++) {
 		STS_thread[i] = new MSOM_learning(_STS->clone(), &STS_params, &STS_analyzer);
 	}
 
@@ -122,22 +127,39 @@ void ModelMNS3::run(int p_epochs) {
 		const auto start = chrono::system_clock::now();
 
 		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
-			for (int p = 0; p < PERSPS; p++) {
-				F5_thread[i]->init_msom(_F5);
-				STS_thread[i * PERSPS + p]->init_msom(_STS);
+			Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
+			Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
 
-				F5_thread[i]->msom()->set_input_mask(_f5_mask_pre);
-				activateF5(i, F5_thread[i]->msom(), trainData->at(i)->getMotorData());
-				F5_thread[i]->msom()->set_input_mask(nullptr);
+			F5_thread[i]->init_msom(_F5);
+			
+			for (int p = 0; p < PERSPS; p++) {				
+				STS_thread[i]->init_msom(_STS);
 
-				STS_thread[i * PERSPS + p]->msom()->set_input_mask(_sts_mask);
-				activateSTS(i, STS_thread[i * PERSPS + p]->msom(), trainData->at(i)->getVisualData(p));
-				STS_thread[i * PERSPS + p]->msom()->set_input_mask(nullptr);
+				for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+					Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
+					Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+					
 
-				for(int s = 0; s < Config::instance().settling; s++) {
-					trainF5(i, F5_thread[i], trainData->at(i)->getMotorData());
-					trainSTS(i * PERSPS + p, STS_thread[i * PERSPS + p], trainData->at(i)->getVisualData(p));
+					F5_thread[i]->msom()->set_input_mask(_f5_mask_pre);
+					prepareInputF5(&f5_input, motor_sample, STS_thread[i]->msom());
+					F5_thread[i]->msom()->activate(&f5_input);
+					F5_thread[i]->msom()->set_input_mask(nullptr);
+
+					STS_thread[i]->msom()->set_input_mask(_sts_mask);
+					prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
+					STS_thread[i]->msom()->activate(&sts_input);
+					STS_thread[i]->msom()->set_input_mask(nullptr);
+
+					for (int s = 0; s < Config::instance().settling; s++) {
+						prepareInputF5(&f5_input, motor_sample, STS_thread[i]->msom());
+						prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
+						F5_thread[i]->train(&f5_input);
+						STS_thread[i]->train(&sts_input);
+					}
 				}
+
+				F5_thread[i]->msom()->reset_context();
+				STS_thread[i]->msom()->reset_context();
 			}
 		});
 
@@ -158,12 +180,12 @@ void ModelMNS3::run(int p_epochs) {
 	for (int i = 0; i < trainData->size(); i++) {
 		delete F5_thread[i];
 	}
-	for (int i = 0; i < trainData->size() * PERSPS; i++) {
+	for (int i = 0; i < trainData->size(); i++) {
 		delete STS_thread[i];
 	}
 }
 
-void ModelMNS3::save() {
+void ModelMNS3::save() const {
     const string timestamp = to_string(time(nullptr));
 
     IOUtils::save_network(timestamp + "_F5.json", _F5);
@@ -175,15 +197,15 @@ void ModelMNS3::load(const string p_timestamp) {
     _STS = static_cast<MSOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_STS.json"));
 }
 
-void ModelMNS3::prepareInputSTS(int p_index, Tensor *p_input) {
-    Tensor::Concat(_STSinput[p_index], p_input, _F5->get_output());
+void ModelMNS3::prepareInputSTS(Tensor* p_output, Tensor *p_input, MSOM* p_f5) const {
+    Tensor::Concat(p_output, p_input, p_f5->get_output());
 }
 
-void ModelMNS3::prepareInputF5(int p_index, Tensor *p_input) {
-    Tensor::Concat(_F5input[p_index], p_input, _STS->get_output());
+void ModelMNS3::prepareInputF5(Tensor* p_output, Tensor *p_input, MSOM* p_sts) const {
+    Tensor::Concat(p_output, p_input, p_sts->get_output());
 }
 
-void ModelMNS3::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) const {
+void ModelMNS3::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) {
 	ofstream file(p_filename);
 
 	if (file.is_open()) {
@@ -214,20 +236,31 @@ void ModelMNS3::testDistance() {
     double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
     double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
 
+	Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
+	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
+
 	for (int i = 0; i < trainData->size(); i++) {
-		_F5->set_input_mask(_f5_mask_pre);
-		activateF5(0, _F5, trainData->at(i)->getMotorData());
-		_F5->set_input_mask(nullptr);
-
 		for (int p = 0; p < PERSPS; p++) {
-			_STS->set_input_mask(_sts_mask);
-			activateSTS(0, _STS, trainData->at(i)->getVisualData(p));
-			_STS->set_input_mask(nullptr);
+			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
+				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-			for(int s = 0; s < 5; s++) {
-				activateSTS(0, _STS, trainData->at(i)->getVisualData(p));
+				_F5->set_input_mask(_f5_mask_pre);
+				prepareInputF5(&f5_input, motor_sample, _STS);
+				_F5->activate(&f5_input);
+				_F5->set_input_mask(nullptr);
 
-				activateF5(0, _F5, trainData->at(i)->getMotorData());
+				_STS->set_input_mask(_sts_mask);
+				prepareInputSTS(&sts_input, visual_sample, _F5);
+				_STS->activate(&sts_input);
+				_STS->set_input_mask(nullptr);
+
+				for (int s = 0; s < Config::instance().settling; s++) {
+					prepareInputF5(&f5_input, motor_sample, _STS);
+					prepareInputSTS(&sts_input, visual_sample, _F5);
+					_F5->activate(&f5_input);
+					_STS->activate(&sts_input);
+				}
 			}
 
 			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
@@ -259,31 +292,41 @@ void ModelMNS3::testFinalWinners() {
 	double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
 	double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
  
+	Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
+	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
+
 	for (int i = 0; i < trainData->size(); i++) {
-		_F5->set_input_mask(_f5_mask_pre);
-		activateF5(0, _F5, trainData->at(i)->getMotorData());
-		_F5->set_input_mask(nullptr);
-
 		for (int p = 0; p < PERSPS; p++) {
-			_STS->set_input_mask(_sts_mask);
-			activateSTS(0, _STS, trainData->at(i)->getVisualData(p));
-			_STS->set_input_mask(nullptr);
+			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
+				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-			for (int j = 0; j < trainData->at(i)->getVisualData(p)->size(); j++) {
-				prepareInputSTS(0, trainData->at(i)->getVisualData(p)->at(j));
-				_STS->activate(_STSinput[0]);
+				_F5->set_input_mask(_f5_mask_pre);
+				prepareInputF5(&f5_input, motor_sample, _STS);
+				_F5->activate(&f5_input);
+				_F5->set_input_mask(nullptr);
+
+				_STS->set_input_mask(_sts_mask);
+				prepareInputSTS(&sts_input, visual_sample, _F5);
+				_STS->activate(&sts_input);
+				_STS->set_input_mask(nullptr);
+
+				for (int s = 0; s < Config::instance().settling; s++) {
+					prepareInputF5(&f5_input, motor_sample, _STS);
+					prepareInputSTS(&sts_input, visual_sample, _F5);
+					_F5->activate(&f5_input);
+					_STS->activate(&sts_input);
+				}
 			}
-			winRateSTS_Visual[_STS->get_winner() * PERSPS + p]++;
-			winRateSTS_Motor[_STS->get_winner() * GRASPS + trainData->at(i)->getGrasp() - 1]++;
+
+			_F5->reset_context();
 			_STS->reset_context();
 
-			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
-				prepareInputF5(0, trainData->at(i)->getMotorData()->at(j));
-				_F5->activate(_F5input[0]);
-			}
+			winRateSTS_Visual[_STS->get_winner() * PERSPS + p]++;
+			winRateSTS_Motor[_STS->get_winner() * GRASPS + trainData->at(i)->getGrasp() - 1]++;
+
 			winRateF5_Visual[_F5->get_winner() * PERSPS + p]++;
 			winRateF5_Motor[_F5->get_winner() * GRASPS + trainData->at(i)->getGrasp() - 1]++;
-			_F5->reset_context();
 		}
 	}
 
@@ -303,21 +346,34 @@ void ModelMNS3::testMirror() {
 	double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
 	double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
 
-	for (int i = 0; i < 1; i++) {
-		for (int p = 0; p < 1; p++) {
-			_STS->set_input_mask(_sts_mask);
-			activateSTS(0, _STS, trainData->at(i)->getVisualData(p));
-			_F5->set_input_mask(_f5_mask_post);
-			activateF5(0, _F5, trainData->at(i)->getMotorData());
-			_STS->set_input_mask(nullptr);
-			activateSTS(0, _STS, trainData->at(i)->getVisualData(p));
+	Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
+	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
 
-			for(int s = 0; s < 5; s++) {
-				_F5->set_input_mask(_f5_mask_post);
-				activateF5(0, _F5, trainData->at(i)->getMotorData());
+	for (int i = 0; i < 1; i++) {
+		for (int p = 0; p < PERSPS; p++) {
+			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
+				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+
+				_STS->set_input_mask(_sts_mask);
+				prepareInputSTS(&sts_input, visual_sample, _F5);
+				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);
-				activateSTS(0, _STS, trainData->at(i)->getVisualData(p));
-			}	
+
+				_F5->set_input_mask(_f5_mask_post);
+				prepareInputF5(&f5_input, motor_sample, _STS);
+				_F5->activate(&f5_input);
+
+				for (int s = 0; s < Config::instance().settling; s++) {
+					prepareInputF5(&f5_input, motor_sample, _STS);
+					prepareInputSTS(&sts_input, visual_sample, _F5);
+					_F5->activate(&f5_input);
+					_STS->activate(&sts_input);
+				}
+			}
+
+			_F5->reset_context();
+			_STS->reset_context();
 
 			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
 				winRateSTS_Visual[n * PERSPS + p] += _STS->get_output()->at(n);
@@ -337,39 +393,4 @@ void ModelMNS3::testMirror() {
 	save_results(timestamp + "_F5.vis", _sizeF5, _sizeF5, winRateF5_Visual, PERSPS);
 	save_results(timestamp + "_STS.mot", _sizeSTS, _sizeSTS, winRateSTS_Motor, GRASPS);
 	save_results(timestamp + "_STS.vis", _sizeSTS, _sizeSTS, winRateSTS_Visual, PERSPS);
-}
-
-void MNS::ModelMNS3::activateF5(int p_index, MSOM* p_msom, vector<Tensor*>* p_input)
-{
-	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputF5(p_index, p_input->at(j));
-		p_msom->activate(_F5input[p_index]);
-	}
-	p_msom->reset_context();
-
-}
-
-void MNS::ModelMNS3::activateSTS(int p_index, MSOM* p_msom, vector<Tensor*>* p_input)
-{
-	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputSTS(p_index, p_input->at(j));
-		p_msom->activate(_STSinput[p_index]);
-	}
-	p_msom->reset_context();
-}
-
-void ModelMNS3::trainF5(int p_index, MSOM_learning* p_F5_learner, vector<Tensor*>* p_input) {
-	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputF5(p_index, p_input->at(j));
-		p_F5_learner->train(_F5input[p_index]);
-	}
-	p_F5_learner->reset_context();
-}
-
-void ModelMNS3::trainSTS(int p_index, MSOM_learning* p_STS_learner, vector<Tensor*>* p_input) {
-	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputSTS(p_index, p_input->at(j));
-		p_STS_learner->train(_STSinput[p_index]);
-	}
-	p_STS_learner->reset_context();
 }

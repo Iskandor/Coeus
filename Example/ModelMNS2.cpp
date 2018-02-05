@@ -205,16 +205,17 @@ void ModelMNS2::load(const string p_timestamp) {
     _PF = static_cast<SOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_PF.json"));
 }
 
-void ModelMNS2::prepareInputSTS(Tensor *p_input) {
-    _STSinput = Tensor::Concat(*p_input, *_PF->get_output());
+void ModelMNS2::prepareInputSTS(int p_index, Tensor *p_input) {
+	Tensor::Concat(_STSinput[p_index], p_input, _PF->get_output());
 }
 
-void ModelMNS2::prepareInputF5(Tensor *p_input) {
-    _F5input = Tensor::Concat(*p_input, *_PF->get_output());
+void ModelMNS2::prepareInputF5(int p_index, Tensor *p_input) {
+	Tensor::Concat(_F5input[p_index], p_input, _PF->get_output());
 }
 
-void ModelMNS2::prepareInputPF() {
-    _PFinput = Tensor::Concat(*_STS->get_output(), *_F5->get_output());
+void ModelMNS2::prepareInputPF(int p_index) {
+	Tensor::Concat(_PFinput[p_index], _STS->get_output(), _F5->get_output());
+
 }
 
 void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) const {
@@ -252,20 +253,20 @@ void ModelMNS2::testDistance() {
 
 	for (int i = 0; i < trainData->size(); i++) {
 		_F5->set_input_mask(_f5_mask_pre);
-		activateF5(trainData->at(i)->getMotorData());
+		activateF5(i, _F5, trainData->at(i)->getMotorData());
 		_F5->set_input_mask(nullptr);
 
 		for (int p = 0; p < PERSPS; p++) {
 			_STS->set_input_mask(_sts_mask);
-			activateSTS(trainData->at(i)->getVisualData(p));
+			activateSTS(i, _STS, trainData->at(i)->getVisualData(p));
 			_STS->set_input_mask(nullptr);
 
 			for(int s = 0; s < 10; s++) {
-				activatePF();
+				activatePF(i, _PF);
 
-				activateSTS(trainData->at(i)->getVisualData(p));
+				activateSTS(i, _STS, trainData->at(i)->getVisualData(p));
 
-				activateF5(trainData->at(i)->getMotorData());
+				activateF5(i, _F5, trainData->at(i)->getMotorData());
 			}
 
 			for (int n = 0; n < _PF->get_lattice()->getDim(); n++) {
@@ -308,18 +309,18 @@ void ModelMNS2::testFinalWinners() {
  
 	for (int i = 0; i < trainData->size(); i++) {
 		_F5->set_input_mask(_f5_mask_pre);
-		activateF5(trainData->at(i)->getMotorData());
+		activateF5(i, _F5, trainData->at(i)->getMotorData());
 		_F5->set_input_mask(nullptr);
 
 		for (int p = 0; p < PERSPS; p++) {
 			_STS->set_input_mask(_sts_mask);
-			activateSTS(trainData->at(i)->getVisualData(p));
+			activateSTS(i, _STS, trainData->at(i)->getVisualData(p));
 			_STS->set_input_mask(nullptr);
 
 			for(int s = 0; s < 10; s++) {
-				activatePF();
-				activateSTS(trainData->at(i)->getVisualData(p));
-				activateF5(trainData->at(i)->getMotorData());
+				activatePF(i, _PF);
+				activateSTS(i, _STS, trainData->at(i)->getVisualData(p));
+				activateF5(i, _F5, trainData->at(i)->getMotorData());
 			}
 
 			winRatePF_Visual[_PF->get_winner() * PERSPS + p]++;
@@ -356,23 +357,23 @@ void ModelMNS2::testMirror() {
 	for (int i = 0; i < 1; i++) {
 		for (int p = 0; p < PERSPS; p++) {
 			_STS->set_input_mask(_sts_mask);
-			activateSTS(trainData->at(i)->getVisualData(p));
+			activateSTS(i, _STS, trainData->at(i)->getVisualData(p));
 			_PF->set_input_mask(_pf_mask);
-			activatePF();
+			activatePF(i, _PF);
 			_F5->set_input_mask(_f5_mask_post);
-			activateF5(trainData->at(i)->getMotorData());
+			activateF5(i, _F5, trainData->at(i)->getMotorData());
 			_PF->set_input_mask(nullptr);
-			activatePF();
+			activatePF(i, _PF);
 			_STS->set_input_mask(nullptr);
-			activateSTS(trainData->at(i)->getVisualData(p));
+			activateSTS(i, _STS, trainData->at(i)->getVisualData(p));
 
 			for(int s = 0; s < 10; s++) {
 				_PF->set_input_mask(nullptr);
-				activatePF();
+				activatePF(i, _PF);
 				_F5->set_input_mask(_f5_mask_post);
-				activateF5(trainData->at(i)->getMotorData());
+				activateF5(i, _F5, trainData->at(i)->getMotorData());
 				_STS->set_input_mask(nullptr);
-				activateSTS(trainData->at(i)->getVisualData(p));
+				activateSTS(i, _STS, trainData->at(i)->getVisualData(p));
 			}	
 
 			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
@@ -400,42 +401,42 @@ void ModelMNS2::testMirror() {
 	save_results(timestamp + "_PF.vis", _sizePF, _sizePF, winRatePF_Visual, PERSPS);
 }
 
-void MNS::ModelMNS2::activateF5(vector<Tensor*>* p_input)
+void ModelMNS2::activatePF(int p_index, SOM* p_som) {
+	prepareInputPF(p_index);
+	p_som->activate(_PFinput[p_index]);
+}
+
+void MNS::ModelMNS2::activateF5(int p_index, MSOM* p_msom, vector<Tensor*>* p_input)
 {
 	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputF5(p_input->at(j));
-		_F5->activate(&_F5input);
+		prepareInputF5(p_index, p_input->at(j));
+		p_msom->activate(_F5input[p_index]);
 	}
-	_F5->reset_context();
+	p_msom->reset_context();
 
 }
 
-void MNS::ModelMNS2::activateSTS(vector<Tensor*>* p_input)
+void MNS::ModelMNS2::activateSTS(int p_index, MSOM* p_msom, vector<Tensor*>* p_input)
 {
 	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputSTS(p_input->at(j));
-		_STS->activate(&_STSinput);
+		prepareInputSTS(p_index, p_input->at(j));
+		p_msom->activate(_STSinput[p_index]);
 	}
-	_STS->reset_context();
+	p_msom->reset_context();
 }
 
-void ModelMNS2::activatePF() {
-	prepareInputPF();
-	_PF->activate(&_PFinput);
-}
-
-void ModelMNS2::trainF5(MSOM_learning& p_F5_learner, vector<Tensor*>* p_input) {
+void ModelMNS2::trainF5(int p_index, MSOM_learning* p_F5_learner, vector<Tensor*>* p_input) {
 	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputF5(p_input->at(j));
-		p_F5_learner.train(&_F5input);
+		prepareInputF5(p_index, p_input->at(j));
+		p_F5_learner->train(_F5input[p_index]);
 	}
-	_F5->reset_context();
+	p_F5_learner->reset_context();
 }
 
-void ModelMNS2::trainSTS(MSOM_learning& p_STS_learner, vector<Tensor*>* p_input) {
+void ModelMNS2::trainSTS(int p_index, MSOM_learning* p_STS_learner, vector<Tensor*>* p_input) {
 	for (int j = 0; j < p_input->size(); j++) {
-		prepareInputSTS(p_input->at(j));
-		p_STS_learner.train(&_STSinput);
+		prepareInputSTS(p_index, p_input->at(j));
+		p_STS_learner->train(_STSinput[p_index]);
 	}
-	_STS->reset_context();
+	p_STS_learner->reset_context();
 }

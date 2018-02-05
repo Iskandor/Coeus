@@ -19,44 +19,40 @@ public:
 	ModelMNS3();
     ~ModelMNS3();
 
-    void init();
+    void init(string p_timestamp = "");
     void run(int p_epochs);
-    void save();
-    void load(string p_timestamp);
+    void save() const;
 
     void testDistance();
     void testFinalWinners();
 	void testMirror();
 
 private:
+	void load(string p_timestamp);
 
-	void activateF5(int p_index, MSOM* p_msom, vector<Tensor*>* p_input);
-	void activateSTS(int p_index, MSOM* p_msom, vector<Tensor*>* p_input);
-	void trainF5(int p_index, MSOM_learning* p_F5_learner, vector<Tensor*>* p_input);
-	void trainSTS(int p_index, MSOM_learning* p_STS_learner, vector<Tensor*>* p_input);
+    void prepareInputF5(Tensor* p_output, Tensor* p_input, MSOM* p_sts) const;
+    void prepareInputSTS(Tensor* p_output, Tensor* p_input, MSOM* p_f5) const;
 
-    void prepareInputF5(int p_index, Tensor* p_input);
-    void prepareInputSTS(int p_index, Tensor* p_input);
-
-	void save_results(string p_filename, int p_dim_x, int p_dim_y, double* p_data, int p_category) const;
+	static void save_results(string p_filename, int p_dim_x, int p_dim_y, double* p_data, int p_category);
 
 	static const int _sizeF5input = 16;
 	static const int _sizeSTSinput = 40;
-    static const int _sizeF5 = 12;
-    static const int _sizeSTS = 16;
     static const int GRASPS = 3;
     static const int PERSPS = 4;
+
+	int _sizeF5;
+	int _sizeSTS;
 
     Dataset _data;
     MSOM    *_F5;
     MSOM    *_STS;
 
-	Tensor** _F5input;
-    Tensor** _STSinput;
+	//Tensor** _F5input;
+    //Tensor** _STSinput;
 
-	int _f5_mask_pre[_sizeF5input + _sizeSTS * _sizeSTS];
-	int _f5_mask_post[_sizeF5input + _sizeSTS * _sizeSTS];
-	int _sts_mask[_sizeSTSinput + _sizeF5 * _sizeF5];
+	int *_f5_mask_pre;
+	int *_f5_mask_post;
+	int *_sts_mask;
 };
 
 }
