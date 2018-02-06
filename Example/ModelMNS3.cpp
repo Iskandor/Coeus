@@ -31,7 +31,12 @@ ModelMNS3::~ModelMNS3() {
     delete _F5;
     delete _STS;
 
-	vector<Sequence*>* trainData = _data.permute();
+	int len = _data.permute()->size();
+
+	for (int d = 0; d < len; d++) {
+		delete[] _f5_mask_pre[d];
+		delete[] _sts_mask[d];
+	}
 
 	delete[] _f5_mask_pre;
 	delete[] _f5_mask_post;
@@ -40,49 +45,77 @@ ModelMNS3::~ModelMNS3() {
 }
 
 void ModelMNS3::init(string p_timestamp) {
+	cout << "Loading data...";
     _data.loadData( Config::instance().visual_data, Config::instance().motor_data);
+	cout << "done" << endl;
 
 	if (p_timestamp.empty()) {
-		_sizeSTS = Config::instance().sts_config.dim_x;
-		_sizeF5 = Config::instance().f5_config.dim_x;
+		cout << "Initializing networks...";
 
-		_F5 = new MSOM(_sizeF5input + _sizeSTS * _sizeSTS, _sizeF5, _sizeF5, NeuralGroup::EXPONENTIAL, Config::instance().f5_config.alpha, Config::instance().f5_config.beta);
-		_STS = new MSOM(_sizeSTSinput + _sizeF5 * _sizeF5, _sizeSTS, _sizeSTS, NeuralGroup::EXPONENTIAL, Config::instance().sts_config.alpha, Config::instance().sts_config.beta);
+		_F5 = new MSOM(
+			_sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y, 
+			Config::instance().f5_config.dim_x,
+			Config::instance().f5_config.dim_y,
+			NeuralGroup::EXPONENTIAL, 
+			Config::instance().f5_config.alpha, 
+			Config::instance().f5_config.beta);
+
+		_STS = new MSOM(_sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y,
+			Config::instance().sts_config.dim_x, 
+			Config::instance().sts_config.dim_y, 
+			NeuralGroup::EXPONENTIAL, 
+			Config::instance().sts_config.alpha, 
+			Config::instance().sts_config.beta);
+
+		cout << "done" << endl;
 	}
 	else {
+		cout << "Loading networks...";
+
 		load(p_timestamp);
 
-		_sizeSTS = _STS->dim_x();
-		_sizeF5 = _F5->dim_x();
+		Config::instance().f5_config.dim_x = _STS->dim_x();
+		Config::instance().f5_config.dim_y = _STS->dim_y();
+		Config::instance().sts_config.dim_x = _F5->dim_x();
+		Config::instance().sts_config.dim_y = _F5->dim_y();
+
+		cout << "done" << endl;
 	}
 
+	cout << "Initializing masks...";
+
+	int len = _data.permute()->size();
+
+	_f5_mask_post = new int[_sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y];
+	_f5_mask_pre = new int*[len];
+	_sts_mask = new int*[len];
+
+	for (int d = 0; d < len; d++) {
+		_f5_mask_pre[d] = new int[_sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y];
+		_sts_mask[d] = new int[_sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y];
 
 
-	_f5_mask_pre = new int[_sizeF5input + _sizeSTS * _sizeSTS];
-	_f5_mask_post = new int[_sizeF5input + _sizeSTS * _sizeSTS];
-	_sts_mask = new int[_sizeSTSinput + _sizeF5 * _sizeF5];
-
-	for(int i = 0; i < _sizeF5input + _sizeSTS * _sizeSTS; i++) {
-		if (i < _sizeF5input) {
-			_f5_mask_pre[i] = 1;
-			_f5_mask_post[i] = 0;
+		for (int i = 0; i < _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y; i++) {
+			if (i < _sizeF5input) {
+				_f5_mask_pre[d][i] = 1;
+				_f5_mask_post[i] = 0;
+			}
+			else {
+				_f5_mask_pre[d][i] = 0;
+				_f5_mask_post[i] = 1;
+			}
 		}
-		else {
-			_f5_mask_pre[i] = 0;
-			_f5_mask_post[i] = 1;
+
+		for (int i = 0; i < _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y; i++) {
+			if (i < _sizeSTSinput) {
+				_sts_mask[d][i] = 1;
+			}
+			else {
+				_sts_mask[d][i] = 0;
+			}
 		}
 	}
-
-	for (int i = 0; i < _sizeSTSinput + _sizeF5 * _sizeF5; i++) {
-		if (i < _sizeSTSinput) {
-			_sts_mask[i] = 1;
-		}
-		else {
-			_sts_mask[i] = 0;
-		}
-	}
-
-	vector<Sequence*>* trainData = _data.permute();
+	cout << "done" << endl;
 }
 
 void ModelMNS3::run(const int p_epochs) {
@@ -127,8 +160,8 @@ void ModelMNS3::run(const int p_epochs) {
 		const auto start = chrono::system_clock::now();
 
 		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
-			Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
-			Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
+			Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
+			Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
 
 			F5_thread[i]->init_msom(_F5);
 			
@@ -140,12 +173,12 @@ void ModelMNS3::run(const int p_epochs) {
 					Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 					
 
-					F5_thread[i]->msom()->set_input_mask(_f5_mask_pre);
+					F5_thread[i]->msom()->set_input_mask(_f5_mask_pre[i]);
 					prepareInputF5(&f5_input, motor_sample, STS_thread[i]->msom());
 					F5_thread[i]->msom()->activate(&f5_input);
 					F5_thread[i]->msom()->set_input_mask(nullptr);
 
-					STS_thread[i]->msom()->set_input_mask(_sts_mask);
+					STS_thread[i]->msom()->set_input_mask(_sts_mask[i]);
 					prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
 					STS_thread[i]->msom()->activate(&sts_input);
 					STS_thread[i]->msom()->set_input_mask(nullptr);
@@ -231,13 +264,13 @@ void ModelMNS3::testDistance() {
 
     vector<Sequence*>* trainData = _data.permute();
 
-    double* winRateF5_Motor = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * GRASPS, sizeof(double)));
-	double* winRateF5_Visual = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * PERSPS, sizeof(double)));
-    double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
-    double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
+    double* winRateF5_Motor = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(double)));
+	double* winRateF5_Visual = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(double)));
+    double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
+    double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
 
-	Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
-	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
+	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
+	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
 
 	for (int i = 0; i < trainData->size(); i++) {
 		for (int p = 0; p < PERSPS; p++) {
@@ -245,12 +278,12 @@ void ModelMNS3::testDistance() {
 				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
 				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-				_F5->set_input_mask(_f5_mask_pre);
+				_F5->set_input_mask(_f5_mask_pre[i]);
 				prepareInputF5(&f5_input, motor_sample, _STS);
 				_F5->activate(&f5_input);
 				_F5->set_input_mask(nullptr);
 
-				_STS->set_input_mask(_sts_mask);
+				_STS->set_input_mask(_sts_mask[i]);
 				prepareInputSTS(&sts_input, visual_sample, _F5);
 				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);
@@ -276,10 +309,10 @@ void ModelMNS3::testDistance() {
 		}
 	}
 
-	save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, winRateF5_Motor, GRASPS);
-	save_results(timestamp + "_F5.vis", _sizeF5, _sizeF5, winRateF5_Visual, PERSPS);
-	save_results(timestamp + "_STS.mot", _sizeSTS, _sizeSTS, winRateSTS_Motor, GRASPS);
-	save_results(timestamp + "_STS.vis", _sizeSTS, _sizeSTS, winRateSTS_Visual, PERSPS);
+	save_results(timestamp + "_F5.mot", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Motor, GRASPS);
+	save_results(timestamp + "_F5.vis", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Visual, PERSPS);
+	save_results(timestamp + "_STS.mot", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Motor, GRASPS);
+	save_results(timestamp + "_STS.vis", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Visual, PERSPS);
 }
 
 void ModelMNS3::testFinalWinners() {
@@ -287,13 +320,13 @@ void ModelMNS3::testFinalWinners() {
 
     vector<Sequence*>* trainData = _data.permute();
 
-	double* winRateF5_Motor = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * GRASPS, sizeof(double)));
-	double* winRateF5_Visual = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * PERSPS, sizeof(double)));
-	double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
-	double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
+	double* winRateF5_Motor = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(double)));
+	double* winRateF5_Visual = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(double)));
+	double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
+	double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
  
-	Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
-	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
+	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
+	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
 
 	for (int i = 0; i < trainData->size(); i++) {
 		for (int p = 0; p < PERSPS; p++) {
@@ -301,12 +334,12 @@ void ModelMNS3::testFinalWinners() {
 				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
 				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-				_F5->set_input_mask(_f5_mask_pre);
+				_F5->set_input_mask(_f5_mask_pre[i]);
 				prepareInputF5(&f5_input, motor_sample, _STS);
 				_F5->activate(&f5_input);
 				_F5->set_input_mask(nullptr);
 
-				_STS->set_input_mask(_sts_mask);
+				_STS->set_input_mask(_sts_mask[i]);
 				prepareInputSTS(&sts_input, visual_sample, _F5);
 				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);
@@ -330,10 +363,10 @@ void ModelMNS3::testFinalWinners() {
 		}
 	}
 
-	save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, winRateF5_Motor, GRASPS);
-	save_results(timestamp + "_F5.vis", _sizeF5, _sizeF5, winRateF5_Visual, PERSPS);
-	save_results(timestamp + "_STS.mot", _sizeSTS, _sizeSTS, winRateSTS_Motor, GRASPS);
-	save_results(timestamp + "_STS.vis", _sizeSTS, _sizeSTS, winRateSTS_Visual, PERSPS);
+	save_results(timestamp + "_F5.mot", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Motor, GRASPS);
+	save_results(timestamp + "_F5.vis", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Visual, PERSPS);
+	save_results(timestamp + "_STS.mot", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Motor, GRASPS);
+	save_results(timestamp + "_STS.vis", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Visual, PERSPS);
 }
 
 void ModelMNS3::testMirror() {
@@ -341,13 +374,13 @@ void ModelMNS3::testMirror() {
 
 	vector<Sequence*>* trainData = _data.permute();
 
-	double* winRateF5_Motor = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * GRASPS, sizeof(double)));
-	double* winRateF5_Visual = static_cast<double*>(calloc(_sizeF5 * _sizeF5 * PERSPS, sizeof(double)));
-	double* winRateSTS_Visual = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * PERSPS, sizeof(double)));
-	double* winRateSTS_Motor = static_cast<double*>(calloc(_sizeSTS * _sizeSTS * GRASPS, sizeof(double)));
+	double* winRateF5_Motor = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(double)));
+	double* winRateF5_Visual = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(double)));
+	double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
+	double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
 
-	Tensor f5_input = Tensor::Zero({ _sizeF5input + _sizeSTS * _sizeSTS });
-	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + _sizeF5 * _sizeF5 });
+	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
+	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
 
 	for (int i = 0; i < 1; i++) {
 		for (int p = 0; p < PERSPS; p++) {
@@ -355,7 +388,7 @@ void ModelMNS3::testMirror() {
 				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
 				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-				_STS->set_input_mask(_sts_mask);
+				_STS->set_input_mask(_sts_mask[i]);
 				prepareInputSTS(&sts_input, visual_sample, _F5);
 				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);
@@ -389,8 +422,8 @@ void ModelMNS3::testMirror() {
 		}
 	}
 
-	save_results(timestamp + "_F5.mot", _sizeF5, _sizeF5, winRateF5_Motor, GRASPS);
-	save_results(timestamp + "_F5.vis", _sizeF5, _sizeF5, winRateF5_Visual, PERSPS);
-	save_results(timestamp + "_STS.mot", _sizeSTS, _sizeSTS, winRateSTS_Motor, GRASPS);
-	save_results(timestamp + "_STS.vis", _sizeSTS, _sizeSTS, winRateSTS_Visual, PERSPS);
+	save_results(timestamp + "_F5.mot", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Motor, GRASPS);
+	save_results(timestamp + "_F5.vis", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Visual, PERSPS);
+	save_results(timestamp + "_STS.mot", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Motor, GRASPS);
+	save_results(timestamp + "_STS.vis", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Visual, PERSPS);
 }

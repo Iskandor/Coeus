@@ -10,7 +10,7 @@ using namespace MNS;
 
 int main()
 {
-	Config::instance().Load("../data/config3.json");
+	Config::instance().Load("./config3.json");
 
 	ModelMNS3 model;
 

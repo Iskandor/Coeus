@@ -40,8 +40,8 @@ private:
     static const int GRASPS = 3;
     static const int PERSPS = 4;
 
-	int _sizeF5;
-	int _sizeSTS;
+	//int _sizeF5;
+	//int _sizeSTS;
 
     Dataset _data;
     MSOM    *_F5;
@@ -50,9 +50,9 @@ private:
 	//Tensor** _F5input;
     //Tensor** _STSinput;
 
-	int *_f5_mask_pre;
+	int **_f5_mask_pre;
 	int *_f5_mask_post;
-	int *_sts_mask;
+	int **_sts_mask;
 };
 
 }
