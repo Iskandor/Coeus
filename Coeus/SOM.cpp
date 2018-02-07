@@ -139,6 +139,6 @@ void SOM::get_position(const int p_index, int& p_x, int& p_y) const {
 int Coeus::SOM::get_position(int p_x, int p_y) const
 {
 	int pos = p_y * _dim_x + p_x;	
-	if (pos < 0 || pos > _dim_x * _dim_y) pos = -1;
+	if (pos < 0 || pos >= _dim_x * _dim_y) pos = -1;
 	return pos;
 }
