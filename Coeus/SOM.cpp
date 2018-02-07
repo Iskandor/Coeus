@@ -81,6 +81,18 @@ double SOM::calc_distance(const int p_index) {
 	return sqrt(s);
 }
 
+double SOM::calc_distance(int p_neuron1, int p_neuron2)
+{
+	const int dim = _input_group->getDim();
+	double s = 0;
+
+	for (int i = 0; i < dim; i++) {
+		s += pow(_input_lattice->get_weights()->at(p_neuron1, i) - _input_lattice->get_weights()->at(p_neuron2, i), 2);
+	}
+
+	return sqrt(s);
+}
+
 SOM * SOM::clone() const {
 	SOM* result = new SOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
 
@@ -122,5 +134,11 @@ int SOM::find_winner(Tensor* p_input) {
 void SOM::get_position(const int p_index, int& p_x, int& p_y) const {
 	p_x = p_index % _dim_x;
 	p_y = p_index / _dim_x;
+}
 
+int Coeus::SOM::get_position(int p_x, int p_y) const
+{
+	int pos = p_y * _dim_x + p_x;	
+	if (pos < 0 || pos > _dim_x * _dim_y) pos = -1;
+	return pos;
 }

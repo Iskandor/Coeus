@@ -168,8 +168,8 @@ void ModelMNS::save() const {
 }
 
 void ModelMNS::load(const string p_timestamp) {
-	_F5 = static_cast<MSOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_F5.json"));
-	_STS = static_cast<MSOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_STS.json"));
+	_F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
+	_STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
 }
 
 void ModelMNS::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) {
@@ -191,6 +191,17 @@ void ModelMNS::save_results(const string p_filename, const int p_dim_x, const in
 	}
 
 	file.close();
+}
+
+void MNS::ModelMNS::save_umatrix(string p_timestamp)
+{
+	SOM_analyzer analyzer;
+
+	analyzer.create_umatrix(_F5);
+	analyzer.save_umatrix(p_timestamp + "_F5.umat");
+
+	analyzer.create_umatrix(_STS);
+	analyzer.save_umatrix(p_timestamp + "_STS.umat");
 }
 
 void ModelMNS::testDistance() {

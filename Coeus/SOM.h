@@ -14,12 +14,14 @@ namespace Coeus
 		void activate(Tensor *p_input) override;
 		virtual int find_winner(Tensor* p_input);
 		void get_position(int p_index, int& p_x, int& p_y) const;
+		int get_position(int p_x, int p_y) const;
 
 		NeuralGroup* get_input_group() const { return _input_group; }
 		NeuralGroup* get_lattice() const { return _output_group; }
 		Connection*  get_input_lattice() const { return _input_lattice; }
 
 		virtual double calc_distance(int p_index);
+		virtual double calc_distance(int p_neuron1, int p_neuron2);
 
 		int dim_x() const { return _dim_x; }
 		int dim_y() const { return _dim_y; }
@@ -30,8 +32,8 @@ namespace Coeus
 		virtual SOM* clone() const;
 		void override_params(BaseLayer* p_source) override;
 
-	protected:		
-		virtual void calc_distance();		
+	protected:
+		void calc_distance();
 
 		Connection* _input_lattice;
 

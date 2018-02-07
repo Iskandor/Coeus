@@ -21,8 +21,10 @@ namespace MNS {
 		void run(int p_epochs);
 		void save() const;
 
+		void save_umatrix(string p_timestamp);
 		void testDistance();
 		void testFinalWinners();
+
 
 	private:
 		void load(string p_timestamp);

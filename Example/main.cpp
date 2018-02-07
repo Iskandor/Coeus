@@ -14,10 +14,11 @@ int main()
 
 	ModelMNS model;
 
-	model.init();
-	//model.init("1517840926");
-	model.run(Config::instance().epoch);
-	model.save();
+	//model.init();
+	model.init("1518007204");
+	//model.run(Config::instance().epoch);
+	//model.save();
+	model.save_umatrix("1518007204");
 
 	//model.testMirror();
 	//model.testAllWinners();

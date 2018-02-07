@@ -1,8 +1,6 @@
 #include <iostream>
 #include "MSOM.h"
 #include "IOUtils.h"
-#include <future>
-#include "ThreadPool.h"
 
 using namespace Coeus;
 
@@ -55,7 +53,27 @@ double MSOM::calc_distance(const int p_index) {
 		}
 	}
 
-	return (1 - _alpha) * dx + _alpha * dc;;
+	return (1 - _alpha) * dx + _alpha * dc;
+}
+
+double Coeus::MSOM::calc_distance(int p_neuron1, int p_neuron2)
+{
+	const int dim = _input_group->getDim();
+
+	Tensor* xi = _input_lattice->get_weights();
+	Tensor* ci = _context_lattice->get_weights();
+
+	double dx = 0;
+	double dc = 0;
+
+	for (int i = 0; i < dim; i++) {
+		if (_input_mask == nullptr || _input_mask[i] == 1) {
+			dx += pow(xi->at(p_neuron1, i) - xi->at(p_neuron2, i), 2);
+			dc += pow(ci->at(p_neuron1, i) - ci->at(p_neuron2, i), 2);
+		}
+	}
+
+	return (1 - _alpha) * dx + _alpha * dc;
 }
 
 MSOM * MSOM::clone() const {
@@ -71,12 +89,6 @@ void MSOM::override_params(BaseLayer * p_source)
 	MSOM* msom = static_cast<MSOM*>(p_source);
 
 	_context_lattice->set_weights(msom->get_context_lattice()->get_weights());
-}
-
-void MSOM::calc_distance() {
-	for (int l = 0; l < _dim_x * _dim_y; l++) {
-		_dist.set(l, calc_distance(l));
-	}
 }
 
 void MSOM::reset_context() const {

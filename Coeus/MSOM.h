@@ -12,6 +12,7 @@ namespace Coeus
 
 		void activate(Tensor *p_input) override;
 		double calc_distance(int p_index) override;
+		double calc_distance(int p_neuron1, int p_neuron2) override;
 
 		void update_context() const;
 		void reset_context() const;
@@ -25,8 +26,7 @@ namespace Coeus
 		MSOM* clone() const override;
 		void override_params(BaseLayer* p_source) override;
 
-	protected:
-		void calc_distance() override;		
+	protected:		
 
 		NeuralGroup* _context_group;
 		Connection* _context_lattice;
