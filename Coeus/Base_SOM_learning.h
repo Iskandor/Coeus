@@ -1,6 +1,9 @@
 #pragma once
 #include "Base_SOM_params.h"
 #include "SOM_analyzer.h"
+#include <ppl.h>
+
+using namespace concurrency;
 
 namespace Coeus
 {
@@ -19,6 +22,8 @@ namespace Coeus
 
 		SOM_analyzer* analyzer() const { return _som_analyzer; };
 
+		void set_mutex(critical_section* p_mutex) { _mutex = p_mutex; }
+
 	protected:
 		double calc_neighborhood(double p_d, NEIGHBORHOOD_TYPE p_type) const;
 		double euclidean_distance(int p_x1, int p_y1, int p_x2, int p_y2) const;
@@ -28,6 +33,8 @@ namespace Coeus
 		SOM_analyzer* _som_analyzer;
 		
 		Tensor	_dist_matrix;
+
+		critical_section* _mutex;
 
 	};
 }

@@ -33,11 +33,6 @@ ModelMNS3::~ModelMNS3() {
 
 	int len = _data.permute()->size();
 
-	for (int d = 0; d < len; d++) {
-		delete[] _f5_mask_pre[d];
-		delete[] _sts_mask[d];
-	}
-
 	delete[] _f5_mask_pre;
 	delete[] _f5_mask_post;
 	delete[] _sts_mask;
@@ -87,34 +82,29 @@ void ModelMNS3::init(string p_timestamp) {
 	int len = _data.permute()->size();
 
 	_f5_mask_post = new int[_sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y];
-	_f5_mask_pre = new int*[len];
-	_sts_mask = new int*[len];
+	_f5_mask_pre = new int[_sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y];
+	_sts_mask = new int[_sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y];
 
-	for (int d = 0; d < len; d++) {
-		_f5_mask_pre[d] = new int[_sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y];
-		_sts_mask[d] = new int[_sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y];
-
-
-		for (int i = 0; i < _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y; i++) {
-			if (i < _sizeF5input) {
-				_f5_mask_pre[d][i] = 1;
-				_f5_mask_post[i] = 0;
-			}
-			else {
-				_f5_mask_pre[d][i] = 0;
-				_f5_mask_post[i] = 1;
-			}
+	for (int i = 0; i < _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y; i++) {
+		if (i < _sizeF5input) {
+			_f5_mask_pre[i] = 1;
+			_f5_mask_post[i] = 0;
 		}
-
-		for (int i = 0; i < _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y; i++) {
-			if (i < _sizeSTSinput) {
-				_sts_mask[d][i] = 1;
-			}
-			else {
-				_sts_mask[d][i] = 0;
-			}
+		else {
+			_f5_mask_pre[i] = 0;
+			_f5_mask_post[i] = 1;
 		}
 	}
+
+	for (int i = 0; i < _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y; i++) {
+		if (i < _sizeSTSinput) {
+			_sts_mask[i] = 1;
+		}
+		else {
+			_sts_mask[i] = 0;
+		}
+	}
+
 	cout << "done" << endl;
 }
 
@@ -123,7 +113,6 @@ void ModelMNS3::run(const int p_epochs) {
 	cout << "Settling: " << Config::instance().settling << endl;
 	cout << "CPUs: " << GetProcessorCount() << endl;
 	cout << "Initializing learning module...";
-
 
 	SOM_analyzer F5_analyzer;
 	SOM_analyzer STS_analyzer;
@@ -140,15 +129,19 @@ void ModelMNS3::run(const int p_epochs) {
 	vector<Sequence*>* trainData = _data.permute();
 
 	vector<MSOM_learning*> F5_thread(trainData->size());
+	vector<SOM_analyzer*> F5_thread_analyzer(trainData->size());
 
 	for (int i = 0; i < trainData->size(); i++) {
-		F5_thread[i] = new MSOM_learning(_F5->clone(), &F5_params, &F5_analyzer);
+		F5_thread_analyzer[i] = new SOM_analyzer();
+		F5_thread[i] = new MSOM_learning(_F5->clone(), &F5_params, F5_thread_analyzer[i]);
 	}
 
 	vector<MSOM_learning*> STS_thread(trainData->size());
+	vector<SOM_analyzer*> STS_thread_analyzer(trainData->size());
 
 	for (int i = 0; i < trainData->size(); i++) {
-		STS_thread[i] = new MSOM_learning(_STS->clone(), &STS_params, &STS_analyzer);
+		STS_thread_analyzer[i] = new SOM_analyzer();
+		STS_thread[i] = new MSOM_learning(_STS->clone(), &STS_params, STS_thread_analyzer[i]);
 	}
 
 	cout << "done" << endl;
@@ -173,12 +166,12 @@ void ModelMNS3::run(const int p_epochs) {
 					Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 					
 
-					F5_thread[i]->msom()->set_input_mask(_f5_mask_pre[i]);
+					F5_thread[i]->msom()->set_input_mask(_f5_mask_pre);
 					prepareInputF5(&f5_input, motor_sample, STS_thread[i]->msom());
 					F5_thread[i]->msom()->activate(&f5_input);
 					F5_thread[i]->msom()->set_input_mask(nullptr);
 
-					STS_thread[i]->msom()->set_input_mask(_sts_mask[i]);
+					STS_thread[i]->msom()->set_input_mask(_sts_mask);
 					prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
 					STS_thread[i]->msom()->activate(&sts_input);
 					STS_thread[i]->msom()->set_input_mask(nullptr);
@@ -198,6 +191,8 @@ void ModelMNS3::run(const int p_epochs) {
 
 		F5_learner.merge(F5_thread);
 		STS_learner.merge(STS_thread);
+		F5_analyzer.merge(F5_thread_analyzer);
+		STS_analyzer.merge(STS_thread_analyzer);
 
 		const auto end = chrono::system_clock::now();
 		chrono::duration<double> elapsed_seconds = end - start;
@@ -212,9 +207,11 @@ void ModelMNS3::run(const int p_epochs) {
 
 	for (int i = 0; i < trainData->size(); i++) {
 		delete F5_thread[i];
+		delete F5_thread_analyzer[i];
 	}
 	for (int i = 0; i < trainData->size(); i++) {
 		delete STS_thread[i];
+		delete STS_thread_analyzer[i];
 	}
 }
 
@@ -278,12 +275,12 @@ void ModelMNS3::testDistance() {
 				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
 				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-				_F5->set_input_mask(_f5_mask_pre[i]);
+				_F5->set_input_mask(_f5_mask_pre);
 				prepareInputF5(&f5_input, motor_sample, _STS);
 				_F5->activate(&f5_input);
 				_F5->set_input_mask(nullptr);
 
-				_STS->set_input_mask(_sts_mask[i]);
+				_STS->set_input_mask(_sts_mask);
 				prepareInputSTS(&sts_input, visual_sample, _F5);
 				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);
@@ -334,12 +331,12 @@ void ModelMNS3::testFinalWinners() {
 				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
 				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-				_F5->set_input_mask(_f5_mask_pre[i]);
+				_F5->set_input_mask(_f5_mask_pre);
 				prepareInputF5(&f5_input, motor_sample, _STS);
 				_F5->activate(&f5_input);
 				_F5->set_input_mask(nullptr);
 
-				_STS->set_input_mask(_sts_mask[i]);
+				_STS->set_input_mask(_sts_mask);
 				prepareInputSTS(&sts_input, visual_sample, _F5);
 				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);
@@ -388,7 +385,7 @@ void ModelMNS3::testMirror() {
 				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
 				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
 
-				_STS->set_input_mask(_sts_mask[i]);
+				_STS->set_input_mask(_sts_mask);
 				prepareInputSTS(&sts_input, visual_sample, _F5);
 				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);

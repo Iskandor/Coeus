@@ -12,6 +12,7 @@ namespace Coeus {
 			SOM_analyzer();
 			~SOM_analyzer();
 
+			void merge(vector<SOM_analyzer*> &p_analyzers);
 			void update(SOM* p_som, const int p_winner);
 			void end_epoch();
 
