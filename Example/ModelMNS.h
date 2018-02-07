@@ -12,36 +12,32 @@ using namespace Coeus;
 
 namespace MNS {
 
-class ModelMNS {
-public:
-    ModelMNS();
-    ~ModelMNS();
+	class ModelMNS {
+	public:
+		ModelMNS();
+		~ModelMNS();
 
-    void init();
-    void run(int p_epochs);
-    void save() const;
-    void load(string p_timestamp);
+		void init(string p_timestamp = "");
+		void run(int p_epochs);
+		void save() const;
 
-    void testAllWinners();
-    void testFinalWinners();
-    void testDistance();
-    void testBALData();
+		void testDistance();
+		void testFinalWinners();
 
-private:
-	double** init_test_buffer(int p_size1, int p_size2);	
-	double*** init_test_buffer(int p_size1, int p_size2, int p_size3);
-	void free_test_buffer(double** p_buffer, int p_size1, int p_size2);
-	void free_test_buffer(double*** p_buffer, int p_size1, int p_size2, int p_size3);
+	private:
+		void load(string p_timestamp);
 
-    static const int _sizePMC = 12;
-	static const int _sizeSTSp = 16;
-	static const int GRASPS = 3;
-	static const int PERSPS = 4;
+		static void save_results(string p_filename, int p_dim_x, int p_dim_y, double* p_data, int p_category);
 
-    Dataset _data;
-    MSOM    *_msomMotor;
-    MSOM    *_msomVisual;
-};
+		static const int _sizeF5input = 16;
+		static const int _sizeSTSinput = 40;
+		static const int GRASPS = 3;
+		static const int PERSPS = 4;
+
+		Dataset _data;
+		MSOM    *_F5;
+		MSOM    *_STS;
+	};
 
 }
 

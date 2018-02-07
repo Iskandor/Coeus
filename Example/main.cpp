@@ -10,9 +10,9 @@ using namespace MNS;
 
 int main()
 {
-	Config::instance().Load("./config3.json");
+	Config::instance().Load("./config0.json");
 
-	ModelMNS3 model;
+	ModelMNS model;
 
 	model.init();
 	//model.init("1517840926");
