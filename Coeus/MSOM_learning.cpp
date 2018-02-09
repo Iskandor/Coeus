@@ -58,6 +58,7 @@ void MSOM_learning::train(Tensor* p_input) {
 }
 
 void MSOM_learning::merge(vector<MSOM_learning*>& p_learners) {
+	int size = p_learners.size();
 
 	for(auto it = p_learners.begin(); it != p_learners.end(); ++it) {
 		_delta_w += (*it)->_batch_delta_w;
@@ -66,6 +67,9 @@ void MSOM_learning::merge(vector<MSOM_learning*>& p_learners) {
 		(*it)->_batch_delta_w.fill(0);
 		(*it)->_batch_delta_c.fill(0);
 	}
+
+	_delta_w /= size;
+	_delta_c /= size;
 
 	_msom->get_input_lattice()->update_weights(_delta_w);
 	_msom->get_context_lattice()->update_weights(_delta_c);

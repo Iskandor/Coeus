@@ -194,6 +194,24 @@ void Tensor::operator*=(const double p_const) {
 	}
 }
 
+Tensor Tensor::operator/(const double p_const)
+{
+	double* arr = alloc_arr(_size);
+
+	for (int i = 0; i < _size; i++) {
+		arr[i] = _arr[i] / p_const;
+	}
+
+	return Tensor(_rank, _shape, arr);
+}
+
+void Tensor::operator/=(const double p_const)
+{
+	for (int i = 0; i < _size; i++) {
+		_arr[i] /= p_const;
+	}
+}
+
 Tensor Tensor::apply(double(*f)(double)) const 
 {
 	double* arr = alloc_arr(_size);

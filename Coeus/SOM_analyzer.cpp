@@ -29,22 +29,37 @@ void Coeus::SOM_analyzer::create_umatrix(SOM * p_som)
 
 	int pos, pos_x, pos_y;
 	double s;
+	int n;
 
 	for (int i = 0; i < p_som->dim_x() * p_som->dim_y(); i++) {
 		p_som->get_position(i, pos_x, pos_y);
 		s = 0;
+		n = 0;
 
-		for (int y = -1; y < 2; y++) {
-			for (int x = -1; x < 2; x++) {
-				pos = p_som->get_position(pos_x + x, pos_y + y);
-
-				if (pos != -1) {
-					s += p_som->calc_distance(i, pos);
-				}
-			}
+		pos = p_som->get_position(pos_x + 1, pos_y);
+		if (pos != -1) {
+			s += p_som->calc_distance(i, pos);
+			n++;
 		}
 
-		_umatrix->set(pos_y, pos_x, s);
+		pos = p_som->get_position(pos_x - 1, pos_y);
+		if (pos != -1) {
+			s += p_som->calc_distance(i, pos);
+			n++;
+		}
+
+		pos = p_som->get_position(pos_x, pos_y + 1);
+		if (pos != -1) {
+			s += p_som->calc_distance(i, pos);
+			n++;
+		}
+		pos = p_som->get_position(pos_x, pos_y - 1);
+		if (pos != -1) {
+			s += p_som->calc_distance(i, pos);
+			n++;
+		}
+
+		_umatrix->set(pos_y, pos_x, s/n);
 	}
 }
 

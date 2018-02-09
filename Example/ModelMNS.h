@@ -20,6 +20,7 @@ namespace MNS {
 		void init(string p_timestamp = "");
 		void run(int p_epochs);
 		void save() const;
+		void load(string p_timestamp);
 
 		void save_umatrix(string p_timestamp);
 		void testDistance();
@@ -27,8 +28,6 @@ namespace MNS {
 
 
 	private:
-		void load(string p_timestamp);
-
 		static void save_results(string p_filename, int p_dim_x, int p_dim_y, double* p_data, int p_category);
 
 		static const int _sizeF5input = 16;

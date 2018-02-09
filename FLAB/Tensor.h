@@ -38,6 +38,8 @@ public:
 	Tensor operator * (const Tensor& p_tensor);
 	Tensor operator * (const double p_const);
 	void operator *= (const double p_const);
+	Tensor operator / (const double p_const);
+	void operator /= (const double p_const);
 
 	Tensor apply(double(*f)(double)) const;
 
@@ -56,9 +58,10 @@ public:
 	void set(int p_x, double p_val) const;
 	void set(int p_y, int p_x, double p_val) const;
 
-private:
 	static double* alloc_arr(int p_size);
 	static int* alloc_shape(int p_size);
+
+private:
 	void free_arr() const;
 	void free_shape() const;
 	void init_shape(int p_rank, int* p_shape);

@@ -36,7 +36,7 @@ public:
      string	getId() const { return _id; };
     int		getDim() const { return _dim; };
 
-    void	setOutput(Tensor& p_output);
+    void	setOutput(Tensor* p_output);
     Tensor* getOutput() { return &_output; };
 
     ACTIVATION getActivationFunction() const { return _activationFunction; };

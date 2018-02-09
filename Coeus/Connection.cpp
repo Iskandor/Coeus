@@ -20,7 +20,7 @@ Connection::Connection(nlohmann::json p_data) {
 	_in_dim = p_data["in_dim"].get<int>();
 	_out_dim = p_data["out_dim"].get<int>();
 
-	double* data = new double[_out_dim * _in_dim];
+	double* data = Tensor::alloc_arr(_out_dim * _in_dim);
 
 	stringstream ss(p_data["weights"].get<string>());
 
@@ -61,10 +61,6 @@ void Connection::init(const Connection::INIT p_init, const double p_limit) {
             identity();
             break;
     }
-}
-
-void Connection::init(Tensor *p_weights) {
-    _weights = p_weights;
 }
 
 void Connection::uniform(const double p_limit) {

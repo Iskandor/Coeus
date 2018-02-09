@@ -65,7 +65,7 @@ void SOM::activate(Tensor* p_input) {
 			break;
 	}
 
-	_output_group->setOutput(_dist);
+	_output_group->setOutput(&_dist);
 }
 
 double SOM::calc_distance(const int p_index) {
@@ -118,7 +118,7 @@ int SOM::find_winner(Tensor* p_input) {
 	double winner_dist = INFINITY;
 	_winner = 0;
 
-	_input_group->setOutput(*p_input);
+	_input_group->setOutput(p_input);
 
 	for (int i = 0; i < _output_group->getDim(); i++) {
 		const double neuron_dist = calc_distance(i);
@@ -138,7 +138,7 @@ void SOM::get_position(const int p_index, int& p_x, int& p_y) const {
 
 int Coeus::SOM::get_position(int p_x, int p_y) const
 {
-	int pos = p_y * _dim_x + p_x;	
-	if (pos < 0 || pos >= _dim_x * _dim_y) pos = -1;
+	int pos = p_y * _dim_x + p_x;
+	if (p_x < 0 || p_x >= _dim_x || p_y < 0 || p_y >= _dim_y) pos = -1;
 	return pos;
 }

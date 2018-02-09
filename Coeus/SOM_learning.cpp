@@ -44,12 +44,15 @@ void SOM_learning::train(Tensor* p_input) {
 }
 
 void SOM_learning::merge(vector<SOM_learning*>& p_learners) {
+	int size = p_learners.size();
 
 	for (auto it = p_learners.begin(); it != p_learners.end(); ++it) {
 		_delta_w += (*it)->_batch_delta_w;
 
 		(*it)->_batch_delta_w.fill(0);
 	}
+
+	_delta_w /= size;
 
 	_som->get_input_lattice()->update_weights(_delta_w);
 

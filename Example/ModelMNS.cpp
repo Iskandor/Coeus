@@ -25,8 +25,8 @@ ModelMNS::ModelMNS() {
 }
 
 ModelMNS::~ModelMNS() {
-	delete _F5;
-	delete _STS;
+	if (_F5 != nullptr) delete _F5;
+	if (_STS != nullptr) delete _STS;
 }
 
 void ModelMNS::init(string p_timestamp) {
