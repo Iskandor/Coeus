@@ -69,10 +69,10 @@ void ModelMNS3::init(string p_timestamp) {
 
 		load(p_timestamp);
 
-		Config::instance().f5_config.dim_x = _STS->dim_x();
-		Config::instance().f5_config.dim_y = _STS->dim_y();
-		Config::instance().sts_config.dim_x = _F5->dim_x();
-		Config::instance().sts_config.dim_y = _F5->dim_y();
+		Config::instance().f5_config.dim_x = _F5->dim_x();
+		Config::instance().f5_config.dim_y = _F5->dim_y();
+		Config::instance().sts_config.dim_x = _STS->dim_x();
+		Config::instance().sts_config.dim_y = _STS->dim_y();
 
 		cout << "done" << endl;
 	}
