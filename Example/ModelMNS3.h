@@ -21,7 +21,7 @@ public:
 
     void init(string p_timestamp = "");
     void run(int p_epochs);
-    void save() const;
+	void save(string p_timestamp) const;
 
     void testDistance();
     void testFinalWinners();

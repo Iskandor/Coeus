@@ -160,11 +160,9 @@ void ModelMNS::run(const int p_epochs) {
 	}
 }
 
-void ModelMNS::save() const {
-	const string timestamp = to_string(time(nullptr));
-
-	IOUtils::save_network(timestamp + "_F5.json", _F5);
-	IOUtils::save_network(timestamp + "_STS.json", _STS);
+void ModelMNS::save(string p_timestamp) const {
+	IOUtils::save_network(p_timestamp + "_F5.json", _F5);
+	IOUtils::save_network(p_timestamp + "_STS.json", _STS);
 }
 
 void ModelMNS::load(const string p_timestamp) {

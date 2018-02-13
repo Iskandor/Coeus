@@ -19,7 +19,7 @@ namespace MNS {
 
 		void init(string p_timestamp = "");
 		void run(int p_epochs);
-		void save() const;
+		void save(string p_timestamp) const;
 		void load(string p_timestamp);
 
 		void save_umatrix(string p_timestamp);

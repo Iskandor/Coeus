@@ -13,6 +13,7 @@
 #include <ppl.h>
 #include <concrtrm.h>
 #include "Config.h"
+#include "Logger.h"
 
 using namespace MNS;
 using namespace Concurrency;
@@ -197,8 +198,17 @@ void ModelMNS3::run(const int p_epochs) {
 		const auto end = chrono::system_clock::now();
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-		cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff(_F5->get_lattice()->getDim()) << endl;
-		cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff(_STS->get_lattice()->getDim()) << endl;
+
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->getDim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->getDim());
+		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->getDim());
+		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->getDim());
+
+		cout << " F5 qError: " << qerrF5 << " WD: " << wdF5 << endl;
+		cout << "STS qError: " << qerrSTS << " WD: " << wdSTS << endl;
+
+		Logger::instance().log(to_string(qerrF5) + "," + to_string(wdF5) + "," + to_string(qerrSTS) + "," + to_string(wdSTS));
+
 		F5_analyzer.end_epoch();
 		STS_analyzer.end_epoch();
 		F5_params.param_decay();
@@ -215,16 +225,14 @@ void ModelMNS3::run(const int p_epochs) {
 	}
 }
 
-void ModelMNS3::save() const {
-    const string timestamp = to_string(time(nullptr));
-
-    IOUtils::save_network(timestamp + "_F5.json", _F5);
-	IOUtils::save_network(timestamp + "_STS.json", _STS);
+void ModelMNS3::save(string p_timestamp) const {
+    IOUtils::save_network(p_timestamp + "_F5.json", _F5);
+	IOUtils::save_network(p_timestamp + "_STS.json", _STS);
 }
 
 void ModelMNS3::load(const string p_timestamp) {
-    _F5 = static_cast<MSOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_F5.json"));
-    _STS = static_cast<MSOM*>(IOUtils::load_network("C:\\GIT\\Coeus\\x64\\Debug\\" + p_timestamp + "_STS.json"));
+    _F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
+    _STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
 }
 
 void ModelMNS3::prepareInputSTS(Tensor* p_output, Tensor *p_input, MSOM* p_f5) const {

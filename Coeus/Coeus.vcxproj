@@ -167,6 +167,7 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="IDGen.cpp" />
     <ClCompile Include="IOUtils.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
     <ClCompile Include="MSOM_params.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IOUtils.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
     <ClInclude Include="MSOM_params.h" />
