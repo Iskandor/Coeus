@@ -225,6 +225,127 @@ void ModelMNS3::run(const int p_epochs) {
 	}
 }
 
+void ModelMNS3::run2(const int p_epochs) {
+	cout << "Epochs: " << p_epochs << endl;
+	cout << "Settling: " << Config::instance().settling << endl;
+	cout << "CPUs: " << GetProcessorCount() << endl;
+	cout << "Initializing learning module...";
+
+	SOM_analyzer F5_analyzer;
+	SOM_analyzer STS_analyzer;
+
+	MSOM_params F5_params(_F5);
+	F5_params.init_training(Config::instance().f5_config.gamma1, Config::instance().f5_config.gamma2, p_epochs);
+
+	MSOM_params STS_params(_STS);
+	STS_params.init_training(Config::instance().sts_config.gamma1, Config::instance().sts_config.gamma2, p_epochs);
+
+	MSOM_learning F5_learner(_F5, &F5_params, &F5_analyzer);
+	MSOM_learning STS_learner(_STS, &STS_params, &STS_analyzer);
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	vector<MSOM_learning*> F5_thread(trainData->size());
+	vector<SOM_analyzer*> F5_thread_analyzer(trainData->size());
+
+	for (int i = 0; i < trainData->size(); i++) {
+		F5_thread_analyzer[i] = new SOM_analyzer();
+		F5_thread[i] = new MSOM_learning(_F5->clone(), &F5_params, F5_thread_analyzer[i]);
+	}
+
+	vector<MSOM_learning*> STS_thread(trainData->size());
+	vector<SOM_analyzer*> STS_thread_analyzer(trainData->size());
+
+	for (int i = 0; i < trainData->size(); i++) {
+		STS_thread_analyzer[i] = new SOM_analyzer();
+		STS_thread[i] = new MSOM_learning(_STS->clone(), &STS_params, STS_thread_analyzer[i]);
+	}
+
+	cout << "done" << endl;
+
+	for (int t = 0; t < p_epochs; t++) {
+		cout << "Epoch " << t << endl;
+		trainData = _data.permute();
+
+		const auto start = chrono::system_clock::now();
+
+		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
+			Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
+			Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
+
+			F5_thread[i]->init_msom(_F5);
+
+			for (int p = 0; p < PERSPS; p++) {
+				STS_thread[i]->init_msom(_STS);
+
+				for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+					Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
+					Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+
+
+					F5_thread[i]->msom()->set_input_mask(_f5_mask_pre);
+					prepareInputF5(&f5_input, motor_sample, STS_thread[i]->msom());
+					F5_thread[i]->msom()->activate(&f5_input);
+					F5_thread[i]->msom()->set_input_mask(nullptr);
+
+					STS_thread[i]->msom()->set_input_mask(_sts_mask);
+					prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
+					STS_thread[i]->msom()->activate(&sts_input);
+					STS_thread[i]->msom()->set_input_mask(nullptr);
+
+					for (int s = 0; s < Config::instance().settling; s++) {
+						prepareInputF5(&f5_input, motor_sample, STS_thread[i]->msom());
+						prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
+						F5_thread[i]->msom()->activate(&f5_input);
+						STS_thread[i]->msom()->activate(&sts_input);
+					}
+
+					prepareInputF5(&f5_input, motor_sample, STS_thread[i]->msom());
+					prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
+					F5_thread[i]->train(&f5_input);
+					STS_thread[i]->train(&sts_input);
+				}
+
+				F5_thread[i]->msom()->reset_context();
+				STS_thread[i]->msom()->reset_context();
+			}
+		});
+
+		F5_learner.merge(F5_thread);
+		STS_learner.merge(STS_thread);
+		F5_analyzer.merge(F5_thread_analyzer);
+		STS_analyzer.merge(STS_thread_analyzer);
+
+		const auto end = chrono::system_clock::now();
+		chrono::duration<double> elapsed_seconds = end - start;
+		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->getDim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->getDim());
+		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->getDim());
+		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->getDim());
+
+		cout << " F5 qError: " << qerrF5 << " WD: " << wdF5 << endl;
+		cout << "STS qError: " << qerrSTS << " WD: " << wdSTS << endl;
+
+		Logger::instance().log(to_string(qerrF5) + "," + to_string(wdF5) + "," + to_string(qerrSTS) + "," + to_string(wdSTS));
+
+		F5_analyzer.end_epoch();
+		STS_analyzer.end_epoch();
+		F5_params.param_decay();
+		STS_params.param_decay();
+	}
+
+	for (int i = 0; i < trainData->size(); i++) {
+		delete F5_thread[i];
+		delete F5_thread_analyzer[i];
+	}
+	for (int i = 0; i < trainData->size(); i++) {
+		delete STS_thread[i];
+		delete STS_thread_analyzer[i];
+	}
+}
+
 void ModelMNS3::save(string p_timestamp) const {
     IOUtils::save_network(p_timestamp + "_F5.json", _F5);
 	IOUtils::save_network(p_timestamp + "_STS.json", _STS);
