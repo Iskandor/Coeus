@@ -182,6 +182,8 @@ void ModelMNS3::run(const int p_epochs) {
 						prepareInputSTS(&sts_input, visual_sample, F5_thread[i]->msom());
 						F5_thread[i]->train(&f5_input);
 						STS_thread[i]->train(&sts_input);
+						F5_thread[i]->msom()->activate(&f5_input);
+						STS_thread[i]->msom()->activate(&sts_input);
 					}
 				}
 
@@ -395,6 +397,8 @@ void ModelMNS3::testDistance() {
     double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
     double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
 
+	SOM_analyzer analyzer;
+
 	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
 	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
 
@@ -420,6 +424,8 @@ void ModelMNS3::testDistance() {
 					_F5->activate(&f5_input);
 					_STS->activate(&sts_input);
 				}
+
+				analyzer.update(_F5, _F5->get_winner());
 			}
 
 			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
@@ -434,6 +440,8 @@ void ModelMNS3::testDistance() {
 			}
 		}
 	}
+
+	cout << " F5 qError: " << analyzer.q_error() << " WD: " << analyzer.winner_diff(_F5->get_lattice()->getDim()) << endl;
 
 	save_results(timestamp + "_F5.mot", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Motor, GRASPS);
 	save_results(timestamp + "_F5.vis", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Visual, PERSPS);
