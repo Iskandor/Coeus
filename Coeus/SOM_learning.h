@@ -15,6 +15,8 @@ namespace Coeus
 		void train(Tensor *p_input) override;
 		void merge(vector<SOM_learning*> &p_learners);
 
+		SOM* som() const { return _som; }
+
 	private:
 		Tensor	_delta_w;
 		Tensor	_batch_delta_w;

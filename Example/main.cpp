@@ -18,15 +18,17 @@ int main()
 
 	ModelMNS3 model;
 
-	//model.init();
-	//model.run(Config::instance().epoch);
-	//model.save(timestamp);
+	/*
+	model.init();
+	model.run(Config::instance().epoch);
+	model.save(timestamp);
+	*/
 
-	//model.init("1518009903");
-	//model.save_umatrix("1518009903");
+	model.init("1519198741");
+	model.save_umatrix("1519198741");
 
-	model.init("1518510932");
-	//model.testMirror();
+	//model.init("1519113426");
+	//model.testMirror(3);
 	//model.testAllWinners();
 	//model.testFinalWinners();
 	model.testDistance();

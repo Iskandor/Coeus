@@ -191,7 +191,7 @@ void ModelMNS::save_results(const string p_filename, const int p_dim_x, const in
 	file.close();
 }
 
-void MNS::ModelMNS::save_umatrix(string p_timestamp)
+void ModelMNS::save_umatrix(string p_timestamp)
 {
 	SOM_analyzer analyzer;
 

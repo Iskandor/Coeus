@@ -24,9 +24,10 @@ public:
 	void run2(int p_epochs);
 	void save(string p_timestamp) const;
 
+	void save_umatrix(string p_timestamp);
     void testDistance();
     void testFinalWinners();
-	void testMirror();
+	void testMirror(int p_persp);
 
 private:
 	void load(string p_timestamp);

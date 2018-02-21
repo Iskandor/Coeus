@@ -4,7 +4,7 @@
 using namespace Coeus;
 
 Base_SOM_params::Base_SOM_params(SOM* p_som): _sigma(0), _iteration(0) {
-	_sigma0 = sqrt(max(p_som->dim_x(), p_som->dim_y()));
+	_sigma0 = sqrt(pow(max(p_som->dim_x(), p_som->dim_y()), 2) * 2);
 	_lambda = 1;
 }
 
