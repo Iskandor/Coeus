@@ -4,10 +4,10 @@
 
 using namespace Coeus;
 
-MSOM::MSOM(int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation, double p_alpha, double p_beta) : SOM(p_input_dim, p_dim_x, p_dim_y, p_activation) {
+MSOM::MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation, double p_alpha, double p_beta) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation) {
 	_context_group = new NeuralGroup(p_input_dim, NeuralGroup::LINEAR, false);
 	_context_lattice = new Connection(_context_group->getDim(), _output_group->getDim(), _context_group->getId(), _output_group->getId());
-	_context_lattice->init(Connection::UNIFORM, 0.1);
+	_context_lattice->init(Connection::UNIFORM, 1);
 	_alpha = p_alpha;
 	_beta = p_beta;
 	_type = TYPE::MSOM;

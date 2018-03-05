@@ -11,7 +11,7 @@ NeuralNetwork::NeuralNetwork()
 
 NeuralNetwork::~NeuralNetwork()
 {
-	for (auto it = _groups.begin(); it != _groups.end(); ++it) {
+	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
 		delete (*it).second;
 	}
 
@@ -20,26 +20,25 @@ NeuralNetwork::~NeuralNetwork()
 	}
 }
 
-NeuralGroup* NeuralNetwork::add_group(const int p_dim, const NeuralGroup::ACTIVATION p_activation, const bool p_bias) {
-	NeuralGroup* g = new NeuralGroup(p_dim, p_activation, p_bias);
-	_groups[g->getId()] = g;
+BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
+	_layers[p_layer->id()] = p_layer;
 
-	return g;
+	return p_layer;
 }
 
-Connection* NeuralNetwork::add_connection(NeuralGroup* p_inGroup, NeuralGroup* p_outGroup, const Connection::INIT p_init, const double p_limit) {
-	Connection* c = new Connection(p_inGroup->getDim(), p_outGroup->getDim(), p_inGroup->getId(), p_outGroup->getId());
+Connection* NeuralNetwork::add_connection(BaseLayer* p_inGroup, BaseLayer* p_outGroup, const Connection::INIT p_init, const double p_limit) {
+	Connection* c = new Connection(p_inGroup->input_dim(), p_outGroup->output_dim(), p_inGroup->id(), p_outGroup->id());
 	c->init(p_init, p_limit);
 
 	_connections[c->get_id()] = c;
 
-	_graph[p_outGroup->getId()].push_back(p_inGroup->getId());
+	_graph[p_outGroup->id()].push_back(p_inGroup->id());
 
 	set<string> controll_set;
 
-	for (auto it = _groups.begin(); it != _groups.end(); ++it) {
+	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
 		if (_graph.find(it->first) == _graph.end()) {
-			_inputGroup = it->first;
+			_inputLayer = it->first;
 		}
 		else {
 			for (auto ag = _graph[it->first].begin(); ag != _graph[it->first].end(); ++ag) {
@@ -50,7 +49,7 @@ Connection* NeuralNetwork::add_connection(NeuralGroup* p_inGroup, NeuralGroup* p
 
 	for (auto it = _graph.begin(); it != _graph.end(); ++it) {
 		if (controll_set.find((*it).first) == controll_set.end()) {
-			_outputGroup = (*it).first;
+			_outputLayer = (*it).first;
 		}
 	}
 

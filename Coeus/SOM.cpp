@@ -6,7 +6,7 @@
 
 using namespace Coeus;
 
-SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation)
+SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
 {
 	_type = TYPE::SOM;
 	_dim_x = p_dim_x;
@@ -16,13 +16,13 @@ SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const Neur
 	_output_group = new NeuralGroup(p_dim_x * p_dim_y, p_activation, false);
 
 	_input_lattice = new Connection(_input_group->getDim(), _output_group->getDim(), _input_group->getId(), _output_group->getId());
-	_input_lattice->init(Connection::UNIFORM, 0.1);
+	_input_lattice->init(Connection::UNIFORM, 1);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_input_mask = nullptr;
 }
 
-SOM::SOM(nlohmann::json p_data) {
+SOM::SOM(nlohmann::json p_data) : BaseLayer(p_data) {
 	_type = TYPE::SOM;
 
 	_dim_x = p_data["dim_x"].get<int>();
@@ -94,7 +94,7 @@ double SOM::calc_distance(int p_neuron1, int p_neuron2)
 }
 
 SOM * SOM::clone() const {
-	SOM* result = new SOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
+	SOM* result = new SOM(_id, _input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
 
 	result->_input_lattice = new Connection(*_input_lattice);
 

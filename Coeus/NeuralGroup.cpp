@@ -15,7 +15,10 @@ NeuralGroup::NeuralGroup(int p_dim, ACTIVATION p_activationFunction, bool p_bias
     _id = IDGen::instance().next();
 	_bias = p_bias;	
     _dim = p_dim;
-	if (_bias) _dim += 1;
+	if (_bias) {
+		_dim += 1;
+		_bias_index = _dim - 1;
+	}
     _activationFunction = p_activationFunction;
 
 	_output = Tensor::Zero({ _dim });
@@ -26,6 +29,8 @@ NeuralGroup::NeuralGroup(nlohmann::json p_data) {
 	_id = p_data["id"].get<string>();
 	_dim = p_data["dim"].get<int>();
 	_activationFunction = static_cast<ACTIVATION>(p_data["actfn"].get<int>());
+	_bias = p_data["bias"].get<bool>();
+	_bias_index = _dim - 1;
 
 	_output = Tensor::Zero({ _dim });
 	_ap = Tensor::Zero({ _dim });
@@ -35,6 +40,7 @@ NeuralGroup::NeuralGroup(NeuralGroup &p_copy) {
     _id = p_copy._id;
     _dim = p_copy._dim;
     _activationFunction = p_copy._activationFunction;
+	_bias_index = p_copy._bias_index;
 
 	_output = Tensor::Zero({ _dim });
 	_ap = Tensor::Zero({ _dim });
@@ -85,6 +91,10 @@ void NeuralGroup::activate() {
 	    default: ;
     }
 	_ap.fill(0);
+
+	if (_bias) {
+		_output.set(_bias_index, 1.0);
+	}
 }
 
 void NeuralGroup::setOutput(Tensor* p_output) {
