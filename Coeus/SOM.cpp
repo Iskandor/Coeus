@@ -43,7 +43,7 @@ SOM::~SOM()
 	_input_lattice = nullptr;
 }
 
-void SOM::activate(Tensor* p_input) {
+void SOM::activate(Tensor* p_input, Tensor* p_weights) {
 	find_winner(p_input);
 
 	calc_distance();

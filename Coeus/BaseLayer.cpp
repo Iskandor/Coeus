@@ -15,9 +15,5 @@ BaseLayer::BaseLayer(nlohmann::json p_data)
 
 BaseLayer::~BaseLayer()
 {
-	if (_input_group != nullptr) delete _input_group;
-	_input_group = nullptr;
-	if (_output_group != nullptr) delete _output_group;
-	_output_group = nullptr;
 }
 

@@ -30,7 +30,7 @@ MSOM::~MSOM()
 	_context_lattice = nullptr;
 }
 
-void MSOM::activate(Tensor* p_input) {
+void MSOM::activate(Tensor* p_input, Tensor* p_weights) {
 	SOM::activate(p_input);
 	update_context();
 }

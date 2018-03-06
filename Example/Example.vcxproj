@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Dataset.cpp" />
+    <ClCompile Include="FFN.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelMNS.cpp" />
     <ClCompile Include="ModelMNS2.cpp" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="Config.h" />
     <ClInclude Include="Dataset.h" />
+    <ClInclude Include="FFN.h" />
     <ClInclude Include="ModelMNS.h" />
     <ClInclude Include="ModelMNS2.h" />
     <ClInclude Include="ModelMNS3.h" />
