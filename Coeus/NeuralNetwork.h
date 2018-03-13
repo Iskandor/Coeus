@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 #include <map>
-#include "NeuralGroup.h"
+#include <list>
+#include "BaseLayer.h"
 #include "Connection.h"
 
 using namespace std;
@@ -14,20 +15,23 @@ public:
 	NeuralNetwork();
 	virtual ~NeuralNetwork();
 
-	virtual void activate(Tensor* p_input) = 0;
+	virtual void activate(Tensor* p_input);
+
+	BaseLayer*	add_layer(BaseLayer* p_layer);
+	Connection* add_connection(string p_input_layer, string p_output_layer, Connection::INIT p_init, double p_limit);
+	Connection* get_connection(string p_input_layer, string p_output_layer);
 
 protected:
-	NeuralGroup* add_group(int p_dim, NeuralGroup::ACTIVATION p_activation, bool p_bias);
-	Connection* add_connection(NeuralGroup* p_in_group, NeuralGroup* p_out_group, Connection::INIT p_init, double p_limit);
+	void create_directed_graph();
 
-	Connection* get_connection(string p_input_group, string p_output_group);
-
-	map<string, NeuralGroup*> _groups;
+	map<string, BaseLayer*> _layers;
 	map<string, Connection*> _connections;
 	map<string, vector<string>> _graph;
+	list<BaseLayer*> _forward_graph;
+	list<BaseLayer*> _backward_graph;
 
-	string _inputGroup;
-	string _outputGroup;
+	string _input_layer;
+	string _output_layer;
 };
 
 }

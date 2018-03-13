@@ -20,8 +20,7 @@ public:
     Connection(Connection& p_copy);
     ~Connection(void);
 
-    void init(INIT p_init, double p_limit);
-    void init(Tensor* p_weights);
+    void init(INIT p_init, double p_limit = 0);
     void set_weights(Tensor* p_weights) const;
     Tensor* get_weights() const { return _weights; };
 	void update_weights(Tensor& p_delta_w) const;

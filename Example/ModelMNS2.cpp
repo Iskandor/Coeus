@@ -51,6 +51,7 @@ void ModelMNS2::init(string p_timestamp) {
 		cout << "Initializing networks...";
 
 		_F5 = new MSOM(
+			"F5",
 			_sizeF5input + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y,
 			Config::instance().f5_config.dim_x,
 			Config::instance().f5_config.dim_y,
@@ -58,14 +59,18 @@ void ModelMNS2::init(string p_timestamp) {
 			Config::instance().f5_config.alpha,
 			Config::instance().f5_config.beta);
 
-		_STS = new MSOM(_sizeSTSinput + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y,
+		_STS = new MSOM(
+			"STS",
+			_sizeSTSinput + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y,
 			Config::instance().sts_config.dim_x,
 			Config::instance().sts_config.dim_y,
 			NeuralGroup::EXPONENTIAL,
 			Config::instance().sts_config.alpha,
 			Config::instance().sts_config.beta);
 
-		_PFG = new SOM(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y,
+		_PFG = new SOM(
+			"PFG",
+			Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y,
 			Config::instance().pf_config.dim_x,
 			Config::instance().pf_config.dim_y,
 			NeuralGroup::EXPONENTIAL);
@@ -135,7 +140,7 @@ void ModelMNS2::run(const int p_epochs) {
 	STS_params.init_training(Config::instance().sts_config.gamma1, Config::instance().sts_config.gamma2, p_epochs);
 
 	SOM_params PFG_params(_PFG);
-	PFG_params.init_training(Config::instance().pf_config.alpha, p_epochs);
+	PFG_params.init_training(Config::instance().pf_config.alpha, p_epochs / 2);
 
 	MSOM_learning F5_learner(_F5, &F5_params, &F5_analyzer);
 	MSOM_learning STS_learner(_STS, &STS_params, &STS_analyzer);
@@ -170,7 +175,66 @@ void ModelMNS2::run(const int p_epochs) {
 
 	cout << "done" << endl;
 
-	for (int t = 0; t < p_epochs; t++) {
+	for (int t = 0; t < p_epochs / 2; t++) {
+		cout << "Epoch " << t << endl;
+		trainData = _data.permute();
+
+		const auto start = chrono::system_clock::now();
+
+		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
+			Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y });
+			Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y });
+			Tensor* motor_sample = nullptr;
+			Tensor* visual_sample = nullptr;
+
+			F5_thread[i]->init_msom(_F5);
+			STS_thread[i]->init_msom(_STS);
+
+			F5_thread[i]->msom()->set_input_mask(_f5_mask_pre);
+			STS_thread[i]->msom()->set_input_mask(_sts_mask);
+
+			for (int p = 0; p < PERSPS; p++) {
+				for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+					motor_sample = trainData->at(i)->getMotorData()->at(j);
+					prepareInputF5(&f5_input, motor_sample, PFG_thread[i]->som());
+					F5_thread[i]->train(&f5_input);
+
+					visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+					prepareInputSTS(&sts_input, visual_sample, PFG_thread[i]->som());
+					STS_thread[i]->train(&sts_input);
+				}
+
+				F5_thread[i]->msom()->reset_context();
+				STS_thread[i]->msom()->reset_context();
+			}
+		});
+
+		F5_learner.merge(F5_thread);
+		STS_learner.merge(STS_thread);
+		F5_analyzer.merge(F5_thread_analyzer);
+		STS_analyzer.merge(STS_thread_analyzer);
+
+		const auto end = chrono::system_clock::now();
+		chrono::duration<double> elapsed_seconds = end - start;
+		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->getDim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->getDim());
+		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->getDim());
+		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->getDim());
+
+		cout << " F5 qError: " << qerrF5 << " WD: " << wdF5 << endl;
+		cout << "STS qError: " << qerrSTS << " WD: " << wdSTS << endl;
+
+		Logger::instance().log(to_string(qerrF5) + "," + to_string(wdF5) + "," + to_string(qerrSTS) + "," + to_string(wdSTS));
+
+		F5_analyzer.end_epoch();
+		STS_analyzer.end_epoch();
+		F5_params.param_decay();
+		STS_params.param_decay();
+	}
+
+	for (int t = 0; t < p_epochs / 2; t++) {
 		cout << "Epoch " << t << endl;
 		trainData = _data.permute();
 
@@ -346,40 +410,47 @@ void ModelMNS2::testDistance() {
 
 	double* winRateF5_Motor = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(double)));
 	double* winRateF5_Visual = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(double)));
-	double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
 	double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
-
-	SOM_analyzer analyzerF5;
-	SOM_analyzer analyzerSTS;
+	double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
+	double* winRatePFG_Motor = static_cast<double*>(calloc(Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y * GRASPS, sizeof(double)));
+	double* winRatePFG_Visual = static_cast<double*>(calloc(Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y * PERSPS, sizeof(double)));
 
 	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
 	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
 
 	for (int i = 0; i < trainData->size(); i++) {
+		Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y });
+		Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y });
+		Tensor pfg_input = Tensor::Zero({ Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
+		Tensor* motor_sample = nullptr;
+		Tensor* visual_sample = nullptr;
+
 		for (int p = 0; p < PERSPS; p++) {
+
 			for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
-				Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
-				Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+				motor_sample = trainData->at(i)->getMotorData()->at(j);
 
 				_F5->set_input_mask(_f5_mask_pre);
-				prepareInputF5(&f5_input, motor_sample, _STS);
+				prepareInputF5(&f5_input, motor_sample, _PFG);
 				_F5->activate(&f5_input);
 				_F5->set_input_mask(nullptr);
 
+				visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+
 				_STS->set_input_mask(_sts_mask);
-				prepareInputSTS(&sts_input, visual_sample, _F5);
+				prepareInputSTS(&sts_input, visual_sample, _PFG);
 				_STS->activate(&sts_input);
 				_STS->set_input_mask(nullptr);
+			}
 
-				for (int s = 0; s < Config::instance().settling; s++) {
-					prepareInputF5(&f5_input, motor_sample, _STS);
-					prepareInputSTS(&sts_input, visual_sample, _F5);
-					_F5->activate(&f5_input);
-					_STS->activate(&sts_input);
-				}
+			for (int s = 0; s < Config::instance().settling; s++) {
+				prepareInputPFG(&pfg_input, _F5, _STS);
+				_PFG->activate(&pfg_input);
 
-				analyzerF5.update(_F5, _F5->get_winner());
-				analyzerSTS.update(_STS, _STS->get_winner());
+				prepareInputF5(&f5_input, motor_sample, _PFG);
+				prepareInputSTS(&sts_input, visual_sample, _PFG);
+				_F5->activate(&f5_input);
+				_STS->activate(&sts_input);
 			}
 
 			_F5->reset_context();
@@ -390,21 +461,25 @@ void ModelMNS2::testDistance() {
 				winRateSTS_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
 			}
 
-
 			for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
 				winRateF5_Visual[n * PERSPS + p] += _F5->get_output()->at(n);
 				winRateF5_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
 			}
+
+			for (int n = 0; n < _PFG->get_lattice()->getDim(); n++) {
+				winRatePFG_Visual[n * PERSPS + p] += _PFG->get_output()->at(n);
+				winRatePFG_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _PFG->get_output()->at(n);
+			}
 		}
 	}
-
-	cout << " F5 qError: " << analyzerF5.q_error(_F5->get_input_group()->getDim()) << " WD: " << analyzerF5.winner_diff(_F5->get_lattice()->getDim()) << endl;
-	cout << " STS qError: " << analyzerSTS.q_error(_STS->get_input_group()->getDim()) << " WD: " << analyzerSTS.winner_diff(_STS->get_lattice()->getDim()) << endl;
 
 	save_results(timestamp + "_F5.mot", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Motor, GRASPS);
 	save_results(timestamp + "_F5.vis", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Visual, PERSPS);
 	save_results(timestamp + "_STS.mot", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Motor, GRASPS);
 	save_results(timestamp + "_STS.vis", Config::instance().sts_config.dim_x, Config::instance().sts_config.dim_y, winRateSTS_Visual, PERSPS);
+	save_results(timestamp + "_PFG.mot", Config::instance().pf_config.dim_x, Config::instance().pf_config.dim_y, winRatePFG_Motor, GRASPS);
+	save_results(timestamp + "_PFG.vis", Config::instance().pf_config.dim_x, Config::instance().pf_config.dim_y, winRatePFG_Visual, PERSPS);
+
 }
 
 void ModelMNS2::testFinalWinners() {

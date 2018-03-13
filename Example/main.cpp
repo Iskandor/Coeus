@@ -4,6 +4,7 @@
 #include "ModelMNS.h"
 #include "ModelMNS2.h"
 #include "ModelMNS3.h"
+#include "FFN.h"
 
 
 using namespace std;
@@ -11,6 +12,8 @@ using namespace MNS;
 
 int main()
 {
+	FFN model;
+	/*
 	const string timestamp = to_string(time(nullptr));
 
 	Config::instance().Load("./config0.json");
@@ -25,7 +28,7 @@ int main()
 	//model.init("1519198741");
 	//model.save_umatrix("1519198741");
 
-	//model.init("1519113426");
+	//model.init("1519295153");
 	//model.testMirror(3);
 	//model.testAllWinners();
 	//model.testFinalWinners();
@@ -33,6 +36,7 @@ int main()
 	//model.testBALData();
 
 	Logger::instance().close();
+	*/
 
 	system("pause");
 

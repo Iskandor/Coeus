@@ -38,6 +38,7 @@ void ModelMNS::init(string p_timestamp) {
 		cout << "Initializing networks...";
 
 		_F5 = new MSOM(
+			"F5",
 			_sizeF5input,
 			Config::instance().f5_config.dim_x,
 			Config::instance().f5_config.dim_y,
@@ -46,7 +47,9 @@ void ModelMNS::init(string p_timestamp) {
 			Config::instance().f5_config.beta);
 		_F5->set_conscience(10);
 
-		_STS = new MSOM(_sizeSTSinput,
+		_STS = new MSOM(
+			"STS",
+			_sizeSTSinput,
 			Config::instance().sts_config.dim_x,
 			Config::instance().sts_config.dim_y,
 			NeuralGroup::EXPONENTIAL,

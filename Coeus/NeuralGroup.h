@@ -35,6 +35,7 @@ public:
 
      string	getId() const { return _id; };
     int		getDim() const { return _dim; };
+	bool	is_bias() const { return _bias; };
 
     void	setOutput(Tensor* p_output);
     Tensor* getOutput() { return &_output; };
@@ -49,6 +50,7 @@ private:
     Tensor	_output;
     Tensor	_ap;
 	bool	_bias;
+	int		_bias_index;
 };
 
 }

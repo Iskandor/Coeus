@@ -7,11 +7,11 @@ namespace Coeus
 	class __declspec(dllexport) SOM : public BaseLayer
 	{
 	public:
-		SOM(int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation);
+		SOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation);
 		SOM(nlohmann::json p_data);
 		~SOM();
 
-		void activate(Tensor *p_input) override;
+		void activate(Tensor *p_input, Tensor* p_weights = nullptr) override;
 		virtual int find_winner(Tensor* p_input);
 		void get_position(int p_index, int& p_x, int& p_y) const;
 		int get_position(int p_x, int p_y) const;
