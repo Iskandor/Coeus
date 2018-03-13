@@ -44,6 +44,7 @@ void ModelMNS::init(string p_timestamp) {
 			NeuralGroup::EXPONENTIAL,
 			Config::instance().f5_config.alpha,
 			Config::instance().f5_config.beta);
+		_F5->set_conscience(10);
 
 		_STS = new MSOM(_sizeSTSinput,
 			Config::instance().sts_config.dim_x,
@@ -51,6 +52,7 @@ void ModelMNS::init(string p_timestamp) {
 			NeuralGroup::EXPONENTIAL,
 			Config::instance().sts_config.alpha,
 			Config::instance().sts_config.beta);
+		_STS->set_conscience(10);
 
 		cout << "done" << endl;
 	}
@@ -112,10 +114,10 @@ void ModelMNS::run(const int p_epochs) {
 
 		const auto start = chrono::system_clock::now();
 
-		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
-			Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
-			Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
+		_F5->init_conscience();
+		_STS->init_conscience();
 
+		parallel_for(0, static_cast<int>(trainData->size()), [&](int i) {
 			F5_thread[i]->init_msom(_F5);
 
 			for (int p = 0; p < PERSPS; p++) {
@@ -133,6 +135,21 @@ void ModelMNS::run(const int p_epochs) {
 				STS_thread[i]->msom()->reset_context();
 			}
 		});
+
+		for(int i = 0; i < trainData->size(); i++) {
+			for (int p = 0; p < PERSPS; p++) {
+				for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+					Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
+					Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+
+					_F5->update_conscience(motor_sample);
+					_STS->update_conscience(visual_sample);
+				}
+
+				_F5->reset_context();
+				_STS->reset_context();
+			}
+		}
 
 		F5_learner.merge(F5_thread);
 		STS_learner.merge(STS_thread);

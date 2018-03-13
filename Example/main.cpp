@@ -13,25 +13,23 @@ int main()
 {
 	const string timestamp = to_string(time(nullptr));
 
-	Config::instance().Load("./config3.json");
+	Config::instance().Load("./config0.json");
 	Logger::instance().init(timestamp + ".log");
 
-	ModelMNS3 model;
+	ModelMNS model;
 
-	/*
 	model.init();
 	model.run(Config::instance().epoch);
 	model.save(timestamp);
-	*/
 
-	model.init("1519198741");
-	model.save_umatrix("1519198741");
+	//model.init("1519198741");
+	//model.save_umatrix("1519198741");
 
 	//model.init("1519113426");
 	//model.testMirror(3);
 	//model.testAllWinners();
 	//model.testFinalWinners();
-	model.testDistance();
+	//model.testDistance();
 	//model.testBALData();
 
 	Logger::instance().close();

@@ -28,11 +28,16 @@ namespace Coeus
 
 		int get_winner() const { return _winner; }
 		void set_input_mask(int* p_mask) { _input_mask = p_mask; }
+		void set_conscience(double p_val);
+		void init_conscience() const;
+		void update_conscience(Tensor* p_input);
 
 		virtual SOM* clone() const;
 		void override_params(BaseLayer* p_source) override;
 
 	protected:
+		void find_winner(Tensor* p_input, bool p_conscience);
+		
 		void calc_distance();
 
 		Connection* _input_lattice;
@@ -42,7 +47,11 @@ namespace Coeus
 		int _dim_y;
 
 		Tensor	_dist;
+		Tensor	_p;
+		Tensor	_bias;
 		int*	_input_mask;
+		double	_conscience;
+		const double B = 1e-4;
 	};
 }
 

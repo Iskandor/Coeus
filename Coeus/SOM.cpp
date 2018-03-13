@@ -19,7 +19,11 @@ SOM::SOM(const int p_input_dim, const int p_dim_x, const int p_dim_y, const Neur
 	_input_lattice->init(Connection::UNIFORM, 0.1);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
+	_p = Tensor::Zero({ _dim_x * _dim_y });
+	_bias = Tensor::Zero({ _dim_x * _dim_y });
 	_input_mask = nullptr;
+
+	_conscience = 0;
 }
 
 SOM::SOM(nlohmann::json p_data) {
@@ -33,6 +37,8 @@ SOM::SOM(nlohmann::json p_data) {
 	_input_lattice = IOUtils::read_connection(p_data["connections"]["input_lattice"]);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
+	_p = Tensor::Zero({ _dim_x * _dim_y });
+	_bias = Tensor::Zero({ _dim_x * _dim_y });
 	_input_mask = nullptr;
 }
 
@@ -81,7 +87,7 @@ double SOM::calc_distance(const int p_index) {
 	return sqrt(s);
 }
 
-double SOM::calc_distance(int p_neuron1, int p_neuron2)
+double SOM::calc_distance(const int p_neuron1, const int p_neuron2)
 {
 	const int dim = _input_group->getDim();
 	double s = 0;
@@ -93,10 +99,19 @@ double SOM::calc_distance(int p_neuron1, int p_neuron2)
 	return sqrt(s);
 }
 
+void SOM::set_conscience(const double p_val) {
+	_conscience = p_val;
+}
+
+void SOM::init_conscience() const {
+	_p.fill(0);
+}
+
 SOM * SOM::clone() const {
 	SOM* result = new SOM(_input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
 
 	result->_input_lattice = new Connection(*_input_lattice);
+	result->_conscience = _conscience;
 
 	return result;
 }
@@ -106,6 +121,26 @@ void SOM::override_params(BaseLayer * p_source)
 	SOM* som = static_cast<SOM*>(p_source);
 
 	_input_lattice->set_weights(som->get_input_lattice()->get_weights());
+	_conscience = som->_conscience;
+
+	if (_conscience > 0) {
+		_p.override(&som->_p);
+		_bias.override(&som->_bias);
+	}
+}
+
+void SOM::update_conscience(Tensor* p_input) {
+	find_winner(p_input, false);
+
+	for(int i = 0; i < _dim_y * _dim_x; i++) {
+		const double p_new = _p.at(i) + B * (i == _winner ? 1 : 0 - _p.at(i));
+		_p.set(i, p_new);
+	}
+
+	for (int i = 0; i < _dim_y * _dim_x; i++) {
+		const double bias_new =  _conscience * (1/(_dim_y * _dim_x) - _p.at(i));
+		_bias.set(i, bias_new);
+	}
 }
 
 void SOM::calc_distance() {
@@ -115,20 +150,35 @@ void SOM::calc_distance() {
 }
 
 int SOM::find_winner(Tensor* p_input) {
+
+	if (_conscience > 0) {
+		find_winner(p_input, true);
+	}
+	else {
+		find_winner(p_input, false);
+	}
+
+	return _winner;
+}
+
+void SOM::find_winner(Tensor* p_input, const bool p_conscience) {
 	double winner_dist = INFINITY;
 	_winner = 0;
 
 	_input_group->setOutput(p_input);
 
 	for (int i = 0; i < _output_group->getDim(); i++) {
-		const double neuron_dist = calc_distance(i);
+		double neuron_dist = calc_distance(i);
+
+		if (p_conscience) {
+			neuron_dist -= _bias.at(i);
+		}
+
 		if (winner_dist > neuron_dist) {
 			_winner = i;
 			winner_dist = neuron_dist;
 		}
 	}
-	
-	return _winner;
 }
 
 void SOM::get_position(const int p_index, int& p_x, int& p_y) const {
@@ -136,7 +186,7 @@ void SOM::get_position(const int p_index, int& p_x, int& p_y) const {
 	p_y = p_index / _dim_x;
 }
 
-int Coeus::SOM::get_position(int p_x, int p_y) const
+int Coeus::SOM::get_position(const int p_x, const int p_y) const
 {
 	int pos = p_y * _dim_x + p_x;
 	if (p_x < 0 || p_x >= _dim_x || p_y < 0 || p_y >= _dim_y) pos = -1;

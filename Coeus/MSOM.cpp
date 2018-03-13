@@ -56,7 +56,7 @@ double MSOM::calc_distance(const int p_index) {
 	return (1 - _alpha) * dx + _alpha * dc;
 }
 
-double Coeus::MSOM::calc_distance(int p_neuron1, int p_neuron2)
+double MSOM::calc_distance(const int p_neuron1, const int p_neuron2)
 {
 	const int dim = _input_group->getDim();
 

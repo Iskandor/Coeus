@@ -58,7 +58,7 @@ void MSOM_learning::train(Tensor* p_input) {
 }
 
 void MSOM_learning::merge(vector<MSOM_learning*>& p_learners) {
-	int size = p_learners.size();
+	const int size = p_learners.size();
 
 	for(auto it = p_learners.begin(); it != p_learners.end(); ++it) {
 		_delta_w += (*it)->_batch_delta_w;
