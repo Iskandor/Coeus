@@ -170,6 +170,7 @@
     <ClCompile Include="InputLayer.cpp" />
     <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="LSOM.cpp" />
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
     <ClCompile Include="MSOM_params.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="InputLayer.h" />
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LSOM.h" />
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
     <ClInclude Include="MSOM_params.h" />

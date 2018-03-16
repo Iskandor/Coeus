@@ -105,6 +105,9 @@
     <ClCompile Include="RecurrentLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
+    <ClCompile Include="LSOM.cpp">
+      <Filter>Source Files\Network\SOM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="RecurrentLayer.h">
       <Filter>Header Files\Network\BaseLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM.h">
+      <Filter>Header Files\Network\SOM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

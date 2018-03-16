@@ -15,7 +15,8 @@ public:
 		INPUT = 3,
 		CORE = 4,
 		RECURRENT = 5,
-		LSTM = 6
+		LSTM = 6,
+		LSOM = 7
 	};
 
 	BaseLayer(string p_id);
