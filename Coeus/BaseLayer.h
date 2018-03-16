@@ -29,8 +29,8 @@ public:
 	TYPE	type() const { return _type; }
 	string	id() const { return _id; }
 
-	int input_dim() const { return _input_group->getDim(); }
-	int output_dim() const { return _output_group->getDim(); }
+	int input_dim() const { return _input_group->get_dim(); }
+	int output_dim() const { return _output_group->get_dim(); }
 
 	bool is_valid() { return _valid; }
 	void set_valid(bool p_val) { _valid = p_val; }

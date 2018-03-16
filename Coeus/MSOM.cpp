@@ -6,8 +6,8 @@ using namespace Coeus;
 
 MSOM::MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation, double p_alpha, double p_beta) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation) {
 	_context_group = new NeuralGroup(p_input_dim, NeuralGroup::LINEAR, false);
-	_context_lattice = new Connection(_context_group->getDim(), _output_group->getDim(), _context_group->getId(), _output_group->getId());
-	_context_lattice->init(Connection::UNIFORM, 1);
+	_context_lattice = new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id());
+	_context_lattice->init(Connection::UNIFORM, 0.01);
 	_alpha = p_alpha;
 	_beta = p_beta;
 	_type = TYPE::MSOM;
@@ -36,7 +36,7 @@ void MSOM::activate(Tensor* p_input, Tensor* p_weights) {
 }
 
 double MSOM::calc_distance(const int p_index) {
-	const int dim = _input_group->getDim();
+	const int dim = _input_group->get_dim();
 
 	Tensor* xi = _input_lattice->get_weights();
 	Tensor* ci = _context_lattice->get_weights();
@@ -58,7 +58,7 @@ double MSOM::calc_distance(const int p_index) {
 
 double MSOM::calc_distance(const int p_neuron1, const int p_neuron2)
 {
-	const int dim = _input_group->getDim();
+	const int dim = _input_group->get_dim();
 
 	Tensor* xi = _input_lattice->get_weights();
 	Tensor* ci = _context_lattice->get_weights();
@@ -101,7 +101,7 @@ void MSOM::update_context() const {
 	Tensor* wIt = _input_lattice->get_weights();
 	Tensor* cIt = _context_lattice->get_weights();
 
-	for (int i = 0; i < _context_group->getDim(); i++) {
+	for (int i = 0; i < _context_group->get_dim(); i++) {
 		ct->set(i, (1 - _beta) * wIt->at(_winner, i) + _beta * cIt->at(_winner, i));
 	}
 }

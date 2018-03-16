@@ -204,10 +204,10 @@ void ModelMNS3::run(const int p_epochs) {
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->getDim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->getDim());
-		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->getDim());
-		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->getDim());
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->get_dim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->get_dim());
+		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
+		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
 
 		cout << " F5 qError: " << qerrF5 << " WD: " << wdF5 << endl;
 		cout << "STS qError: " << qerrSTS << " WD: " << wdSTS << endl;
@@ -325,10 +325,10 @@ void ModelMNS3::run2(const int p_epochs) {
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->getDim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->getDim());
-		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->getDim());
-		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->getDim());
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->get_dim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->get_dim());
+		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
+		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
 
 		cout << " F5 qError: " << qerrF5 << " WD: " << wdF5 << endl;
 		cout << "STS qError: " << qerrSTS << " WD: " << wdSTS << endl;
@@ -447,21 +447,21 @@ void ModelMNS3::testDistance() {
 			_F5->reset_context();
 			_STS->reset_context();
 
-			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
+			for (int n = 0; n < _STS->get_lattice()->get_dim(); n++) {
 				winRateSTS_Visual[n * PERSPS + p] += _STS->get_output()->at(n);
 				winRateSTS_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
 			}
 
 
-			for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
+			for (int n = 0; n < _F5->get_lattice()->get_dim(); n++) {
 				winRateF5_Visual[n * PERSPS + p] += _F5->get_output()->at(n);
 				winRateF5_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
 			}
 		}
 	}
 
-	cout << " F5 qError: " << analyzerF5.q_error(_F5->get_input_group()->getDim()) << " WD: " << analyzerF5.winner_diff(_F5->get_lattice()->getDim()) << endl;
-	cout << " STS qError: " << analyzerSTS.q_error(_STS->get_input_group()->getDim()) << " WD: " << analyzerSTS.winner_diff(_STS->get_lattice()->getDim()) << endl;
+	cout << " F5 qError: " << analyzerF5.q_error(_F5->get_input_group()->get_dim()) << " WD: " << analyzerF5.winner_diff(_F5->get_lattice()->get_dim()) << endl;
+	cout << " STS qError: " << analyzerSTS.q_error(_STS->get_input_group()->get_dim()) << " WD: " << analyzerSTS.winner_diff(_STS->get_lattice()->get_dim()) << endl;
 
 	save_results(timestamp + "_F5.mot", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Motor, GRASPS);
 	save_results(timestamp + "_F5.vis", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Visual, PERSPS);
@@ -561,13 +561,13 @@ void ModelMNS3::testMirror(int p_persp) {
 		_F5->reset_context();
 		_STS->reset_context();
 
-		for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
+		for (int n = 0; n < _STS->get_lattice()->get_dim(); n++) {
 			winRateSTS_Visual[n * PERSPS + p_persp] += _STS->get_output()->at(n);
 			winRateSTS_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
 		}
 		
 			
-		for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
+		for (int n = 0; n < _F5->get_lattice()->get_dim(); n++) {
 			winRateF5_Visual[n * PERSPS + p_persp] += _F5->get_output()->at(n);
 			winRateF5_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
 		}

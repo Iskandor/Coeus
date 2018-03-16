@@ -18,6 +18,7 @@ namespace MNS {
 		~ModelMNS();
 
 		void init(string p_timestamp = "");
+		void run_seq(int p_epochs);
 		void run(int p_epochs);
 		void save(string p_timestamp) const;
 		void load(string p_timestamp);

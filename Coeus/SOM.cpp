@@ -15,8 +15,8 @@ SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_
 	_input_group = new NeuralGroup(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false);
 	_output_group = new NeuralGroup(p_dim_x * p_dim_y, p_activation, false);
 
-	_input_lattice = new Connection(_input_group->getDim(), _output_group->getDim(), _input_group->getId(), _output_group->getId());
-	_input_lattice->init(Connection::UNIFORM, 1);
+	_input_lattice = new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id());
+	_input_lattice->init(Connection::UNIFORM, 0.01);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });
@@ -75,7 +75,7 @@ void SOM::activate(Tensor* p_input, Tensor* p_weights) {
 }
 
 double SOM::calc_distance(const int p_index) {
-	const int dim = _input_group->getDim();
+	const int dim = _input_group->get_dim();
 	double s = 0;
 
 	for (int i = 0; i < dim; i++) {
@@ -89,7 +89,7 @@ double SOM::calc_distance(const int p_index) {
 
 double SOM::calc_distance(const int p_neuron1, const int p_neuron2)
 {
-	const int dim = _input_group->getDim();
+	const int dim = _input_group->get_dim();
 	double s = 0;
 
 	for (int i = 0; i < dim; i++) {
@@ -108,7 +108,7 @@ void SOM::init_conscience() const {
 }
 
 SOM * SOM::clone() const {
-	SOM* result = new SOM(_id, _input_group->getDim(), _dim_x, _dim_y, _output_group->getActivationFunction());
+	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->getActivationFunction());
 
 	result->_input_lattice = new Connection(*_input_lattice);
 	result->_conscience = _conscience;
@@ -167,7 +167,7 @@ void SOM::find_winner(Tensor* p_input, const bool p_conscience) {
 
 	_input_group->setOutput(p_input);
 
-	for (int i = 0; i < _output_group->getDim(); i++) {
+	for (int i = 0; i < _output_group->get_dim(); i++) {
 		double neuron_dist = calc_distance(i);
 
 		if (p_conscience) {
@@ -186,7 +186,7 @@ void SOM::get_position(const int p_index, int& p_x, int& p_y) const {
 	p_y = p_index / _dim_x;
 }
 
-int Coeus::SOM::get_position(const int p_x, const int p_y) const
+int SOM::get_position(const int p_x, const int p_y) const
 {
 	int pos = p_y * _dim_x + p_x;
 	if (p_x < 0 || p_x >= _dim_x || p_y < 0 || p_y >= _dim_y) pos = -1;

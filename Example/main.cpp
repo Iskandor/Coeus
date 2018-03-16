@@ -12,8 +12,8 @@ using namespace MNS;
 
 int main()
 {
-	FFN model;
-	/*
+	//FFN model;
+
 	const string timestamp = to_string(time(nullptr));
 
 	Config::instance().Load("./config0.json");
@@ -36,7 +36,6 @@ int main()
 	//model.testBALData();
 
 	Logger::instance().close();
-	*/
 
 	system("pause");
 

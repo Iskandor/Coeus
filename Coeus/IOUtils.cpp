@@ -83,6 +83,7 @@ BaseLayer* IOUtils::load_network(const string p_filename) {
 json IOUtils::write_som(SOM* p_som) {
 	json result;
 
+	result["id"] = p_som->id();
 	result["dim_x"] = p_som->dim_x();
 	result["dim_y"] = p_som->dim_y();
 	result["groups"]["input"] = write_neural_group(p_som->get_input_group());
@@ -112,7 +113,7 @@ MSOM* IOUtils::read_msom(const json p_data) {
 }
 
 json IOUtils::write_neural_group(NeuralGroup* p_group) {
-	return json({ { "id", p_group->getId() }, { "dim", p_group->getDim() }, { "actfn", p_group->getActivationFunction() }, {"bias", p_group->getDim()} });
+	return json({ { "id", p_group->get_id() }, { "dim", p_group->get_dim() }, { "actfn", p_group->getActivationFunction() }, {"bias", p_group->is_bias()} });
 }
 
 json IOUtils::write_connection(Connection* p_connection) {

@@ -8,7 +8,7 @@ Base_SOM_learning::Base_SOM_learning(SOM* p_som, Base_SOM_params* p_params, SOM_
 	_som_analyzer = p_som_analyzer;
 	_params = p_params;
 
-	const int dim_lattice = p_som->get_lattice()->getDim();
+	const int dim_lattice = p_som->get_lattice()->get_dim();
 
 	_dist_matrix = Tensor::Zero({ dim_lattice, dim_lattice });
 

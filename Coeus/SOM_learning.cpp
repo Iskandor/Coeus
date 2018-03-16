@@ -5,8 +5,8 @@ using namespace Coeus;
 
 
 SOM_learning::SOM_learning(SOM* p_som, SOM_params* p_params, SOM_analyzer* p_analyzer) : Base_SOM_learning(p_som, p_params, p_analyzer) {
-	const int dim_input = p_som->get_input_group()->getDim();
-	const int dim_lattice = p_som->get_lattice()->getDim();
+	const int dim_input = p_som->get_input_group()->get_dim();
+	const int dim_lattice = p_som->get_lattice()->get_dim();
 
 	_delta_w = Tensor::Zero({ dim_lattice, dim_input });
 	_batch_delta_w = Tensor::Zero({ dim_lattice, dim_input });
@@ -23,8 +23,8 @@ void SOM_learning::init_som(SOM * p_source) const {
 
 void SOM_learning::train(Tensor* p_input) {
 	const int winner = _som->find_winner(p_input);	
-	const int dim_input = _som->get_input_group()->getDim();
-	const int dim_lattice = _som->get_lattice()->getDim();
+	const int dim_input = _som->get_input_group()->get_dim();
+	const int dim_lattice = _som->get_lattice()->get_dim();
 	Tensor* wi = _som->get_input_lattice()->get_weights();
 	Tensor* in = _som->get_input_group()->getOutput();
 

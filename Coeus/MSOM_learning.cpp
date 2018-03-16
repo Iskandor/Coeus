@@ -5,9 +5,9 @@ using namespace Coeus;
 MSOM_learning::MSOM_learning(MSOM* p_msom, MSOM_params *p_params, SOM_analyzer* p_analyzer): Base_SOM_learning(p_msom, p_params, p_analyzer) {
 	_msom = p_msom;
 
-	const int dim_input = _msom->get_input_group()->getDim();
-	const int dim_context = _msom->get_context_group()->getDim();
-	const int dim_lattice = _msom->get_lattice()->getDim();
+	const int dim_input = _msom->get_input_group()->get_dim();
+	const int dim_context = _msom->get_context_group()->get_dim();
+	const int dim_lattice = _msom->get_lattice()->get_dim();
 
 	_delta_w = Tensor::Zero({ dim_lattice, dim_input });
 	_delta_c = Tensor::Zero({ dim_lattice, dim_context });	
@@ -27,8 +27,8 @@ void MSOM_learning::init_msom(MSOM * p_source) const {
 
 void MSOM_learning::train(Tensor* p_input) {
 	const int winner = _msom->find_winner(p_input);
-	const int dim_input = _msom->get_input_group()->getDim();
-	const int dim_lattice = _msom->get_lattice()->getDim();
+	const int dim_input = _msom->get_input_group()->get_dim();
+	const int dim_lattice = _msom->get_lattice()->get_dim();
 
 	_msom->update_context();
 

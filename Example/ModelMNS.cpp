@@ -73,6 +73,64 @@ void ModelMNS::init(string p_timestamp) {
 	}
 }
 
+void ModelMNS::run_seq(int p_epochs) {
+	cout << "Epochs: " << p_epochs << endl;
+	cout << "Settling: " << Config::instance().settling << endl;
+	cout << "CPUs: " << GetProcessorCount() << endl;
+	cout << "Initializing learning module...";
+
+	SOM_analyzer F5_analyzer;
+	SOM_analyzer STS_analyzer;
+
+	MSOM_params F5_params(_F5);
+	F5_params.init_training(Config::instance().f5_config.gamma1, Config::instance().f5_config.gamma2, p_epochs);
+
+	MSOM_params STS_params(_STS);
+	STS_params.init_training(Config::instance().sts_config.gamma1, Config::instance().sts_config.gamma2, p_epochs);
+
+	MSOM_learning F5_learner(_F5, &F5_params, &F5_analyzer);
+	MSOM_learning STS_learner(_STS, &STS_params, &STS_analyzer);
+
+	vector<Sequence*>* trainData = _data.permute();
+
+	cout << "done" << endl;
+
+	for (int t = 0; t < p_epochs; t++) {
+		cout << "Epoch " << t << endl;
+		trainData = _data.permute();
+
+		const auto start = chrono::system_clock::now();
+
+		//_F5->init_conscience();
+		//_STS->init_conscience();
+
+		for(int i = 0; i < static_cast<int>(trainData->size()); i++) {
+			for (int p = 0; p < PERSPS; p++) {
+				for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
+					Tensor* motor_sample = trainData->at(i)->getMotorData()->at(j);
+					Tensor* visual_sample = trainData->at(i)->getVisualData(p)->at(j);
+
+					F5_learner.train(motor_sample);
+					STS_learner.train(visual_sample);
+				}
+
+				_F5->reset_context();
+				_STS->reset_context();
+			}
+		}
+
+		const auto end = chrono::system_clock::now();
+		chrono::duration<double> elapsed_seconds = end - start;
+		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+		cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff(_F5->get_lattice()->get_dim()) << endl;
+		cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff(_STS->get_lattice()->get_dim()) << endl;
+		F5_analyzer.end_epoch();
+		STS_analyzer.end_epoch();
+		F5_params.param_decay();
+		STS_params.param_decay();
+	}
+}
+
 void ModelMNS::run(const int p_epochs) {
 	cout << "Epochs: " << p_epochs << endl;
 	cout << "Settling: " << Config::instance().settling << endl;
@@ -139,6 +197,11 @@ void ModelMNS::run(const int p_epochs) {
 			}
 		});
 
+		F5_learner.merge(F5_thread);
+		STS_learner.merge(STS_thread);
+		F5_analyzer.merge(F5_thread_analyzer);
+		STS_analyzer.merge(STS_thread_analyzer);
+
 		for(int i = 0; i < trainData->size(); i++) {
 			for (int p = 0; p < PERSPS; p++) {
 				for (int j = 0; j < trainData->at(i)->getMotorData()->size(); j++) {
@@ -154,16 +217,11 @@ void ModelMNS::run(const int p_epochs) {
 			}
 		}
 
-		F5_learner.merge(F5_thread);
-		STS_learner.merge(STS_thread);
-		F5_analyzer.merge(F5_thread_analyzer);
-		STS_analyzer.merge(STS_thread_analyzer);
-
 		const auto end = chrono::system_clock::now();
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-		cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff(_F5->get_lattice()->getDim()) << endl;
-		cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff(_STS->get_lattice()->getDim()) << endl;
+		cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff(_F5->get_lattice()->get_dim()) << endl;
+		cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff(_STS->get_lattice()->get_dim()) << endl;
 		F5_analyzer.end_epoch();
 		STS_analyzer.end_epoch();
 		F5_params.param_decay();
@@ -246,12 +304,12 @@ void ModelMNS::testDistance() {
 			_STS->reset_context();
 
 
-			for (int n = 0; n < _STS->get_lattice()->getDim(); n++) {
+			for (int n = 0; n < _STS->get_lattice()->get_dim(); n++) {
 				winRateSTS_Visual[n * PERSPS + p] += _STS->get_output()->at(n);
 				winRateSTS_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _STS->get_output()->at(n);
 			}
 
-			for (int n = 0; n < _F5->get_lattice()->getDim(); n++) {
+			for (int n = 0; n < _F5->get_lattice()->get_dim(); n++) {
 				winRateF5_Visual[n * PERSPS + p] += _F5->get_output()->at(n);
 				winRateF5_Motor[n * GRASPS + trainData->at(i)->getGrasp() - 1] += _F5->get_output()->at(n);
 			}

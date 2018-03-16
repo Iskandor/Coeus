@@ -33,8 +33,8 @@ public:
 	void integrate(Tensor* p_input, Tensor* p_weights);
     void activate();
 
-     string	getId() const { return _id; };
-    int		getDim() const { return _dim; };
+    string	get_id() const { return _id; };
+    int		get_dim() const { return _dim; };
 	bool	is_bias() const { return _bias; };
 
     void	setOutput(Tensor* p_output);

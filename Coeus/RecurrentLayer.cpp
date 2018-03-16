@@ -8,7 +8,7 @@ RecurrentLayer::RecurrentLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p
 	_output_group = _input_group;
 	_context_group = new NeuralGroup(p_dim, NeuralGroup::ACTIVATION::LINEAR, true);
 
-	_rec_connection = new Connection(_context_group->getDim(), _output_group->getDim(), _context_group->getId(), _output_group->getId());
+	_rec_connection = new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id());
 
 	_type = BaseLayer::CORE;
 }
