@@ -108,6 +108,12 @@
     <ClCompile Include="LSOM.cpp">
       <Filter>Source Files\Network\SOM</Filter>
     </ClCompile>
+    <ClCompile Include="LSOM_learning.cpp">
+      <Filter>Source Files\Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM_params.cpp">
+      <Filter>Source Files\Algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -175,6 +181,12 @@
     </ClInclude>
     <ClInclude Include="LSOM.h">
       <Filter>Header Files\Network\SOM</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM_learning.h">
+      <Filter>Header Files\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM_params.h">
+      <Filter>Header Files\Algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

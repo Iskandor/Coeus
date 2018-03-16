@@ -31,6 +31,7 @@ void LSOM_learning::train(Tensor * p_input)
 			_delta_w.set(i, j, theta * alpha * (in->at(j) - wi->at(i, j)));
 		}
 		for (int j = 0; j < dim_lattice; j++) {
+			//_delta_lw.set(i, j, )
 		}
 	}
 
