@@ -132,7 +132,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 	int rank = 0;
 	int* shape = nullptr;
 	
-	if (this->_rank == 1 && p_tensor._rank == 1) {
+	if (this->_rank == 1 && p_tensor._rank == 1) { // preverit spravnu funkcnost
 		arr = alloc_arr(_size * p_tensor._size);
 		rank = 2;
 		shape = alloc_shape(rank);
@@ -160,7 +160,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 		}
 	}
 
-	if (this->_rank == 2 && p_tensor._rank == 2) {
+	if (this->_rank == 2 && p_tensor._rank == 2) { // preverit spravnu funkcnost
 		arr = alloc_arr(_shape[0] * p_tensor._shape[1]);
 		rank = 2;
 		shape = alloc_shape(rank);

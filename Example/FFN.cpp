@@ -19,7 +19,33 @@ FFN::~FFN()
 }
 
 void FFN::run() {
-	Tensor input = Tensor::Value({2}, 1);
+	double data_i[8]{ 0,0,0,1,1,0,1,1 };
+	double data_t[4]{ 0,0,0,1 };
 
-	_network.activate(&input);
+	Tensor* input[4];
+	Tensor* target[4];
+
+	for (int i = 0; i < 4; i++) {
+		double* d = new double[2];
+
+		d[0] = data_i[i * 2];
+		d[1] = data_i[i * 2 + 1];
+
+		double* t = new double[1];
+		t[0] = data_t[i];
+
+		input[i] = new Tensor({ 2 }, d);
+		target[i] = new Tensor({ 1 }, t);
+	}
+
+	/*
+	for (int i = 0; i < 4; i++) {
+		_network.activate(input[i]);
+	}
+	*/
+
+	for (int i = 0; i < 4; i++) {
+		delete input[i];
+		delete target[i];
+	}
 }
