@@ -23,6 +23,14 @@ NeuralNetwork::~NeuralNetwork()
 
 void NeuralNetwork::activate(Tensor * p_input)
 {
+	_layers[_input_layer]->activate(p_input);
+
+	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {
+		for (auto input = _graph[(*layer)->id()].begin(); input != _graph[(*layer)->id()].end(); ++input) {
+			(*layer)->integrate(_layers[*input]->get_output(), _connections[(*layer)->id() + "_" + (*input)]->get_weights());
+		}
+		(*layer)->activate();
+	}
 }
 
 BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
@@ -31,7 +39,7 @@ BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
 	return p_layer;
 }
 
-Connection* NeuralNetwork::add_connection(string p_input_layer, string p_output_layer, const Connection::INIT p_init, const double p_limit) {
+Connection* NeuralNetwork::add_connection(const string p_input_layer, const string p_output_layer, const Connection::INIT p_init, const double p_limit) {
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 

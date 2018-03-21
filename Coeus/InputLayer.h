@@ -9,8 +9,9 @@ public:
 	InputLayer(string p_id, int p_input_dim);
 	~InputLayer();
 
-	void activate(Tensor* p_input, Tensor* p_weights = nullptr);
-	void override_params(BaseLayer* p_source);
+	void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
+	void activate(Tensor* p_input = nullptr) override;
+	void override_params(BaseLayer* p_source) override;
 };
 
 }

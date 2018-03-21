@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-RecurrentLayer::RecurrentLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
+RecurrentLayer::RecurrentLayer(const string p_id, const int p_dim, const NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
 {
 	_input_group = new NeuralGroup(p_dim, p_activation, true);
 	_output_group = _input_group;
@@ -20,10 +20,13 @@ RecurrentLayer::~RecurrentLayer()
 	delete _rec_connection;
 }
 
-void RecurrentLayer::activate(Tensor * p_input, Tensor* p_weights)
-{
-	_context_group->setOutput(_output_group->getOutput());
+void RecurrentLayer::integrate(Tensor* p_input, Tensor* p_weights) {
 	_output_group->integrate(p_input, p_weights);
+}
+
+void RecurrentLayer::activate(Tensor * p_input)
+{
+	_context_group->set_output(_output_group->getOutput());
 	_output_group->integrate(_context_group->getOutput(), _rec_connection->get_weights());
 	_output_group->activate();
 }

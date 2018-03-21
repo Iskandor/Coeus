@@ -114,6 +114,9 @@
     <ClCompile Include="LSOM_params.cpp">
       <Filter>Source Files\Algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="Metrics.cpp">
+      <Filter>Source Files\Algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -186,6 +189,9 @@
       <Filter>Header Files\Algorithm</Filter>
     </ClInclude>
     <ClInclude Include="LSOM_params.h">
+      <Filter>Header Files\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="Metrics.h">
       <Filter>Header Files\Algorithm</Filter>
     </ClInclude>
   </ItemGroup>

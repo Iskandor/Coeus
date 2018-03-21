@@ -118,8 +118,9 @@ void Dataset::parseLines(vector<string> p_vLines, vector<string> p_mLines) {
 }
 
 vector<Sequence*>* Dataset::permute() {
-    //random_shuffle(_permBuffer.begin(), _permBuffer.end());
-    return &_permBuffer;
+    random_shuffle(_permBuffer.begin(), _permBuffer.end());
+
+	return &_permBuffer;
 }
 
 

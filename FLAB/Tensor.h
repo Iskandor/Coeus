@@ -42,6 +42,7 @@ public:
 	void operator /= (const double p_const);
 
 	Tensor apply(double(*f)(double)) const;
+	static void apply(Tensor* p_target, Tensor* p_source, double(*f)(double, double));
 
 	int max_index() const;
 	void override(Tensor* p_tensor) const;
@@ -51,7 +52,7 @@ public:
 	double sum() const;
 
 	int size() const { return _size; }
-	int shape(int p_index) const { return _shape[p_index]; }
+	int shape(const int p_index) const { return _shape[p_index]; }
 
 	double at(int p_x) const;
 	double at(int p_y, int p_x) const;
@@ -60,6 +61,9 @@ public:
 
 	static double* alloc_arr(int p_size);
 	static int* alloc_shape(int p_size);
+
+	static double ew_dot(double p_x, double p_y);
+	static double ew_div(double p_x, double p_y);
 
 private:
 	void free_arr() const;

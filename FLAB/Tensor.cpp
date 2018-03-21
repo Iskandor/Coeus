@@ -153,6 +153,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 		shape[0] = p_tensor._size;
 
 		for (int i = 0; i < _shape[0]; i++) {
+			arr[i] = 0;
 			for (int j = 0; j < _shape[1]; j++) {
 				arr[i] = arr[i] + _arr[i * _shape[1] + j] * p_tensor._arr[j];
 			}
@@ -223,6 +224,12 @@ Tensor Tensor::apply(double(*f)(double)) const
 	return Tensor(_rank, _shape, arr);
 }
 
+void Tensor::apply(Tensor* p_target, Tensor* p_source, double(*f)(double, double)) {
+	for (int i = 0; i < p_target->_size; i++) {
+		p_target->_arr[i] = f(p_target->_arr[i], p_source->_arr[i]);
+	}
+}
+
 int Tensor::max_index() const {
 	int max = 0;
 
@@ -276,6 +283,14 @@ double* Tensor::alloc_arr(const int p_size) {
 int* Tensor::alloc_shape(const int p_size) {
 	return static_cast<int*>(Alloc(p_size * sizeof(int)));
 	//return static_cast<int*>(malloc(p_size * sizeof(int)));
+}
+
+double Tensor::ew_dot(const double p_x, const double p_y) {
+	return p_x * p_y;
+}
+
+double Tensor::ew_div(const double p_x, const double p_y) {
+	return p_x / p_y;
 }
 
 void Tensor::free_arr() const {

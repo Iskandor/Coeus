@@ -14,6 +14,7 @@ NeuralGroup::NeuralGroup(int p_dim, ACTIVATION p_activationFunction, bool p_bias
 {
     _id = IDGen::instance().next();
 	_bias = p_bias;	
+	_bias_index = -1;
     _dim = p_dim;
 	if (_bias) {
 		_dim += 1;
@@ -61,7 +62,8 @@ NeuralGroup::~NeuralGroup(void)
  * @param p_weights matrix of input connection params
  */
 void NeuralGroup::integrate(Tensor* p_input, Tensor* p_weights) {
-    _ap += (*p_weights) * (*p_input);
+	Tensor t = (*p_weights) * (*p_input);
+    //_ap += (*p_weights) * (*p_input);
 }
 
 /**
@@ -97,7 +99,7 @@ void NeuralGroup::activate() {
 	}
 }
 
-void NeuralGroup::setOutput(Tensor* p_output) {
+void NeuralGroup::set_output(Tensor* p_output) const {
     _output.override(p_output);
 }
 

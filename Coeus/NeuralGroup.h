@@ -37,7 +37,7 @@ public:
     int		get_dim() const { return _dim; };
 	bool	is_bias() const { return _bias; };
 
-    void	setOutput(Tensor* p_output);
+    void	set_output(Tensor* p_output) const;
     Tensor* getOutput() { return &_output; };
 
     ACTIVATION getActivationFunction() const { return _activationFunction; };

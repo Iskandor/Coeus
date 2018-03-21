@@ -5,7 +5,7 @@ using namespace Coeus;
 
 Connection::Connection(const int p_in_dim, const int p_out_dim, const string p_in_id, const string p_out_id)
 {
-    _id = p_in_id + "_" + p_out_id;
+    _id = p_out_id + "_" + p_in_id;
 	_in_dim = p_in_dim;
     _out_dim = p_out_dim;
 	_in_id = p_in_id;

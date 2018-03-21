@@ -157,6 +157,8 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="FFN.cpp" />
+    <ClCompile Include="IrisDataset.cpp" />
+    <ClCompile Include="IrisTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelMNS.cpp" />
     <ClCompile Include="ModelMNS2.cpp" />
@@ -167,6 +169,8 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="FFN.h" />
+    <ClInclude Include="IrisDataset.h" />
+    <ClInclude Include="IrisTest.h" />
     <ClInclude Include="ModelMNS.h" />
     <ClInclude Include="ModelMNS2.h" />
     <ClInclude Include="ModelMNS3.h" />

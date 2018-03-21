@@ -49,7 +49,10 @@ SOM::~SOM()
 	_input_lattice = nullptr;
 }
 
-void SOM::activate(Tensor* p_input, Tensor* p_weights) {
+void SOM::integrate(Tensor* p_input, Tensor* p_weights) {
+}
+
+void SOM::activate(Tensor* p_input) {
 	find_winner(p_input);
 
 	calc_distance();
@@ -71,7 +74,7 @@ void SOM::activate(Tensor* p_input, Tensor* p_weights) {
 			break;
 	}
 
-	_output_group->setOutput(&_dist);
+	_output_group->set_output(&_dist);
 }
 
 double SOM::calc_distance(const int p_index) {
@@ -165,7 +168,7 @@ void SOM::find_winner(Tensor* p_input, const bool p_conscience) {
 	double winner_dist = INFINITY;
 	_winner = 0;
 
-	_input_group->setOutput(p_input);
+	_input_group->set_output(p_input);
 
 	for (int i = 0; i < _output_group->get_dim(); i++) {
 		double neuron_dist = calc_distance(i);

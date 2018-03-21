@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-MSOM_params::MSOM_params(SOM* p_som): Base_SOM_params(p_som) {
+MSOM_params::MSOM_params(MSOM* p_som): Base_SOM_params(p_som) {
 	_gamma1 = _gamma1_0 = 0;
 	_gamma2 = _gamma2_0 = 0;
 }

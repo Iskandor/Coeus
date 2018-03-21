@@ -7,11 +7,12 @@ namespace Coeus {
 class __declspec(dllexport) CoreLayer : public BaseLayer
 {
 public:
-	CoreLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation);
+	CoreLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation, bool p_bias = true);
 	~CoreLayer();
 
-	void activate(Tensor* p_input, Tensor* p_weights = nullptr);
-	void override_params(BaseLayer* p_source);
+	void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
+	void activate(Tensor* p_input = nullptr) override;
+	void override_params(BaseLayer* p_source) override;
 };
 
 }

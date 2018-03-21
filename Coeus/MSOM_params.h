@@ -1,5 +1,6 @@
 #pragma once
 #include "Base_SOM_params.h"
+#include "MSOM.h"
 
 namespace Coeus
 {
@@ -7,7 +8,7 @@ namespace Coeus
 	class __declspec(dllexport) MSOM_params : public Base_SOM_params
 	{
 	public:
-		MSOM_params(SOM* p_som);
+		explicit MSOM_params(MSOM* p_som);
 		~MSOM_params();
 
 		void init_training(double p_gamma1, double p_gamma2, double p_epochs);

@@ -5,6 +5,7 @@
 #include "ModelMNS2.h"
 #include "ModelMNS3.h"
 #include "FFN.h"
+#include "IrisTest.h"
 
 
 using namespace std;
@@ -12,8 +13,18 @@ using namespace MNS;
 
 int main()
 {
-	//FFN model;
+	FFN model;
 
+	model.run();
+
+	/*
+	IrisTest iris;
+
+	iris.init();
+	iris.run(3000);
+	*/
+
+	/*
 	const string timestamp = to_string(time(nullptr));
 
 	Config::instance().Load("./config0.json");
@@ -24,6 +35,7 @@ int main()
 	model.init();
 	model.run(Config::instance().epoch);
 	model.save(timestamp);
+	*/
 
 	//model.init("1519198741");
 	//model.save_umatrix("1519198741");
@@ -35,7 +47,7 @@ int main()
 	//model.testDistance();
 	//model.testBALData();
 
-	Logger::instance().close();
+	//Logger::instance().close();
 
 	system("pause");
 

@@ -10,7 +10,7 @@ namespace Coeus
 		explicit MSOM(nlohmann::json p_data);
 		~MSOM();
 
-		void activate(Tensor *p_input, Tensor* p_weights = nullptr) override;
+		void activate(Tensor* p_input = nullptr) override;
 		double calc_distance(int p_index) override;
 		double calc_distance(int p_neuron1, int p_neuron2) override;
 
