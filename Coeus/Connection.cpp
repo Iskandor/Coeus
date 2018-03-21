@@ -10,7 +10,6 @@ Connection::Connection(const int p_in_dim, const int p_out_dim, const string p_i
     _out_dim = p_out_dim;
 	_in_id = p_in_id;
 	_out_id = p_out_id;
-	_weights = nullptr;
 }
 
 Connection::Connection(nlohmann::json p_data) {
@@ -29,7 +28,7 @@ Connection::Connection(nlohmann::json p_data) {
 	ss.seekg(0, ios::beg);
 	ss.read(reinterpret_cast<char*>(data), size);
 
-	_weights = new Tensor({_out_dim, _in_dim}, data);
+	_weights = Tensor({_out_dim, _in_dim}, data);
 }
 
 Connection::Connection(Connection &p_copy) {
@@ -38,12 +37,11 @@ Connection::Connection(Connection &p_copy) {
     _out_dim = p_copy._out_dim;
 	_in_id = p_copy._in_id;
 	_out_id = p_copy._out_id;
-    _weights = new Tensor(*p_copy._weights);
+    _weights = Tensor(p_copy._weights);
 }
 
 Connection::~Connection()
 {
-	if (_weights != nullptr) delete _weights;
 }
 
 void Connection::init(const Connection::INIT p_init, const double p_limit) {
@@ -64,17 +62,17 @@ void Connection::init(const Connection::INIT p_init, const double p_limit) {
 }
 
 void Connection::uniform(const double p_limit) {
-	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit);
+	_weights = Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit);
 }
 
 void Connection::identity() {
-	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ONES);
+	_weights = Tensor({ _out_dim, _in_dim }, Tensor::ONES);
 }
 
 void Connection::set_weights(Tensor *p_weights) const {
-    _weights->override(p_weights);
+    _weights.override(p_weights);
 }
 
-void Connection::update_weights(Tensor& p_delta_w) const {
-	*_weights += p_delta_w;
+void Connection::update_weights(Tensor& p_delta_w) {
+	_weights += p_delta_w;
 }

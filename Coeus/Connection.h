@@ -22,8 +22,8 @@ public:
 
     void init(INIT p_init, double p_limit = 0);
     void set_weights(Tensor* p_weights) const;
-    Tensor* get_weights() const { return _weights; };
-	void update_weights(Tensor& p_delta_w) const;
+    Tensor* get_weights() { return &_weights; };
+	void update_weights(Tensor& p_delta_w);
 
 	string get_id() const { return _id; };
 	string get_in_id() const { return _in_id; };
@@ -40,7 +40,7 @@ private:
     string _id;
 	string _in_id, _out_id;
     int _in_dim, _out_dim;
-    Tensor *_weights;
+    Tensor _weights;
 };
 
 }

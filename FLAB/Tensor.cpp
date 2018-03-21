@@ -152,10 +152,10 @@ Tensor Tensor::operator*(const Tensor& p_tensor) {
 		shape = alloc_shape(rank);
 		shape[0] = p_tensor._size;
 
-		for (int i = 0; i < _shape[0]; i++) {
+		for (int i = 0; i < _shape[1]; i++) {
 			arr[i] = 0;
-			for (int j = 0; j < _shape[1]; j++) {
-				arr[i] = arr[i] + _arr[i * _shape[1] + j] * p_tensor._arr[j];
+			for (int j = 0; j < _shape[0]; j++) {
+				arr[i] = arr[i] + _arr[i * _shape[0] + j] * p_tensor._arr[i];
 			}
 		}
 	}

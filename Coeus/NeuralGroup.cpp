@@ -62,8 +62,7 @@ NeuralGroup::~NeuralGroup(void)
  * @param p_weights matrix of input connection params
  */
 void NeuralGroup::integrate(Tensor* p_input, Tensor* p_weights) {
-	Tensor t = (*p_weights) * (*p_input);
-    //_ap += (*p_weights) * (*p_input);
+    _ap += (*p_weights) * (*p_input);
 }
 
 /**
