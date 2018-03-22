@@ -52,7 +52,9 @@ public:
 	double sum() const;
 
 	int size() const { return _size; }
+	int rank() const { return _rank; }
 	int shape(const int p_index) const { return _shape[p_index]; }
+	int* shape() const { return _shape; }
 
 	double at(int p_x) const;
 	double at(int p_y, int p_x) const;
