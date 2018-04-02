@@ -31,15 +31,15 @@ public:
 	static void Concat(Tensor* p_result, Tensor* p_vector1, Tensor* p_vector2);
 
 	void operator = (const Tensor& p_tensor);
-	Tensor operator + (const Tensor& p_tensor);
-	void operator += (const Tensor& p_tensor);
-	Tensor operator - (const Tensor& p_tensor);
-	void operator -= (const Tensor& p_tensor);
-	Tensor operator * (const Tensor& p_tensor);
-	Tensor operator * (const double p_const);
-	void operator *= (const double p_const);
-	Tensor operator / (const double p_const);
-	void operator /= (const double p_const);
+	Tensor operator + (const Tensor& p_tensor) const;
+	void operator += (const Tensor& p_tensor) const;
+	Tensor operator - (const Tensor& p_tensor) const;
+	void operator -= (const Tensor& p_tensor) const;
+	Tensor operator * (const Tensor& p_tensor) const;
+	Tensor operator * (const double p_const) const;
+	void operator *= (const double p_const) const;
+	Tensor operator / (const double p_const) const;
+	void operator /= (const double p_const) const;
 
 	Tensor apply(double(*f)(double)) const;
 	static void apply(Tensor* p_target, Tensor* p_source, double(*f)(double, double));
@@ -67,9 +67,12 @@ public:
 	static double ew_dot(double p_x, double p_y);
 	static double ew_div(double p_x, double p_y);
 
+	static int control;
+
 private:
 	void free_arr() const;
 	void free_shape() const;
+	static int* copy_shape(int p_rank, int* p_shape);
 	void init_shape(int p_rank, int* p_shape);
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, double p_value) const;
