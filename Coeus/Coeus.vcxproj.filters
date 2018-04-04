@@ -156,9 +156,6 @@
     <ClCompile Include="GenKLDivergence.cpp">
       <Filter>Source Files\Algorithm\CostFunctions</Filter>
     </ClCompile>
-    <ClCompile Include="ItakuraSaitoDistance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IGradientComponent.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
     </ClCompile>
@@ -170,6 +167,12 @@
     </ClCompile>
     <ClCompile Include="NetworkGradient.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="ItakuraSaitoDistance.cpp">
+      <Filter>Source Files\Algorithm\CostFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="LISSOM.cpp">
+      <Filter>Source Files\Network\SOM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +272,6 @@
     <ClInclude Include="GenKLDivergence.h">
       <Filter>Header Files\Algorithm\CostFunctions</Filter>
     </ClInclude>
-    <ClInclude Include="ItakuraSaitoDistance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IGradientComponent.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
     </ClInclude>
@@ -283,6 +283,12 @@
     </ClInclude>
     <ClInclude Include="NetworkGradient.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="ItakuraSaitoDistance.h">
+      <Filter>Header Files\Algorithm\CostFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="LISSOM.h">
+      <Filter>Header Files\Network\SOM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

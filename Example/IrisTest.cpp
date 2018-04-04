@@ -2,6 +2,7 @@
 #include "LSOM_params.h"
 #include "LSOM_learning.h"
 #include "SOM_learning.h"
+#include <fstream>
 
 
 IrisTest::IrisTest() {
@@ -15,7 +16,7 @@ IrisTest::~IrisTest()
 }
 
 void IrisTest::init() {
-	_lsom = new LSOM("LSOM", 4, 4, 4, NeuralGroup::EXPONENTIAL);
+	_lsom = new LSOM("LSOM", 4, 4, 4, NeuralGroup::TANH);
 }
 
 void IrisTest::run(const int p_epochs) {
@@ -25,6 +26,8 @@ void IrisTest::run(const int p_epochs) {
 	LSOM_learning learner(_lsom, &params, &analyzer);
 
 	vector<IrisDatasetItem>* data = nullptr;
+
+	_lsom->init(p_epochs / 2);
 
 	for(int t = 0; t < p_epochs; t++) {
 		cout << "Epoch " << t << endl;
@@ -45,5 +48,47 @@ void IrisTest::run(const int p_epochs) {
 
 		analyzer.end_epoch();
 		params.param_decay();
-	}	
+		_lsom->update_param();
+	}
 }
+
+void IrisTest::test() {
+	double* activity = new double[_lsom->dim_x() * _lsom->dim_y() * IrisDataset::CATEGORIES]{ 0 };
+
+	vector<IrisDatasetItem>* data = _dataset.permute();
+
+	for (int i = 0; i < data->size(); i++) {
+		cout << data->at(i).target << endl;
+		_lsom->activate(data->at(i).data);
+		for (int n = 0; n < _lsom->get_lattice()->get_dim(); n++) {
+			activity[n * IrisDataset::CATEGORIES + (*_dataset.get_target_map())[data->at(i).target]] += _lsom->get_output()->at(n);
+		}
+	}
+
+	save_results("iris_test.act", _lsom->dim_x(), _lsom->dim_y(), activity, IrisDataset::CATEGORIES);
+
+	delete[] activity;
+}
+
+void IrisTest::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, 	const int p_category) const {
+	ofstream file(p_filename);
+
+	if (file.is_open()) {
+		file << p_dim_x << "," << p_dim_y << endl;
+		for (int i = 0; i < p_dim_x * p_dim_y; i++) {
+			for (int j = 0; j < p_category; j++) {
+				if (j == p_category - 1) {
+					file << p_data[i * p_category + j];
+				}
+				else {
+					file << p_data[i * p_category + j] << ",";
+				}
+			}
+			if (i < p_dim_x * p_dim_y - 1) file << endl;
+		}
+	}
+
+	file.close();
+}
+
+

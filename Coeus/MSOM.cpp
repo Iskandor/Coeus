@@ -38,7 +38,7 @@ void MSOM::activate(Tensor* p_input) {
 double MSOM::calc_distance(const int p_index) {
 	const int dim = _input_group->get_dim();
 
-	Tensor* xi = _input_lattice->get_weights();
+	Tensor* xi = _afferent->get_weights();
 	Tensor* ci = _context_lattice->get_weights();
 	Tensor* xt = _input_group->getOutput();
 	Tensor* ct = _context_group->getOutput();
@@ -60,7 +60,7 @@ double MSOM::calc_distance(const int p_neuron1, const int p_neuron2)
 {
 	const int dim = _input_group->get_dim();
 
-	Tensor* xi = _input_lattice->get_weights();
+	Tensor* xi = _afferent->get_weights();
 	Tensor* ci = _context_lattice->get_weights();
 
 	double dx = 0;
@@ -98,7 +98,7 @@ void MSOM::reset_context() const {
 void MSOM::update_context() const {
 	Tensor* ct = _context_group->getOutput();
 
-	Tensor* wIt = _input_lattice->get_weights();
+	Tensor* wIt = _afferent->get_weights();
 	Tensor* cIt = _context_lattice->get_weights();
 
 	for (int i = 0; i < _context_group->get_dim(); i++) {

@@ -16,6 +16,7 @@ Base_SOM_params::~Base_SOM_params()
 void Base_SOM_params::init(const double p_epochs)
 {
 	_iteration = 0;
+	_epochs = p_epochs;
 	_lambda = p_epochs / log(_sigma0);
 	_sigma = _sigma0 * exp(-_iteration / _lambda);
 }

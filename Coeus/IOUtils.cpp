@@ -88,7 +88,7 @@ json IOUtils::write_som(SOM* p_som) {
 	result["dim_y"] = p_som->dim_y();
 	result["groups"]["input"] = write_neural_group(p_som->get_input_group());
 	result["groups"]["lattice"] = write_neural_group(p_som->get_lattice());
-	result["connections"]["input_lattice"] = write_connection(p_som->get_input_lattice());
+	result["connections"]["input_lattice"] = write_connection(p_som->get_afferent());
 
 	return result;
 }

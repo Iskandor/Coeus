@@ -179,6 +179,7 @@
     <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
+    <ClCompile Include="LISSOM.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LSOM.cpp" />
     <ClCompile Include="LSOM_learning.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="KLDivergence.h" />
+    <ClInclude Include="LISSOM.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LSOM.h" />
     <ClInclude Include="LSOM_learning.h" />

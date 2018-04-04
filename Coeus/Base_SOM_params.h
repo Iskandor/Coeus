@@ -19,6 +19,7 @@ namespace Coeus {
 		double _sigma;
 		double _lambda;
 		double _iteration;
+		double _epochs;
 
 	};
 }

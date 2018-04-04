@@ -25,7 +25,7 @@ void SOM_learning::train(Tensor* p_input) {
 	const int winner = _som->find_winner(p_input);	
 	const int dim_input = _som->get_input_group()->get_dim();
 	const int dim_lattice = _som->get_lattice()->get_dim();
-	Tensor* wi = _som->get_input_lattice()->get_weights();
+	Tensor* wi = _som->get_afferent()->get_weights();
 	Tensor* in = _som->get_input_group()->getOutput();
 
 	double theta = 0;
@@ -40,7 +40,7 @@ void SOM_learning::train(Tensor* p_input) {
 		}
 	}
 
-	_som->get_input_lattice()->update_weights(_delta_w);
+	_som->get_afferent()->update_weights(_delta_w);
 }
 
 void SOM_learning::merge(vector<SOM_learning*>& p_learners) {
@@ -54,7 +54,7 @@ void SOM_learning::merge(vector<SOM_learning*>& p_learners) {
 
 	_delta_w /= size;
 
-	_som->get_input_lattice()->update_weights(_delta_w);
+	_som->get_afferent()->update_weights(_delta_w);
 
 	_delta_w.fill(0);
 }

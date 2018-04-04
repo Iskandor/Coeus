@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <set>
 
 IrisDataset::IrisDataset()
 {
@@ -26,18 +27,30 @@ void IrisDataset::load_data(const string p_filename) {
 		file.close();
 	}
 
-	Tensor max = Tensor::Value({ 4 }, -1);
+	Tensor max = Tensor::Value({ SIZE }, -1);
+
+	set<string> temp_target;
 
 	for(int i = 0; i < _data.size(); i++) {
-		for(int j = 0; j < 4; j++) {
+
+		for(int j = 0; j < SIZE; j++) {
 			if (max.at(j) == -1 || max.at(j) < _data[i].data->at(j)) {
 				max.set(j, _data[i].data->at(j));
 			}
 		}
+
+		temp_target.insert(_data[i].target);
 	}
 
 	for (int i = 0; i < _data.size(); i++) {
 		Tensor::apply(_data[i].data, &max, Tensor::ew_div);
+	}
+
+	int id = 0;
+
+	for(auto it = temp_target.begin(); it != temp_target.end(); ++it) {
+		_target[*it] = id;
+		id++;
 	}
 }
 
@@ -61,13 +74,13 @@ void IrisDataset::parse_line(string p_line) {
 
 	IrisDatasetItem item;
 
-	item.data = new Tensor({ 4 }, Tensor::INIT::ZERO);
+	item.data = new Tensor({ SIZE }, Tensor::INIT::ZERO);
 
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < SIZE; i++) {
 		item.data->set(i, stod(tokens[i]));
 	}
 
-	item.target = tokens[4];
+	item.target = tokens[SIZE];
 
 	_data.push_back(item);
 }

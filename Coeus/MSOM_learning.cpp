@@ -32,7 +32,7 @@ void MSOM_learning::train(Tensor* p_input) {
 
 	_msom->update_context();
 
-	Tensor* wi = _msom->get_input_lattice()->get_weights();
+	Tensor* wi = _msom->get_afferent()->get_weights();
 	Tensor* ci = _msom->get_context_lattice()->get_weights();
 	Tensor* in = _msom->get_input_group()->getOutput();
 	Tensor* ct = _msom->get_context_group()->getOutput();
@@ -50,7 +50,7 @@ void MSOM_learning::train(Tensor* p_input) {
 		}
 	}
 
-	_msom->get_input_lattice()->update_weights(_delta_w);
+	_msom->get_afferent()->update_weights(_delta_w);
 	_msom->get_context_lattice()->update_weights(_delta_c);
 
 	_batch_delta_w += _delta_w;
@@ -71,7 +71,7 @@ void MSOM_learning::merge(vector<MSOM_learning*>& p_learners) {
 	_delta_w /= size;
 	_delta_c /= size;
 
-	_msom->get_input_lattice()->update_weights(_delta_w);
+	_msom->get_afferent()->update_weights(_delta_w);
 	_msom->get_context_lattice()->update_weights(_delta_c);
 
 	_delta_w.fill(0);

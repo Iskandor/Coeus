@@ -15,8 +15,8 @@ SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_
 	_input_group = new NeuralGroup(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false);
 	_output_group = new NeuralGroup(p_dim_x * p_dim_y, p_activation, false);
 
-	_input_lattice = new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id());
-	_input_lattice->init(Connection::UNIFORM, 0.01);
+	_afferent = new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id());
+	_afferent->init(Connection::UNIFORM, 1);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });
@@ -34,7 +34,7 @@ SOM::SOM(nlohmann::json p_data) : BaseLayer(p_data) {
 
 	_input_group = IOUtils::read_neural_group(p_data["groups"]["input"]);
 	_output_group = IOUtils::read_neural_group(p_data["groups"]["lattice"]);
-	_input_lattice = IOUtils::read_connection(p_data["connections"]["input_lattice"]);
+	_afferent = IOUtils::read_connection(p_data["connections"]["input_lattice"]);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });
@@ -45,8 +45,8 @@ SOM::SOM(nlohmann::json p_data) : BaseLayer(p_data) {
 
 SOM::~SOM()
 {
-	if (_input_lattice != nullptr) delete _input_lattice;
-	_input_lattice = nullptr;
+	if (_afferent != nullptr) delete _afferent;
+	_afferent = nullptr;
 }
 
 void SOM::integrate(Tensor* p_input, Tensor* p_weights) {
@@ -83,7 +83,7 @@ double SOM::calc_distance(const int p_index) {
 
 	for (int i = 0; i < dim; i++) {
 		if (_input_mask == nullptr || _input_mask[i] == 1) {
-			s += pow(_input_group->getOutput()->at(i) - _input_lattice->get_weights()->at(p_index, i), 2);
+			s += pow(_input_group->getOutput()->at(i) - _afferent->get_weights()->at(p_index, i), 2);
 		}
 	}
 
@@ -96,7 +96,7 @@ double SOM::calc_distance(const int p_neuron1, const int p_neuron2)
 	double s = 0;
 
 	for (int i = 0; i < dim; i++) {
-		s += pow(_input_lattice->get_weights()->at(p_neuron1, i) - _input_lattice->get_weights()->at(p_neuron2, i), 2);
+		s += pow(_afferent->get_weights()->at(p_neuron1, i) - _afferent->get_weights()->at(p_neuron2, i), 2);
 	}
 
 	return sqrt(s);
@@ -113,7 +113,7 @@ void SOM::init_conscience() const {
 SOM * SOM::clone() const {
 	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->getActivationFunction());
 
-	result->_input_lattice = new Connection(*_input_lattice);
+	result->_afferent = new Connection(*_afferent);
 	result->_conscience = _conscience;
 
 	return result;
@@ -123,7 +123,7 @@ void SOM::override_params(BaseLayer * p_source)
 {
 	SOM* som = static_cast<SOM*>(p_source);
 
-	_input_lattice->set_weights(som->get_input_lattice()->get_weights());
+	_afferent->set_weights(som->get_afferent()->get_weights());
 	_conscience = som->_conscience;
 
 	if (_conscience > 0) {
