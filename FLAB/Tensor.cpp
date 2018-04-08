@@ -280,6 +280,22 @@ void Tensor::set(const int p_y, const int p_x, const double p_val) const {
 	_arr[p_y * _shape[1] + p_x] = p_val;
 }
 
+void Tensor::inc(const int p_x, const double p_val) const {
+	_arr[p_x] += p_val;
+}
+
+void Tensor::inc(const int p_x, const int p_y, const double p_val) const {
+	_arr[p_y * _shape[1] + p_x] += p_val;
+}
+
+void Tensor::dec(const int p_x, const double p_val) const {
+	_arr[p_x] -= p_val;
+}
+
+void Tensor::dec(const int p_x, const int p_y, const double p_val) const {
+	_arr[p_y * _shape[1] + p_x] -= p_val;
+}
+
 double* Tensor::alloc_arr(const int p_size) {
 	control++;
 	return static_cast<double*>(Alloc(p_size * sizeof(double)));

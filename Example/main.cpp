@@ -13,16 +13,16 @@ using namespace MNS;
 
 int main()
 {
+	/*
 	FFN model;
 
 	model.run();
-
-	/*
+	*/
 	IrisTest iris;
 
 	iris.init();
-	iris.run(3000);
-	*/
+	iris.run(6000);
+	iris.test();
 
 	/*
 	const string timestamp = to_string(time(nullptr));

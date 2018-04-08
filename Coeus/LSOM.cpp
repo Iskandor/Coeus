@@ -7,8 +7,8 @@ using namespace Coeus;
 LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
 {
 	_type = TYPE::LSOM;
-	_lattice_lattice = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
-	_lattice_lattice->init(Connection::UNIFORM, 0.01);
+	_lateral = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
+	_lateral->init(Connection::UNIFORM, 0.01);
 
 	_auxoutput = Tensor::Zero({ _dim_x * _dim_y });
 }
@@ -16,51 +16,59 @@ LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const in
 
 LSOM::~LSOM()
 {
-	delete _lattice_lattice;
+	delete _lateral;
+}
+
+void LSOM::init(const double p_epochs) {
+	_iteration = 0;
+	_epochs = p_epochs;
+	_lat_param = 0;
+}
+
+void LSOM::update_param() {
+	_iteration++;
+	_lat_param = 1 - (-pow(_iteration / _epochs, 2) + 1);
+
+	if (_lat_param > 1) _lat_param = 1;
 }
 
 void LSOM::activate(Tensor * p_input)
 {
 	_input_group->set_output(p_input);
+
+
 	calc_distance();
 
 	switch (_output_group->getActivationFunction()) {
 	case NeuralGroup::LINEAR:
-		_dist = _dist.apply(ActivationFunctions::linear);
+		_auxoutput = _dist.apply(ActivationFunctions::linear);
 		break;
 	case NeuralGroup::EXPONENTIAL:
-		_dist = _dist.apply(ActivationFunctions::exponential);
+		_auxoutput = _dist.apply(ActivationFunctions::exponential);
 		break;
 	case NeuralGroup::KEXPONENTIAL:
-		_dist = _dist.apply(ActivationFunctions::kexponential);
+		_auxoutput = _dist.apply(ActivationFunctions::kexponential);
 		break;
 	case NeuralGroup::GAUSS:
-		_dist = _dist.apply(ActivationFunctions::gauss);
+		_auxoutput = _dist.apply(ActivationFunctions::gauss);
 		break;
 	default:
 		break;
 	}
 
-	Tensor* lateral_w = _lattice_lattice->get_weights();
+	Tensor* lateral_w = _lateral->get_weights();
 
-	int x1 = 0;
-	int y1 = 0;
-	int x2 = 0;
-	int y2 = 0;
-
-	for (int i = 0; i < _dim_x * _dim_y; i++) {
-		get_position(i, x1, y1);
-		for (int n = 0; n < _dim_x * _dim_y; n++) {
-			get_position(n, x2, y2);
-			
-			//double d = Metrics::euclidean_distance(x1, y1, x2, y2);
-
-			_auxoutput.set(i, _auxoutput.at(i) + _dist.at(n) * lateral_w->at(i, n)); // * (1.0 / (d == 0 ? 1 : d))
+	for(int s = 0; s < 10; s++) {
+		for (int i = 0; i < _dim_x * _dim_y; i++) {
+			for (int n = 0; n < _dim_x * _dim_y; n++) {
+				const double w = _dist.at(i) + _auxoutput.at(n) * lateral_w->at(i, n);
+				_auxoutput.set(i, w);
+			}
 		}
+		_auxoutput = _auxoutput.apply(ActivationFunctions::exponential);
 	}
 
 	_output_group->set_output(&_auxoutput);
-	_auxoutput.fill(0);
 }
 
 int LSOM::find_winner(Tensor * p_input)

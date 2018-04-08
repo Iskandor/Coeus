@@ -16,18 +16,18 @@ IrisTest::~IrisTest()
 }
 
 void IrisTest::init() {
-	_lsom = new LSOM("LSOM", 4, 4, 4, NeuralGroup::TANH);
+	_lsom = new LSOM("LSOM", 4, 8, 8, NeuralGroup::EXPONENTIAL);
 }
 
 void IrisTest::run(const int p_epochs) {
 	SOM_analyzer analyzer;
 	LSOM_params params(_lsom);
-	params.init_training(0.1, 0.1, p_epochs);
+	params.init_training(0.5, 0.1, p_epochs);
 	LSOM_learning learner(_lsom, &params, &analyzer);
 
 	vector<IrisDatasetItem>* data = nullptr;
 
-	_lsom->init(p_epochs / 2);
+	_lsom->init(p_epochs);
 
 	for(int t = 0; t < p_epochs; t++) {
 		cout << "Epoch " << t << endl;
@@ -58,7 +58,7 @@ void IrisTest::test() {
 	vector<IrisDatasetItem>* data = _dataset.permute();
 
 	for (int i = 0; i < data->size(); i++) {
-		cout << data->at(i).target << endl;
+		//cout << data->at(i).target << endl;
 		_lsom->activate(data->at(i).data);
 		for (int n = 0; n < _lsom->get_lattice()->get_dim(); n++) {
 			activity[n * IrisDataset::CATEGORIES + (*_dataset.get_target_map())[data->at(i).target]] += _lsom->get_output()->at(n);

@@ -16,7 +16,7 @@ SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_
 	_output_group = new NeuralGroup(p_dim_x * p_dim_y, p_activation, false);
 
 	_afferent = new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id());
-	_afferent->init(Connection::UNIFORM, 1);
+	_afferent->init(Connection::UNIFORM, 0.1);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });
