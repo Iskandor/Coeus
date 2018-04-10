@@ -21,6 +21,6 @@ double Metrics::gaussian_distance(const double p_d, const double p_sigma) {
 	return exp(-0.5 * pow(p_d / p_sigma, 2)) / (p_sigma * sqrt2PI);
 }
 
-double Metrics::abs_distance(const double p_d, const double p_h) {
+double Metrics::binary_distance(const double p_d, const double p_h) {
 	return p_d < p_h ? 1 : -1;
 }

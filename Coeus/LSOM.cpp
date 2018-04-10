@@ -19,19 +19,6 @@ LSOM::~LSOM()
 	delete _lateral;
 }
 
-void LSOM::init(const double p_epochs) {
-	_iteration = 0;
-	_epochs = p_epochs;
-	_lat_param = 0;
-}
-
-void LSOM::update_param() {
-	_iteration++;
-	_lat_param = 1 - (-pow(_iteration / _epochs, 2) + 1);
-
-	if (_lat_param > 1) _lat_param = 1;
-}
-
 void LSOM::activate(Tensor * p_input)
 {
 	_input_group->set_output(p_input);
@@ -60,12 +47,13 @@ void LSOM::activate(Tensor * p_input)
 
 	for(int s = 0; s < 10; s++) {
 		for (int i = 0; i < _dim_x * _dim_y; i++) {
+			double w = 0;
 			for (int n = 0; n < _dim_x * _dim_y; n++) {
-				const double w = _dist.at(i) + _auxoutput.at(n) * lateral_w->at(i, n);
-				_auxoutput.set(i, w);
+				 w += _auxoutput.at(n) * lateral_w->at(i, n);				
 			}
+			_auxoutput.set(i, _dist.at(i) + w);
 		}
-		_auxoutput = _auxoutput.apply(ActivationFunctions::exponential);
+		//_auxoutput = _auxoutput.apply(ActivationFunctions::sigmoid);
 	}
 
 	_output_group->set_output(&_auxoutput);

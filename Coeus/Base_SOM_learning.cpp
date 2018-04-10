@@ -41,9 +41,6 @@ double Base_SOM_learning::calc_neighborhood(const double p_d, const NEIGHBORHOOD
 		case GAUSSIAN:
 			result = Metrics::gaussian_distance(p_d, _params->sigma());
 		break;
-		case ABS: 
-			result = Metrics::abs_distance(p_d);
-		break;
 		default: ;
 	}
 

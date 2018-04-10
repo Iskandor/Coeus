@@ -15,8 +15,7 @@ namespace Coeus
 
 		enum NEIGHBORHOOD_TYPE {
 			EUCLIDEAN = 0,
-			GAUSSIAN = 1,
-			ABS = 2
+			GAUSSIAN = 1
 		};
 
 		virtual void train(Tensor *p_input) = 0;		

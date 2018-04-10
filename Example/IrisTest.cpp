@@ -27,8 +27,6 @@ void IrisTest::run(const int p_epochs) {
 
 	vector<IrisDatasetItem>* data = nullptr;
 
-	_lsom->init(p_epochs);
-
 	for(int t = 0; t < p_epochs; t++) {
 		cout << "Epoch " << t << endl;
 		
@@ -46,9 +44,9 @@ void IrisTest::run(const int p_epochs) {
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 		cout << " LSOM qError: " << analyzer.q_error() << " WD: " << analyzer.winner_diff(_lsom->get_lattice()->get_dim()) << endl;
 
+		learner.update_friendship();
 		analyzer.end_epoch();
-		params.param_decay();
-		_lsom->update_param();
+		params.param_decay();		
 	}
 }
 
