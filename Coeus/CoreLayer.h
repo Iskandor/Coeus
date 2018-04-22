@@ -6,6 +6,7 @@ namespace Coeus {
 
 class __declspec(dllexport) CoreLayer : public BaseLayer
 {
+	friend class CoreLayerGradient;
 public:
 	CoreLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation, bool p_bias = true);
 	~CoreLayer();

@@ -1,17 +1,19 @@
 #pragma once
 #include "IGradientComponent.h"
+#include "CoreLayer.h"
 
 namespace Coeus {
 
 	class __declspec(dllexport) CoreLayerGradient : public IGradientComponent
 	{
 	public:
-		CoreLayerGradient();
+		explicit CoreLayerGradient(CoreLayer* p_layer);
 		~CoreLayerGradient();
 
-		void init(BaseLayer* p_layer) override;
-		map<string, Tensor>* calc_delta(Tensor* p_delta) override;
-		map<string, Tensor>* calc_gradient() override;
+		void init() override;
+		void calc_deriv() override;
+		void calc_delta(Tensor* p_weights, Tensor* p_delta) override;
+		void calc_gradient(map<string, Tensor> &p_gradient) override;
 
 	};
 

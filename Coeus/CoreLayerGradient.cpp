@@ -2,25 +2,28 @@
 
 using namespace Coeus;
 
-CoreLayerGradient::CoreLayerGradient()
-{
+CoreLayerGradient::CoreLayerGradient(CoreLayer* p_layer) : IGradientComponent(p_layer) {
 }
-
 
 CoreLayerGradient::~CoreLayerGradient()
 {
 }
 
-void Coeus::CoreLayerGradient::init(BaseLayer * p_layer)
+void Coeus::CoreLayerGradient::init()
 {
+	NeuralGroup* g = reinterpret_cast<CoreLayer*>(_layer)->_output_group;
+	_deriv[g->get_id()] = Tensor::Zero({ g->get_dim() });
+	_delta[g->get_id()] = Tensor::Zero({ g->get_dim() });
 }
 
-map<string, Tensor>* Coeus::CoreLayerGradient::calc_delta(Tensor * p_delta)
-{
-	return nullptr;
+void CoreLayerGradient::calc_deriv() {
+	calc_deriv_group(reinterpret_cast<CoreLayer*>(_layer)->_output_group);
 }
 
-map<string, Tensor>* Coeus::CoreLayerGradient::calc_gradient()
-{
-	return nullptr;
+void CoreLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta) {
+	NeuralGroup* g = reinterpret_cast<CoreLayer*>(_layer)->_output_group;
+	_delta[g->get_id()] = p_weights->T() * *p_delta;
+}
+
+void CoreLayerGradient::calc_gradient(map<string, Tensor>& p_gradient) {
 }

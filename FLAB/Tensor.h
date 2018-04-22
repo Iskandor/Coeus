@@ -41,6 +41,8 @@ public:
 	Tensor operator / (const double p_const) const;
 	void operator /= (const double p_const) const;
 
+	Tensor T() const;
+
 	Tensor apply(double(*f)(double)) const;
 	static void apply(Tensor* p_target, Tensor* p_source, double(*f)(double, double));
 

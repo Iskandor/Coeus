@@ -11,6 +11,7 @@ namespace Coeus {
 
 class __declspec(dllexport) NeuralNetwork
 {
+	friend class NetworkGradient;
 public:
 	NeuralNetwork();
 	virtual ~NeuralNetwork();
@@ -20,6 +21,7 @@ public:
 	BaseLayer*	add_layer(BaseLayer* p_layer);
 	Connection* add_connection(string p_input_layer, string p_output_layer, Connection::INIT p_init, double p_limit);
 	Connection* get_connection(string p_input_layer, string p_output_layer);
+	Tensor*		get_output() { return _layers[_output_layer]->get_output(); }
 
 protected:
 	void create_directed_graph();

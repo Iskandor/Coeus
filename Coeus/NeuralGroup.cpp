@@ -66,7 +66,7 @@ void NeuralGroup::integrate(Tensor* p_input, Tensor* p_weights) {
 }
 
 /**
- * calculates the output of layer according to activation function
+ * calculates the get_output of layer according to activation function
  */
 void NeuralGroup::activate() {
     switch (_activationFunction) {

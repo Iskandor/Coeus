@@ -91,7 +91,7 @@ void NeuralNetwork::create_directed_graph()
 	_forward_graph.clear();
 	_backward_graph.clear();
 
-	for(auto it = _layers.begin(); it != _layers.end(); it++)
+	for(auto it = _layers.begin(); it != _layers.end(); ++it)
 	{
 		it->second->set_valid(false);
 	}
@@ -102,16 +102,16 @@ void NeuralNetwork::create_directed_graph()
 
 	while (!q.empty())
 	{
-		string v = q.front();
+		const string v = q.front();
 		q.pop();
 
 		if (!_layers[v]->is_valid()) {
 			_forward_graph.push_back(_layers[v]);
 			_layers[v]->set_valid(true);
 
-			for (auto it = _graph.begin(); it != _graph.end(); it++) {
+			for (auto it = _graph.begin(); it != _graph.end(); ++it) {
 				if (!_layers[it->first]->is_valid()) {
-					for (auto n = it->second.begin(); n != it->second.end(); n++) {
+					for (auto n = it->second.begin(); n != it->second.end(); ++n) {
 						if (*n == v) {
 							q.push(it->first);
 						}
@@ -121,7 +121,7 @@ void NeuralNetwork::create_directed_graph()
 		}
 	}
 
-	for (auto it = _forward_graph.rbegin(); it != _forward_graph.rend(); it++) {
+	for (auto it = _forward_graph.rbegin(); it != _forward_graph.rend(); ++it) {
 		_backward_graph.push_back(*it);
 	}
 }

@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-BaseLayer::BaseLayer(string p_id): _input_group(nullptr), _output_group(nullptr) 
+BaseLayer::BaseLayer(const string p_id): _input_group(nullptr), _output_group(nullptr) 
 {
 	_id = p_id;
 }

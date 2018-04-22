@@ -217,6 +217,22 @@ void Tensor::operator/=(const double p_const) const {
 	}
 }
 
+Tensor Tensor::T() const {
+	double* arr = alloc_arr(_size);
+
+	int* shape = copy_shape(_rank, _shape);
+
+	if (_rank == 2 && _shape[0] == _shape[1]) {
+		for (int i = 0; i < _shape[0]; i++) {
+			for (int j = 0; j < _shape[1]; j++) {
+				arr[i * _shape[0] + j] = _arr[j * _shape[0] + i];
+			}
+		}
+	}
+
+	return Tensor(_rank, shape, arr);
+}
+
 Tensor Tensor::apply(double(*f)(double)) const 
 {
 	double* arr = alloc_arr(_size);
