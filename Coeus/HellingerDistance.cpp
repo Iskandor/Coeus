@@ -31,6 +31,7 @@ double HellingerDistance::cost(Tensor * p_prediction, Tensor * p_target)
 Tensor HellingerDistance::cost_deriv(Tensor * p_prediction, Tensor * p_target)
 {
 	double* data = Tensor::alloc_arr(p_prediction->size());
+	int* shape = Tensor::copy_shape(p_prediction->rank(), p_prediction->shape());
 
 	for (int i = 0; i < p_prediction->size(); i++) {
 		double e = p_target->at(i);
@@ -39,5 +40,5 @@ Tensor HellingerDistance::cost_deriv(Tensor * p_prediction, Tensor * p_target)
 		data[i] = (sqrt(a) - sqrt(e))/(sqrt(2) * sqrt(a));
 	}
 
-	return Tensor(p_prediction->rank(), p_prediction->shape(), data);
+	return Tensor(p_prediction->rank(), shape, data);
 }

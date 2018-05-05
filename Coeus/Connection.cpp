@@ -53,7 +53,7 @@ void Connection::init(const Connection::INIT p_init, const double p_limit) {
             uniform(static_cast<double>(pow(_in_dim, -.5)));
             break;
         case GLOROT_UNIFORM:
-            uniform(2 / (_in_dim + _out_dim));
+            uniform(2.0f / (_in_dim + _out_dim));
             break;
         case IDENTITY:
             identity();

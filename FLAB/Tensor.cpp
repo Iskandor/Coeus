@@ -55,6 +55,7 @@ Tensor::~Tensor() {
 	_shape = nullptr;
 	if (_arr != nullptr) free_arr();
 	_arr = nullptr;
+	_rank = -1;
 }
 
 Tensor Tensor::Zero(const initializer_list<int> p_shape) {
@@ -136,7 +137,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 	int rank = 0;
 	int* shape = nullptr;
 	
-	if (this->_rank == 1 && p_tensor._rank == 1 && this->shape(0) == p_tensor.shape(0)) { // preverit spravnu funkcnost
+	if (this->_rank == 1 && p_tensor._rank == 1) {
 		arr = alloc_arr(_size * p_tensor._size);
 		rank = 2;
 		shape = alloc_shape(rank);
@@ -222,7 +223,15 @@ Tensor Tensor::T() const {
 
 	int* shape = copy_shape(_rank, _shape);
 
-	if (_rank == 2 && _shape[0] == _shape[1]) {
+	if (_rank == 1) {
+		for (int i = 0; i < _shape[0]; i++) {
+			arr[i] = _arr[i];
+		}
+	}
+
+	if (_rank == 2) {
+		shape[0] = _shape[1];
+		shape[1] = _shape[0];
 		for (int i = 0; i < _shape[0]; i++) {
 			for (int j = 0; j < _shape[1]; j++) {
 				arr[i * _shape[0] + j] = _arr[j * _shape[0] + i];
@@ -233,22 +242,38 @@ Tensor Tensor::T() const {
 	return Tensor(_rank, shape, arr);
 }
 
-Tensor Tensor::apply(double(*f)(double)) const 
+Tensor Tensor::apply(Tensor& p_source, double(*f)(double))
 {
-	double* arr = alloc_arr(_size);
-	int* shape = copy_shape(_rank, _shape);
+	double* arr = alloc_arr(p_source._size);
+	int* shape = copy_shape(p_source._rank, p_source._shape);
 
-	for (int i = 0; i < _size; i++) {
-		arr[i] = f(_arr[i]);
+	for (int i = 0; i < p_source._size; i++) {
+		arr[i] = f(p_source._arr[i]);
 	}
 
-	return Tensor(_rank, shape, arr);
+	return Tensor(p_source._rank, shape, arr);
 }
 
-void Tensor::apply(Tensor* p_target, Tensor* p_source, double(*f)(double, double)) {
-	for (int i = 0; i < p_target->_size; i++) {
-		p_target->_arr[i] = f(p_target->_arr[i], p_source->_arr[i]);
+Tensor Tensor::apply(Tensor* p_source, double(* f)(double)) {
+	double* arr = alloc_arr(p_source->_size);
+	int* shape = copy_shape(p_source->_rank, p_source->_shape);
+
+	for (int i = 0; i < p_source->_size; i++) {
+		arr[i] = f(p_source->_arr[i]);
 	}
+
+	return Tensor(p_source->_rank, shape, arr);
+}
+
+Tensor Tensor::apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double)) {
+	double* arr = alloc_arr(p_source1._size);
+	int* shape = copy_shape(p_source1._rank, p_source1._shape);
+
+	for (int i = 0; i < p_source1._size; i++) {
+		arr[i] = f(p_source1._arr[i], p_source2._arr[i]);
+	}
+
+	return Tensor(p_source1._rank, shape, arr);
 }
 
 int Tensor::max_index() const {

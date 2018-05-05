@@ -1,5 +1,6 @@
 #pragma once
 #include "NeuralGroup.h"
+#include "Connection.h"
 
 using namespace std;
 
@@ -41,12 +42,16 @@ public:
 	IGradientComponent* gradient_component() const { return _gradient_component; }
 
 protected:
+	Connection* add_connection(Connection* p_connection);
+
 	string		_id;
 	TYPE		_type;
 	NeuralGroup *_input_group;
 	NeuralGroup *_output_group;
 
 	IGradientComponent* _gradient_component;
+
+	map<string, Connection*> _connections;
 
 private:
 	bool	_valid;

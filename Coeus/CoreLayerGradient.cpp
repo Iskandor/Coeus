@@ -9,7 +9,7 @@ CoreLayerGradient::~CoreLayerGradient()
 {
 }
 
-void Coeus::CoreLayerGradient::init()
+void CoreLayerGradient::init()
 {
 	NeuralGroup* g = reinterpret_cast<CoreLayer*>(_layer)->_output_group;
 	_deriv[g->get_id()] = Tensor::Zero({ g->get_dim() });
@@ -22,7 +22,8 @@ void CoreLayerGradient::calc_deriv() {
 
 void CoreLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta) {
 	NeuralGroup* g = reinterpret_cast<CoreLayer*>(_layer)->_output_group;
-	_delta[g->get_id()] = p_weights->T() * *p_delta;
+	Tensor wd = p_weights->T() * *p_delta;
+	_delta[g->get_id()] = Tensor::apply(wd, _deriv[g->get_id()], Tensor::ew_dot);
 }
 
 void CoreLayerGradient::calc_gradient(map<string, Tensor>& p_gradient) {

@@ -1,4 +1,5 @@
 #include "CoreLayer.h"
+#include "CoreLayerGradient.h"
 
 using namespace Coeus;
 
@@ -8,11 +9,13 @@ CoreLayer::CoreLayer(const string p_id, const int p_dim, const NeuralGroup::ACTI
 	_output_group = _input_group;
 
 	_type = CORE;
+	_gradient_component = new CoreLayerGradient(this);
 }
 
 CoreLayer::~CoreLayer()
 {
 	delete _input_group;
+	delete _gradient_component;
 }
 
 void CoreLayer::integrate(Tensor* p_input, Tensor* p_weights) {

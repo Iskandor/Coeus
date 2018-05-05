@@ -11,7 +11,7 @@ namespace Coeus {
 		BackProp(NeuralNetwork* p_network);
 		~BackProp();
 
-		void init(ICostFunction* p_cost_function);
+		void init(ICostFunction* p_cost_function, double p_alpha);
 
 		double train(Tensor* p_input, Tensor* p_target);
 
@@ -23,6 +23,8 @@ namespace Coeus {
 		NetworkGradient*	_network_gradient;
 
 		map<string, Tensor> _update;
+
+		double _alpha;
 	};
 }
 

@@ -59,16 +59,16 @@ void SOM::activate(Tensor* p_input) {
 
 	switch (_output_group->getActivationFunction()) {
 		case NeuralGroup::LINEAR:
-			_dist = _dist.apply(ActivationFunctions::linear);
+			_dist = Tensor::apply(_dist, ActivationFunctions::linear);
 			break;
 		case NeuralGroup::EXPONENTIAL:
-			_dist = _dist.apply(ActivationFunctions::exponential);
+			_dist = Tensor::apply(_dist, ActivationFunctions::exponential);
 			break;
 		case NeuralGroup::KEXPONENTIAL:
-			_dist = _dist.apply(ActivationFunctions::kexponential);
+			_dist = Tensor::apply(_dist, ActivationFunctions::kexponential);
 			break;
 		case NeuralGroup::GAUSS:
-			_dist = _dist.apply(ActivationFunctions::gauss);
+			_dist = Tensor::apply(_dist, ActivationFunctions::gauss);
 			break;
 		default:
 			break;

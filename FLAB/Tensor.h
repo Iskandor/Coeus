@@ -36,6 +36,7 @@ public:
 	Tensor operator - (const Tensor& p_tensor) const;
 	void operator -= (const Tensor& p_tensor) const;
 	Tensor operator * (const Tensor& p_tensor) const;
+	friend static Tensor operator * (const double p_const, const Tensor& p_tensor) { return p_tensor * p_const; }
 	Tensor operator * (const double p_const) const;
 	void operator *= (const double p_const) const;
 	Tensor operator / (const double p_const) const;
@@ -43,8 +44,9 @@ public:
 
 	Tensor T() const;
 
-	Tensor apply(double(*f)(double)) const;
-	static void apply(Tensor* p_target, Tensor* p_source, double(*f)(double, double));
+	static Tensor apply(Tensor& p_source, double(*f)(double));
+	static Tensor apply(Tensor* p_source, double(*f)(double));
+	static Tensor apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double));
 
 	int max_index() const;
 	void override(Tensor* p_tensor) const;
@@ -69,6 +71,7 @@ public:
 
 	static double* alloc_arr(int p_size);
 	static int* alloc_shape(int p_size);
+	static int* copy_shape(int p_rank, int* p_shape);
 
 	static double ew_dot(double p_x, double p_y);
 	static double ew_div(double p_x, double p_y);
@@ -78,7 +81,7 @@ public:
 private:
 	void free_arr() const;
 	void free_shape() const;
-	static int* copy_shape(int p_rank, int* p_shape);
+	
 	void init_shape(int p_rank, int* p_shape);
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, double p_value) const;

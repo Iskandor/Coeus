@@ -32,6 +32,7 @@ double ExponentialCost::cost(Tensor * p_prediction, Tensor * p_target)
 Tensor ExponentialCost::cost_deriv(Tensor * p_prediction, Tensor * p_target)
 {
 	double* data = Tensor::alloc_arr(p_prediction->size());
+	int* shape = Tensor::copy_shape(p_prediction->rank(), p_prediction->shape());
 	double c = cost(p_prediction, p_target);
 
 
@@ -42,5 +43,5 @@ Tensor ExponentialCost::cost_deriv(Tensor * p_prediction, Tensor * p_target)
 		data[i] = 2 / _tau * (a - e) * c;
 	}
 
-	return Tensor(p_prediction->rank(), p_prediction->shape(), data);
+	return Tensor(p_prediction->rank(), shape, data);
 }

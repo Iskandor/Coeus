@@ -72,22 +72,22 @@ void NeuralGroup::activate() {
     switch (_activationFunction) {
         case IDENTITY:
         case LINEAR:
-			_output = _ap.apply(ActivationFunctions::linear);
+			_output = Tensor::apply(_ap, ActivationFunctions::linear);
             break;
         case BINARY:
-			_output = _ap.apply(ActivationFunctions::binary);
+			_output = Tensor::apply(_ap, ActivationFunctions::binary);
             break;
         case SIGMOID:
-			_output = _ap.apply(ActivationFunctions::sigmoid);
+			_output = Tensor::apply(_ap, ActivationFunctions::sigmoid);
             break;
         case TANH:
-			_output = _ap.apply(ActivationFunctions::tanh);
+			_output = Tensor::apply(_ap, ActivationFunctions::tanh);
             break;
         case SOFTPLUS:
-			_output = _ap.apply(ActivationFunctions::softplus);
+			_output = Tensor::apply(_ap, ActivationFunctions::softplus);
             break;
         case RELU:
-			_output = _ap.apply(ActivationFunctions::relu);
+			_output = Tensor::apply(_ap, ActivationFunctions::relu);
             break;
 	    default: ;
     }

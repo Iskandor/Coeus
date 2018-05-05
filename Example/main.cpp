@@ -17,6 +17,7 @@ int main()
 	FFN model;
 
 	model.run();
+
 	/*
 	IrisTest iris;
 
@@ -24,6 +25,7 @@ int main()
 	iris.run(6000);
 	iris.test();
 	*/
+
 	/*
 	const string timestamp = to_string(time(nullptr));
 

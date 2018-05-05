@@ -181,6 +181,8 @@
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
     <ClCompile Include="LISSOM.cpp" />
+    <ClCompile Include="LISSOM_learning.cpp" />
+    <ClCompile Include="LISSOM_params.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LSOM.cpp" />
     <ClCompile Include="LSOM_learning.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="QuadraticCost.cpp" />
     <ClCompile Include="RecurrentLayer.cpp" />
+    <ClCompile Include="RecurrentLayerGradient.cpp" />
     <ClCompile Include="SOM.cpp" />
     <ClCompile Include="SOM_analyzer.cpp" />
     <ClCompile Include="SOM_learning.cpp" />
@@ -222,6 +225,8 @@
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="KLDivergence.h" />
     <ClInclude Include="LISSOM.h" />
+    <ClInclude Include="LISSOM_learning.h" />
+    <ClInclude Include="LISSOM_params.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LSOM.h" />
     <ClInclude Include="LSOM_learning.h" />
@@ -235,6 +240,7 @@
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="QuadraticCost.h" />
     <ClInclude Include="RecurrentLayer.h" />
+    <ClInclude Include="RecurrentLayerGradient.h" />
     <ClInclude Include="SOM.h" />
     <ClInclude Include="SOM_analyzer.h" />
     <ClInclude Include="SOM_learning.h" />

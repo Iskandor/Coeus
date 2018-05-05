@@ -2,6 +2,8 @@
 #include "NeuralNetwork.h"
 #include "InputLayer.h"
 #include "CoreLayer.h"
+#include "BackProp.h"
+#include "QuadraticCost.h"
 
 FFN::FFN()
 {
@@ -38,7 +40,20 @@ void FFN::run() {
 		target[i] = Tensor({ 1 }, t);
 	}
 
+	BackProp model(&_network);
+
+	model.init(new QuadraticCost(), 0.05);
+
+	for(int t = 0; t < 10000; t++) {
+		double error = 0;
+		for (int i = 0; i < 4; i++) {
+			error += model.train(&input[i], &target[i]);
+		}
+		cout << error << endl;
+	}
+
 	for (int i = 0; i < 4; i++) {
 		_network.activate(&input[i]);
+		cout << _network.get_output()->at(i) << endl;
 	}
 }

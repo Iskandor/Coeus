@@ -14,6 +14,7 @@ public:
 
 	void calc_gradient(Tensor* p_target);
 	map<string, Tensor>* get_gradient() { return &_gradient; }
+	void update(map<string, Tensor> &p_update) const;
 
 private:
 	NeuralNetwork*	_network;

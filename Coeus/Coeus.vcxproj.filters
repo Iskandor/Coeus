@@ -55,6 +55,9 @@
     <Filter Include="Source Files\Algorithm\Unsupervised">
       <UniqueIdentifier>{51ac72c3-5e2b-4fb9-a94e-1747a07c1af8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Algorithm\GradientDescent">
+      <UniqueIdentifier>{474f546f-7c65-48d1-a420-52d7aefdc8d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -177,6 +180,15 @@
     <ClCompile Include="BackProp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RecurrentLayerGradient.cpp">
+      <Filter>Source Files\Algorithm\Gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="LISSOM_learning.cpp">
+      <Filter>Source Files\Algorithm\Unsupervised</Filter>
+    </ClCompile>
+    <ClCompile Include="LISSOM_params.cpp">
+      <Filter>Source Files\Algorithm\Unsupervised</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -293,8 +305,17 @@
     <ClInclude Include="LISSOM.h">
       <Filter>Header Files\Network\SOM</Filter>
     </ClInclude>
+    <ClInclude Include="RecurrentLayerGradient.h">
+      <Filter>Header Files\Algorithm\Gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="LISSOM_learning.h">
+      <Filter>Header Files\Algorithm\Unsupervised</Filter>
+    </ClInclude>
+    <ClInclude Include="LISSOM_params.h">
+      <Filter>Header Files\Algorithm\Unsupervised</Filter>
+    </ClInclude>
     <ClInclude Include="BackProp.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Algorithm\GradientDescent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
