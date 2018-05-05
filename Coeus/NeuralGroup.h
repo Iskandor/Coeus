@@ -13,7 +13,6 @@ class __declspec(dllexport) NeuralGroup
 public:
     enum ACTIVATION {
      IDENTITY = 0,
-     BIAS = 1,
      BINARY = 2,
      SIGMOID = 3,
      TANH = 4,
@@ -35,12 +34,13 @@ public:
 
     string	get_id() const { return _id; };
     int		get_dim() const { return _dim; };
-	bool	is_bias() const { return _bias; };
+	bool	is_bias() const { return _bias_flag; };
 
     void	set_output(Tensor* p_output) const;
-    Tensor* getOutput() { return &_output; };
+    Tensor* get_output() { return &_output; };
+	void update_bias(Tensor& p_delta_b);
 
-    ACTIVATION getActivationFunction() const { return _activationFunction; };
+    ACTIVATION get_activation_function() const { return _activationFunction; };
 
 private:
     string  _id;
@@ -49,8 +49,8 @@ private:
 	int     _dim;
     Tensor	_output;
     Tensor	_ap;
-	bool	_bias;
-	int		_bias_index;
+	bool	_bias_flag;
+	Tensor	_bias;
 };
 
 }

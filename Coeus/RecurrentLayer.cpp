@@ -7,7 +7,7 @@ RecurrentLayer::RecurrentLayer(const string p_id, const int p_dim, const NeuralG
 {
 	_input_group = new NeuralGroup(p_dim, p_activation, true);
 	_output_group = _input_group;
-	_context_group = new NeuralGroup(p_dim, NeuralGroup::ACTIVATION::LINEAR, true);
+	_context_group = new NeuralGroup(p_dim, NeuralGroup::ACTIVATION::LINEAR, false);
 
 	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id()));
 
@@ -30,8 +30,8 @@ void RecurrentLayer::integrate(Tensor* p_input, Tensor* p_weights) {
 
 void RecurrentLayer::activate(Tensor * p_input)
 {
-	_context_group->set_output(_output_group->getOutput());
-	_output_group->integrate(_context_group->getOutput(), _rec_connection->get_weights());
+	_context_group->set_output(_output_group->get_output());
+	_output_group->integrate(_context_group->get_output(), _rec_connection->get_weights());
 	_output_group->activate();
 }
 

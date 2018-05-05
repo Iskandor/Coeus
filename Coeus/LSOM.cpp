@@ -8,7 +8,7 @@ LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const in
 {
 	_type = TYPE::LSOM;
 	_lateral = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
-	_lateral->init(Connection::UNIFORM, 0.01);
+	_lateral->init(Connection::GLOROT_UNIFORM);
 
 	_auxoutput = Tensor::Zero({ _dim_x * _dim_y });
 }
@@ -26,18 +26,18 @@ void LSOM::activate(Tensor * p_input)
 
 	calc_distance();
 
-	switch (_output_group->getActivationFunction()) {
+	switch (_output_group->get_activation_function()) {
 	case NeuralGroup::LINEAR:
-		_auxoutput = _dist.apply(ActivationFunctions::linear);
+		_auxoutput = Tensor::apply(_dist, ActivationFunctions::linear);
 		break;
 	case NeuralGroup::EXPONENTIAL:
-		_auxoutput = _dist.apply(ActivationFunctions::exponential);
+		_auxoutput = Tensor::apply(_dist, ActivationFunctions::exponential);
 		break;
 	case NeuralGroup::KEXPONENTIAL:
-		_auxoutput = _dist.apply(ActivationFunctions::kexponential);
+		_auxoutput = Tensor::apply(_dist, ActivationFunctions::kexponential);
 		break;
 	case NeuralGroup::GAUSS:
-		_auxoutput = _dist.apply(ActivationFunctions::gauss);
+		_auxoutput = Tensor::apply(_dist, ActivationFunctions::gauss);
 		break;
 	default:
 		break;
@@ -45,16 +45,14 @@ void LSOM::activate(Tensor * p_input)
 
 	Tensor* lateral_w = _lateral->get_weights();
 
-	for(int s = 0; s < 10; s++) {
-		for (int i = 0; i < _dim_x * _dim_y; i++) {
-			double w = 0;
-			for (int n = 0; n < _dim_x * _dim_y; n++) {
-				 w += _auxoutput.at(n) * lateral_w->at(i, n);				
-			}
-			_auxoutput.set(i, _dist.at(i) + w);
+	for (int i = 0; i < _dim_x * _dim_y; i++) {
+		double w = 0;
+		for (int n = 0; n < _dim_x * _dim_y; n++) {
+				w += _auxoutput.at(n) * lateral_w->at(i, n);				
 		}
-		//_auxoutput = _auxoutput.apply(ActivationFunctions::sigmoid);
+		_auxoutput.inc(i, w);
 	}
+	_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::relu);
 
 	_output_group->set_output(&_auxoutput);
 }
@@ -66,7 +64,7 @@ int LSOM::find_winner(Tensor * p_input)
 	_winner = 0;
 
 	for (int i = 0; i < _output_group->get_dim(); i++) {
-		if (_output_group->getOutput()->at(_winner) < _output_group->getOutput()->at(i)) {
+		if (_output_group->get_output()->at(_winner) < _output_group->get_output()->at(i)) {
 			_winner = i;
 		}
 	}

@@ -29,7 +29,7 @@ public:
 	virtual void activate(Tensor* p_input = nullptr) = 0;
 	virtual void override_params(BaseLayer* p_source) = 0;
 
-	Tensor* get_output() const { return _output_group->getOutput(); }
+	Tensor* get_output() const { return _output_group->get_output(); }
 	TYPE	type() const { return _type; }
 	string	id() const { return _id; }
 

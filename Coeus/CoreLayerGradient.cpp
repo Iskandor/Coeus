@@ -26,5 +26,14 @@ void CoreLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta) {
 	_delta[g->get_id()] = Tensor::apply(wd, _deriv[g->get_id()], Tensor::ew_dot);
 }
 
-void CoreLayerGradient::calc_gradient(map<string, Tensor>& p_gradient) {
+void CoreLayerGradient::calc_gradient(map<string, Tensor> &p_w_gradient, map<string, Tensor> &p_b_gradient) {
+	NeuralGroup* g = reinterpret_cast<CoreLayer*>(_layer)->_output_group;
+	p_b_gradient[g->get_id()] = _delta[g->get_id()];
+}
+
+void CoreLayerGradient::update(map<string, Tensor>& p_update) {
+	IGradientComponent::update(p_update);
+
+	NeuralGroup* g = reinterpret_cast<CoreLayer*>(_layer)->_output_group;
+	g->update_bias(p_update[g->get_id()]);
 }

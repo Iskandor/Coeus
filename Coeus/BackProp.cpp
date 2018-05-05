@@ -40,7 +40,11 @@ double BackProp::train(Tensor* p_input, Tensor* p_target) {
 
 void BackProp::calc_update() {
 
-	for(auto it = _network_gradient->get_gradient()->begin(); it != _network_gradient->get_gradient()->end(); ++it ) {
+	for(auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it ) {
+		_update[it->first] = -_alpha * it->second;
+	}
+
+	for (auto it = _network_gradient->get_b_gradient()->begin(); it != _network_gradient->get_b_gradient()->end(); ++it) {
 		_update[it->first] = -_alpha * it->second;
 	}
 }

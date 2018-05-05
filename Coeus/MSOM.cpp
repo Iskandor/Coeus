@@ -40,8 +40,8 @@ double MSOM::calc_distance(const int p_index) {
 
 	Tensor* xi = _afferent->get_weights();
 	Tensor* ci = _context_lattice->get_weights();
-	Tensor* xt = _input_group->getOutput();
-	Tensor* ct = _context_group->getOutput();
+	Tensor* xt = _input_group->get_output();
+	Tensor* ct = _context_group->get_output();
 
 	double dx = 0;
 	double dc = 0;
@@ -92,11 +92,11 @@ void MSOM::override_params(BaseLayer * p_source)
 }
 
 void MSOM::reset_context() const {
-	_context_group->getOutput()->fill(0);
+	_context_group->get_output()->fill(0);
 }
 
 void MSOM::update_context() const {
-	Tensor* ct = _context_group->getOutput();
+	Tensor* ct = _context_group->get_output();
 
 	Tensor* wIt = _afferent->get_weights();
 	Tensor* cIt = _context_lattice->get_weights();

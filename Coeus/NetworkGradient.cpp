@@ -47,12 +47,12 @@ void NetworkGradient::calc_gradient(Tensor* p_target) {
 
 	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		if ((*it)->gradient_component() != nullptr) {
-			(*it)->gradient_component()->calc_gradient(_gradient);
+			(*it)->gradient_component()->calc_gradient(_w_gradient, _b_gradient);
 		}
 	}
 
 	for (auto it = _network->_connections.begin(); it != _network->_connections.end(); ++it) {
-		_gradient[(*it).first] = *_network->_layers[it->second->get_in_id()]->get_output() * *_network->_layers[it->second->get_out_id()]->gradient_component()->get_input_delta();
+		_w_gradient[(*it).first] = *_network->_layers[it->second->get_in_id()]->get_output() * *_network->_layers[it->second->get_out_id()]->gradient_component()->get_input_delta();
 	}
 }
 

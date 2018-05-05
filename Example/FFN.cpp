@@ -9,7 +9,7 @@ FFN::FFN()
 {
 	_network.add_layer(new InputLayer("input", 2));
 	_network.add_layer(new CoreLayer("hidden", 4, NeuralGroup::ACTIVATION::SIGMOID));
-	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID, false));
+	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::INIT::UNIFORM, 0.1);
 	_network.add_connection("hidden", "output", Connection::INIT::UNIFORM, 0.1);
@@ -42,9 +42,9 @@ void FFN::run() {
 
 	BackProp model(&_network);
 
-	model.init(new QuadraticCost(), 0.05);
+	model.init(new QuadraticCost(), 0.1);
 
-	for(int t = 0; t < 10000; t++) {
+	for(int t = 0; t < 4000; t++) {
 		double error = 0;
 		for (int i = 0; i < 4; i++) {
 			error += model.train(&input[i], &target[i]);
@@ -54,6 +54,6 @@ void FFN::run() {
 
 	for (int i = 0; i < 4; i++) {
 		_network.activate(&input[i]);
-		cout << _network.get_output()->at(i) << endl;
+		cout << _network.get_output()->at(0) << endl;
 	}
 }

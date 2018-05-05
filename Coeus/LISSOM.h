@@ -11,6 +11,9 @@ namespace Coeus {
 
 		void activate(Tensor* p_input = nullptr) override;
 
+		Connection* get_latteral_e() const { return _lateral_e;}
+		Connection* get_latteral_i() const { return _lateral_i; }
+
 	private:
 		Tensor		_auxoutput;
 		Tensor		_prime_activity;

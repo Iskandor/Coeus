@@ -113,7 +113,7 @@ MSOM* IOUtils::read_msom(const json p_data) {
 }
 
 json IOUtils::write_neural_group(NeuralGroup* p_group) {
-	return json({ { "id", p_group->get_id() }, { "dim", p_group->get_dim() }, { "actfn", p_group->getActivationFunction() }, {"bias", p_group->is_bias()} });
+	return json({ { "id", p_group->get_id() }, { "dim", p_group->get_dim() }, { "actfn", p_group->get_activation_function() }, {"bias", p_group->is_bias()} });
 }
 
 json IOUtils::write_connection(Connection* p_connection) {

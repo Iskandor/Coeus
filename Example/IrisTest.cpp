@@ -22,7 +22,7 @@ void IrisTest::init() {
 void IrisTest::run(const int p_epochs) {
 	SOM_analyzer analyzer;
 	LSOM_params params(_lsom);
-	params.init_training(0.5, 0.1, p_epochs);
+	params.init_training(0.1, 0.001, p_epochs);
 	LSOM_learning learner(_lsom, &params, &analyzer);
 
 	vector<IrisDatasetItem>* data = nullptr;

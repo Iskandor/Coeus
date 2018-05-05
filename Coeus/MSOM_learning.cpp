@@ -34,8 +34,8 @@ void MSOM_learning::train(Tensor* p_input) {
 
 	Tensor* wi = _msom->get_afferent()->get_weights();
 	Tensor* ci = _msom->get_context_lattice()->get_weights();
-	Tensor* in = _msom->get_input_group()->getOutput();
-	Tensor* ct = _msom->get_context_group()->getOutput();
+	Tensor* in = _msom->get_input_group()->get_output();
+	Tensor* ct = _msom->get_context_group()->get_output();
 
 	_som_analyzer->update(_msom, winner);
 

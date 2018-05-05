@@ -27,18 +27,18 @@ void LISSOM::activate(Tensor* p_input) {
 
 	_prime_activity = *_afferent->get_weights() * *p_input;
 
-	switch (_output_group->getActivationFunction()) {
+	switch (_output_group->get_activation_function()) {
 		case NeuralGroup::LINEAR:
-		_dist = _prime_activity.apply(ActivationFunctions::linear);
+		_dist = Tensor::apply(_prime_activity, ActivationFunctions::linear);
 		break;
 		case NeuralGroup::SIGMOID:
-		_dist = _prime_activity.apply(ActivationFunctions::sigmoid);
+		_dist = Tensor::apply(_prime_activity, ActivationFunctions::sigmoid);
 		break;
 		case NeuralGroup::TANH:
-		_dist = _prime_activity.apply(ActivationFunctions::tanh);
+		_dist = Tensor::apply(_prime_activity, ActivationFunctions::tanh);
 		break;
 		case NeuralGroup::RELU:
-		_dist = _prime_activity.apply(ActivationFunctions::relu);
+		_dist = Tensor::apply(_prime_activity, ActivationFunctions::relu);
 		break;
 		default:
 		break;
@@ -50,11 +50,11 @@ void LISSOM::activate(Tensor* p_input) {
 	_auxoutput = _dist;
 
 	for(int s = 0; s < 10; s++) {
-		Tensor exc = *lateral_e * _auxoutput;
-		Tensor inh = *lateral_i * _auxoutput;
+		const Tensor exc = *lateral_e * _auxoutput;
+		const Tensor inh = *lateral_i * _auxoutput;
 
 		_auxoutput = _prime_activity + exc * _gamma_e - inh * _gamma_i;
-		_auxoutput = _auxoutput.apply(ActivationFunctions::sigmoid);
+		_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::sigmoid);
 	}
 
 	_output_group->set_output(&_auxoutput);

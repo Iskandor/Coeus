@@ -3,9 +3,9 @@
 
 using namespace Coeus;
 
-CoreLayer::CoreLayer(const string p_id, const int p_dim, const NeuralGroup::ACTIVATION p_activation, const bool p_bias) : BaseLayer(p_id)
+CoreLayer::CoreLayer(const string p_id, const int p_dim, const NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
 {
-	_input_group = new NeuralGroup(p_dim, p_activation, p_bias);
+	_input_group = new NeuralGroup(p_dim, p_activation, true);
 	_output_group = _input_group;
 
 	_type = CORE;

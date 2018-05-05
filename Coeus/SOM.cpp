@@ -57,7 +57,7 @@ void SOM::activate(Tensor* p_input) {
 
 	calc_distance();
 
-	switch (_output_group->getActivationFunction()) {
+	switch (_output_group->get_activation_function()) {
 		case NeuralGroup::LINEAR:
 			_dist = Tensor::apply(_dist, ActivationFunctions::linear);
 			break;
@@ -83,7 +83,7 @@ double SOM::calc_distance(const int p_index) {
 
 	for (int i = 0; i < dim; i++) {
 		if (_input_mask == nullptr || _input_mask[i] == 1) {
-			s += pow(_input_group->getOutput()->at(i) - _afferent->get_weights()->at(p_index, i), 2);
+			s += pow(_input_group->get_output()->at(i) - _afferent->get_weights()->at(p_index, i), 2);
 		}
 	}
 
@@ -111,7 +111,7 @@ void SOM::init_conscience() const {
 }
 
 SOM * SOM::clone() const {
-	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->getActivationFunction());
+	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->get_activation_function());
 
 	result->_afferent = new Connection(*_afferent);
 	result->_conscience = _conscience;

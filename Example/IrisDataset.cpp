@@ -43,7 +43,8 @@ void IrisDataset::load_data(const string p_filename) {
 	}
 
 	for (int i = 0; i < _data.size(); i++) {
-		Tensor::apply(_data[i].data, &max, Tensor::ew_div);
+		Tensor d = Tensor::apply(*_data[i].data, max, Tensor::ew_div);
+		_data[i].data->override(&d);
 	}
 
 	int id = 0;
