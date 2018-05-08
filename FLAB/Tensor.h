@@ -41,9 +41,11 @@ public:
 	void operator *= (const double p_const) const;
 	Tensor operator / (const double p_const) const;
 	void operator /= (const double p_const) const;
+	double& operator [](const int p_index) const;
 
 	Tensor T() const;
 
+	static Tensor apply(Tensor& p_source, double(*f)());
 	static Tensor apply(Tensor& p_source, double(*f)(double));
 	static Tensor apply(Tensor* p_source, double(*f)(double));
 	static Tensor apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double));
@@ -75,6 +77,8 @@ public:
 
 	static double ew_dot(double p_x, double p_y);
 	static double ew_div(double p_x, double p_y);
+	static double ew_pow2(double p_x);
+	static double ew_sqrt(double p_x);
 
 	static int control;
 

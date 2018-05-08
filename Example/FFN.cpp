@@ -2,8 +2,13 @@
 #include "NeuralNetwork.h"
 #include "InputLayer.h"
 #include "CoreLayer.h"
-#include "BackProp.h"
+#include "BaseGradientAlgorithm.h"
 #include "QuadraticCost.h"
+#include "BackProph.h"
+#include "RMSProp.h"
+#include "Adagrad.h"
+#include "Adadelta.h"
+#include "ADAM.h"
 
 FFN::FFN()
 {
@@ -22,7 +27,7 @@ FFN::~FFN()
 
 void FFN::run() {
 	double data_i[8]{ 0,0,0,1,1,0,1,1 };
-	double data_t[4]{ 0,0,0,1 };
+	double data_t[4]{ 0,1,1,0 };
 
 	Tensor input[4];
 	Tensor target[4];
@@ -40,17 +45,23 @@ void FFN::run() {
 		target[i] = Tensor({ 1 }, t);
 	}
 
-	BackProp model(&_network);
+	//BackProp model(&_network);
+	//RMSProp model(&_network);
+	Adadelta model(&_network);
+	//ADAM model(&_network);
 
-	model.init(new QuadraticCost(), 0.1);
+	//model.init(new QuadraticCost(), 0.1, 0.99, true);
+	model.init(new QuadraticCost());
 
-	for(int t = 0; t < 4000; t++) {
+	for(int t = 0; t < 100; t++) {
 		double error = 0;
 		for (int i = 0; i < 4; i++) {
 			error += model.train(&input[i], &target[i]);
 		}
 		cout << error << endl;
 	}
+
+	cout << endl;
 
 	for (int i = 0; i < 4; i++) {
 		_network.activate(&input[i]);

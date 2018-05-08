@@ -161,7 +161,11 @@
   <ItemGroup>
     <ClCompile Include="ActivationFunctions.cpp" />
     <ClCompile Include="ActivationFunctionsDeriv.cpp" />
+    <ClCompile Include="Adadelta.cpp" />
+    <ClCompile Include="Adagrad.cpp" />
+    <ClCompile Include="ADAM.cpp" />
     <ClCompile Include="BackProp.cpp" />
+    <ClCompile Include="BaseGradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="Base_SOM_learning.cpp" />
     <ClCompile Include="Base_SOM_params.cpp" />
@@ -197,6 +201,7 @@
     <ClCompile Include="QuadraticCost.cpp" />
     <ClCompile Include="RecurrentLayer.cpp" />
     <ClCompile Include="RecurrentLayerGradient.cpp" />
+    <ClCompile Include="RMSProp.cpp" />
     <ClCompile Include="SOM.cpp" />
     <ClCompile Include="SOM_analyzer.cpp" />
     <ClCompile Include="SOM_learning.cpp" />
@@ -205,7 +210,11 @@
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
     <ClInclude Include="ActivationFunctionsDeriv.h" />
-    <ClInclude Include="BackProp.h" />
+    <ClInclude Include="Adadelta.h" />
+    <ClInclude Include="Adagrad.h" />
+    <ClInclude Include="ADAM.h" />
+    <ClInclude Include="BackProph.h" />
+    <ClInclude Include="BaseGradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />
     <ClInclude Include="Base_SOM_learning.h" />
@@ -241,6 +250,7 @@
     <ClInclude Include="QuadraticCost.h" />
     <ClInclude Include="RecurrentLayer.h" />
     <ClInclude Include="RecurrentLayerGradient.h" />
+    <ClInclude Include="RMSProp.h" />
     <ClInclude Include="SOM.h" />
     <ClInclude Include="SOM_analyzer.h" />
     <ClInclude Include="SOM_learning.h" />

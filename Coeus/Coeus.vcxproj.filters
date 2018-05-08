@@ -55,7 +55,10 @@
     <Filter Include="Source Files\Algorithm\Unsupervised">
       <UniqueIdentifier>{51ac72c3-5e2b-4fb9-a94e-1747a07c1af8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Algorithm\GradientDescent">
+    <Filter Include="Source Files\Algorithm\Supervised">
+      <UniqueIdentifier>{18ad6569-82d9-481f-abaf-0dc5a6abfcc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\Supervised">
       <UniqueIdentifier>{474f546f-7c65-48d1-a420-52d7aefdc8d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -177,9 +180,6 @@
     <ClCompile Include="LISSOM.cpp">
       <Filter>Source Files\Network\SOM</Filter>
     </ClCompile>
-    <ClCompile Include="BackProp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RecurrentLayerGradient.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
     </ClCompile>
@@ -188,6 +188,24 @@
     </ClCompile>
     <ClCompile Include="LISSOM_params.cpp">
       <Filter>Source Files\Algorithm\Unsupervised</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseGradientAlgorithm.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="BackProp.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="RMSProp.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="Adagrad.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="Adadelta.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="ADAM.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -314,8 +332,23 @@
     <ClInclude Include="LISSOM_params.h">
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
-    <ClInclude Include="BackProp.h">
-      <Filter>Header Files\Algorithm\GradientDescent</Filter>
+    <ClInclude Include="BaseGradientAlgorithm.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="BackProph.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="RMSProp.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="Adagrad.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="Adadelta.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="ADAM.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

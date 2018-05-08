@@ -2,7 +2,7 @@
 #include "ICostFunction.h"
 
 namespace Coeus {
-	class ExponentialCost : public ICostFunction
+	class __declspec(dllexport) ExponentialCost : public ICostFunction
 	{
 	public:
 		ExponentialCost(double p_tau);

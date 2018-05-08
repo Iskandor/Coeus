@@ -5,18 +5,17 @@
 
 namespace Coeus {
 
-	class __declspec(dllexport) BackProp
+	class __declspec(dllexport) BaseGradientAlgorithm
 	{
 	public:
-		BackProp(NeuralNetwork* p_network);
-		~BackProp();
-
-		void init(ICostFunction* p_cost_function, double p_alpha);
+		BaseGradientAlgorithm(NeuralNetwork* p_network);
+		virtual ~BaseGradientAlgorithm();
 
 		double train(Tensor* p_input, Tensor* p_target);
 
-	private:
-		void calc_update();
+	protected:
+		void init(ICostFunction* p_cost_function, const double p_alpha);
+		virtual void calc_update();
 
 		NeuralNetwork*	_network;
 		ICostFunction*	_cost_function;
@@ -25,6 +24,9 @@ namespace Coeus {
 		map<string, Tensor> _update;
 
 		double _alpha;
+
+
+		
 	};
 }
 

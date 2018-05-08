@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-ExponentialCost::ExponentialCost(double p_tau)
+ExponentialCost::ExponentialCost(const double p_tau)
 {
 	_tau = p_tau;
 }

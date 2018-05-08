@@ -218,6 +218,10 @@ void Tensor::operator/=(const double p_const) const {
 	}
 }
 
+double& Tensor::operator[](const int p_index) const {
+	return _arr[p_index];
+}
+
 Tensor Tensor::T() const {
 	double* arr = alloc_arr(_size);
 
@@ -354,6 +358,14 @@ double Tensor::ew_dot(const double p_x, const double p_y) {
 
 double Tensor::ew_div(const double p_x, const double p_y) {
 	return p_x / p_y;
+}
+
+double Tensor::ew_pow2(const double p_x) {
+	return pow(p_x, 2);
+}
+
+double Tensor::ew_sqrt(const double p_x) {
+	return sqrt(p_x);
 }
 
 void Tensor::free_arr() const {
