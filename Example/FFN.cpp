@@ -9,6 +9,7 @@
 #include "Adagrad.h"
 #include "Adadelta.h"
 #include "ADAM.h"
+#include "AdaMax.h"
 
 FFN::FFN()
 {
@@ -47,13 +48,13 @@ void FFN::run() {
 
 	//BackProp model(&_network);
 	//RMSProp model(&_network);
-	Adadelta model(&_network);
+	AdaMax model(&_network);
 	//ADAM model(&_network);
 
 	//model.init(new QuadraticCost(), 0.1, 0.99, true);
-	model.init(new QuadraticCost());
+	model.init(new QuadraticCost(), 0.005);
 
-	for(int t = 0; t < 100; t++) {
+	for(int t = 0; t < 2000; t++) {
 		double error = 0;
 		for (int i = 0; i < 4; i++) {
 			error += model.train(&input[i], &target[i]);

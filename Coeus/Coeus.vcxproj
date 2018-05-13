@@ -164,6 +164,7 @@
     <ClCompile Include="Adadelta.cpp" />
     <ClCompile Include="Adagrad.cpp" />
     <ClCompile Include="ADAM.cpp" />
+    <ClCompile Include="AdaMax.cpp" />
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BaseGradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Adadelta.h" />
     <ClInclude Include="Adagrad.h" />
     <ClInclude Include="ADAM.h" />
+    <ClInclude Include="AdaMax.h" />
     <ClInclude Include="BackProph.h" />
     <ClInclude Include="BaseGradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
