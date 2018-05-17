@@ -28,25 +28,30 @@ void AdaMax::update_momentum(const string p_id, Tensor& p_gradient) {
 		}
 	}
 	else {
+		Tensor *m1 = &_momentum1[p_id];
 		for (int i = 0; i < p_gradient.size(); i++) {
-			_momentum1[p_id][i] = _beta1 * _momentum1[p_id][i] + (1 - _beta1) * p_gradient[i];
+			(*m1)[i] = _beta1 * (*m1)[i] + (1 - _beta1) * p_gradient[i];
 		}
 	}
 
 	if (_inf_norm.find(p_id) == _inf_norm.end()) {
 		_inf_norm[p_id] = Tensor(p_gradient);
+		Tensor *in = &_inf_norm[p_id];
 		for (int i = 0; i < p_gradient.size(); i++) {
-			_inf_norm[p_id][i] = abs(p_gradient[i]);
+			(*in)[i] = abs(p_gradient[i]);
 		}
 	}
 	else {
+		Tensor *in = &_inf_norm[p_id];
 		for (int i = 0; i < p_gradient.size(); i++) {
-			_inf_norm[p_id][i] = max(_beta2 * _inf_norm[p_id][i], abs(p_gradient[i]));
+			(*in)[i] = max(_beta2 * (*in)[i], abs(p_gradient[i]));
 		}
 	}
 
+	Tensor *m1est = &_momentum1_est[p_id];
+	Tensor *m1 = &_momentum1[p_id];
 	for (int i = 0; i < p_gradient.size(); i++) {
-		_momentum1_est[p_id][i] = _momentum1[p_id][i] / (1 - _beta1);
+		(*m1est)[i] = (*m1)[i] / (1 - _beta1);
 	}
 
 }
@@ -62,8 +67,12 @@ void AdaMax::calc_update() {
 
 		update_momentum(it->first, it->second);
 
+		Tensor* u = &_update[it->first];
+		Tensor* in = &_inf_norm[it->first];
+		Tensor* m1est = &_momentum1_est[it->first];
+
 		for (int i = 0; i < it->second.size(); i++) {
-			_update[it->first][i] = -_alpha / (_inf_norm[it->first][i] + _epsilon) * _momentum1_est[it->first][i];
+			(*u)[i] = -_alpha / ((*in)[i] + _epsilon) * (*m1est)[i];
 		}
 	}
 }
