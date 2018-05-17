@@ -368,6 +368,10 @@ double Tensor::ew_sqrt(const double p_x) {
 	return sqrt(p_x);
 }
 
+double Tensor::ew_abs(const double p_x) {
+	return abs(p_x);
+}
+
 void Tensor::free_arr() const {
 	control--;
 	Free(_arr);

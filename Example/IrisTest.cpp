@@ -22,7 +22,7 @@ void IrisTest::init() {
 void IrisTest::run(const int p_epochs) {
 	SOM_analyzer analyzer;
 	LSOM_params params(_lsom);
-	params.init_training(0.1, 0.001, p_epochs);
+	params.init_training(1e-1, 1e-4, p_epochs);
 	LSOM_learning learner(_lsom, &params, &analyzer);
 
 	vector<IrisDatasetItem>* data = nullptr;
@@ -47,6 +47,10 @@ void IrisTest::run(const int p_epochs) {
 		learner.update_friendship();
 		analyzer.end_epoch();
 		params.param_decay();		
+	}
+
+	for(int i = 0; i < learner._friendship.size(); i++) {
+		cout << i << " " << learner._friendship[i] << endl;
 	}
 }
 

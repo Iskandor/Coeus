@@ -79,6 +79,7 @@ public:
 	static double ew_div(double p_x, double p_y);
 	static double ew_pow2(double p_x);
 	static double ew_sqrt(double p_x);
+	static double ew_abs(double p_x);
 
 	static int control;
 
