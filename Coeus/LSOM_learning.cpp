@@ -11,7 +11,8 @@ LSOM_learning::LSOM_learning(LSOM* p_som, LSOM_params* p_params, SOM_analyzer* p
 	const int dim_input = p_som->get_input_group()->get_dim();
 	const int dim_lattice = p_som->get_lattice()->get_dim();
 
-	_friendship = Tensor::Value({ dim_lattice }, 2);
+	_friendship = Tensor::Random({ dim_lattice }, p_som->dim_x()); // Tensor::Value({ dim_lattice }, 1);
+	_friendship = Tensor::apply(_friendship, Tensor::ew_abs);
 	_delta_w = Tensor::Zero({ dim_lattice, dim_input });
 	_delta_lw = Tensor::Zero({ dim_lattice, dim_lattice });
 }
@@ -48,9 +49,11 @@ void LSOM_learning::train(Tensor * p_input)
 		}
 
 		for (int j = 0; j < dim_lattice; j++) {
+			const double lambda = -_dist_matrix.at(i, j) + _friendship.at(i);
 			//const double lambda = Metrics::binary_distance(_dist_matrix.at(i, j), _friendship.at(i));
+			//const double lambda = Metrics::gaussian_distance(_dist_matrix.at(i, j), _friendship.at(i)) - 0.25;
 			
-			const double val = beta * (oi->at(j) * oi->at(i) - pow(oi->at(i), 2) * abs(li->at(i, j))); 
+			const double val = lambda * beta * (oi->at(j) * oi->at(i) - pow(oi->at(i), 2) * abs(li->at(i, j))); 
 			_delta_lw.set(i, j, val);
 			norm.inc(i, abs(li->at(i, j) + val));
 		}
@@ -61,7 +64,7 @@ void LSOM_learning::train(Tensor * p_input)
 
 	for (int i = 0; i < dim_lattice; i++) {
 		for (int j = 0; j < dim_lattice; j++) {
-			li->set(i, j, li->at(i, j) / norm.at(i));
+			li->set(i, j, li->at(i, j) / norm[i]);
 		}
 	}
 }
@@ -72,9 +75,11 @@ void LSOM_learning::update_friendship() {
 	for (int i = 0; i < dim_lattice; i++) {
 		if (_winners.count(i) > 0) {
 			_friendship.set(i, _friendship.at(i) * 0.99);
+			/*
 			if (_friendship.at(i) < 2) {
 				_friendship.set(i, 2);
 			}
+			*/
 		}
 		else {
 			_friendship.set(i, _friendship.at(i) * 1.001);

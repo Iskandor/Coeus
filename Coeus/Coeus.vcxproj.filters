@@ -22,9 +22,6 @@
     <Filter Include="Source Files\Network\Layer">
       <UniqueIdentifier>{83a2b3a6-b9c5-45c4-bdab-8352b24eca48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Network\BaseLayer">
-      <UniqueIdentifier>{7619e07b-8f30-4242-aa7a-0e7a326ef563}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Network\SOM">
       <UniqueIdentifier>{37809e74-c498-4cd2-9f5c-a9bf5ed43a5e}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     </Filter>
     <Filter Include="Header Files\Algorithm\Supervised">
       <UniqueIdentifier>{474f546f-7c65-48d1-a420-52d7aefdc8d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network\Layer">
+      <UniqueIdentifier>{7619e07b-8f30-4242-aa7a-0e7a326ef563}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -225,7 +225,7 @@
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="BaseLayer.h">
-      <Filter>Header Files\Network\BaseLayer</Filter>
+      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="base64.h">
       <Filter>Header Files</Filter>
@@ -249,13 +249,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputLayer.h">
-      <Filter>Header Files\Network\BaseLayer</Filter>
+      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="CoreLayer.h">
-      <Filter>Header Files\Network\BaseLayer</Filter>
+      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="RecurrentLayer.h">
-      <Filter>Header Files\Network\BaseLayer</Filter>
+      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="LSOM.h">
       <Filter>Header Files\Network\SOM</Filter>

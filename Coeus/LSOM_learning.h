@@ -16,9 +16,11 @@ namespace Coeus {
 
 		LSOM* lsom() const { return _lsom; }
 
+
+		Tensor	_friendship;
+
 	private:
 		set<int> _winners;
-		Tensor	_friendship;
 		Tensor	_delta_w;
 		Tensor	_delta_lw;
 
