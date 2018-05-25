@@ -208,6 +208,9 @@
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
     <ClCompile Include="AdaMax.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="Nadam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -354,6 +357,9 @@
       <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
     <ClInclude Include="AdaMax.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="Nadam.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
