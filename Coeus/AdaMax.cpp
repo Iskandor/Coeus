@@ -20,38 +20,20 @@ void AdaMax::init(ICostFunction* p_cost_function, const double p_alpha, const do
 }
 
 void AdaMax::update_momentum(const string p_id, Tensor& p_gradient) {
-	if (_momentum1.find(p_id) == _momentum1.end()) {
-		_momentum1[p_id] = Tensor(p_gradient);
-		_momentum1_est[p_id] = Tensor(p_gradient);
-		for (int i = 0; i < p_gradient.size(); i++) {
-			_momentum1[p_id][i] = (1 - _beta1) * p_gradient[i];
-		}
-	}
-	else {
-		Tensor *m1 = &_momentum1[p_id];
-		for (int i = 0; i < p_gradient.size(); i++) {
-			(*m1)[i] = _beta1 * (*m1)[i] + (1 - _beta1) * p_gradient[i];
-		}
-	}
 
-	if (_inf_norm.find(p_id) == _inf_norm.end()) {
-		_inf_norm[p_id] = Tensor(p_gradient);
-		Tensor *in = &_inf_norm[p_id];
-		for (int i = 0; i < p_gradient.size(); i++) {
-			(*in)[i] = abs(p_gradient[i]);
-		}
-	}
-	else {
-		Tensor *in = &_inf_norm[p_id];
-		for (int i = 0; i < p_gradient.size(); i++) {
-			(*in)[i] = max(_beta2 * (*in)[i], abs(p_gradient[i]));
-		}
-	}
-
-	Tensor *m1est = &_momentum1_est[p_id];
-	Tensor *m1 = &_momentum1[p_id];
+	Tensor *m = &_m[p_id];
 	for (int i = 0; i < p_gradient.size(); i++) {
-		(*m1est)[i] = (*m1)[i] / (1 - _beta1);
+		(*m)[i] = _beta1 * (*m)[i] + (1 - _beta1) * p_gradient[i];
+	}
+
+	Tensor *u = &_u[p_id];
+	for (int i = 0; i < p_gradient.size(); i++) {
+		(*u)[i] = max(_beta2 * (*u)[i], abs(p_gradient[i]));
+	}
+
+	Tensor *m_mean = &_m_mean[p_id];
+	for (int i = 0; i < p_gradient.size(); i++) {
+		(*m_mean)[i] = (*m)[i] / (1 - _beta1);
 	}
 
 }
@@ -61,19 +43,25 @@ void AdaMax::calc_update() {
 
 	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
 
-		if (_update.find(it->first) == _update.end()) {
-			_update[it->first] = Tensor(it->second);
-		}
-
 		update_momentum(it->first, it->second);
 
-		Tensor* u = &_update[it->first];
-		Tensor* in = &_inf_norm[it->first];
-		Tensor* m1est = &_momentum1_est[it->first];
+		Tensor* update = &_update[it->first];
+		Tensor* u = &_u[it->first];
+		Tensor* m_mean = &_m_mean[it->first];
 
 		for (int i = 0; i < it->second.size(); i++) {
-			(*u)[i] = -_alpha / ((*in)[i] + _epsilon) * (*m1est)[i];
+			(*update)[i] = -_alpha / ((*u)[i] + _epsilon) * (*m_mean)[i];
 		}
+	}
+}
+
+void AdaMax::init_structures() {
+	BaseGradientAlgorithm::init_structures();
+
+	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
+		_m[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
+		_m_mean[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
+		_u[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
 	}
 }
 

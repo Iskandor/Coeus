@@ -13,14 +13,15 @@ namespace Coeus {
 	private:
 		void update_momentum(string p_id, Tensor &p_gradient);
 		void calc_update() override;
+		void init_structures() override;
 
 		double _beta1;
 		double _beta2;
 		double _epsilon;
 
-		map<string, Tensor> _momentum1;
-		map<string, Tensor> _momentum1_est;
-		map<string, Tensor> _inf_norm;
+		map<string, Tensor> _m;
+		map<string, Tensor> _m_mean;
+		map<string, Tensor> _u;
 	};
 }
 

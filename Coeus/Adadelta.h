@@ -15,6 +15,7 @@ namespace Coeus {
 		void update_cache(string p_id, Tensor &p_gradient);
 		void update_cache_delta(string p_id, Tensor &p_gradient);
 		void calc_update() override;
+		void init_structures() override;
 
 		double _decay;
 		double _epsilon;

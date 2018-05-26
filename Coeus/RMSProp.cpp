@@ -20,34 +20,23 @@ void RMSProp::init(ICostFunction* p_cost_function, const double p_alpha, const d
 	_epsilon = p_epsilon;
 }
 
-void RMSProp::update_cache(const string p_id, Tensor& p_gradient) {
-	if (_cache.find(p_id) != _cache.end()) {
-		for (int i = 0; i < p_gradient.size(); i++) {
-			_cache[p_id][i] = _decay * _cache[p_id][i] + (1 - _decay) * pow(p_gradient[i], 2);
-		}
-	}
-	else {
-		_cache[p_id] = Tensor(p_gradient);
-		for (int i = 0; i < p_gradient.size(); i++) {
-			_cache[p_id][i] = (1 - _decay) * pow(p_gradient[i], 2);
-		}
-	}
-}
-
-
 void RMSProp::calc_update() {
 	BaseGradientAlgorithm::calc_update();
 
 	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
 
-		update_cache(it->first, it->second);
-
-		if (_update.find(it->first) == _update.end()) {
-			_update[it->first] = Tensor(it->second);
-		}
-
 		for(int i = 0; i < it->second.size(); i++) {
+			_cache[it->first][i] = _decay * _cache[it->first][i] + (1 - _decay) * pow(it->second[i], 2);
 			_update[it->first][i] = -_alpha / sqrt(_cache[it->first][i] + _epsilon) * it->second[i];
 		}
+
+	}
+}
+
+void RMSProp::init_structures() {
+	BaseGradientAlgorithm::init_structures();
+
+	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
+		_cache[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
 	}
 }

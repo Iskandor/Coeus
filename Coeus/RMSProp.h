@@ -14,8 +14,8 @@ namespace Coeus {
 		void init(ICostFunction* p_cost_function, double p_alpha, double p_decay = 0.9, double p_epsilon = 1e-8);
 
 	private:
-		void update_cache(string p_id, Tensor &p_gradient);
 		void calc_update() override;
+		void init_structures() override;
 
 		double _decay;
 		double _epsilon;

@@ -17,11 +17,11 @@ void LSOM_params::init_training(const double p_alpha, const double p_beta, const
 	_alpha0 = p_alpha;
 	_beta0 = p_beta;
 	_alpha = _alpha0 * exp(-_iteration / _epochs);
-	_beta = _beta0 * exp(-_iteration / _epochs);
+	_beta = _beta0; // / exp(-_iteration / _epochs);
 }
 
 void LSOM_params::param_decay() {
 	Base_SOM_params::param_decay();
 	_alpha = _alpha0 * exp(-_iteration / _epochs);
-	_beta = _beta0 * exp(-_iteration / _epochs);
+	//_beta = _beta0  / exp(-_iteration / _epochs);
 }

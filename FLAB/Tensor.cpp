@@ -22,8 +22,14 @@ Tensor::Tensor(const initializer_list<int> p_shape, double* p_data) {
 }
 
 Tensor::Tensor(const int p_rank, int* p_shape, double* p_data) {
-	init_shape(p_rank, p_shape);
+	init_shape(p_rank, p_shape, false);
 	_arr = p_data;
+}
+
+Tensor::Tensor(const int p_rank, int* p_shape, const INIT p_init, const double p_value) {
+	init_shape(p_rank, p_shape, true);
+	_arr = alloc_arr(_size);
+	fill(p_init, p_value);
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<double> p_inputs) {
@@ -258,17 +264,6 @@ Tensor Tensor::apply(Tensor& p_source, double(*f)(double))
 	return Tensor(p_source._rank, shape, arr);
 }
 
-Tensor Tensor::apply(Tensor* p_source, double(* f)(double)) {
-	double* arr = alloc_arr(p_source->_size);
-	int* shape = copy_shape(p_source->_rank, p_source->_shape);
-
-	for (int i = 0; i < p_source->_size; i++) {
-		arr[i] = f(p_source->_arr[i]);
-	}
-
-	return Tensor(p_source->_rank, shape, arr);
-}
-
 Tensor Tensor::apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double)) {
 	double* arr = alloc_arr(p_source1._size);
 	int* shape = copy_shape(p_source1._rank, p_source1._shape);
@@ -393,9 +388,9 @@ int* Tensor::copy_shape(const int p_rank, int* p_shape) {
 	return shape;
 }
 
-void Tensor::init_shape(const int p_rank, int* p_shape) {
+void Tensor::init_shape(const int p_rank, int* p_shape, const bool p_copy_shape) {
 	_rank = p_rank;
-	_shape = p_shape;
+	_shape = p_copy_shape ? copy_shape(p_rank, p_shape) : p_shape;
 	_size = 1;
 
 	for(int i = 0; i < _rank; i++) {

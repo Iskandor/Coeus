@@ -34,10 +34,23 @@ void BaseGradientAlgorithm::init(ICostFunction* p_cost_function, const double p_
 	_cost_function = p_cost_function;
 	_network_gradient = new NetworkGradient(_network, _cost_function);
 	_alpha = p_alpha;
+	_init_structures = false;
 }
 
 void BaseGradientAlgorithm::calc_update() {
+	if (!_init_structures) {
+		init_structures();
+	}
+
 	for (auto it = _network_gradient->get_b_gradient()->begin(); it != _network_gradient->get_b_gradient()->end(); ++it) {
 		_update[it->first] = -_alpha * it->second;
+	}
+}
+
+void BaseGradientAlgorithm::init_structures() {
+	_init_structures = true;
+
+	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
+		_update[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
 	}
 }

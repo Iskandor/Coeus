@@ -24,20 +24,23 @@ void BackProp::calc_update() {
 	Tensor prev_update;
 
 	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
-		if (_nesterov && _update.find(it->first) != _update.end()) {
+		if (_nesterov) {
 			prev_update = Tensor(_update[it->first]);
 		}
 
-		if (_momentum > 0 && _update.find(it->first) != _update.end()) {
-			_update[it->first] = _momentum * _update[it->first] -_alpha * it->second;
+		if (_momentum > 0) {
+			Tensor* update = &_update[it->first];
+
+			for (int i = 0; i < it->second.size(); i++) {
+				(*update)[i] = _momentum * (*update)[i] - _alpha * it->second[i];
+			}
 
 			if(_nesterov) {
-				_update[it->first] = -_momentum * prev_update + (1 + _momentum) * _update[it->first];
+				for (int i = 0; i < it->second.size(); i++) {
+					(*update)[i] = -_momentum * prev_update[i] + (1 + _momentum) * (*update)[i];
+				}
 			}
 		}
-		else {
-			_update[it->first] = -_alpha * it->second;
-		}		
 	}
 }
 

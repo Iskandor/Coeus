@@ -22,26 +22,20 @@ void Adagrad::calc_update() {
 
 	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
 
-		if (_G.find(it->first) == _G.end()) {
-			_G[it->first] = Tensor(it->second);
-
-			for (int i = 0; i < it->second.size(); i++) {
-				_G[it->first][i] = pow(it->second[i], 2);
-			}
-		}
-		else {
-			for (int i = 0; i < it->second.size(); i++) {
-				_G[it->first][i] = _G[it->first][i] + pow(it->second[i], 2);
-			}
-		}
-
-		if (_update.find(it->first) == _update.end()) {
-			_update[it->first] = Tensor(it->second);
-		}
+		Tensor* G = &_G[it->first];
+		Tensor* update = &_update[it->first];
 
 		for (int i = 0; i < it->second.size(); i++) {
-			
-			_update[it->first][i] = -_alpha / sqrt(_G[it->first][i] + _epsilon) * it->second[i];
+			(*G)[i] = (*G)[i] + pow(it->second[i], 2);
+			(*update)[i] = -_alpha / sqrt((*G)[i] + _epsilon) * it->second[i];
 		}
+	}
+}
+
+void Adagrad::init_structures() {
+	BaseGradientAlgorithm::init_structures();
+
+	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
+		_G[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
 	}
 }

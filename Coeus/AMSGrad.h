@@ -1,12 +1,13 @@
 #pragma once
 #include "BaseGradientAlgorithm.h"
 
-namespace Coeus {
-	class __declspec(dllexport) Nadam : public BaseGradientAlgorithm
+namespace Coeus
+{
+	class __declspec(dllexport) AMSGrad : public BaseGradientAlgorithm
 	{
 	public:
-		explicit Nadam(NeuralNetwork* p_network);
-		~Nadam();
+		explicit AMSGrad(NeuralNetwork* p_network);
+		~AMSGrad();
 
 		void init(ICostFunction* p_cost_function, double p_alpha, double p_beta1 = 0.9, double p_beta2 = 0.999, double p_epsilon = 1e-8);
 
@@ -21,9 +22,8 @@ namespace Coeus {
 
 		map<string, Tensor> _m;
 		map<string, Tensor> _v;
-		map<string, Tensor> _m_mean;
 		map<string, Tensor> _v_mean;
-
 	};
 }
+
 

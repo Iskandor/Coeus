@@ -13,6 +13,7 @@ namespace Coeus {
 
 	private:
 		void calc_update() override;
+		void init_structures() override;
 
 		double _epsilon;
 		map<string, Tensor> _G;

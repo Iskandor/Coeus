@@ -19,27 +19,19 @@ void Adadelta::init(ICostFunction* p_cost_function, const double p_alpha, const 
 }
 
 void Adadelta::update_cache(const string p_id, Tensor& p_gradient) {
-	if (_cache.find(p_id) != _cache.end()) {
-		for (int i = 0; i < p_gradient.size(); i++) {
-			_cache[p_id][i] = _decay * _cache[p_id][i] + (1 - _decay) * pow(p_gradient[i], 2);
-		}
-	}
-	else {
-		_cache[p_id] = Tensor(p_gradient);
-		for (int i = 0; i < p_gradient.size(); i++) {
-			_cache[p_id][i] = (1 - _decay) * pow(p_gradient[i], 2);
-		}
-	}
+	Tensor* cache = &_cache[p_id];
 
-	if (_cache_delta.find(p_id) == _cache_delta.end()) {
-		_cache_delta[p_id] = Tensor(p_gradient);
-		_cache_delta[p_id].fill(0);
+	for (int i = 0; i < p_gradient.size(); i++) {
+		(*cache)[i] = _decay * (*cache)[i] + (1 - _decay) * pow(p_gradient[i], 2);
 	}
 }
 
 void Adadelta::update_cache_delta(const string p_id, Tensor& p_gradient) {
+	Tensor* cache = &_cache[p_id];
+	Tensor* cache_delta = &_cache_delta[p_id];
+
 	for (int i = 0; i < p_gradient.size(); i++) {
-		_cache_delta[p_id][i] = _decay * _cache_delta[p_id][i] + (1 - _decay) * pow(_alpha / sqrt(_cache[p_id][i] + _epsilon) * p_gradient[i], 2);
+		(*cache_delta)[i] = _decay * (*cache_delta)[i] + (1 - _decay) * pow(_alpha / sqrt((*cache)[i] + _epsilon) * p_gradient[i], 2);
 	}
 }
 
@@ -47,18 +39,26 @@ void Adadelta::calc_update() {
 	BaseGradientAlgorithm::calc_update();
 
 	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
-
-		if (_update.find(it->first) == _update.end()) {
-			_update[it->first] = Tensor(it->second);
-		}
-
 		update_cache(it->first, it->second);
 
+		Tensor* update = &_update[it->first];
+		Tensor* cache = &_cache[it->first];
+		Tensor* cache_delta = &_cache_delta[it->first];
+
 		for (int i = 0; i < it->second.size(); i++) {
-			_update[it->first][i] = -sqrt(_cache_delta[it->first][i] + _epsilon) / sqrt(_cache[it->first][i] + _epsilon) * it->second[i];
+			(*update)[i] = -sqrt((*cache_delta)[i] + _epsilon) / sqrt((*cache)[i] + _epsilon) * it->second[i];
 		}
 
 		update_cache_delta(it->first, it->second);
+	}
+}
+
+void Adadelta::init_structures() {
+	BaseGradientAlgorithm::init_structures();
+
+	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
+		_cache[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
+		_cache_delta[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
 	}
 }
 

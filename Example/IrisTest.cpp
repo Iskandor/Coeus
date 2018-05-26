@@ -28,8 +28,6 @@ void IrisTest::run(const int p_epochs) {
 	vector<IrisDatasetItem>* data = nullptr;
 
 	for(int t = 0; t < p_epochs; t++) {
-		cout << "Epoch " << t << endl;
-		
 		data = _dataset.permute();
 
 		const auto start = chrono::system_clock::now();
@@ -41,8 +39,11 @@ void IrisTest::run(const int p_epochs) {
 
 		const auto end = chrono::system_clock::now();
 		chrono::duration<double> elapsed_seconds = end - start;
-		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-		cout << " LSOM qError: " << analyzer.q_error() << " WD: " << analyzer.winner_diff(_lsom->get_lattice()->get_dim()) << endl;
+		if (t % 1000 == 0) {
+			cout << "Epoch " << t << endl;
+			cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+			cout << " LSOM qError: " << analyzer.q_error() << " WD: " << analyzer.winner_diff(_lsom->get_lattice()->get_dim()) << endl;
+		}
 
 		learner.update_friendship();
 		analyzer.end_epoch();
@@ -51,6 +52,14 @@ void IrisTest::run(const int p_epochs) {
 
 	for(int i = 0; i < learner._friendship.size(); i++) {
 		cout << i << " " << learner._friendship[i] << endl;
+	}
+	cout << endl;
+	for (int i = 0; i < _lsom->get_lattice()->get_dim(); i++) {
+		double sum = 0;
+		for (int j = 0; j < _lsom->get_lattice()->get_dim(); j++) {
+			sum += _lsom->get_lateral()->get_weights()->at(i, j);
+		}
+		cout << i << " " << sum << endl;
 	}
 }
 

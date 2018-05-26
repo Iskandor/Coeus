@@ -11,6 +11,7 @@
 #include "ADAM.h"
 #include "AdaMax.h"
 #include "Nadam.h"
+#include "AMSGrad.h"
 
 FFN::FFN()
 {
@@ -51,12 +52,13 @@ void FFN::run() {
 	//RMSProp model(&_network);
 	//AdaMax model(&_network);
 	//ADAM model(&_network);
-	Nadam model(&_network);
+	AMSGrad model(&_network);
+	//Nadam model(&_network);
 
 	//model.init(new QuadraticCost(), 0.1, 0.99, true);
-	model.init(new QuadraticCost(), 0.001);
+	model.init(new QuadraticCost(), 0.05);
 
-	for(int t = 0; t < 2000; t++) {
+	for(int t = 0; t < 4000; t++) {
 		double error = 0;
 		for (int i = 0; i < 4; i++) {
 			error += model.train(&input[i], &target[i]);

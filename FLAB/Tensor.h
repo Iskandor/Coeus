@@ -19,6 +19,7 @@ public:
 	Tensor(const initializer_list<int> p_shape, INIT p_init, double p_value = 1.);
 	Tensor(const initializer_list<int> p_shape, double* p_data);
 	Tensor(int p_rank, int* p_shape, double* p_data);
+	Tensor(int p_rank, int* p_shape, INIT p_init, double p_value = 1.);
 	Tensor(const initializer_list<int> p_shape, initializer_list <double> p_inputs);
 	Tensor(const Tensor &p_copy);
 	~Tensor();
@@ -47,7 +48,6 @@ public:
 
 	static Tensor apply(Tensor& p_source, double(*f)());
 	static Tensor apply(Tensor& p_source, double(*f)(double));
-	static Tensor apply(Tensor* p_source, double(*f)(double));
 	static Tensor apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double));
 
 	int max_index() const;
@@ -87,7 +87,7 @@ private:
 	void free_arr() const;
 	void free_shape() const;
 	
-	void init_shape(int p_rank, int* p_shape);
+	void init_shape(int p_rank, int* p_shape, bool p_copy_shape);
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, double p_value) const;
 	
