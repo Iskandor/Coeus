@@ -3,10 +3,12 @@
 using namespace Coeus;
 
 CoreLayerGradient::CoreLayerGradient(CoreLayer* p_layer) : IGradientComponent(p_layer) {
+	_state = new LayerState(p_layer->get_output_group()->get_dim());
 }
 
 CoreLayerGradient::~CoreLayerGradient()
 {
+	delete _state;
 }
 
 void CoreLayerGradient::init()
@@ -20,9 +22,9 @@ void CoreLayerGradient::calc_deriv() {
 	calc_deriv_group(reinterpret_cast<CoreLayer*>(_layer)->_output_group);
 }
 
-void CoreLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta) {
+void CoreLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state) {
 	NeuralGroup* g = reinterpret_cast<CoreLayer*>(_layer)->_output_group;
-	Tensor wd = p_weights->T() * *p_delta;
+	Tensor wd = p_weights->T() * p_state->delta;
 	_delta[g->get_id()] = Tensor::apply(wd, _deriv[g->get_id()], Tensor::ew_dot);
 }
 

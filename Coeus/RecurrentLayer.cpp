@@ -38,3 +38,7 @@ void RecurrentLayer::activate(Tensor * p_input)
 void RecurrentLayer::override_params(BaseLayer * p_source)
 {
 }
+
+void RecurrentLayer::post_connection(BaseLayer* p_input)
+{
+}

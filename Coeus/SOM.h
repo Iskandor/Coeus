@@ -17,7 +17,6 @@ namespace Coeus
 		void get_position(int p_index, int& p_x, int& p_y) const;
 		int get_position(int p_x, int p_y) const;
 
-		NeuralGroup* get_input_group() const { return _input_group; }
 		NeuralGroup* get_lattice() const { return _output_group; }
 		Connection*  get_afferent() const { return _afferent; }
 
@@ -35,10 +34,10 @@ namespace Coeus
 
 		virtual SOM* clone() const;
 		void override_params(BaseLayer* p_source) override;
+		void post_connection(BaseLayer* p_input) override {};
 
 	protected:
 		void find_winner(Tensor* p_input, bool p_conscience);
-		
 		void calc_distance();
 
 		Connection* _afferent;

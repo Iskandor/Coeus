@@ -5,6 +5,7 @@ using namespace Coeus;
 
 IGradientComponent::IGradientComponent(BaseLayer* p_layer)
 {
+	_state = nullptr;
 	_layer = p_layer;
 }
 
@@ -24,6 +25,12 @@ void IGradientComponent::update(map<string, Tensor>& p_update) {
 	for(auto it = _layer->_connections.begin(); it != _layer->_connections.end(); ++it) {
 		it->second->update_weights(p_update[it->first]);
 	}
+}
+
+LayerState* IGradientComponent::get_state()
+{
+	_state->delta.override(&_delta[_layer->_output_group->get_id()]);
+	return _state;
 }
 
 void IGradientComponent::calc_deriv_group(NeuralGroup* p_group) {

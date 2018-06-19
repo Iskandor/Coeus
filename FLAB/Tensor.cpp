@@ -5,8 +5,6 @@
 using namespace FLAB;
 using namespace Concurrency;
 
-int Tensor::control = 0;
-
 Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0) {
 }
 
@@ -337,7 +335,6 @@ void Tensor::dec(const int p_x, const int p_y, const double p_val) const {
 }
 
 double* Tensor::alloc_arr(const int p_size) {
-	control++;
 	return static_cast<double*>(Alloc(p_size * sizeof(double)));
 	//return static_cast<double*>(malloc(p_size * sizeof(double)));
 }
@@ -368,7 +365,6 @@ double Tensor::ew_abs(const double p_x) {
 }
 
 void Tensor::free_arr() const {
-	control--;
 	Free(_arr);
 	//free(_arr);
 }

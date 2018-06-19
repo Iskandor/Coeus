@@ -61,6 +61,12 @@
     <Filter Include="Header Files\Network\Layer">
       <UniqueIdentifier>{7619e07b-8f30-4242-aa7a-0e7a326ef563}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Algorithm\Gradient\State">
+      <UniqueIdentifier>{7e00f4a7-18ae-4f9a-9144-4fbf8e83dea4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\Gradient\State">
+      <UniqueIdentifier>{be1c7aa5-ed52-4bca-943e-957cb0986b2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -213,8 +219,26 @@
     <ClCompile Include="Nadam.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
+    <ClCompile Include="UBALLayer.cpp">
+      <Filter>Source Files\Network\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="UBAL.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
     <ClCompile Include="AMSGrad.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="LSTMLayer.cpp">
+      <Filter>Source Files\Network\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="LayerState.cpp">
+      <Filter>Source Files\Algorithm\Gradient\State</Filter>
+    </ClCompile>
+    <ClCompile Include="LSTMLayerGradient.cpp">
+      <Filter>Source Files\Algorithm\Gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="LSTMLayerState.cpp">
+      <Filter>Source Files\Algorithm\Gradient\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,8 +389,26 @@
     <ClInclude Include="Nadam.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
+    <ClInclude Include="UBALLayer.h">
+      <Filter>Header Files\Network\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="UBAL.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
     <ClInclude Include="AMSGrad.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="LSTMLayer.h">
+      <Filter>Header Files\Network\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerState.h">
+      <Filter>Header Files\Algorithm\Gradient\State</Filter>
+    </ClInclude>
+    <ClInclude Include="LSTMLayerGradient.h">
+      <Filter>Header Files\Algorithm\Gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="LSTMLayerState.h">
+      <Filter>Header Files\Algorithm\Gradient\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

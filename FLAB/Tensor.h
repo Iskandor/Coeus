@@ -92,9 +92,9 @@ private:
 	void fill(INIT p_init, double p_value) const;
 	
 	double *_arr;
-	int _rank;
-	int *_shape;
-	int _size;
+	int _rank{};
+	int *_shape{};
+	int _size{};
 };
 
 }

@@ -27,3 +27,7 @@ void InputLayer::activate(Tensor * p_input)
 void InputLayer::override_params(BaseLayer * p_source)
 {
 }
+
+void InputLayer::post_connection(BaseLayer* p_input)
+{
+}

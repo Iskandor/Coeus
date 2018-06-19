@@ -30,3 +30,7 @@ void CoreLayer::activate(Tensor * p_input)
 void CoreLayer::override_params(BaseLayer * p_source)
 {
 }
+
+void CoreLayer::post_connection(BaseLayer* p_input)
+{
+}

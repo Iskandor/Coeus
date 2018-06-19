@@ -168,6 +168,7 @@
     <ClCompile Include="ModelMNS2.cpp" />
     <ClCompile Include="ModelMNS3.cpp" />
     <ClCompile Include="Sequence.cpp" />
+    <ClCompile Include="UBALTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="ModelMNS2.h" />
     <ClInclude Include="ModelMNS3.h" />
     <ClInclude Include="Sequence.h" />
+    <ClInclude Include="UBALTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -28,6 +28,7 @@ public:
 	virtual void integrate(Tensor* p_input, Tensor* p_weights) = 0;
 	virtual void activate(Tensor* p_input = nullptr) = 0;
 	virtual void override_params(BaseLayer* p_source) = 0;
+	virtual void post_connection(BaseLayer* p_input) = 0;
 
 	Tensor* get_output() const { return _output_group->get_output(); }
 	TYPE	type() const { return _type; }
@@ -40,6 +41,9 @@ public:
 	void set_valid(const bool p_val) { _valid = p_val; }
 
 	IGradientComponent* gradient_component() const { return _gradient_component; }
+
+	NeuralGroup* get_output_group() const { return _output_group; }
+	NeuralGroup* get_input_group() const { return _input_group; }
 
 protected:
 	Connection* add_connection(Connection* p_connection);

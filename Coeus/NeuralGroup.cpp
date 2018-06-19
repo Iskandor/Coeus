@@ -6,9 +6,9 @@ using namespace std;
 using namespace Coeus;
 /**
  * NeuralGroup constructor creates layer of p_dim neurons with p_activationFunction
- * @param p_id name of layer must be unique per network
  * @param p_dim dimension of layer
  * @param p_activationFunction type of activation function
+ * @param p_bias
  */
 NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activationFunction, const bool p_bias)
 {

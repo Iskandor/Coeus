@@ -15,7 +15,7 @@ public:
         IDENTITY = 3
     };
 
-	Connection(int p_inDim, int p_outDim, string p_inId, string p_outId);
+	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id);
 	explicit Connection(nlohmann::json p_data);
     Connection(Connection& p_copy);
     ~Connection(void);
@@ -30,6 +30,7 @@ public:
 	string get_out_id() const { return _out_id; };
 	int get_in_dim() const { return _in_dim; };
 	int get_out_dim() const { return _out_dim; };
+	bool is_trainable() const { return _trainable; };
 
 private:
 	
@@ -41,6 +42,8 @@ private:
 	string _in_id, _out_id;
     int _in_dim, _out_dim;
     Tensor _weights;
+
+	bool _trainable;
 };
 
 }

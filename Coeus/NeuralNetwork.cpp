@@ -5,9 +5,7 @@
 
 using namespace Coeus;
 
-NeuralNetwork::NeuralNetwork()
-{
-}
+NeuralNetwork::NeuralNetwork() = default;
 
 
 NeuralNetwork::~NeuralNetwork()
@@ -39,7 +37,7 @@ BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
 	return p_layer;
 }
 
-Connection* NeuralNetwork::add_connection(const string p_input_layer, const string p_output_layer, const Connection::INIT p_init, const double p_limit) {
+Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const double p_limit) {
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 
@@ -71,14 +69,16 @@ Connection* NeuralNetwork::add_connection(const string p_input_layer, const stri
 
 	create_directed_graph();
 
+	out_layer->post_connection(in_layer);
+
 	return c;
 }
 
-Connection* NeuralNetwork::get_connection(const string p_input_group, const string p_output_group) {
+Connection* NeuralNetwork::get_connection(const string& p_input_layer, const string& p_output_layer) {
 	Connection* result = nullptr;
 
 	for (auto it = _connections.begin(); it != _connections.end(); ++it) {
-		if ((*it).second->get_in_id().compare(p_input_group) == 0 && (*it).second->get_out_id().compare(p_output_group) == 0) {
+		if ((*it).second->get_in_id() == p_input_layer && (*it).second->get_out_id() == p_output_layer) {
 			result = (*it).second;
 		}
 	}

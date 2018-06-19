@@ -1,15 +1,15 @@
-#include <random>
 #include "Connection.h"
 
 using namespace Coeus;
 
-Connection::Connection(const int p_in_dim, const int p_out_dim, const string p_in_id, const string p_out_id)
+Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id)
 {
     _id = p_out_id + "_" + p_in_id;
 	_in_dim = p_in_dim;
     _out_dim = p_out_dim;
 	_in_id = p_in_id;
 	_out_id = p_out_id;
+	_trainable = true;
 }
 
 Connection::Connection(nlohmann::json p_data) {
@@ -18,6 +18,7 @@ Connection::Connection(nlohmann::json p_data) {
 	_out_id = p_data["out_id"].get<string>();
 	_in_dim = p_data["in_dim"].get<int>();
 	_out_dim = p_data["out_dim"].get<int>();
+	_trainable = p_data["trainable"].get<bool>();
 
 	double* data = Tensor::alloc_arr(_out_dim * _in_dim);
 
@@ -44,7 +45,7 @@ Connection::~Connection()
 {
 }
 
-void Connection::init(const Connection::INIT p_init, const double p_limit) {
+void Connection::init(const INIT p_init, const double p_limit) {
     switch(p_init) {
         case UNIFORM:
             uniform(p_limit);
@@ -56,6 +57,7 @@ void Connection::init(const Connection::INIT p_init, const double p_limit) {
             uniform(2.0f / (_in_dim + _out_dim));
             break;
         case IDENTITY:
+			_trainable = false;
             identity();
             break;
     }

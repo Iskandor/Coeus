@@ -189,6 +189,7 @@
     <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
+    <ClCompile Include="LayerState.cpp" />
     <ClCompile Include="LISSOM.cpp" />
     <ClCompile Include="LISSOM_learning.cpp" />
     <ClCompile Include="LISSOM_params.cpp" />
@@ -196,6 +197,9 @@
     <ClCompile Include="LSOM.cpp" />
     <ClCompile Include="LSOM_learning.cpp" />
     <ClCompile Include="LSOM_params.cpp" />
+    <ClCompile Include="LSTMLayer.cpp" />
+    <ClCompile Include="LSTMLayerGradient.cpp" />
+    <ClCompile Include="LSTMLayerState.cpp" />
     <ClCompile Include="Metrics.cpp" />
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
@@ -212,6 +216,8 @@
     <ClCompile Include="SOM_analyzer.cpp" />
     <ClCompile Include="SOM_learning.cpp" />
     <ClCompile Include="SOM_params.cpp" />
+    <ClCompile Include="UBAL.cpp" />
+    <ClCompile Include="UBALLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
@@ -241,6 +247,7 @@
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="KLDivergence.h" />
+    <ClInclude Include="LayerState.h" />
     <ClInclude Include="LISSOM.h" />
     <ClInclude Include="LISSOM_learning.h" />
     <ClInclude Include="LISSOM_params.h" />
@@ -248,6 +255,9 @@
     <ClInclude Include="LSOM.h" />
     <ClInclude Include="LSOM_learning.h" />
     <ClInclude Include="LSOM_params.h" />
+    <ClInclude Include="LSTMLayer.h" />
+    <ClInclude Include="LSTMLayerGradient.h" />
+    <ClInclude Include="LSTMLayerState.h" />
     <ClInclude Include="Metrics.h" />
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
@@ -264,6 +274,8 @@
     <ClInclude Include="SOM_analyzer.h" />
     <ClInclude Include="SOM_learning.h" />
     <ClInclude Include="SOM_params.h" />
+    <ClInclude Include="UBAL.h" />
+    <ClInclude Include="UBALLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
