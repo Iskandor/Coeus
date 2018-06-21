@@ -1,12 +1,11 @@
 #include "LSTMLayer.h"
+#include "LSTMLayerGradient.h"
 
 using namespace Coeus;
 
 
 LSTMLayer::LSTMLayer(const string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
 {
-	_type = LSTM;
-
 	_output_group = new NeuralGroup(p_dim, p_activation, true);
 
 	_hf = new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true);
@@ -18,11 +17,13 @@ LSTMLayer::LSTMLayer(const string p_id, int p_dim, NeuralGroup::ACTIVATION p_act
 	_h = new Tensor({ p_dim }, Tensor::INIT::ZERO);
 	_c_old = new Tensor({ p_dim }, Tensor::INIT::ZERO);
 	_h_old = new Tensor({ p_dim }, Tensor::INIT::ZERO);
+
+	_type = LSTM;
+	_gradient_component = new LSTMLayerGradient(this);
 }
 
 LSTMLayer::~LSTMLayer()
 {
-	delete _input_group;
 	delete _output_group;
 	delete _x;
 	delete _c;
@@ -41,19 +42,18 @@ LSTMLayer::~LSTMLayer()
 
 void LSTMLayer::integrate(Tensor* p_input, Tensor* p_weights)
 {
-	_x->override(p_input);
-	Tensor::Concat(_input_group->get_output(), _h_old, p_input);
+	Tensor::Concat(_x->get_output(), _h_old, p_input);
 }
 
 void LSTMLayer::activate(Tensor* p_input)
 {
-	_hf->integrate(_input_group->get_output(), _Wf->get_weights());
+	_hf->integrate(_x->get_output(), _Wf->get_weights());
 	_hf->activate();
-	_hi->integrate(_input_group->get_output(), _Wi->get_weights());
+	_hi->integrate(_x->get_output(), _Wi->get_weights());
 	_hi->activate();
-	_ho->integrate(_input_group->get_output(), _Wo->get_weights());
+	_ho->integrate(_x->get_output(), _Wo->get_weights());
 	_ho->activate();
-	_hc->integrate(_input_group->get_output(), _Wc->get_weights());
+	_hc->integrate(_x->get_output(), _Wc->get_weights());
 	_hc->activate();
 
 	for(int i = 0; i < _c->size(); i++)
@@ -76,18 +76,18 @@ void LSTMLayer::override_params(BaseLayer* p_source)
 
 void LSTMLayer::post_connection(BaseLayer* p_input)
 {
+	_input_group = p_input->get_output_group();
+
 	const int dim = output_dim() + p_input->output_dim();
 
-	_input_group = new NeuralGroup(dim, NeuralGroup::LINEAR, false);
-
-	_x = new Tensor({ p_input->output_dim() }, Tensor::ZERO);
-	_Wf = add_connection(new Connection(dim, output_dim(), _input_group->get_id(), _hf->get_id()));
+	_x = new NeuralGroup(dim, NeuralGroup::LINEAR, false);
+	_Wf = add_connection(new Connection(dim, output_dim(), _x->get_id(), _hf->get_id()));
 	_Wf->init(Connection::INIT::GLOROT_UNIFORM);
-	_Wi = add_connection(new Connection(dim, output_dim(), _input_group->get_id(), _hi->get_id()));
+	_Wi = add_connection(new Connection(dim, output_dim(), _x->get_id(), _hi->get_id()));
 	_Wi->init(Connection::INIT::GLOROT_UNIFORM);
-	_Wo = add_connection(new Connection(dim, output_dim(), _input_group->get_id(), _ho->get_id()));
+	_Wo = add_connection(new Connection(dim, output_dim(), _x->get_id(), _ho->get_id()));
 	_Wo->init(Connection::INIT::GLOROT_UNIFORM);
-	_Wc = add_connection(new Connection(dim, output_dim(), _input_group->get_id(), _hc->get_id()));
+	_Wc = add_connection(new Connection(dim, output_dim(), _x->get_id(), _hc->get_id()));
 	_Wc->init(Connection::INIT::GLOROT_UNIFORM);
 	_Wy = add_connection(new Connection(output_dim(), output_dim(), "_h", _output_group->get_id()));
 	_Wy->init(Connection::INIT::GLOROT_UNIFORM);

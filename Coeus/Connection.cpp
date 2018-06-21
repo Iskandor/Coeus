@@ -47,6 +47,10 @@ Connection::~Connection()
 
 void Connection::init(const INIT p_init, const double p_limit) {
     switch(p_init) {
+		case NONE:
+			_trainable = false;
+			_weights = Tensor::Zero({ _out_dim, _in_dim });
+			break;
         case UNIFORM:
             uniform(p_limit);
             break;
@@ -68,7 +72,7 @@ void Connection::uniform(const double p_limit) {
 }
 
 void Connection::identity() {
-	_weights = Tensor({ _out_dim, _in_dim }, Tensor::ONES);
+	_weights = Tensor::Ones({ _out_dim, _in_dim });
 }
 
 void Connection::set_weights(Tensor *p_weights) const {

@@ -29,7 +29,7 @@ void IGradientComponent::update(map<string, Tensor>& p_update) {
 
 LayerState* IGradientComponent::get_state()
 {
-	_state->delta.override(&_delta[_layer->_output_group->get_id()]);
+	_state->delta.override(&_delta[_layer->_input_group->get_id()]);
 	return _state;
 }
 

@@ -9,10 +9,11 @@ class __declspec(dllexport) Connection
 {
 public:
     enum INIT {
-        UNIFORM = 0,
-        LECUN_UNIFORM = 1,
-        GLOROT_UNIFORM = 2,
-        IDENTITY = 3
+		NONE = 0,
+        UNIFORM = 1,
+        LECUN_UNIFORM = 2,
+        GLOROT_UNIFORM = 3,
+        IDENTITY = 4
     };
 
 	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id);

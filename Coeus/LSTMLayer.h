@@ -20,7 +20,7 @@ namespace Coeus
 		NeuralGroup* _hi;
 		NeuralGroup* _ho;
 		NeuralGroup* _hc;
-		Tensor*		 _x;
+		NeuralGroup* _x;
 		Tensor*		 _h;
 		Tensor*		 _h_old;
 		Tensor*		 _c;

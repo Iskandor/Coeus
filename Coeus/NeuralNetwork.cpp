@@ -41,7 +41,7 @@ Connection* NeuralNetwork::add_connection(const string& p_input_layer, const str
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 
-	Connection* c = new Connection(in_layer->input_dim(), out_layer->output_dim(), in_layer->id(), out_layer->id());
+	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->id(), out_layer->id());
 	c->init(p_init, p_limit);
 
 	_connections[c->get_id()] = c;

@@ -1,6 +1,7 @@
 #include "Tensor.h"
 #include "RandomGenerator.h"
 #include <ppl.h>
+#include <cassert>
 
 using namespace FLAB;
 using namespace Concurrency;
@@ -169,6 +170,11 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 		}
 	}
 
+	if (this->_rank == 1 && p_tensor._rank == 2)
+	{
+		assert(0);
+	}
+
 	if (this->_rank == 2 && p_tensor._rank == 2) { // preverit spravnu funkcnost
 		arr = alloc_arr(_shape[0] * p_tensor._shape[1]);
 		rank = 2;
@@ -335,7 +341,8 @@ void Tensor::dec(const int p_x, const int p_y, const double p_val) const {
 }
 
 double* Tensor::alloc_arr(const int p_size) {
-	return static_cast<double*>(Alloc(p_size * sizeof(double)));
+	double* res = static_cast<double*>(Alloc(p_size * sizeof(double)));
+	return res;
 	//return static_cast<double*>(malloc(p_size * sizeof(double)));
 }
 
@@ -416,7 +423,7 @@ void Tensor::fill(const INIT p_init, const double p_value) const {
 			if (_rank == 1) {
 				for (int i = 0; i < _size; i++) _arr[i] = 1;
 			}
-			if (_rank == 2) {
+			if (_rank == 2 && _shape[0] == _shape[1]) {
 				for (int i = 0; i < _shape[0]; i++) _arr[i * _shape[1] + i] = 1;
 			}			
 			break;

@@ -1,6 +1,7 @@
 #pragma once
 #include "IGradientComponent.h"
 #include "LSTMLayer.h"
+#include "LSTMLayerState.h"
 
 namespace Coeus
 {
@@ -16,6 +17,7 @@ namespace Coeus
 		void calc_delta(Tensor* p_weights, LayerState* p_state) override;
 		void update(map<string, Tensor> &p_update) override;
 		void calc_gradient(map<string, Tensor> &p_w_gradient, map<string, Tensor> &p_b_gradient) override;
+		LSTMLayerState* get_state() override;
 
 	private:
 		Tensor	_dc_next;

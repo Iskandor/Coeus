@@ -73,7 +73,7 @@ void LSTMLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state)
 
 	Tensor wd = p_weights->T() * p_state->delta;
 	_delta[layer->_output_group->get_id()] = Tensor::apply(wd, _deriv[layer->_output_group->get_id()], Tensor::ew_dot);
-	_delta["_h" + _layer->id()] = _delta[layer->_output_group->get_id()] * layer->_Wy->get_weights()->T() + _dh_next;
+	_delta["_h" + _layer->id()] = layer->_Wy->get_weights()->T() * _delta[layer->_output_group->get_id()] + _dh_next;
 
 	for(int i = 0; i < layer->_output_group->get_dim(); i++)
 	{
@@ -84,8 +84,8 @@ void LSTMLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state)
 		_delta[layer->_hc->get_id()][i] = ActivationFunctionsDeriv::dtanh(layer->_hc->get_output()->at(i)) * layer->_hi->get_output()->at(i) * _delta["_c" + _layer->id()][i];
 	}
 
-	Tensor dX = _delta[layer->_hf->get_id()] * layer->_Wf->get_weights()->T() + _delta[layer->_hi->get_id()] * layer->_Wi->get_weights()->T() + _delta[layer->_ho->get_id()] * layer->_Wo->get_weights()->T() + _delta[layer->_hc->get_id()] * layer->_Wc->get_weights()->T();
-	for(int i = 0; i < layer->_x->size(); i++)
+	Tensor dX = layer->_Wf->get_weights()->T() * _delta[layer->_hf->get_id()] + layer->_Wi->get_weights()->T() * _delta[layer->_hi->get_id()] + layer->_Wo->get_weights()->T() * _delta[layer->_ho->get_id()] + layer->_Wc->get_weights()->T() * _delta[layer->_hc->get_id()];
+	for(int i = 0; i < layer->input_dim(); i++)
 	{
 		_dh_next[i] = dX[i];
 	}
@@ -111,12 +111,21 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 
 	p_w_gradient[layer->_Wy->get_id()] = *layer->_h  * _delta[layer->_output_group->get_id()];
 	p_b_gradient[layer->_output_group->get_id()] = _delta[layer->_output_group->get_id()];
-	p_w_gradient[layer->_Wf->get_id()] = *layer->_x  * _delta[layer->_hf->get_id()];
+	p_w_gradient[layer->_Wf->get_id()] = *layer->_input_group->get_output() * _delta[layer->_hf->get_id()];
 	p_b_gradient[layer->_hf->get_id()] = _delta[layer->_hf->get_id()];
-	p_w_gradient[layer->_Wi->get_id()] = *layer->_x  * _delta[layer->_hi->get_id()];
+	p_w_gradient[layer->_Wi->get_id()] = *layer->_input_group->get_output() * _delta[layer->_hi->get_id()];
 	p_b_gradient[layer->_hi->get_id()] = _delta[layer->_hi->get_id()];
-	p_w_gradient[layer->_Wo->get_id()] = *layer->_x  * _delta[layer->_ho->get_id()];
+	p_w_gradient[layer->_Wo->get_id()] = *layer->_input_group->get_output() * _delta[layer->_ho->get_id()];
 	p_b_gradient[layer->_ho->get_id()] = _delta[layer->_ho->get_id()];
-	p_w_gradient[layer->_Wc->get_id()] = *layer->_x  * _delta[layer->_hc->get_id()];
+	p_w_gradient[layer->_Wc->get_id()] = *layer->_input_group->get_output() * _delta[layer->_hc->get_id()];
 	p_b_gradient[layer->_hc->get_id()] = _delta[layer->_hc->get_id()];
+}
+
+LSTMLayerState* LSTMLayerGradient::get_state()
+{
+	_state = IGradientComponent::get_state();
+	dynamic_cast<LSTMLayerState*>(_state)->dc_next.override(&_dc_next);
+	dynamic_cast<LSTMLayerState*>(_state)->dh_next.override(&_dh_next);
+
+	return dynamic_cast<LSTMLayerState*>(_state);
 }
