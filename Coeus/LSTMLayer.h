@@ -10,10 +10,10 @@ namespace Coeus
 		LSTMLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation);
 		~LSTMLayer();
 
+		void init(vector<BaseLayer*>& p_input_layers) override;
 		void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
 		void activate(Tensor* p_input = nullptr) override;
 		void override_params(BaseLayer* p_source) override;
-		void post_connection(BaseLayer* p_input) override;
 
 	private:		
 		NeuralGroup* _hf;
@@ -25,6 +25,7 @@ namespace Coeus
 		Tensor*		 _h_old;
 		Tensor*		 _c;
 		Tensor*		 _c_old;
+		Tensor		 _input_buffer;
 
 		Connection* _Wf;
 		Connection* _Wi;

@@ -123,7 +123,9 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 
 LSTMLayerState* LSTMLayerGradient::get_state()
 {
-	_state = IGradientComponent::get_state();
+	LSTMLayer* layer = dynamic_cast<LSTMLayer*>(_layer);
+
+	_state->delta.override(&_delta[layer->_output_group->get_id()]);
 	dynamic_cast<LSTMLayerState*>(_state)->dc_next.override(&_dc_next);
 	dynamic_cast<LSTMLayerState*>(_state)->dh_next.override(&_dh_next);
 

@@ -14,7 +14,6 @@ namespace Coeus {
 		void activate(Tensor* p_input = nullptr) override;
 		void activate_back(Tensor* p_input = nullptr);
 		void override_params(BaseLayer* p_source) override;
-		void post_connection(BaseLayer* p_input) override;
 
 	private:
 		NeuralGroup* _input_bp;

@@ -6,6 +6,7 @@
 #include "ModelMNS3.h"
 #include "FFN.h"
 #include "IrisTest.h"
+#include "RNN.h"
 
 
 using namespace std;
@@ -14,7 +15,7 @@ using namespace MNS;
 int main()
 {
 	
-	FFN model;
+	RNN model;
 
 	model.run();
 

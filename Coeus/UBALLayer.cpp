@@ -60,7 +60,3 @@ void UBALLayer::override_params(BaseLayer * p_source)
 {
 
 }
-
-void UBALLayer::post_connection(BaseLayer* p_input)
-{
-}

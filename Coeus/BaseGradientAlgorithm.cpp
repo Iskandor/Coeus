@@ -18,10 +18,20 @@ BaseGradientAlgorithm::~BaseGradientAlgorithm()
 }
 
 double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) {
+	_network->activate(p_input);	
+	return train(p_target);
+}
+
+double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, Tensor* p_target)
+{
 	_network->activate(p_input);
-	
+	return train(p_target);
+}
+
+double BaseGradientAlgorithm::train(Tensor* p_target)
+{
 	const double error = _cost_function->cost(_network->get_output(), p_target);
-	
+
 	_network_gradient->calc_gradient(p_target);
 
 	calc_update();

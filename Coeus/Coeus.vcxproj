@@ -174,6 +174,7 @@
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="Base_SOM_learning.cpp" />
     <ClCompile Include="Base_SOM_params.cpp" />
+    <ClCompile Include="BPTT.cpp" />
     <ClCompile Include="Coeus.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="CoreLayer.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="BaseLayer.h" />
     <ClInclude Include="Base_SOM_learning.h" />
     <ClInclude Include="Base_SOM_params.h" />
+    <ClInclude Include="BPTT.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="CoreLayer.h" />
     <ClInclude Include="CoreLayerGradient.h" />

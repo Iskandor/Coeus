@@ -17,10 +17,10 @@
 FFN::FFN()
 {
 	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new LSTMLayer("hidden", 4, NeuralGroup::ACTIVATION::SIGMOID));
+	_network.add_layer(new CoreLayer("hidden", 3, NeuralGroup::ACTIVATION::SIGMOID));
 	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
 
-	_network.add_connection("input", "hidden");
+	_network.add_connection("input", "hidden", Connection::INIT::UNIFORM, 0.1);
 	_network.add_connection("hidden", "output", Connection::INIT::UNIFORM, 0.1);
 }
 
@@ -50,14 +50,14 @@ void FFN::run() {
 	}
 
 	//BackProp model(&_network);
-	RMSProp model(&_network);
+	//RMSProp model(&_network);
 	//AdaMax model(&_network);
-	//ADAM model(&_network);
+	ADAM model(&_network);
 	//AMSGrad model(&_network);
 	//Nadam model(&_network);
 
 	//model.init(new QuadraticCost(), 0.1, 0.99, true);
-	model.init(new QuadraticCost(), 0.01);
+	model.init(new QuadraticCost(), 0.05);
 
 	for(int t = 0; t < 4000; t++) {
 		double error = 0;

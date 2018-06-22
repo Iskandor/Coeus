@@ -17,6 +17,10 @@ BaseLayer::~BaseLayer()
 {
 }
 
+void BaseLayer::init(vector<BaseLayer*>& p_input_layers)
+{
+}
+
 Connection* BaseLayer::add_connection(Connection* p_connection) {
 	_connections[p_connection->get_id()] = p_connection;
 

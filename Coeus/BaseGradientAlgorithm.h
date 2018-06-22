@@ -12,8 +12,10 @@ namespace Coeus {
 		virtual ~BaseGradientAlgorithm();
 
 		double train(Tensor* p_input, Tensor* p_target);
+		double train(vector<Tensor*>* p_input, Tensor* p_target);
 
 	protected:
+		double train(Tensor* p_target);
 		void init(ICostFunction* p_cost_function, const double p_alpha);
 		virtual void calc_update();
 		virtual void init_structures();

@@ -240,6 +240,9 @@
     <ClCompile Include="LSTMLayerState.cpp">
       <Filter>Source Files\Algorithm\Gradient\State</Filter>
     </ClCompile>
+    <ClCompile Include="BPTT.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="LSTMLayerState.h">
       <Filter>Header Files\Algorithm\Gradient\State</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTT.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

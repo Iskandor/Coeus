@@ -34,7 +34,6 @@ namespace Coeus
 
 		virtual SOM* clone() const;
 		void override_params(BaseLayer* p_source) override;
-		void post_connection(BaseLayer* p_input) override {};
 
 	protected:
 		void find_winner(Tensor* p_input, bool p_conscience);

@@ -16,7 +16,9 @@ public:
 	NeuralNetwork();
 	virtual ~NeuralNetwork();
 
+	void init();
 	virtual void activate(Tensor* p_input);
+	virtual void activate(vector<Tensor*>* p_input);
 
 	BaseLayer*	add_layer(BaseLayer* p_layer);
 	Connection* add_connection(const string& p_input_layer, const string& p_output_layer, Connection::INIT p_init = Connection::NONE, double p_limit = 0);
@@ -24,6 +26,7 @@ public:
 	Tensor*		get_output() { return _layers[_output_layer]->get_output(); }
 
 protected:
+	void activate();
 	void create_directed_graph();
 
 	map<string, BaseLayer*> _layers;
@@ -32,7 +35,7 @@ protected:
 	list<BaseLayer*> _forward_graph;
 	list<BaseLayer*> _backward_graph;
 
-	string _input_layer;
+	vector<string> _input_layer;
 	string _output_layer;
 };
 
