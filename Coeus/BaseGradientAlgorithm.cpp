@@ -8,6 +8,7 @@ BaseGradientAlgorithm::BaseGradientAlgorithm(NeuralNetwork* p_network)
 	_cost_function = nullptr;
 	_network_gradient = nullptr;
 	_alpha = 0;
+	_init_structures = false;
 }
 
 

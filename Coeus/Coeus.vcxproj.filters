@@ -114,9 +114,6 @@
     <ClCompile Include="RecurrentLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="LSOM.cpp">
-      <Filter>Source Files\Network\SOM</Filter>
-    </ClCompile>
     <ClCompile Include="Metrics.cpp">
       <Filter>Source Files\Algorithm</Filter>
     </ClCompile>
@@ -130,12 +127,6 @@
       <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
     <ClCompile Include="Base_SOM_params.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM_learning.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM_params.cpp">
       <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
     <ClCompile Include="MSOM_learning.cpp">
@@ -243,6 +234,15 @@
     <ClCompile Include="BPTT.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
+    <ClCompile Include="LSOM1.cpp">
+      <Filter>Source Files\Network\SOM</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM1_learning.cpp">
+      <Filter>Source Files\Algorithm\Unsupervised</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM1_params.cpp">
+      <Filter>Source Files\Algorithm\Unsupervised</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -287,9 +287,6 @@
     <ClInclude Include="RecurrentLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="LSOM.h">
-      <Filter>Header Files\Network\SOM</Filter>
-    </ClInclude>
     <ClInclude Include="Metrics.h">
       <Filter>Header Files\Algorithm</Filter>
     </ClInclude>
@@ -303,12 +300,6 @@
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
     <ClInclude Include="Base_SOM_params.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM_learning.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM_params.h">
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
     <ClInclude Include="MSOM_learning.h">
@@ -415,6 +406,15 @@
     </ClInclude>
     <ClInclude Include="BPTT.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM1.h">
+      <Filter>Header Files\Network\SOM</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM1_learning.h">
+      <Filter>Header Files\Algorithm\Unsupervised</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM1_params.h">
+      <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

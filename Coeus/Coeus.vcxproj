@@ -195,9 +195,9 @@
     <ClCompile Include="LISSOM_learning.cpp" />
     <ClCompile Include="LISSOM_params.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="LSOM.cpp" />
-    <ClCompile Include="LSOM_learning.cpp" />
-    <ClCompile Include="LSOM_params.cpp" />
+    <ClCompile Include="LSOM1.cpp" />
+    <ClCompile Include="LSOM1_learning.cpp" />
+    <ClCompile Include="LSOM1_params.cpp" />
     <ClCompile Include="LSTMLayer.cpp" />
     <ClCompile Include="LSTMLayerGradient.cpp" />
     <ClCompile Include="LSTMLayerState.cpp" />
@@ -254,9 +254,9 @@
     <ClInclude Include="LISSOM_learning.h" />
     <ClInclude Include="LISSOM_params.h" />
     <ClInclude Include="Logger.h" />
-    <ClInclude Include="LSOM.h" />
-    <ClInclude Include="LSOM_learning.h" />
-    <ClInclude Include="LSOM_params.h" />
+    <ClInclude Include="LSOM1.h" />
+    <ClInclude Include="LSOM1_learning.h" />
+    <ClInclude Include="LSOM1_params.h" />
     <ClInclude Include="LSTMLayer.h" />
     <ClInclude Include="LSTMLayerGradient.h" />
     <ClInclude Include="LSTMLayerState.h" />
