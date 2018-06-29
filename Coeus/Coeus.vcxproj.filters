@@ -243,6 +243,15 @@
     <ClCompile Include="LSOM1_params.cpp">
       <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
+    <ClCompile Include="LSOM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM_learning.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM_params.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -415,6 +424,15 @@
     </ClInclude>
     <ClInclude Include="LSOM1_params.h">
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM_learning.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM_params.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
