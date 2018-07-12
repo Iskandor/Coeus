@@ -180,6 +180,7 @@
     <ClCompile Include="CoreLayer.cpp" />
     <ClCompile Include="CoreLayerGradient.cpp" />
     <ClCompile Include="CrossEntropyCost.cpp" />
+    <ClCompile Include="Encoder.cpp" />
     <ClCompile Include="ExponentialCost.cpp" />
     <ClCompile Include="GenKLDivergence.cpp" />
     <ClCompile Include="HellingerDistance.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="CoreLayer.h" />
     <ClInclude Include="CoreLayerGradient.h" />
     <ClInclude Include="CrossEntropyCost.h" />
+    <ClInclude Include="Encoder.h" />
     <ClInclude Include="ExponentialCost.h" />
     <ClInclude Include="GenKLDivergence.h" />
     <ClInclude Include="HellingerDistance.h" />
