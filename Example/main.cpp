@@ -7,6 +7,8 @@
 #include "FFN.h"
 #include "IrisTest.h"
 #include "RNN.h"
+#include "MazeExample.h"
+#include "Encoder.h"
 
 
 using namespace std;
@@ -14,18 +16,23 @@ using namespace MNS;
 
 int main()
 {
-	
+	/*
+	MazeExample example;
+
+	example.example_q();
+	*/
+
+	/*
 	RNN model;
 
 	model.run();
+	*/
 
-	/*
 	IrisTest iris;
 
 	iris.init();
-	iris.run(5000);
+	iris.run(2000);
 	iris.test();
-	*/
 
 	/*
 	const string timestamp = to_string(time(nullptr));

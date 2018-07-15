@@ -8,9 +8,11 @@ LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const in
 {
 	_type = TYPE::LSOM;
 	_lateral = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
-	_lateral->init(Connection::GLOROT_UNIFORM);
+	_lateral->init(Connection::UNIFORM, 1);
 
 	_auxoutput = Tensor::Zero({ _dim_x * _dim_y });
+	Tensor bias = Tensor::apply(*_output_group->get_bias(), Tensor::ew_abs);
+	_output_group->set_bias(&bias);
 }
 
 
@@ -24,37 +26,60 @@ void LSOM::activate(Tensor * p_input)
 	_input_group->set_output(p_input);
 
 
-	calc_distance();
+	//calc_distance();
 
+	_output_group->integrate(p_input, _afferent->get_weights());	
+	_output_group->activate();
+	_auxoutput = *_output_group->get_output();
+
+	/*
 	switch (_output_group->get_activation_function()) {
 	case NeuralGroup::LINEAR:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::linear);
+		_dist = Tensor::apply(_dist, ActivationFunctions::linear);
 		break;
 	case NeuralGroup::EXPONENTIAL:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::exponential);
+		_dist = Tensor::apply(_dist, ActivationFunctions::exponential);
 		break;
 	case NeuralGroup::KEXPONENTIAL:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::kexponential);
+		_dist = Tensor::apply(_dist, ActivationFunctions::kexponential);
 		break;
 	case NeuralGroup::GAUSS:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::gauss);
+		_dist = Tensor::apply(_dist, ActivationFunctions::gauss);
 		break;
 	default:
 		break;
 	}
+	*/
+
+	//_auxoutput.override(&_dist);
 
 	Tensor* lateral_w = _lateral->get_weights();
 
-	for (int i = 0; i < _dim_x * _dim_y; i++) {
-		double w = 0;
-		for (int n = 0; n < _dim_x * _dim_y; n++) {
-				w += _auxoutput.at(n) * lateral_w->at(i, n);				
+	/*
+	for(int s = 0; s < 1; s++) {
+		for (int i = 0; i < _dim_x * _dim_y; i++) {
+			double w = 0;
+			for (int n = 0; n < _dim_x * _dim_y; n++) {
+				if (i != n) w += _dist.at(n) * lateral_w->at(i, n);
+			}
+			_auxoutput.inc(i, w);
 		}
-		_auxoutput.inc(i, w);
+		_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::sigmoid);
 	}
-	_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::relu);
+	*/
+	if (_auxoutput[0] != _auxoutput[0]) {
+		int i = 0;
+	}
 
-	_output_group->set_output(&_auxoutput);
+	_output_group->integrate(&_auxoutput, lateral_w);
+	_output_group->activate();
+	_auxoutput = *_output_group->get_output();
+
+	if (_auxoutput[0] != _auxoutput[0]) {
+		int i = 0;
+	}
+
+	//_output_group->set_output(&_auxoutput);
 }
 
 int LSOM::find_winner(Tensor * p_input)

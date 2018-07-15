@@ -23,6 +23,7 @@ public:
 	~IrisDataset();
 
 	void load_data(string p_filename);
+	void encode();
 	vector<IrisDatasetItem>* permute();
 
 	map<string, int>* get_target_map() { return &_target; }

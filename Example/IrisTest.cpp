@@ -8,6 +8,7 @@
 IrisTest::IrisTest() {
 	_lsom = nullptr;
 	_dataset.load_data("./data/iris.data");
+	_dataset.encode();
 }
 
 IrisTest::~IrisTest()
@@ -16,14 +17,18 @@ IrisTest::~IrisTest()
 }
 
 void IrisTest::init() {
-	_lsom = new LSOM("LSOM", 4, 8, 8, NeuralGroup::EXPONENTIAL);
+	_lsom = new LSOM("LSOM", 32, 8, 8, NeuralGroup::TANH);
+	//_lsom = new SOM("LSOM", 4, 8, 8, NeuralGroup::EXPONENTIAL);
 }
 
 void IrisTest::run(const int p_epochs) {
 	SOM_analyzer analyzer;
+	//SOM_params params(_lsom);
+	//params.init_training(0.8, p_epochs);
 	LSOM_params params(_lsom);
-	params.init_training(1e-1, 1e-4, p_epochs);
+	params.init_training(0.01, 0.01, p_epochs);
 	LSOM_learning learner(_lsom, &params, &analyzer);
+	//SOM_learning learner(_lsom, &params, &analyzer);
 
 	vector<IrisDatasetItem>* data = nullptr;
 
@@ -39,21 +44,32 @@ void IrisTest::run(const int p_epochs) {
 
 		const auto end = chrono::system_clock::now();
 		chrono::duration<double> elapsed_seconds = end - start;
-		if (t % 1000 == 0) {
+		if (t % 10 == 0) {
 			cout << "Epoch " << t << endl;
 			cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 			cout << " LSOM qError: " << analyzer.q_error() << " WD: " << analyzer.winner_diff(_lsom->get_lattice()->get_dim()) << endl;
+
+			for (int i = 0; i < _lsom->get_lattice()->get_dim(); i++) {
+				double sum = 0;
+				for (int j = 0; j < _lsom->get_lattice()->get_dim(); j++) {
+					sum += _lsom->get_lateral()->get_weights()->at(i, j);
+				}
+				cout << i << " " << sum << endl;
+			}
 		}
 
-		learner.update_friendship();
+		//learner.update_friendship();
+		learner.update();
 		analyzer.end_epoch();
 		params.param_decay();		
 	}
 
+	/*
 	for(int i = 0; i < learner._friendship.size(); i++) {
 		cout << i << " " << learner._friendship[i] << endl;
 	}
 	cout << endl;
+	*/
 	for (int i = 0; i < _lsom->get_lattice()->get_dim(); i++) {
 		double sum = 0;
 		for (int j = 0; j < _lsom->get_lattice()->get_dim(); j++) {
@@ -72,7 +88,7 @@ void IrisTest::test() {
 		//cout << data->at(i).target << endl;
 		_lsom->activate(data->at(i).data);
 		for (int n = 0; n < _lsom->get_lattice()->get_dim(); n++) {
-			activity[n * IrisDataset::CATEGORIES + (*_dataset.get_target_map())[data->at(i).target]] += _lsom->get_output()->at(n);
+			activity[n * IrisDataset::CATEGORIES + (*_dataset.get_target_map())[data->at(i).target]] += max(0.0, _lsom->get_output()->at(n));
 		}
 	}
 

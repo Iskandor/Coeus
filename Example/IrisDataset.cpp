@@ -3,6 +3,9 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include "Encoder.h"
+
+using namespace Coeus;
 
 IrisDataset::IrisDataset()
 {
@@ -52,6 +55,23 @@ void IrisDataset::load_data(const string p_filename) {
 	for(auto it = temp_target.begin(); it != temp_target.end(); ++it) {
 		_target[*it] = id;
 		id++;
+	}
+}
+
+void IrisDataset::encode() {
+	
+	Tensor result({ 8 }, Tensor::ZERO);
+	
+	for (int i = 0; i < _data.size(); i++) {
+		Tensor val({ 0 }, Tensor::ZERO);
+
+		for (int j = 0; j < SIZE; j++) {
+			Encoder::pop_code(result, _data[i].data->at(j));
+			val = Tensor::Concat(val, result);
+		}
+
+		delete _data[i].data;
+		_data[i].data = new Tensor(val);
 	}
 }
 

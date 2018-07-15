@@ -63,7 +63,7 @@ void Maze::performAction(double p_action) {
     //cout << _actions[p_action].Id() << endl;
     int newPos = moveInDir(_actions[(int)p_action].X(), _actions[(int)p_action].Y());
 
-    if (newPos < 0 || newPos > _mazeTable.size()) {
+    if (newPos < 0 || newPos >= _mazeTable.size()) {
         _bang = true;
     }
     else {

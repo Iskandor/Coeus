@@ -213,6 +213,7 @@
     <ClCompile Include="NetworkGradient.cpp" />
     <ClCompile Include="NeuralGroup.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
+    <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="QuadraticCost.cpp" />
     <ClCompile Include="RecurrentLayer.cpp" />
     <ClCompile Include="RecurrentLayerGradient.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="NetworkGradient.h" />
     <ClInclude Include="NeuralGroup.h" />
     <ClInclude Include="NeuralNetwork.h" />
+    <ClInclude Include="QLearning.h" />
     <ClInclude Include="QuadraticCost.h" />
     <ClInclude Include="RecurrentLayer.h" />
     <ClInclude Include="RecurrentLayerGradient.h" />

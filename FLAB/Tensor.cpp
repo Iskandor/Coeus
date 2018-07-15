@@ -316,12 +316,20 @@ double Tensor::at(const int p_y, const int p_x) const {
 	return _arr[p_y * _shape[1] + p_x];
 }
 
+double Tensor::at(const int p_z, const int p_y, const int p_x) const {
+	return _arr[p_z * _shape[2] * _shape[1] + p_y * _shape[1] + p_x];
+}
+
 void Tensor::set(const int p_x, const double p_val) const {
 	_arr[p_x] = p_val;
 }
 
 void Tensor::set(const int p_y, const int p_x, const double p_val) const {
 	_arr[p_y * _shape[1] + p_x] = p_val;
+}
+
+void Tensor::set(const int p_z, const int p_y, const int p_x, const double p_val) const {
+	_arr[p_z * _shape[2] * _shape[1] + p_y * _shape[1] + p_x] = p_val;
 }
 
 void Tensor::inc(const int p_x, const double p_val) const {
@@ -369,6 +377,15 @@ double Tensor::ew_sqrt(const double p_x) {
 
 double Tensor::ew_abs(const double p_x) {
 	return abs(p_x);
+}
+
+double Tensor::sgn(const double p_x) {
+	double res = 0;
+
+	if (p_x > 0) res = 1;
+	if (p_x < 0) res = -1;
+
+	return res;
 }
 
 void Tensor::free_arr() const {

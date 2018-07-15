@@ -64,8 +64,10 @@ public:
 
 	double at(int p_x) const;
 	double at(int p_y, int p_x) const;
+	double at(int p_z, int p_y, int p_x) const;
 	void set(int p_x, double p_val) const;
 	void set(int p_y, int p_x, double p_val) const;
+	void set(int p_z, int p_y, int p_x, double p_val) const;
 	void inc(int p_x, double p_val) const;
 	void inc(int p_x, int p_y, double p_val) const;
 	void dec(int p_x, double p_val) const;
@@ -80,6 +82,7 @@ public:
 	static double ew_pow2(double p_x);
 	static double ew_sqrt(double p_x);
 	static double ew_abs(double p_x);
+	static double sgn(double p_x);
 
 	static int control;
 

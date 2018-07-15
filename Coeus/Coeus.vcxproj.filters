@@ -67,6 +67,12 @@
     <Filter Include="Header Files\Algorithm\Gradient\State">
       <UniqueIdentifier>{be1c7aa5-ed52-4bca-943e-957cb0986b2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Algorithm\RL">
+      <UniqueIdentifier>{91801bd2-5bd4-42e3-acbe-a6feea738b41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\RL">
+      <UniqueIdentifier>{9bcec353-e83e-4b4c-ba7f-ed78cdebe816}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -243,17 +249,20 @@
     <ClCompile Include="LSOM1_params.cpp">
       <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
-    <ClCompile Include="LSOM.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM_learning.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM_params.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Encoder.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM.cpp">
+      <Filter>Source Files\Network\SOM</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM_learning.cpp">
+      <Filter>Source Files\Algorithm\Unsupervised</Filter>
+    </ClCompile>
+    <ClCompile Include="LSOM_params.cpp">
+      <Filter>Source Files\Algorithm\Unsupervised</Filter>
+    </ClCompile>
+    <ClCompile Include="QLearning.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -428,17 +437,20 @@
     <ClInclude Include="LSOM1_params.h">
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
-    <ClInclude Include="LSOM.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM_learning.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM_params.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Encoder.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM.h">
+      <Filter>Header Files\Network\SOM</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM_learning.h">
+      <Filter>Header Files\Algorithm\Unsupervised</Filter>
+    </ClInclude>
+    <ClInclude Include="LSOM_params.h">
+      <Filter>Header Files\Algorithm\Unsupervised</Filter>
+    </ClInclude>
+    <ClInclude Include="QLearning.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

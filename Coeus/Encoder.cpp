@@ -31,10 +31,10 @@ void Encoder::pop_code(Tensor& p_result, const double p_value, const double p_lo
 		assert(("Encoder: pop code value out of range", 0));
 	}
 
-	double delta = (p_upper_limit - p_lower_limit) / (p_result.size() - 1);
+	const double c = (p_result.size() - 1) / (p_upper_limit - p_lower_limit);
 
 	for(int i = 0; i < p_result.size(); i++)
 	{
-		p_result[i] = Metrics::gaussian_distance(p_value, 0.4, p_lower_limit + i * delta);
+		p_result[i] = Metrics::gaussian_distance((p_value - p_lower_limit) * c, 0.4, i);
 	}
 }

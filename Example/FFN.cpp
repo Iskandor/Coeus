@@ -17,7 +17,7 @@
 FFN::FFN()
 {
 	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new CoreLayer("hidden", 3, NeuralGroup::ACTIVATION::SIGMOID));
+	_network.add_layer(new CoreLayer("hidden", 4, NeuralGroup::ACTIVATION::RELU));
 	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::INIT::UNIFORM, 0.1);

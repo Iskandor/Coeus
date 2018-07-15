@@ -12,18 +12,26 @@ namespace Coeus {
 		~LSOM_learning();
 
 		void train(Tensor *p_input) override;
-		void update_friendship();
+		void update();
 
 		LSOM* lsom() const { return _lsom; }
-
-
-		Tensor	_friendship;
-
+		
 	private:
+		int _past;
+
 		set<int> _winners;
+		Tensor	_delta_b;
 		Tensor	_delta_w;
 		Tensor	_delta_lw;
 
 		LSOM*	_lsom;
+
+		int		_s;
+		int		_t;
+		vector<Tensor> _hist;
+
+		Tensor	_avg;
+		Tensor	_mean;
+		Tensor	_deviation;
 	};
 }

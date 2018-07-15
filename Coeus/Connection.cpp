@@ -10,6 +10,8 @@ Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_
 	_in_id = p_in_id;
 	_out_id = p_out_id;
 	_trainable = true;
+
+	_norm = Tensor::Zero({ _out_dim });
 }
 
 Connection::Connection(nlohmann::json p_data) {
@@ -81,4 +83,39 @@ void Connection::set_weights(Tensor *p_weights) const {
 
 void Connection::update_weights(Tensor& p_delta_w) {
 	_weights += p_delta_w;
+}
+
+void Connection::normalize_weights(const NORM p_norm) const {
+
+	switch (p_norm) {
+	case L1_NORM:
+		
+		for (int i = 0; i < _out_dim; i++) {
+			_norm[i] = 0;
+			for (int j = 0; j < _in_dim; j++) {
+				_norm[i] += abs(_weights.at(i, j));
+			}
+		}
+
+		break;
+	case L2_NORM:
+		for (int i = 0; i < _out_dim; i++) {
+			_norm[i] = 0;
+			for (int j = 0; j < _in_dim; j++) {
+				_norm[i] += pow(_weights.at(i, j), 2);
+			}
+			_norm[i] = sqrt(_norm[i]);
+		}
+
+		break;
+
+	}
+
+	for (int i = 0; i < _out_dim; i++) {
+		for (int j = 0; j < _in_dim; j++) {
+			if (_norm[i] > 0) {
+				_weights.set(i, j, _weights.at(i, j) / _norm[i]);
+			}			
+		}
+	}
 }

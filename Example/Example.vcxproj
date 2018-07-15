@@ -169,6 +169,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="MazeAction.cpp" />
+    <ClCompile Include="MazeExample.cpp" />
     <ClCompile Include="MazeTask.cpp" />
     <ClCompile Include="ModelMNS.cpp" />
     <ClCompile Include="ModelMNS2.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="IrisTest.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="MazeAction.h" />
+    <ClInclude Include="MazeExample.h" />
     <ClInclude Include="MazeTask.h" />
     <ClInclude Include="ModelMNS.h" />
     <ClInclude Include="ModelMNS2.h" />

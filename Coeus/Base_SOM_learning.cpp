@@ -36,7 +36,7 @@ double Base_SOM_learning::calc_neighborhood(const double p_d, const NEIGHBORHOOD
 
 	switch (p_type) {
 		case EUCLIDEAN:
-			result = 1.0 / p_d;
+			result = p_d == 0 ? 0 : 1.0 / p_d;
 		break;
 		case GAUSSIAN:
 			result = Metrics::gaussian_distance(p_d, _params->sigma());

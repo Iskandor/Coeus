@@ -13,92 +13,89 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\MNS">
+      <UniqueIdentifier>{b43acd1c-ee9f-4283-9f6f-f9822fa44fbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SOM">
+      <UniqueIdentifier>{05a3ee5c-49e0-46d0-9879-e74b187f85a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RL">
+      <UniqueIdentifier>{ab3b9946-283b-4552-9e93-8e4e931a947d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RL">
+      <UniqueIdentifier>{8ae4acd9-c5ee-4253-a5e6-8862b01fe557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SOM">
+      <UniqueIdentifier>{c27a0246-23ce-4d6b-b31e-50b386c77da8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MNS">
+      <UniqueIdentifier>{fbd5a953-f804-48c7-9707-ad146c5bf8e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Dataset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelMNS.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelMNS2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sequence.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelMNS3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FFN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IrisDataset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IrisTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UBALTest.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMNS.cpp">
+      <Filter>Source Files\MNS</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMNS2.cpp">
+      <Filter>Source Files\MNS</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMNS3.cpp">
+      <Filter>Source Files\MNS</Filter>
+    </ClCompile>
+    <ClCompile Include="IrisDataset.cpp">
+      <Filter>Source Files\SOM</Filter>
+    </ClCompile>
+    <ClCompile Include="IrisTest.cpp">
+      <Filter>Source Files\SOM</Filter>
+    </ClCompile>
+    <ClCompile Include="Dataset.cpp">
+      <Filter>Source Files\MNS</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence.cpp">
+      <Filter>Source Files\MNS</Filter>
     </ClCompile>
     <ClCompile Include="RNN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CartPole.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RL</Filter>
     </ClCompile>
     <ClCompile Include="CartPoleTask.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>Source Files\MNS</Filter>
     </ClCompile>
     <ClCompile Include="Environment.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RL</Filter>
     </ClCompile>
     <ClCompile Include="Maze.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RL</Filter>
     </ClCompile>
     <ClCompile Include="MazeAction.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RL</Filter>
     </ClCompile>
     <ClCompile Include="MazeTask.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RL</Filter>
     </ClCompile>
     <ClCompile Include="rk4.cpp">
+      <Filter>Source Files\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Dataset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelMNS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelMNS2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sequence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelMNS3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FFN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IrisDataset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IrisTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UBALTest.h">
@@ -108,24 +105,51 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CartPole.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="CartPoleTask.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="Environment.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="Maze.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="MazeAction.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="MazeTask.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="rk4.hpp">
+      <Filter>Header Files\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="IrisTest.h">
+      <Filter>Header Files\SOM</Filter>
+    </ClInclude>
+    <ClInclude Include="IrisDataset.h">
+      <Filter>Header Files\SOM</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Header Files\MNS</Filter>
+    </ClInclude>
+    <ClInclude Include="Dataset.h">
+      <Filter>Header Files\MNS</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMNS.h">
+      <Filter>Header Files\MNS</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMNS2.h">
+      <Filter>Header Files\MNS</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMNS3.h">
+      <Filter>Header Files\MNS</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence.h">
+      <Filter>Header Files\MNS</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeExample.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
