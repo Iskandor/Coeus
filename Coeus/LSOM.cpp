@@ -30,7 +30,7 @@ void LSOM::activate(Tensor * p_input)
 
 	_output_group->integrate(p_input, _afferent->get_weights());	
 	_output_group->activate();
-	_auxoutput = *_output_group->get_output();
+	_dist = *_output_group->get_output();
 
 	/*
 	switch (_output_group->get_activation_function()) {
@@ -51,35 +51,40 @@ void LSOM::activate(Tensor * p_input)
 	}
 	*/
 
-	//_auxoutput.override(&_dist);
+	_auxoutput.override(&_dist);
 
 	Tensor* lateral_w = _lateral->get_weights();
 
-	/*
+	for (int i = 0; i < _dim_x * _dim_y; i++) {
+		lateral_w->set(i, i, 0);
+	}
+
 	for(int s = 0; s < 1; s++) {
 		for (int i = 0; i < _dim_x * _dim_y; i++) {
 			double w = 0;
 			for (int n = 0; n < _dim_x * _dim_y; n++) {
-				if (i != n) w += _dist.at(n) * lateral_w->at(i, n);
+				w += _dist.at(n) * lateral_w->at(i, n);
 			}
 			_auxoutput.inc(i, w);
 		}
-		_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::sigmoid);
+		_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::tanh);
 	}
-	*/
+
 	if (_auxoutput[0] != _auxoutput[0]) {
 		int i = 0;
 	}
 
+	/*
 	_output_group->integrate(&_auxoutput, lateral_w);
 	_output_group->activate();
 	_auxoutput = *_output_group->get_output();
+	*/
 
 	if (_auxoutput[0] != _auxoutput[0]) {
 		int i = 0;
 	}
 
-	//_output_group->set_output(&_auxoutput);
+	_output_group->set_output(&_auxoutput);
 }
 
 int LSOM::find_winner(Tensor * p_input)
