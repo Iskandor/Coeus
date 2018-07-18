@@ -19,7 +19,7 @@ int main()
 
 	MazeExample example;
 
-	example.example_q();
+	example.example_sarsa();
 
 	/*
 	RNN model;

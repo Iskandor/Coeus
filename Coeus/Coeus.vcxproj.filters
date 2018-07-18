@@ -264,6 +264,12 @@
     <ClCompile Include="QLearning.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
+    <ClCompile Include="TD.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="SARSA.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -450,6 +456,12 @@
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
     <ClInclude Include="QLearning.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="TD.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="SARSA.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>

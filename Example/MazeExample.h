@@ -11,6 +11,7 @@ public:
 	~MazeExample();
 
 	void example_q();
+	void example_sarsa();
 
 private:
 	static Tensor encode_state(vector<double> *p_sensors);

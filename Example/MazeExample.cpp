@@ -8,6 +8,7 @@
 #include "InputLayer.h"
 #include "CoreLayer.h"
 #include "RMSProp.h"
+#include "SARSA.h"
 
 using namespace Coeus;
 
@@ -70,6 +71,80 @@ void MazeExample::example_q() {
 			state1 = encode_state(&sensors);
 			reward = task.getReward();
 			agent.train(&state0, action, &state1, reward);
+		}
+
+		if (reward > 0) {
+			wins++;
+		}
+		else {
+			loses++;
+		}
+
+		//cout << maze->toString() << endl;
+		cout << wins << " / " << loses << endl;
+		//FILE_LOG(logDEBUG1) << wins << " " << loses;
+
+
+		//exploration->update((double)e / epochs);
+
+		if (epsilon > 0.1) {
+			epsilon -= (1.0 / epochs);
+		}
+	}
+}
+
+void MazeExample::example_sarsa() {
+	MazeTask task;
+	Maze* maze = task.getEnvironment();
+
+	NeuralNetwork network;
+
+	network.add_layer(new InputLayer("input", 64));
+	network.add_layer(new CoreLayer("hidden0", 32, NeuralGroup::RELU));
+	network.add_layer(new CoreLayer("output", 4, NeuralGroup::RELU));
+	// feed-forward connections
+	network.add_connection("input", "hidden0");
+	network.add_connection("hidden0", "output");
+	network.init();
+
+	RMSProp optimizer(&network);
+	optimizer.init(new QuadraticCost(), 0.0001);
+	SARSA agent(&network, &optimizer, 0.9);
+
+	vector<double> sensors;
+	Tensor state0, state1;
+	int action0, action1;
+	double reward = 0;
+	double epsilon = 1;
+	int epochs = 2000;
+
+	int wins = 0, loses = 0;
+
+	//FILE* pFile = fopen("application.log", "w");
+	//Output2FILE::Stream() = pFile;
+	//FILELog::ReportingLevel() = FILELog::FromString("DEBUG1");
+
+	for (int e = 0; e < epochs; e++) {
+		cout << "Epoch " << e << endl;
+
+		task.getEnvironment()->reset();
+
+		while (!task.isFinished()) {
+			//cout << maze->toString() << endl;
+
+			sensors = maze->getSensors();
+			state0 = encode_state(&sensors);
+			network.activate(&state0);
+			//action = exploration->chooseAction(network.getOutput());
+			action0 = choose_action(network.get_output(), epsilon);
+			maze->performAction(action0);
+
+			sensors = maze->getSensors();
+			state1 = encode_state(&sensors);
+			reward = task.getReward();
+			network.activate(&state1);
+			action1 = choose_action(network.get_output(), epsilon);
+			agent.train(&state0, action0, &state1, action1, reward);
 		}
 
 		if (reward > 0) {

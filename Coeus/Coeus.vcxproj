@@ -218,10 +218,12 @@
     <ClCompile Include="RecurrentLayer.cpp" />
     <ClCompile Include="RecurrentLayerGradient.cpp" />
     <ClCompile Include="RMSProp.cpp" />
+    <ClCompile Include="SARSA.cpp" />
     <ClCompile Include="SOM.cpp" />
     <ClCompile Include="SOM_analyzer.cpp" />
     <ClCompile Include="SOM_learning.cpp" />
     <ClCompile Include="SOM_params.cpp" />
+    <ClCompile Include="TD.cpp" />
     <ClCompile Include="UBAL.cpp" />
     <ClCompile Include="UBALLayer.cpp" />
   </ItemGroup>
@@ -282,10 +284,12 @@
     <ClInclude Include="RecurrentLayer.h" />
     <ClInclude Include="RecurrentLayerGradient.h" />
     <ClInclude Include="RMSProp.h" />
+    <ClInclude Include="SARSA.h" />
     <ClInclude Include="SOM.h" />
     <ClInclude Include="SOM_analyzer.h" />
     <ClInclude Include="SOM_learning.h" />
     <ClInclude Include="SOM_params.h" />
+    <ClInclude Include="TD.h" />
     <ClInclude Include="UBAL.h" />
     <ClInclude Include="UBALLayer.h" />
   </ItemGroup>
