@@ -27,15 +27,15 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 64));
-	network.add_layer(new CoreLayer("hidden0", 256, NeuralGroup::RELU));
-	network.add_layer(new CoreLayer("output", 4, NeuralGroup::SIGMOID));
-
+	network.add_layer(new CoreLayer("hidden0", 32, NeuralGroup::RELU));
+	network.add_layer(new CoreLayer("output", 4, NeuralGroup::RELU));
 	// feed-forward connections
 	network.add_connection("input", "hidden0");
 	network.add_connection("hidden0", "output");
+	network.init();
 
 	RMSProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.01);
+	optimizer.init(new QuadraticCost(), 0.001);
 	QLearning agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;

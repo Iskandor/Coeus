@@ -16,23 +16,23 @@ using namespace MNS;
 
 int main()
 {
-	/*
+
 	MazeExample example;
 
 	example.example_q();
-	*/
 
 	/*
 	RNN model;
 
 	model.run();
 	*/
-
+	/*
 	IrisTest iris;
 
 	iris.init();
 	iris.run(2000);
 	iris.test();
+	*/
 
 	/*
 	const string timestamp = to_string(time(nullptr));
