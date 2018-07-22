@@ -270,6 +270,9 @@
     <ClCompile Include="SARSA.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -463,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="SARSA.h">
       <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -73,3 +73,73 @@ void NetworkGradient::update(map<string, Tensor> &p_update) const {
 		}
 	}
 }
+
+void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
+	const double epsilon = 1e-4;
+
+	for (auto it = _network->_connections.begin(); it != _network->_connections.end(); ++it) {
+		if (it->second->is_trainable())
+		{
+			cout << it->second->get_id() << endl;
+			for(int i = 0; i < it->second->get_weights()->size(); i++) {
+				const double w = it->second->get_weights()->at(i);
+				it->second->get_weights()->set(i, w + epsilon);
+				const double Je_plus = check_estimate(p_input, p_target);
+				it->second->get_weights()->set(i, w - epsilon);
+				const double Je_minus = check_estimate(p_input, p_target);
+
+				it->second->get_weights()->set(i, w);
+
+				const double de = (Je_plus - Je_minus) / (2 * epsilon);
+
+				cout << i << " " << _w_gradient[it->second->get_id()].at(i) - de << endl;
+			}
+			
+		}
+	}
+
+	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
+		if ((*it)->gradient_component() != nullptr) {
+			cout << (*it)->id() << endl;
+
+			for (auto c = (*it)->get_connections()->begin(); c != (*it)->get_connections()->end(); ++c) {
+				cout << c->second->get_id() << endl;
+				for (int i = 0; i < c->second->get_weights()->size(); i++) {
+					const double w = c->second->get_weights()->at(i);
+					c->second->get_weights()->set(i, w + epsilon);
+					const double Je_plus = check_estimate(p_input, p_target);
+					c->second->get_weights()->set(i, w - epsilon);
+					const double Je_minus = check_estimate(p_input, p_target);
+
+					c->second->get_weights()->set(i, w);
+
+					const double de = (Je_plus - Je_minus) / (2 * epsilon);
+
+					cout << i << " " << _w_gradient[c->second->get_id()].at(i) - de << endl;
+				}
+			}
+
+			for (auto g = (*it)->get_groups()->begin(); g != (*it)->get_groups()->end(); ++g) {				
+				cout << g->second->get_id() << endl;
+				for (int i = 0; i < g->second->get_bias()->size(); i++) {
+					const double b = g->second->get_bias()->at(i);
+					g->second->get_bias()->set(i, b + epsilon);
+					const double Je_plus = check_estimate(p_input, p_target);
+					g->second->get_bias()->set(i, b - epsilon);
+					const double Je_minus = check_estimate(p_input, p_target);
+
+					g->second->get_bias()->set(i, b);
+
+					const double de = (Je_plus - Je_minus) / (2 * epsilon);
+
+					cout << i << " " << _b_gradient[g->second->get_id()].at(i) - de << endl;
+				}
+			}
+		}
+	}
+}
+
+double NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target) {
+	_network->activate(p_input);
+	return _cost_function->cost(_network->get_output(), p_target);
+}

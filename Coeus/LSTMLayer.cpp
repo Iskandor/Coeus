@@ -6,12 +6,12 @@ using namespace Coeus;
 
 LSTMLayer::LSTMLayer(const string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
 {
-	_output_group = new NeuralGroup(p_dim, p_activation, true);
+	_output_group = add_group(new NeuralGroup(p_dim, p_activation, true));
 
-	_hf = new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true);
-	_hi = new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true);
-	_ho = new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true);
-	_hc = new NeuralGroup(p_dim, NeuralGroup::TANH, true);
+	_hf = add_group(new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true));
+	_hi = add_group(new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true));
+	_ho = add_group(new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true));
+	_hc = add_group(new NeuralGroup(p_dim, NeuralGroup::TANH, true));
 
 	_c = new Tensor({ p_dim }, Tensor::INIT::ZERO);
 	_h = new Tensor({ p_dim }, Tensor::INIT::ZERO);

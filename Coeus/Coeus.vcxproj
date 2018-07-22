@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="ActivationFunctions.cpp" />
     <ClCompile Include="ActivationFunctionsDeriv.cpp" />
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Adadelta.cpp" />
     <ClCompile Include="Adagrad.cpp" />
     <ClCompile Include="ADAM.cpp" />
@@ -230,6 +231,7 @@
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
     <ClInclude Include="ActivationFunctionsDeriv.h" />
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Adadelta.h" />
     <ClInclude Include="Adagrad.h" />
     <ClInclude Include="ADAM.h" />

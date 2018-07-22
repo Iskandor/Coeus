@@ -45,8 +45,12 @@ public:
 	NeuralGroup* get_output_group() const { return _output_group; }
 	NeuralGroup* get_input_group() const { return _input_group; }
 
+	map<string, Connection*>* get_connections() { return &_connections; }
+	map<string, NeuralGroup*>* get_groups() { return &_groups; }
+
 protected:
-	Connection* add_connection(Connection* p_connection);
+	Connection*		add_connection(Connection* p_connection);
+	NeuralGroup*	add_group(NeuralGroup* p_group);
 
 	string		_id;
 	TYPE		_type;
@@ -56,6 +60,7 @@ protected:
 	IGradientComponent* _gradient_component;
 
 	map<string, Connection*> _connections;
+	map<string, NeuralGroup*> _groups;
 
 private:
 	bool	_valid;

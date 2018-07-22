@@ -19,14 +19,22 @@ BaseGradientAlgorithm::~BaseGradientAlgorithm()
 }
 
 double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) {
-	_network->activate(p_input);	
-	return train(p_target);
+	_network->activate(p_input);
+	const double error = train(p_target);
+
+	//_network_gradient->check_gradient(p_input, p_target);
+
+	return error;
 }
 
 double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, Tensor* p_target)
 {
 	_network->activate(p_input);
-	return train(p_target);
+	const double error = train(p_target);
+
+	//_network_gradient->check_gradient(p_input, p_target);
+
+	return error;
 }
 
 double BaseGradientAlgorithm::train(Tensor* p_target)

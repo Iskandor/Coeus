@@ -39,6 +39,10 @@ public:
         return _kill;
     }
 
+	int moves() {
+		return _a;
+    }
+
 
 private:
     vector<int> freePos();
@@ -54,6 +58,8 @@ private:
     int _goal;
     bool _bang;
     bool _kill;
+
+	int _a;
 
 };
 

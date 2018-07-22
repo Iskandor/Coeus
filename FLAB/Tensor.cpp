@@ -246,9 +246,10 @@ Tensor Tensor::T() const {
 	if (_rank == 2) {
 		shape[0] = _shape[1];
 		shape[1] = _shape[0];
+
 		for (int i = 0; i < _shape[0]; i++) {
 			for (int j = 0; j < _shape[1]; j++) {
-				arr[i * _shape[0] + j] = _arr[j * _shape[0] + i];
+				arr[j * _shape[0] + i] = _arr[i * _shape[1] + j];
 			}
 		}
 	}

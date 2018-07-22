@@ -40,7 +40,7 @@ bool MazeTask::isFinished() {
 }
 
 double MazeTask::getReward() {
-    double reward = defautPenalty;
+    double reward = MazeTask::defautPenalty;
 
     if (isFinished()) reward = finalReward;
     if (maze->bang()) reward = bangPenalty;

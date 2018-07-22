@@ -28,9 +28,9 @@ void BackProp::calc_update() {
 			prev_update = Tensor(_update[it->first]);
 		}
 
-		if (_momentum > 0) {
-			Tensor* update = &_update[it->first];
+		Tensor* update = &_update[it->first];
 
+		if (_momentum > 0) {
 			for (int i = 0; i < it->second.size(); i++) {
 				(*update)[i] = _momentum * (*update)[i] - _alpha * it->second[i];
 			}
@@ -41,6 +41,12 @@ void BackProp::calc_update() {
 				}
 			}
 		}
+		else {
+			for (int i = 0; i < it->second.size(); i++) {
+				(*update)[i] = -_alpha * it->second[i];
+			}
+		}
+
 	}
 }
 

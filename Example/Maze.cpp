@@ -38,9 +38,10 @@ Maze::~Maze() {
 }
 
 void Maze::reset() {
+	_a = 0;
     _bang = false;
     _kill = false;
-    _actor = RandomGenerator::getInstance().choice(&_initPos)[0];
+	_actor = 0; // RandomGenerator::getInstance().choice(&_initPos)[0];
 }
 
 vector<int> Maze::freePos() {
@@ -62,6 +63,7 @@ int Maze::moveInDir(int p_x, int p_y) {
 void Maze::performAction(double p_action) {
     //cout << _actions[p_action].Id() << endl;
     int newPos = moveInDir(_actions[(int)p_action].X(), _actions[(int)p_action].Y());
+	_a++;
 
     if (newPos < 0 || newPos >= _mazeTable.size()) {
         _bang = true;

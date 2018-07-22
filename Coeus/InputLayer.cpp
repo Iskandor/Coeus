@@ -4,7 +4,7 @@ using namespace Coeus;
 
 InputLayer::InputLayer(const string p_id, const int p_input_dim) : BaseLayer(p_id)
 {
-	_input_group = new NeuralGroup(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false);
+	_input_group = add_group(new NeuralGroup(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false));
 	_output_group = _input_group;
 	_type = INPUT;
 }

@@ -39,7 +39,7 @@ public:
     void	set_output(Tensor* p_output) const;
     Tensor* get_output() { return &_output; };
 	void update_bias(Tensor& p_delta_b);
-	void set_bias(Tensor* p_bias) { _bias.override(p_bias); };
+	void set_bias(Tensor* p_bias) const { _bias.override(p_bias); };
 	Tensor* get_bias() { return &_bias; };
 
     ACTIVATION get_activation_function() const { return _activationFunction; };
