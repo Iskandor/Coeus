@@ -139,7 +139,7 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 	}
 }
 
-double NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target) {
+double NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target) const {
 	_network->activate(p_input);
 	return _cost_function->cost(_network->get_output(), p_target);
 }

@@ -25,6 +25,12 @@ void IGradientComponent::update(map<string, Tensor>& p_update) {
 	for(auto it = _layer->_connections.begin(); it != _layer->_connections.end(); ++it) {
 		it->second->update_weights(p_update[it->first]);
 	}
+
+	for (auto it = _layer->_groups.begin(); it != _layer->_groups.end(); ++it) {
+		if (it->second->is_bias()) {
+			it->second->update_bias(p_update[it->first]);
+		}		
+	}
 }
 
 LayerState* IGradientComponent::get_state()

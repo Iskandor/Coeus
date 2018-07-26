@@ -23,6 +23,7 @@ public:
 	Tensor(const initializer_list<int> p_shape, initializer_list <double> p_inputs);
 	Tensor(const Tensor &p_copy);
 	~Tensor();
+	Tensor operator-() const;
 
 	static Tensor Zero(const initializer_list<int> p_shape);
 	static Tensor Ones(const initializer_list<int> p_shape);

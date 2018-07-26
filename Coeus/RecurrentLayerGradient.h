@@ -15,7 +15,6 @@ namespace Coeus
 		void calc_delta(Tensor* p_weights, LayerState* p_state) override;
 		void calc_gradient(map<string, Tensor> &p_w_gradient, map<string, Tensor> &p_b_gradient) override;
 		void set_delta(Tensor* p_delta) override;
-		void update(map<string, Tensor>& p_update) override;
 	};
 }
 

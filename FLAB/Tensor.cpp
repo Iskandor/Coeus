@@ -63,6 +63,17 @@ Tensor::~Tensor() {
 	_rank = -1;
 }
 
+Tensor Tensor::operator-() const {
+	double* arr = alloc_arr(_size);
+	int* shape = copy_shape(_rank, _shape);
+
+	for (int i = 0; i < _size; i++) {
+		arr[i] = -_arr[i];
+	}
+
+	return Tensor(_rank, shape, arr);
+}
+
 Tensor Tensor::Zero(const initializer_list<int> p_shape) {
 	return Tensor(p_shape, ZERO);
 }

@@ -46,7 +46,6 @@ void BackProp::calc_update() {
 				(*update)[i] = -_alpha * it->second[i];
 			}
 		}
-
 	}
 }
 

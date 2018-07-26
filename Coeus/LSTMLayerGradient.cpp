@@ -93,18 +93,6 @@ void LSTMLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state)
 	_dc_next = Tensor::apply(*layer->_hf->get_output(), _delta["_c" + _layer->id()], Tensor::ew_dot);
 }
 
-void LSTMLayerGradient::update(map<string, Tensor>& p_update)
-{
-	IGradientComponent::update(p_update);
-
-	LSTMLayer* layer = dynamic_cast<LSTMLayer*>(_layer);
-	layer->_output_group->update_bias(p_update[layer->_output_group->get_id()]);
-	layer->_hf->update_bias(p_update[layer->_hf->get_id()]);
-	layer->_hi->update_bias(p_update[layer->_hi->get_id()]);
-	layer->_ho->update_bias(p_update[layer->_ho->get_id()]);
-	layer->_hc->update_bias(p_update[layer->_hc->get_id()]);
-}
-
 void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<string, Tensor>& p_b_gradient)
 {
 	LSTMLayer* layer = dynamic_cast<LSTMLayer*>(_layer);

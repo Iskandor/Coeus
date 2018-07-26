@@ -50,17 +50,17 @@ void FFN::run() {
 		target[i] = Tensor({ 1 }, t);
 	}
 
-	//BackProp model(&_network);
-	RMSProp model(&_network);
+	BackProp model(&_network);
+	//RMSProp model(&_network);
 	//AdaMax model(&_network);
 	//ADAM model(&_network);
 	//AMSGrad model(&_network);
 	//Nadam model(&_network);
 
-	//model.init(new QuadraticCost(), 0.1, 0.9, true);
-	model.init(new QuadraticCost(), 0.01);
+	model.init(new QuadraticCost(), 0.05, 0.9, true);
+	//model.init(new QuadraticCost(), 0.1);
 
-	for(int t = 0; t < 1000; t++) {
+	for(int t = 0; t < 2000; t++) {
 		double error = 0;
 		for (int i = 0; i < 4; i++) {
 			error += model.train(&input[i], &target[i]);

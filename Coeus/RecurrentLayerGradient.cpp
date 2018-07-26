@@ -27,7 +27,3 @@ void RecurrentLayerGradient::calc_gradient(map<string, Tensor> &p_w_gradient, ma
 void RecurrentLayerGradient::set_delta(Tensor* p_delta)
 {
 }
-
-void RecurrentLayerGradient::update(map<string, Tensor>& p_update)
-{
-}

@@ -21,7 +21,7 @@ public:
 
 private:
 	
-	double check_estimate(Tensor* p_input, Tensor* p_target);
+	double check_estimate(Tensor* p_input, Tensor* p_target) const;
 
 	NeuralNetwork*	_network;
 	ICostFunction*	_cost_function;

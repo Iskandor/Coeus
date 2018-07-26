@@ -32,10 +32,3 @@ void CoreLayerGradient::calc_gradient(map<string, Tensor> &p_w_gradient, map<str
 	NeuralGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
 	p_b_gradient[g->get_id()] = _delta[g->get_id()];
 }
-
-void CoreLayerGradient::update(map<string, Tensor>& p_update) {
-	IGradientComponent::update(p_update);
-
-	NeuralGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
-	g->update_bias(p_update[g->get_id()]);
-}
