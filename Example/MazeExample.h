@@ -11,6 +11,7 @@ public:
 	~MazeExample();
 
 	void example_q();
+	void example_double_q();
 	void example_sarsa();
 	void example_actor_critic();
 

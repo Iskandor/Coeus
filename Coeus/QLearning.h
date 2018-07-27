@@ -13,15 +13,13 @@ public:
 	virtual double train(Tensor* p_state0, int p_action0, Tensor* p_state1, double p_reward);
 
 protected:
-	virtual double calc_max_qa(Tensor* p_state);	
+	virtual int calc_max_qa(Tensor* p_state);	
 
 	NeuralNetwork* _network;
 	BaseGradientAlgorithm* _gradient_algorithm;
 	double _gamma;
 
 	Tensor _target;
-
-
 };
 
 }

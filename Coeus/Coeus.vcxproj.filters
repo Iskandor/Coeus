@@ -270,8 +270,11 @@
     <ClCompile Include="SARSA.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
+    <ClCompile Include="DoubleQLearning.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
     <ClCompile Include="Actor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -467,8 +470,11 @@
     <ClInclude Include="SARSA.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
+    <ClInclude Include="DoubleQLearning.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
     <ClInclude Include="Actor.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

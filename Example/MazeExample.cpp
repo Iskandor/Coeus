@@ -12,6 +12,7 @@
 #include "TD.h"
 #include "Actor.h"
 #include "BackProph.h"
+#include "DoubleQLearning.h"
 
 using namespace Coeus;
 
@@ -76,6 +77,99 @@ void MazeExample::example_q() {
 			state1 = encode_state(&sensors);
 			reward = task.getReward();
 			agent.train(&state0, action, &state1, reward);
+		}
+
+		cout << task.getEnvironment()->moves() << endl;
+		cout << epsilon << endl;
+
+		if (reward > 0) {
+			wins++;
+		}
+		else {
+			loses++;
+		}
+
+		//cout << maze->toString() << endl;
+		cout << wins << " / " << loses << endl;
+		//FILE_LOG(logDEBUG1) << wins << " " << loses;
+
+
+		//exploration->update((double)e / epochs);
+
+		if (epsilon > 0.1) {
+			epsilon -= (1.0 / epochs);
+		}
+	}
+}
+
+void MazeExample::example_double_q() {
+	MazeTask task;
+	Maze* maze = task.getEnvironment();
+
+	NeuralNetwork network_a;
+
+	network_a.add_layer(new InputLayer("input", 64));
+	network_a.add_layer(new CoreLayer("hidden0", 164, NeuralGroup::RELU));
+	network_a.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	// feed-forward connections
+	network_a.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
+	network_a.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network_a.init();
+
+	ADAM optimizer1(&network_a);
+	optimizer1.init(new QuadraticCost(), 0.003);
+
+	NeuralNetwork network_b;
+
+	network_b.add_layer(new InputLayer("input", 64));
+	network_b.add_layer(new CoreLayer("hidden0", 164, NeuralGroup::RELU));
+	network_b.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	// feed-forward connections
+	network_b.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
+	network_b.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network_b.init();
+
+	ADAM optimizer2(&network_b);
+	optimizer2.init(new QuadraticCost(), 0.003);
+
+	DoubleQLearning critic(&network_a, &optimizer1, &network_b, &optimizer2, 0.9);
+
+	vector<double> sensors;
+	Tensor state0, state1;
+	Tensor output;
+	int action0;
+	double reward = 0;
+	double epsilon = 1;
+	int epochs = 5000;
+
+	int wins = 0, loses = 0;
+
+	//FILE* pFile = fopen("application.log", "w");
+	//Output2FILE::Stream() = pFile;
+	//FILELog::ReportingLevel() = FILELog::FromString("DEBUG1");
+
+	for (int e = 0; e < epochs; e++) {
+		cout << "Epoch " << e << endl;
+
+		task.getEnvironment()->reset();
+
+		while (!task.isFinished()) {
+			//cout << maze->toString() << endl;
+
+			sensors = maze->getSensors();
+			state0 = encode_state(&sensors);
+			network_a.activate(&state0);
+			network_b.activate(&state0);
+
+			output = (*network_a.get_output() + *network_b.get_output()) / 2;
+			action0 = choose_action(&output, epsilon);
+			maze->performAction(action0);
+
+			sensors = maze->getSensors();
+			state1 = encode_state(&sensors);
+			reward = task.getReward();
+
+			critic.train(&state0, action0, &state1, reward);
 		}
 
 		cout << task.getEnvironment()->moves() << endl;
