@@ -13,6 +13,7 @@ namespace Coeus {
 
 		double train(Tensor* p_input, Tensor* p_target);
 		double train(vector<Tensor*>* p_input, Tensor* p_target);
+		double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target);
 
 	protected:
 		double train(Tensor* p_target);
@@ -25,11 +26,13 @@ namespace Coeus {
 		NetworkGradient*	_network_gradient;
 
 		map<string, Tensor> _update;
+		map<string, Tensor> _update_batch;
 
 		double _alpha;
 
 	private:
 		bool _init_structures;
+		int	 _batch;
 		
 	};
 }

@@ -34,8 +34,8 @@ void FFN::run() {
 	double data_i[8]{ 0,0,0,1,1,0,1,1 };
 	double data_t[4]{ 0,1,1,0 };
 
-	Tensor input[4];
-	Tensor target[4];
+	vector<Tensor*> input;
+	vector<Tensor*> target;
 
 	for (int i = 0; i < 4; i++) {
 		double *d = Tensor::alloc_arr(2);
@@ -46,32 +46,34 @@ void FFN::run() {
 		double *t = Tensor::alloc_arr(1);
 		t[0] = data_t[i];
 
-		input[i] = Tensor({ 2 }, d);
-		target[i] = Tensor({ 1 }, t);
+		input.push_back(new Tensor({ 2 }, d));
+		target.push_back(new Tensor({ 1 }, t));
 	}
 
-	BackProp model(&_network);
+	//BackProp model(&_network);
 	//RMSProp model(&_network);
 	//AdaMax model(&_network);
-	//ADAM model(&_network);
+	ADAM model(&_network);
 	//AMSGrad model(&_network);
 	//Nadam model(&_network);
 
-	model.init(new QuadraticCost(), 0.05, 0.9, true);
-	//model.init(new QuadraticCost(), 0.1);
+	//model.init(new QuadraticCost(), 0.05, 0.9, true);
+	model.init(new QuadraticCost(), 0.1);
 
 	for(int t = 0; t < 2000; t++) {
-		double error = 0;
-		for (int i = 0; i < 4; i++) {
-			error += model.train(&input[i], &target[i]);
-		}
+		const double error = model.train(&input, &target);
 		cout << "Error: " << error << endl;
 	}
 
 	cout << endl;
 
 	for (int i = 0; i < 4; i++) {
-		_network.activate(&input[i]);
+		_network.activate(input[i]);
 		cout << _network.get_output()->at(0) << endl;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		delete input[i];
+		delete target[i];
 	}
 }
