@@ -24,6 +24,7 @@ public:
 	Connection* add_connection(const string& p_input_layer, const string& p_output_layer, Connection::INIT p_init = Connection::NONE, double p_limit = 0);
 	Connection* get_connection(const string& p_input_layer, const string& p_output_layer);
 	Tensor*		get_output() { return _layers[_output_layer]->get_output(); }
+	vector<Tensor*> get_input();
 
 protected:
 	void activate();

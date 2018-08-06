@@ -181,6 +181,7 @@
     <ClCompile Include="CoreLayer.cpp" />
     <ClCompile Include="CoreLayerGradient.cpp" />
     <ClCompile Include="CrossEntropyCost.cpp" />
+    <ClCompile Include="DeepQLearning.cpp" />
     <ClCompile Include="DoubleQLearning.cpp" />
     <ClCompile Include="Encoder.cpp" />
     <ClCompile Include="ExponentialCost.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="QuadraticCost.cpp" />
     <ClCompile Include="RecurrentLayer.cpp" />
     <ClCompile Include="RecurrentLayerGradient.cpp" />
+    <ClCompile Include="ReplayBuffer.cpp" />
     <ClCompile Include="RMSProp.cpp" />
     <ClCompile Include="SARSA.cpp" />
     <ClCompile Include="SOM.cpp" />
@@ -249,6 +251,7 @@
     <ClInclude Include="CoreLayer.h" />
     <ClInclude Include="CoreLayerGradient.h" />
     <ClInclude Include="CrossEntropyCost.h" />
+    <ClInclude Include="DeepQLearning.h" />
     <ClInclude Include="DoubleQLearning.h" />
     <ClInclude Include="Encoder.h" />
     <ClInclude Include="ExponentialCost.h" />
@@ -287,6 +290,7 @@
     <ClInclude Include="QuadraticCost.h" />
     <ClInclude Include="RecurrentLayer.h" />
     <ClInclude Include="RecurrentLayerGradient.h" />
+    <ClInclude Include="ReplayBuffer.h" />
     <ClInclude Include="RMSProp.h" />
     <ClInclude Include="SARSA.h" />
     <ClInclude Include="SOM.h" />

@@ -276,6 +276,12 @@
     <ClCompile Include="Actor.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
+    <ClCompile Include="ReplayBuffer.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="DeepQLearning.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -475,6 +481,12 @@
     </ClInclude>
     <ClInclude Include="Actor.h">
       <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplayBuffer.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="DeepQLearning.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

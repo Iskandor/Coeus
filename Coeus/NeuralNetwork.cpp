@@ -73,6 +73,16 @@ void NeuralNetwork::activate(vector<Tensor*>* p_input)
 	activate();
 }
 
+vector<Tensor*> NeuralNetwork::get_input() {
+	vector<Tensor*> result;
+
+	for(auto it = _input_layer.begin(); it != _input_layer.end(); ++it) {
+		result.push_back(_layers[*it]->get_output());
+	}
+
+	return vector<Tensor*>(result);
+}
+
 void NeuralNetwork::activate()
 {
 	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {

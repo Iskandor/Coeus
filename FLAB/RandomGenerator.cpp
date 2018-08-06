@@ -45,6 +45,16 @@ vector<int> RandomGenerator::choice(vector<int> *p_array, int p_num) {
     return vector<int>(result);
 }
 
+vector<int> RandomGenerator::choice(const int p_size, const int p_sample) {
+	vector<int> result;
+
+	for (int i = 0; i < p_sample; i++) {
+		result.push_back(random(0, p_size - 1));
+	}
+
+	return vector<int>(result);
+}
+
 
 int RandomGenerator::choice(double *p_prob, int p_size) {
 
