@@ -1,10 +1,16 @@
 #include "BaseLayer.h"
+#include "IDGen.h"
 
 using namespace Coeus;
 
 BaseLayer::BaseLayer(const string p_id): _input_group(nullptr), _output_group(nullptr) 
 {
 	_id = p_id;
+	_gradient_component = nullptr;
+}
+
+BaseLayer::BaseLayer(BaseLayer& p_copy) {
+	_id = IDGen::instance().next();
 	_gradient_component = nullptr;
 }
 

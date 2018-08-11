@@ -15,9 +15,9 @@ json IOUtils::save_layer(BaseLayer* p_layer) {
 	json data;
 
 	data["_header"] = "Coeus";
-	data["_type"] = p_layer->type();
+	data["_type"] = p_layer->get_type();
 
-	switch (p_layer->type()) {
+	switch (p_layer->get_type()) {
 	case BaseLayer::SOM:
 		data["_network"] = write_som(static_cast<SOM*>(p_layer));
 		break;
