@@ -22,7 +22,7 @@ MSOM_learning::~MSOM_learning()
 }
 
 void MSOM_learning::init_msom(MSOM * p_source) const {
-	_msom->override_params(p_source);
+	_msom->override(p_source);
 }
 
 void MSOM_learning::train(Tensor* p_input) {

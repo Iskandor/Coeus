@@ -119,7 +119,7 @@ SOM * SOM::clone() const {
 	return result;
 }
 
-void SOM::override_params(BaseLayer * p_source)
+void SOM::override(BaseLayer * p_source)
 {
 	SOM* som = static_cast<SOM*>(p_source);
 

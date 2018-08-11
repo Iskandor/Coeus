@@ -82,9 +82,9 @@ MSOM * MSOM::clone() const {
 	return result;
 }
 
-void MSOM::override_params(BaseLayer * p_source)
+void MSOM::override(BaseLayer * p_source)
 {
-	SOM::override_params(p_source);
+	SOM::override(p_source);
 
 	MSOM* msom = static_cast<MSOM*>(p_source);
 

@@ -18,7 +18,7 @@ SOM_learning::~SOM_learning()
 }
 
 void SOM_learning::init_som(SOM * p_source) const {
-	_som->override_params(p_source);
+	_som->override(p_source);
 }
 
 void SOM_learning::train(Tensor* p_input) {
