@@ -22,7 +22,6 @@ public:
 	};
 
 	BaseLayer(string p_id);
-	BaseLayer(BaseLayer &p_copy);
 	BaseLayer(nlohmann::json p_data);
 	virtual ~BaseLayer();
 

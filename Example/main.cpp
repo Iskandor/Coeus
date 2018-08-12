@@ -24,13 +24,14 @@ int main()
 
 	MazeExample example;
 
-	example.example_deep_q();
+	example.example_q();
 
 	/*
 	RNN model;
 
 	model.run();
 	*/
+
 	/*
 	IrisTest iris;
 

@@ -20,8 +20,8 @@ FFN::FFN()
 	_network.add_layer(new CoreLayer("hidden", 8, NeuralGroup::ACTIVATION::RELU));
 	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
 
-	_network.add_connection("input", "hidden", Connection::INIT::LECUN_UNIFORM);
-	_network.add_connection("hidden", "output", Connection::INIT::LECUN_UNIFORM);
+	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
 	_network.init();
 }
 
@@ -70,6 +70,16 @@ void FFN::run() {
 	for (int i = 0; i < 4; i++) {
 		_network.activate(input[i]);
 		cout << _network.get_output()->at(0) << endl;
+	}
+
+	NeuralNetwork copy(_network);
+	copy.init();
+
+	cout << endl;
+
+	for (int i = 0; i < 4; i++) {
+		copy.activate(input[i]);
+		cout << copy.get_output()->at(0) << endl;
 	}
 
 	for (int i = 0; i < 4; i++) {

@@ -103,7 +103,7 @@ void LSTMLayer::activate(Tensor* p_input)
 	_h_old->override(_h);
 }
 
-void LSTMLayer::override_params(BaseLayer* p_source)
+void LSTMLayer::override(BaseLayer* p_source)
 {
 //#TODO doplnit prepis parametrov LSTM siete
 }

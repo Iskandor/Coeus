@@ -1,11 +1,20 @@
 #include "CoreLayer.h"
 #include "CoreLayerGradient.h"
+#include "IDGen.h"
 
 using namespace Coeus;
 
 CoreLayer::CoreLayer(const string p_id, const int p_dim, const NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
 {
 	_output_group = add_group(new NeuralGroup(p_dim, p_activation, true));
+	_input_group = _output_group;
+
+	_type = CORE;
+	_gradient_component = new CoreLayerGradient(this);
+}
+
+CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(IDGen::instance().next()) {
+	_output_group = add_group(new NeuralGroup(*p_copy._output_group));
 	_input_group = _output_group;
 
 	_type = CORE;
@@ -27,6 +36,8 @@ void CoreLayer::activate(Tensor * p_input)
 	_output_group->activate();
 }
 
-void CoreLayer::override_params(BaseLayer * p_source)
+void CoreLayer::override(BaseLayer * p_source)
 {
+	CoreLayer* source = dynamic_cast<CoreLayer*>(p_source);
+	_output_group->get_bias()->override(source->_output_group->get_bias());
 }

@@ -34,23 +34,13 @@ Connection::Connection(nlohmann::json p_data) {
 	_weights = Tensor({_out_dim, _in_dim}, data);
 }
 
-Connection::Connection(Connection &p_copy) {
-    _id = p_copy._id;
-    _in_dim = p_copy._in_dim;
-    _out_dim = p_copy._out_dim;
-	_in_id = p_copy._in_id;
-	_out_id = p_copy._out_id;
-    _weights = Tensor(p_copy._weights);
-}
-
 Connection::~Connection()
 {
 }
 
-void Connection::init(const INIT p_init, const double p_limit) {
+void Connection::init(const INIT p_init, const bool p_trainable, const double p_limit) {
     switch(p_init) {
-		case NONE:
-			_trainable = false;
+		case NONE:			
 			_weights = Tensor::Zero({ _out_dim, _in_dim });
 			break;
         case UNIFORM:
@@ -63,10 +53,10 @@ void Connection::init(const INIT p_init, const double p_limit) {
             uniform(2.0f / (_in_dim + _out_dim));
             break;
         case IDENTITY:
-			_trainable = false;
             identity();
             break;
     }
+	_trainable = p_trainable;
 }
 
 void Connection::uniform(const double p_limit) {
@@ -118,4 +108,9 @@ void Connection::normalize_weights(const NORM p_norm) const {
 			}			
 		}
 	}
+}
+
+void Connection::override(Connection* p_copy) {
+	_weights.override(&p_copy->_weights);
+	_trainable = p_copy->_trainable;
 }

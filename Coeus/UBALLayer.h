@@ -13,7 +13,7 @@ namespace Coeus {
 		void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
 		void activate(Tensor* p_input = nullptr) override;
 		void activate_back(Tensor* p_input = nullptr);
-		void override_params(BaseLayer* p_source) override;
+		void override(BaseLayer* p_source) override;
 
 	private:
 		NeuralGroup* _input_bp;

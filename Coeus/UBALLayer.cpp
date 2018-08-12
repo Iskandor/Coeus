@@ -56,7 +56,7 @@ void UBALLayer::activate_back(Tensor * p_input)
 	_output_echo->activate();
 }
 
-void UBALLayer::override_params(BaseLayer * p_source)
+void UBALLayer::override(BaseLayer * p_source)
 {
 
 }

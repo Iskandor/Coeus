@@ -113,7 +113,7 @@ void SOM::init_conscience() const {
 SOM * SOM::clone() const {
 	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->get_activation_function());
 
-	result->_afferent = new Connection(*_afferent);
+	result->_afferent->get_weights()->override(_afferent->get_weights());
 	result->_conscience = _conscience;
 
 	return result;

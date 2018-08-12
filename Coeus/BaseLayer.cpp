@@ -9,11 +9,6 @@ BaseLayer::BaseLayer(const string p_id): _input_group(nullptr), _output_group(nu
 	_gradient_component = nullptr;
 }
 
-BaseLayer::BaseLayer(BaseLayer& p_copy) {
-	_id = IDGen::instance().next();
-	_gradient_component = nullptr;
-}
-
 BaseLayer::BaseLayer(nlohmann::json p_data)
 {
 	_id = p_data["id"].get<string>();

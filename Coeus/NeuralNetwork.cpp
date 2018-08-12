@@ -2,11 +2,57 @@
 #include <set>
 #include <queue>
 #include "InputLayer.h"
+#include "CoreLayer.h"
+#include "RecurrentLayer.h"
 
 
 using namespace Coeus;
 
 NeuralNetwork::NeuralNetwork() = default;
+
+NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) {
+	_param_map.clear();
+
+	BaseLayer* layer = nullptr;
+
+	for (auto it = p_copy._layers.begin(); it != p_copy._layers.end(); ++it) {
+		switch ((*it).second->get_type()) {
+
+			case BaseLayer::SOM: 
+
+			break;
+			case BaseLayer::MSOM: 
+
+			break;
+			case BaseLayer::INPUT: 
+				layer = add_layer(new InputLayer(*dynamic_cast<InputLayer*>((*it).second)));
+			break;
+			case BaseLayer::CORE: 
+				layer = add_layer(new CoreLayer(*dynamic_cast<CoreLayer*>((*it).second)));
+			break;
+			case BaseLayer::RECURRENT: 
+				layer = add_layer(new RecurrentLayer(*dynamic_cast<RecurrentLayer*>((*it).second)));
+			break;
+			case BaseLayer::LSTM: 
+			break;
+			case BaseLayer::LSOM: 
+			break;
+			default: ;
+		}
+
+		_param_map[(*it).second->id()] = layer->id();
+	}
+	Connection* connection = nullptr;
+
+	for (auto out = p_copy._graph.begin(); out != p_copy._graph.end(); ++out) {
+		for(auto in = out->second.begin(); in != out->second.end(); ++in) {
+			connection = add_connection(_param_map[*in], _param_map[out->first], Connection::UNIFORM, true);
+			connection->override(p_copy.get_connection(*in, out->first));
+		}
+	}
+
+	_param_map.clear();
+}
 
 
 NeuralNetwork::~NeuralNetwork()
@@ -73,6 +119,39 @@ void NeuralNetwork::activate(vector<Tensor*>* p_input)
 	activate();
 }
 
+void NeuralNetwork::override(NeuralNetwork* p_network) {
+
+	bool param_map_init = true;
+
+	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
+		if (_param_map.count(it->first) == 0) {
+			param_map_init = false;
+			break;
+		}
+	}
+
+	if (param_map_init) {
+		for (auto it = _connections.begin(); it != _connections.end(); ++it) {
+			if (_param_map.count(it->first) == 0) {
+				param_map_init = false;
+				break;
+			}
+		}
+	}
+
+	if (!param_map_init) {
+		create_param_map(p_network);
+	}
+
+	for(auto it = _layers.begin(); it != _layers.end(); ++it) {
+		_layers[it->first]->override(p_network->_layers[_param_map[it->first]]);
+	}
+
+	for (auto it = _connections.begin(); it != _connections.end(); ++it) {
+		_connections[it->first]->override(p_network->_connections[_param_map[it->first]]);
+	}
+}
+
 vector<Tensor*> NeuralNetwork::get_input() {
 	vector<Tensor*> result;
 
@@ -104,12 +183,12 @@ BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
 	return p_layer;
 }
 
-Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const double p_limit) {
+Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const double p_limit, const bool p_trainable) {
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 
 	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->id(), out_layer->id());
-	c->init(p_init, p_limit);
+	c->init(p_init, p_trainable, p_limit);
 
 	_connections[c->get_id()] = c;
 
@@ -171,5 +250,36 @@ void NeuralNetwork::create_directed_graph()
 
 	for (auto it = _forward_graph.rbegin(); it != _forward_graph.rend(); ++it) {
 		_backward_graph.push_back(*it);
+	}
+}
+
+void NeuralNetwork::create_param_map(NeuralNetwork* p_network) {
+	_param_map.clear();
+
+	vector<string> target;
+
+	for (auto it = _forward_graph.begin(); it != _forward_graph.end(); ++it) {
+		target.push_back((*it)->id());
+	}
+
+	vector<string> source;
+
+	for (auto it = p_network->_forward_graph.begin(); it != p_network->_forward_graph.end(); ++it) {
+		source.push_back((*it)->id());
+	}
+
+	if (target.size() == source.size()) {
+		for (int i = 0; i < source.size(); i++) {
+			_param_map[target[i]] = source[i];
+		}
+	}
+	else {
+		//TODO warning inequal sizes
+	}
+
+	for(auto it = _graph.begin(); it != _graph.end(); ++it) {
+		for(auto c = (*it).second.begin(); c != (*it).second.end(); ++c) {
+			_param_map[(*c + "_" + (*it).first)] = _param_map[(*c)] + "_" + _param_map[(*it).first];
+		}
 	}
 }

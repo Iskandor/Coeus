@@ -280,7 +280,7 @@
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
     <ClCompile Include="DeepQLearning.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -486,7 +486,7 @@
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
     <ClInclude Include="DeepQLearning.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

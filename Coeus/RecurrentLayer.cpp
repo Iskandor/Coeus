@@ -1,5 +1,6 @@
 #include "RecurrentLayer.h"
 #include "RecurrentLayerGradient.h"
+#include "IDGen.h"
 
 using namespace Coeus;
 
@@ -10,6 +11,19 @@ RecurrentLayer::RecurrentLayer(const string p_id, const int p_dim, const NeuralG
 	_context_group = add_group(new NeuralGroup(p_dim, NeuralGroup::ACTIVATION::LINEAR, false));
 
 	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id()));
+
+	_type = RECURRENT;
+
+	_gradient_component = new RecurrentLayerGradient(this);
+}
+
+RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(IDGen::instance().next()) {
+	_input_group = add_group(new NeuralGroup(*p_copy._input_group));
+	_output_group = _input_group;
+	_context_group = add_group(new NeuralGroup(*p_copy._context_group));
+
+	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id()));
+	_rec_connection->override(p_copy._rec_connection);
 
 	_type = RECURRENT;
 
@@ -35,6 +49,9 @@ void RecurrentLayer::activate(Tensor * p_input)
 	_output_group->activate();
 }
 
-void RecurrentLayer::override_params(BaseLayer * p_source)
+void RecurrentLayer::override(BaseLayer * p_source)
 {
+	RecurrentLayer *source = dynamic_cast<RecurrentLayer*>(p_source);
+	_input_group->get_bias()->override(source->_input_group->get_bias());
+	_rec_connection->override(source->_rec_connection);
 }

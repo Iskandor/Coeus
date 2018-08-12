@@ -7,7 +7,7 @@ using namespace Coeus;
 /**
  * NeuralGroup constructor creates layer of p_dim neurons with p_activationFunction
  * @param p_dim dimension of layer
- * @param p_activationFunction type of activation function
+ * @param p_activationFunction get_type of activation function
  * @param p_bias
  */
 NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activationFunction, const bool p_bias)
@@ -46,7 +46,7 @@ NeuralGroup::NeuralGroup(NeuralGroup &p_copy) {
 }
 
 /**
- * NeuralGroup destructor frees filters
+ * NeuralGroup destructor
  */
 NeuralGroup::~NeuralGroup(void)
 {
