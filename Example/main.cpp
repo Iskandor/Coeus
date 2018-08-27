@@ -16,15 +16,15 @@ using namespace MNS;
 
 int main()
 {
-	/*
 	FFN model;
 
-	model.run();
-	*/
+	model.run_iris();
 
+	/*
 	MazeExample example;
 
 	example.example_q();
+	*/
 
 	/*
 	RNN model;

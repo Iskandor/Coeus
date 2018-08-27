@@ -187,6 +187,7 @@
     <ClCompile Include="ExponentialCost.cpp" />
     <ClCompile Include="GenKLDivergence.cpp" />
     <ClCompile Include="HellingerDistance.cpp" />
+    <ClCompile Include="ICM.cpp" />
     <ClCompile Include="ICostFunction.cpp" />
     <ClCompile Include="IDGen.cpp" />
     <ClCompile Include="IGradientComponent.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="ExponentialCost.h" />
     <ClInclude Include="GenKLDivergence.h" />
     <ClInclude Include="HellingerDistance.h" />
+    <ClInclude Include="ICM.h" />
     <ClInclude Include="ICostFunction.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IGradientComponent.h" />

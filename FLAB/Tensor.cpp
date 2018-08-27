@@ -291,7 +291,7 @@ Tensor Tensor::apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, do
 	return Tensor(p_source1._rank, shape, arr);
 }
 
-int Tensor::max_index() const {
+int Tensor::max_value_index() const {
 	int max = 0;
 
 	for(int i = 0; i < _size; i++) {

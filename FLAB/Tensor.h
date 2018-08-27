@@ -51,7 +51,7 @@ public:
 	static Tensor apply(Tensor& p_source, double(*f)(double));
 	static Tensor apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double));
 
-	int max_index() const;
+	int max_value_index() const;
 	void override(Tensor* p_tensor) const;
 
 	void fill(double p_value) const;

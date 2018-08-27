@@ -19,11 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{49391E71-8AFE-450E-AFC7-D43F07673F98}</ProjectGuid>
+    <ProjectGuid>{4437F351-260E-487F-BD98-501DACC130EA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Example</RootNamespace>
+    <RootNamespace>OpenAIGym</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>MNS</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -72,16 +71,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\Work\Coeus\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <LibraryPath>$(SolutionDir)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,12 +88,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Coeus;..\FLAB;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Coeus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -108,14 +101,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Coeus\;..\FLAB\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\lib\boost;.\lib\curl\include;.\lib\jsoncpp\include;..\FLAB;..\Coeus;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Coeus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>.\lib\jsoncpp\lib_json.lib;.\lib\curl\libcurld.lib;Coeus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\lib\boost;..\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -127,14 +120,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Coeus\;..\FLAB\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Coeus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -146,60 +137,23 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Coeus\;..\FLAB\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GIT\lib\curl-7.61.0\include;C:\GIT\lib\boost_1_67_0;C:\GIT\lib\jsoncpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Coeus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CartPole.cpp" />
-    <ClCompile Include="CartPoleTask.cpp" />
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="Dataset.cpp" />
-    <ClCompile Include="Environment.cpp" />
-    <ClCompile Include="FFN.cpp" />
-    <ClCompile Include="IrisDataset.cpp" />
-    <ClCompile Include="IrisTest.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Maze.cpp" />
-    <ClCompile Include="MazeAction.cpp" />
-    <ClCompile Include="MazeExample.cpp" />
-    <ClCompile Include="MazeTask.cpp" />
-    <ClCompile Include="ModelMNS.cpp" />
-    <ClCompile Include="ModelMNS2.cpp" />
-    <ClCompile Include="ModelMNS3.cpp" />
-    <ClCompile Include="RNN.cpp" />
-    <ClCompile Include="rk4.cpp" />
-    <ClCompile Include="Sequence.cpp" />
-    <ClCompile Include="UBALTest.cpp" />
+    <ClInclude Include="gym.h" />
+    <ClInclude Include="rl_agent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CartPole.h" />
-    <ClInclude Include="CartPoleTask.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Dataset.h" />
-    <ClInclude Include="Environment.h" />
-    <ClInclude Include="FFN.h" />
-    <ClInclude Include="IrisDataset.h" />
-    <ClInclude Include="IrisTest.h" />
-    <ClInclude Include="Maze.h" />
-    <ClInclude Include="MazeAction.h" />
-    <ClInclude Include="MazeExample.h" />
-    <ClInclude Include="MazeTask.h" />
-    <ClInclude Include="ModelMNS.h" />
-    <ClInclude Include="ModelMNS2.h" />
-    <ClInclude Include="ModelMNS3.h" />
-    <ClInclude Include="RNN.h" />
-    <ClInclude Include="rk4.hpp" />
-    <ClInclude Include="Sequence.h" />
-    <ClInclude Include="UBALTest.h" />
+    <ClCompile Include="gym_binding.cpp" />
+    <ClCompile Include="random_agent.cpp" />
+    <ClCompile Include="rl_agent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

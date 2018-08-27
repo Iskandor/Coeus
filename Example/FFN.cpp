@@ -13,16 +13,10 @@
 #include "Nadam.h"
 #include "AMSGrad.h"
 #include "LSTMLayer.h"
+#include "CrossEntropyCost.h"
 
 FFN::FFN()
 {
-	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new CoreLayer("hidden", 8, NeuralGroup::ACTIVATION::RELU));
-	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
-
-	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
-	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
-	_network.init();
 }
 
 
@@ -31,6 +25,15 @@ FFN::~FFN()
 }
 
 void FFN::run() {
+	_network.add_layer(new InputLayer("input", 2));
+	_network.add_layer(new CoreLayer("hidden", 8, NeuralGroup::ACTIVATION::RELU));
+	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
+
+	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
+	_network.init();
+
+
 	double data_i[8]{ 0,0,0,1,1,0,1,1 };
 	double data_t[4]{ 0,1,1,0 };
 
@@ -86,4 +89,50 @@ void FFN::run() {
 		delete input[i];
 		delete target[i];
 	}
+}
+
+void FFN::run_iris() {
+	_dataset.load_data("./data/iris.data");
+
+	_network.add_layer(new InputLayer("input", IrisDataset::SIZE));
+	_network.add_layer(new CoreLayer("hidden", 640, NeuralGroup::ACTIVATION::SIGMOID));
+	_network.add_layer(new CoreLayer("output", 3, NeuralGroup::ACTIVATION::SIGMOID));
+
+	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
+	_network.init();
+
+
+	const int epochs = 1000;
+	vector<IrisDatasetItem>* data = nullptr;
+	map<int, Tensor> target;
+
+	for(int i = 0; i < IrisDataset::CATEGORIES; i++) {
+		target[i] = Tensor::Zero({ IrisDataset::CATEGORIES });
+		target[i][i] = 1;
+	}
+
+	RMSProp model(&_network);
+	//model.init(new QuadraticCost(), 0.001, 0.9, true);
+	model.init(new QuadraticCost(), 0.0001);
+
+	for (int t = 0; t < epochs; t++) {
+		data = _dataset.permute();
+		double error = 0;
+
+		for (int i = 0; i < data->size(); i++) {
+			error += model.train(data->at(i).data, &target[(*_dataset.get_target_map())[data->at(i).target]]);						
+		}
+		cout << "Error: " << error << endl;
+	}
+
+	for (int i = 0; i < data->size(); i++) {
+		_network.activate(data->at(i).data);
+		for (int o = 0; o < 3; o++) {
+			cout << _network.get_output()->at(o) << " , ";
+		}
+		cout << data->at(i).target << endl;
+
+	}
+
 }
