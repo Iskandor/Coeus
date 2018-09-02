@@ -6,7 +6,7 @@ namespace Coeus
 	class __declspec(dllexport) MSOM : public SOM
 	{
 	public:
-		MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation, double p_alpha, double p_beta);
+		MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, ACTIVATION p_activation, double p_alpha, double p_beta);
 		explicit MSOM(nlohmann::json p_data);
 		~MSOM();
 

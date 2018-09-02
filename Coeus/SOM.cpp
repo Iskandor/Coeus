@@ -6,17 +6,17 @@
 
 using namespace Coeus;
 
-SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
+SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const ACTIVATION p_activation) : BaseLayer(p_id)
 {
 	_type = TYPE::SOM;
 	_dim_x = p_dim_x;
 	_dim_y = p_dim_y;
 
-	_input_group = add_group(new NeuralGroup(p_input_dim, NeuralGroup::ACTIVATION::LINEAR, false));
+	_input_group = add_group(new NeuralGroup(p_input_dim, LINEAR, false));
 	_output_group = add_group(new NeuralGroup(p_dim_x * p_dim_y, p_activation, true));
 
 	_afferent = new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id());
-	_afferent->init(Connection::UNIFORM, 1);
+	_afferent->init(Connection::UNIFORM, true, 1);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });
@@ -58,16 +58,13 @@ void SOM::activate(Tensor* p_input) {
 	calc_distance();
 
 	switch (_output_group->get_activation_function()) {
-		case NeuralGroup::LINEAR:
+		case LINEAR:
 			_dist = Tensor::apply(_dist, ActivationFunctions::linear);
 			break;
-		case NeuralGroup::EXPONENTIAL:
+		case EXPONENTIAL:
 			_dist = Tensor::apply(_dist, ActivationFunctions::exponential);
 			break;
-		case NeuralGroup::KEXPONENTIAL:
-			_dist = Tensor::apply(_dist, ActivationFunctions::kexponential);
-			break;
-		case NeuralGroup::GAUSS:
+		case GAUSS:
 			_dist = Tensor::apply(_dist, ActivationFunctions::gauss);
 			break;
 		default:

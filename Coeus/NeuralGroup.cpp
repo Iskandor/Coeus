@@ -7,16 +7,16 @@ using namespace Coeus;
 /**
  * NeuralGroup constructor creates layer of p_dim neurons with p_activationFunction
  * @param p_dim dimension of layer
- * @param p_activationFunction get_type of activation function
+ * @param p_activation_function get_type of activation function
  * @param p_bias
  */
-NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activationFunction, const bool p_bias)
+NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activation_function, const bool p_bias)
 {
     _id = IDGen::instance().next();
 	_bias_flag = p_bias;	
 	
     _dim = p_dim;
-    _activationFunction = p_activationFunction;
+    activation_function_ = p_activation_function;
 
 	_output = Tensor::Zero({ _dim });
 	_ap = Tensor::Zero({ _dim });
@@ -26,7 +26,7 @@ NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activationFunction,
 NeuralGroup::NeuralGroup(nlohmann::json p_data) {
 	_id = p_data["id"].get<string>();
 	_dim = p_data["dim"].get<int>();
-	_activationFunction = static_cast<ACTIVATION>(p_data["actfn"].get<int>());
+	activation_function_ = static_cast<ACTIVATION>(p_data["actfn"].get<int>());
 	_bias_flag = p_data["bias"].get<bool>();
 	//#TODO doriesit _bias = ;
 
@@ -37,7 +37,7 @@ NeuralGroup::NeuralGroup(nlohmann::json p_data) {
 NeuralGroup::NeuralGroup(NeuralGroup &p_copy) {
     _id = p_copy._id;
     _dim = p_copy._dim;
-    _activationFunction = p_copy._activationFunction;
+    activation_function_ = p_copy.activation_function_;
 	_bias = Tensor(p_copy._bias);
 
 	_output = Tensor::Zero({ _dim });
@@ -70,8 +70,7 @@ void NeuralGroup::activate() {
 		_ap += _bias;
 	}
 
-    switch (_activationFunction) {
-        case IDENTITY:
+    switch (activation_function_) {
         case LINEAR:
 			_output = Tensor::apply(_ap, ActivationFunctions::linear);
             break;

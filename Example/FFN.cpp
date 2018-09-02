@@ -26,8 +26,8 @@ FFN::~FFN()
 
 void FFN::run() {
 	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new CoreLayer("hidden", 8, NeuralGroup::ACTIVATION::RELU));
-	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
+	_network.add_layer(new CoreLayer("hidden", 8, RELU));
+	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
 	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
@@ -95,8 +95,8 @@ void FFN::run_iris() {
 	_dataset.load_data("./data/iris.data");
 
 	_network.add_layer(new InputLayer("input", IrisDataset::SIZE));
-	_network.add_layer(new CoreLayer("hidden", 640, NeuralGroup::ACTIVATION::SIGMOID));
-	_network.add_layer(new CoreLayer("output", 3, NeuralGroup::ACTIVATION::SIGMOID));
+	_network.add_layer(new CoreLayer("hidden", 640, SIGMOID));
+	_network.add_layer(new CoreLayer("output", 3, SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
 	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);

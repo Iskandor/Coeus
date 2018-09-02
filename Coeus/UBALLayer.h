@@ -7,7 +7,7 @@ namespace Coeus {
 	{
 	public:
 
-		UBALLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation, BaseLayer* p_layer);
+		UBALLayer(string p_id, int p_dim, ACTIVATION p_activation, BaseLayer* p_layer);
 		~UBALLayer();
 
 		void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;

@@ -7,7 +7,7 @@ namespace Coeus
 	{
 		friend class LSTMLayerGradient;
 	public:
-		LSTMLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation);
+		LSTMLayer(string p_id, int p_dim, ACTIVATION p_activation);
 		~LSTMLayer();
 
 		void init(vector<BaseLayer*>& p_input_layers) override;

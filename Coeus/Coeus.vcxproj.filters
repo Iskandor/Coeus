@@ -79,14 +79,17 @@
     <Filter Include="Source Files\Algorithm\IM">
       <UniqueIdentifier>{5b68cda2-17d2-42f1-9a53-e76d54f6654d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Network\ActivationFunctions">
+      <UniqueIdentifier>{252acda9-c0bd-40f5-8d9c-e6a56ca41dc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network\ActivationFunctions">
+      <UniqueIdentifier>{5f0a3940-ec5b-415e-bc09-62ffb9755960}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Coeus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Connection.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -290,6 +293,36 @@
     </ClCompile>
     <ClCompile Include="ICM.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IActivationFunction.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="SigmoidActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="ReluActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftmaxActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="TanhActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftplusActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="ExponentialActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianActivation.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -498,6 +531,39 @@
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
     <ClInclude Include="ICM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IActivationFunction.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="SigmoidActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="ReluActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftmaxActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="TanhActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftplusActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="ExponentialActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianActivation.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="Coeus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

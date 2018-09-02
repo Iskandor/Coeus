@@ -2,6 +2,8 @@
 
 #include <Tensor.h>
 #include "json.hpp"
+#include "IActivationFunction.h"
+#include "Coeus.h"
 
 using namespace std;
 using namespace FLAB;
@@ -11,20 +13,7 @@ namespace Coeus {
 class __declspec(dllexport) NeuralGroup
 {
 public:
-    enum ACTIVATION {
-     IDENTITY = 0,
-     BINARY = 2,
-     SIGMOID = 3,
-     TANH = 4,
-     LINEAR = 6,
-     EXPONENTIAL = 7,
-     SOFTPLUS = 8,
-     RELU = 9,
-     KEXPONENTIAL = 10,
-     GAUSS = 11
-    };
-
-    NeuralGroup(int p_dim, ACTIVATION p_activationFunction, bool p_bias);
+    NeuralGroup(int p_dim, ACTIVATION p_activation_function, bool p_bias);
 	explicit NeuralGroup(nlohmann::json p_data);
     NeuralGroup(NeuralGroup& p_copy);
     ~NeuralGroup(void);
@@ -42,11 +31,12 @@ public:
 	void set_bias(Tensor* p_bias) const { _bias.override(p_bias); };
 	Tensor* get_bias() { return &_bias; };
 
-    ACTIVATION get_activation_function() const { return _activationFunction; };
+    ACTIVATION get_activation_function() const { return activation_function_; };
 
 private:
     string  _id;
-    ACTIVATION _activationFunction;
+    ACTIVATION activation_function_;
+	IActivationFunction* _f;
 
 	int     _dim;
     Tensor	_output;

@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-LISSOM::LISSOM(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation, double p_gamma_e, double p_gamma_i) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
+LISSOM::LISSOM(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const ACTIVATION p_activation, double p_gamma_e, double p_gamma_i) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
 {
 	_lateral_e = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
 	_lateral_e->init(Connection::UNIFORM, 0.01);
@@ -28,16 +28,16 @@ void LISSOM::activate(Tensor* p_input) {
 	_prime_activity = *_afferent->get_weights() * *p_input;
 
 	switch (_output_group->get_activation_function()) {
-		case NeuralGroup::LINEAR:
+		case LINEAR:
 		_dist = Tensor::apply(_prime_activity, ActivationFunctions::linear);
 		break;
-		case NeuralGroup::SIGMOID:
+		case SIGMOID:
 		_dist = Tensor::apply(_prime_activity, ActivationFunctions::sigmoid);
 		break;
-		case NeuralGroup::TANH:
+		case TANH:
 		_dist = Tensor::apply(_prime_activity, ActivationFunctions::tanh);
 		break;
-		case NeuralGroup::RELU:
+		case RELU:
 		_dist = Tensor::apply(_prime_activity, ActivationFunctions::relu);
 		break;
 		default:

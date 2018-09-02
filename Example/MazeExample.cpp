@@ -34,8 +34,8 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 64));
-	network.add_layer(new CoreLayer("hidden0", 512, NeuralGroup::RELU));
-	network.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network.add_layer(new CoreLayer("hidden0", 512, RELU));
+	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
@@ -111,8 +111,8 @@ void MazeExample::example_double_q() {
 	NeuralNetwork network_a;
 
 	network_a.add_layer(new InputLayer("input", 64));
-	network_a.add_layer(new CoreLayer("hidden0", 164, NeuralGroup::RELU));
-	network_a.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network_a.add_layer(new CoreLayer("hidden0", 164, RELU));
+	network_a.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network_a.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_a.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
@@ -124,8 +124,8 @@ void MazeExample::example_double_q() {
 	NeuralNetwork network_b;
 
 	network_b.add_layer(new InputLayer("input", 64));
-	network_b.add_layer(new CoreLayer("hidden0", 164, NeuralGroup::RELU));
-	network_b.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network_b.add_layer(new CoreLayer("hidden0", 164, RELU));
+	network_b.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network_b.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_b.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
@@ -204,8 +204,8 @@ void MazeExample::example_sarsa() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 64));
-	network.add_layer(new CoreLayer("hidden0", 512, NeuralGroup::RELU));
-	network.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network.add_layer(new CoreLayer("hidden0", 512, RELU));
+	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
@@ -281,8 +281,8 @@ void MazeExample::example_actor_critic() {
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new InputLayer("input", 64));
-	network_critic.add_layer(new CoreLayer("hidden0", 256, NeuralGroup::RELU));
-	network_critic.add_layer(new CoreLayer("output", 1, NeuralGroup::LINEAR));
+	network_critic.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network_critic.add_layer(new CoreLayer("output", 1, LINEAR));
 	// feed-forward connections
 	network_critic.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_critic.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
@@ -295,8 +295,8 @@ void MazeExample::example_actor_critic() {
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new InputLayer("input", 64));
-	network_actor.add_layer(new CoreLayer("hidden0", 512, NeuralGroup::RELU));
-	network_actor.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network_actor.add_layer(new CoreLayer("hidden0", 512, RELU));
+	network_actor.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network_actor.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_actor.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
@@ -375,8 +375,8 @@ void MazeExample::example_deep_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 64));
-	network.add_layer(new CoreLayer("hidden0", 256, NeuralGroup::RELU));
-	network.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
@@ -452,8 +452,8 @@ void MazeExample::example_icm() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 64));
-	network.add_layer(new CoreLayer("hidden0", 256, NeuralGroup::RELU));
-	network.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network.init();
@@ -465,8 +465,8 @@ void MazeExample::example_icm() {
 
 	NeuralNetwork network_fm;
 	network_fm.add_layer(new InputLayer("input", 68));
-	network_fm.add_layer(new CoreLayer("hidden0", 256, NeuralGroup::RELU));
-	network_fm.add_layer(new CoreLayer("output", 64, NeuralGroup::LINEAR));
+	network_fm.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network_fm.add_layer(new CoreLayer("output", 64, LINEAR));
 	network_fm.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_fm.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_fm.init();
@@ -476,8 +476,8 @@ void MazeExample::example_icm() {
 
 	NeuralNetwork network_im;
 	network_im.add_layer(new InputLayer("input", 128));
-	network_im.add_layer(new CoreLayer("hidden0", 256, NeuralGroup::RELU));
-	network_im.add_layer(new CoreLayer("output", 4, NeuralGroup::LINEAR));
+	network_im.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network_im.add_layer(new CoreLayer("output", 4, LINEAR));
 	network_im.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_im.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_im.init();

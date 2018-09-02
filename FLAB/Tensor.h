@@ -46,6 +46,7 @@ public:
 	double& operator [](const int p_index) const;
 
 	Tensor T() const;
+	Tensor diag() const;
 
 	static Tensor apply(Tensor& p_source, double(*f)());
 	static Tensor apply(Tensor& p_source, double(*f)(double));

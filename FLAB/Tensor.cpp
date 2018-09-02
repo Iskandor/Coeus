@@ -268,6 +268,21 @@ Tensor Tensor::T() const {
 	return Tensor(_rank, shape, arr);
 }
 
+Tensor Tensor::diag() const {
+	const int rank = 2;
+	int* shape = alloc_shape(rank);
+	double* arr = alloc_arr(_size *_size);
+
+	shape[0] = _shape[0];
+	shape[1] = _shape[0];
+
+	for(int i = 0; i < _size; i++) {
+		arr[i * _size + i] = _arr[i];
+	}
+
+	return Tensor(rank, shape, arr);
+}
+
 Tensor Tensor::apply(Tensor& p_source, double(*f)(double))
 {
 	double* arr = alloc_arr(p_source._size);

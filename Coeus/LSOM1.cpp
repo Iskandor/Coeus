@@ -4,7 +4,7 @@
 
 using namespace Coeus;
 
-LSOM1::LSOM1(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
+LSOM1::LSOM1(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const ACTIVATION p_activation) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
 {
 	_type = TYPE::LSOM;
 	_lateral = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
@@ -26,16 +26,13 @@ void LSOM1::activate(Tensor * p_input)
 	calc_distance();
 
 	switch (_output_group->get_activation_function()) {
-	case NeuralGroup::LINEAR:
+	case LINEAR:
 		_auxoutput = Tensor::apply(_dist, ActivationFunctions::linear);
 		break;
-	case NeuralGroup::EXPONENTIAL:
+	case EXPONENTIAL:
 		_auxoutput = Tensor::apply(_dist, ActivationFunctions::exponential);
 		break;
-	case NeuralGroup::KEXPONENTIAL:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::kexponential);
-		break;
-	case NeuralGroup::GAUSS:
+	case GAUSS:
 		_auxoutput = Tensor::apply(_dist, ActivationFunctions::gauss);
 		break;
 	default:

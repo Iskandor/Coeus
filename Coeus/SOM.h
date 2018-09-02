@@ -7,7 +7,7 @@ namespace Coeus
 	class __declspec(dllexport) SOM : public BaseLayer
 	{
 	public:
-		SOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, NeuralGroup::ACTIVATION p_activation);
+		SOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, ACTIVATION p_activation);
 		SOM(nlohmann::json p_data);
 		~SOM();
 
