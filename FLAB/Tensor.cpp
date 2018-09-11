@@ -277,7 +277,9 @@ Tensor Tensor::diag() const {
 	shape[1] = _shape[0];
 
 	for(int i = 0; i < _size; i++) {
-		arr[i * _size + i] = _arr[i];
+		for (int j = 0; j < _size; j++) {
+			arr[i * _size + j] = i == j ? _arr[i] : 0;
+		}
 	}
 
 	return Tensor(rank, shape, arr);

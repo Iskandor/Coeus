@@ -25,19 +25,7 @@ void LSOM1::activate(Tensor * p_input)
 
 	calc_distance();
 
-	switch (_output_group->get_activation_function()) {
-	case LINEAR:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::linear);
-		break;
-	case EXPONENTIAL:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::exponential);
-		break;
-	case GAUSS:
-		_auxoutput = Tensor::apply(_dist, ActivationFunctions::gauss);
-		break;
-	default:
-		break;
-	}
+	_output_group->get_activation_function()->activate(_dist);
 
 	Tensor* lateral_w = _lateral->get_weights();
 

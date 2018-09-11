@@ -1,5 +1,4 @@
 #include "IGradientComponent.h"
-#include "ActivationFunctionsDeriv.h"
 
 using namespace Coeus;
 
@@ -40,25 +39,5 @@ LayerState* IGradientComponent::get_state()
 }
 
 void IGradientComponent::calc_deriv_group(NeuralGroup* p_group) {
-	switch (p_group->get_activation_function()) {
-	case BINARY:
-		_deriv[p_group->get_id()] = Tensor::apply(*p_group->get_output(), ActivationFunctionsDeriv::dbinary);
-		break;
-	case LINEAR:
-		_deriv[p_group->get_id()] = Tensor::apply(*p_group->get_output(), ActivationFunctionsDeriv::dlinear);
-		break;
-	case RELU:
-		_deriv[p_group->get_id()] = Tensor::apply(*p_group->get_output(), ActivationFunctionsDeriv::drelu);
-		break;
-	case SIGMOID:
-		_deriv[p_group->get_id()] = Tensor::apply(*p_group->get_output(), ActivationFunctionsDeriv::dsigmoid);
-		break;
-	case SOFTPLUS:
-		_deriv[p_group->get_id()] = Tensor::apply(*p_group->get_output(), ActivationFunctionsDeriv::dsoftplus);
-		break;
-	case TANH:
-		_deriv[p_group->get_id()] = Tensor::apply(*p_group->get_output(), ActivationFunctionsDeriv::dtanh);
-		break;
-	default:;
-	}
+	_deriv[p_group->get_id()] = p_group->get_activation_function()->deriv(*p_group->get_output());
 }

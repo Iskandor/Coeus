@@ -4,8 +4,7 @@
 
 using namespace Coeus;
 
-SoftmaxActivation::SoftmaxActivation()
-{
+SoftmaxActivation::SoftmaxActivation(): IActivationFunction(SOFTMAX) {
 }
 
 
@@ -31,7 +30,7 @@ Tensor SoftmaxActivation::activate(Tensor& p_input) {
 }
 
 Tensor SoftmaxActivation::deriv(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
+	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 
 	for (int i = 0; i < p_input.size(); i++) {
 		for (int j = 0; j < p_input.size(); j++) {

@@ -5,7 +5,7 @@
 
 using namespace Coeus;
 
-GaussianActivation::GaussianActivation(const double p_sigma): _sigma(p_sigma) {
+GaussianActivation::GaussianActivation(const double p_sigma): IActivationFunction(GAUSS), _sigma(p_sigma) {
 }
 
 GaussianActivation::~GaussianActivation()

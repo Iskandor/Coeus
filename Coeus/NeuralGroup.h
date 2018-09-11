@@ -21,21 +21,23 @@ public:
 	void integrate(Tensor* p_input, Tensor* p_weights);
     void activate();
 
-    string	get_id() const { return _id; };
-    int		get_dim() const { return _dim; };
-	bool	is_bias() const { return _bias_flag; };
+    string	get_id() const { return _id; }
+    int		get_dim() const { return _dim; }
+	bool	is_bias() const { return _bias_flag; }
 
     void	set_output(Tensor* p_output) const;
-    Tensor* get_output() { return &_output; };
+    Tensor* get_output() { return &_output; }
 	void update_bias(Tensor& p_delta_b);
-	void set_bias(Tensor* p_bias) const { _bias.override(p_bias); };
-	Tensor* get_bias() { return &_bias; };
+	void set_bias(Tensor* p_bias) const { _bias.override(p_bias); }
+	Tensor* get_bias() { return &_bias; }
 
-    ACTIVATION get_activation_function() const { return activation_function_; };
+	IActivationFunction* get_activation_function() const { return _f; }
 
 private:
+	void init_activation_function();
+
     string  _id;
-    ACTIVATION activation_function_;
+    ACTIVATION _activation_function;
 	IActivationFunction* _f;
 
 	int     _dim;

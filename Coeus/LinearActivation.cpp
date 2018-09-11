@@ -2,8 +2,7 @@
 
 using namespace Coeus;
 
-LinearActivation::LinearActivation()
-{
+LinearActivation::LinearActivation(): IActivationFunction(LINEAR) {
 }
 
 

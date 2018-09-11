@@ -3,8 +3,7 @@
 
 using namespace Coeus;
 
-SoftplusActivation::SoftplusActivation()
-{
+SoftplusActivation::SoftplusActivation(): IActivationFunction(SOFTPLUS) {
 }
 
 

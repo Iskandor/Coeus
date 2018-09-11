@@ -1,5 +1,4 @@
 #include "SOM.h"
-#include "ActivationFunctions.h"
 #include <chrono>
 #include "Connection.h"
 #include "IOUtils.h"
@@ -57,20 +56,7 @@ void SOM::activate(Tensor* p_input) {
 
 	calc_distance();
 
-	switch (_output_group->get_activation_function()) {
-		case LINEAR:
-			_dist = Tensor::apply(_dist, ActivationFunctions::linear);
-			break;
-		case EXPONENTIAL:
-			_dist = Tensor::apply(_dist, ActivationFunctions::exponential);
-			break;
-		case GAUSS:
-			_dist = Tensor::apply(_dist, ActivationFunctions::gauss);
-			break;
-		default:
-			break;
-	}
-
+	_dist = _output_group->get_activation_function()->activate(_dist);
 	_output_group->set_output(&_dist);
 }
 
@@ -108,7 +94,7 @@ void SOM::init_conscience() const {
 }
 
 SOM * SOM::clone() const {
-	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->get_activation_function());
+	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->get_activation_function()->get_type());
 
 	result->_afferent->get_weights()->override(_afferent->get_weights());
 	result->_conscience = _conscience;

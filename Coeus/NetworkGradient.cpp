@@ -32,7 +32,7 @@ void NetworkGradient::calc_gradient(Tensor* p_target) {
 
 	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
 
-	Tensor delta = Tensor::apply(error, *output_layer->gradient_component()->get_output_deriv(), Tensor::ew_dot);
+	Tensor delta = *output_layer->gradient_component()->get_output_deriv() * error;
 
 	output_layer->gradient_component()->set_delta(&delta);
 

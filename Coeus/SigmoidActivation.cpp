@@ -3,8 +3,7 @@
 
 using namespace Coeus;
 
-SigmoidActivation::SigmoidActivation()
-{
+SigmoidActivation::SigmoidActivation(): IActivationFunction(SIGMOID) {
 }
 
 

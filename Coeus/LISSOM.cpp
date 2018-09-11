@@ -27,22 +27,7 @@ void LISSOM::activate(Tensor* p_input) {
 
 	_prime_activity = *_afferent->get_weights() * *p_input;
 
-	switch (_output_group->get_activation_function()) {
-		case LINEAR:
-		_dist = Tensor::apply(_prime_activity, ActivationFunctions::linear);
-		break;
-		case SIGMOID:
-		_dist = Tensor::apply(_prime_activity, ActivationFunctions::sigmoid);
-		break;
-		case TANH:
-		_dist = Tensor::apply(_prime_activity, ActivationFunctions::tanh);
-		break;
-		case RELU:
-		_dist = Tensor::apply(_prime_activity, ActivationFunctions::relu);
-		break;
-		default:
-		break;
-	}
+	_output_group->get_activation_function()->activate(_prime_activity);
 
 	Tensor* lateral_e = _lateral_e->get_weights();
 	Tensor* lateral_i = _lateral_i->get_weights();

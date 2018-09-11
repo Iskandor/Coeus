@@ -3,8 +3,7 @@
 
 using namespace Coeus;
 
-ReluActivation::ReluActivation()
-{
+ReluActivation::ReluActivation(): IActivationFunction(RELU) {
 }
 
 

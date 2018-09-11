@@ -3,8 +3,7 @@
 
 using namespace Coeus;
 
-TanhActivation::TanhActivation()
-{
+TanhActivation::TanhActivation(): IActivationFunction(TANH) {
 }
 
 

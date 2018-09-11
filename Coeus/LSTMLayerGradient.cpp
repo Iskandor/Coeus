@@ -71,8 +71,7 @@ void LSTMLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state)
 		_dh_next.fill(0);
 	}
 
-	Tensor wd = p_weights->T() * p_state->delta;
-	_delta[layer->_output_group->get_id()] = Tensor::apply(wd, _deriv[layer->_output_group->get_id()], Tensor::ew_dot);
+	_delta[layer->_output_group->get_id()] = p_weights->T() * p_state->delta * _deriv[layer->_output_group->get_id()];
 	_delta["_h" + _layer->id()] = layer->_Wy->get_weights()->T() * _delta[layer->_output_group->get_id()] + _dh_next;
 
 	for(int i = 0; i < layer->_output_group->get_dim(); i++)

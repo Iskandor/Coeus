@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-BinaryActivation::BinaryActivation()
+BinaryActivation::BinaryActivation() : IActivationFunction(BINARY)
 {
 }
 

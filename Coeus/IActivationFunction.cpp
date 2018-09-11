@@ -2,10 +2,8 @@
 
 using namespace Coeus;
 
-IActivationFunction::IActivationFunction()
-{
+IActivationFunction::IActivationFunction(const ACTIVATION p_id): _type(p_id) {
 }
-
 
 IActivationFunction::~IActivationFunction()
 {
