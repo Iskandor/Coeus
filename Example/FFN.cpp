@@ -95,7 +95,7 @@ void FFN::run_iris() {
 	_dataset.load_data("./data/iris.data");
 
 	_network.add_layer(new InputLayer("input", IrisDataset::SIZE));
-	_network.add_layer(new CoreLayer("hidden", 64, SIGMOID));
+	_network.add_layer(new CoreLayer("hidden", 256, SIGMOID));
 	_network.add_layer(new CoreLayer("output", 3, SOFTMAX));
 
 	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
@@ -103,7 +103,7 @@ void FFN::run_iris() {
 	_network.init();
 
 
-	const int epochs = 5;
+	const int epochs = 1000;
 	vector<IrisDatasetItem>* data = nullptr;
 	map<int, Tensor> target;
 
@@ -112,9 +112,9 @@ void FFN::run_iris() {
 		target[i][i] = 1;
 	}
 
-	RMSProp model(&_network);
-	//model.init(new QuadraticCost(), 0.001, 0.9, true);
-	model.init(new QuadraticCost(), 0.001);
+	BackProp model(&_network);
+	model.init(new CrossEntropyCost(), 0.0001, 0.9, false);
+	//model.init(new CrossEntropyCost(), 0.0001);
 
 	for (int t = 0; t < epochs; t++) {
 		data = _dataset.permute();

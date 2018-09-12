@@ -291,9 +291,6 @@
     <ClCompile Include="DeepQLearning.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
-    <ClCompile Include="ICM.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IActivationFunction.cpp">
       <Filter>Source Files\Network\ActivationFunctions</Filter>
     </ClCompile>
@@ -323,6 +320,9 @@
     </ClCompile>
     <ClCompile Include="GaussianActivation.cpp">
       <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="ICM.cpp">
+      <Filter>Source Files\Algorithm\IM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -530,9 +530,6 @@
     <ClInclude Include="DeepQLearning.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
-    <ClInclude Include="ICM.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IActivationFunction.h">
       <Filter>Header Files\Network\ActivationFunctions</Filter>
     </ClInclude>
@@ -565,6 +562,9 @@
     </ClInclude>
     <ClInclude Include="Coeus.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ICM.h">
+      <Filter>Header Files\Algorithm\IM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

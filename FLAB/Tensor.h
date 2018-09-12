@@ -34,21 +34,32 @@ public:
 
 	void operator = (const Tensor& p_tensor);
 	Tensor operator + (const Tensor& p_tensor) const;
-	void operator += (const Tensor& p_tensor) const;
+	Tensor& operator += (const Tensor& p_tensor);
 	Tensor operator - (const Tensor& p_tensor) const;
-	void operator -= (const Tensor& p_tensor) const;
+	Tensor& operator -= (const Tensor& p_tensor);
 	Tensor operator * (const Tensor& p_tensor) const;
 	friend static Tensor operator * (const double p_const, const Tensor& p_tensor) { return p_tensor * p_const; }
 	Tensor operator * (const double p_const) const;
-	void operator *= (const double p_const) const;
+	Tensor& operator *= (const double p_const);
 	Tensor operator / (const double p_const) const;
-	void operator /= (const double p_const) const;
+	friend static Tensor operator / (const double p_const, const Tensor& p_tensor) {
+		const Tensor temp(p_tensor);
+
+		for (int i = 0; i < temp._size; i++) {
+			temp._arr[i] = p_const / temp._arr[i];
+		}
+
+		return Tensor(temp);
+	}
+	Tensor& operator /= (const double p_const);
 	double& operator [](const int p_index) const;
 
 	Tensor T() const;
 	Tensor diag() const;
+	Tensor pow(double p_y) const;
+	Tensor sqrt() const;
 
-	static Tensor apply(Tensor& p_source, double(*f)());
+
 	static Tensor apply(Tensor& p_source, double(*f)(double));
 	static Tensor apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double));
 
