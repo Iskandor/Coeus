@@ -103,7 +103,7 @@ void FFN::run_iris() {
 	_network.init();
 
 
-	const int epochs = 1000;
+	const int epochs = 500;
 	vector<IrisDatasetItem>* data = nullptr;
 	map<int, Tensor> target;
 
@@ -112,9 +112,10 @@ void FFN::run_iris() {
 		target[i][i] = 1;
 	}
 
-	BackProp model(&_network);
-	model.init(new CrossEntropyCost(), 0.0001, 0.9, false);
-	//model.init(new CrossEntropyCost(), 0.0001);
+	//BackProp model(&_network);
+	//model.init(new CrossEntropyCost(), 0.0001, 0.9, false);
+	ADAM model(&_network);
+	model.init(new CrossEntropyCost(), 0.0002);
 
 	for (int t = 0; t < epochs; t++) {
 		data = _dataset.permute();

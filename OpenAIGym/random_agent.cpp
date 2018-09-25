@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 
 		rl_agent agent;
 
-		agent.run(client, "FrozenLake-v0", 10000);
+		agent.run(client, "FrozenLake-v0", 1000);
 
 	} catch (const std::exception& e) {
 		fprintf(stderr, "ERROR: %s\n", e.what());

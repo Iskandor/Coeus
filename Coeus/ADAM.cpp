@@ -17,10 +17,13 @@ void ADAM::init(ICostFunction* p_cost_function, const double p_alpha, const doub
 	_beta1 = p_beta1;
 	_beta2 = p_beta2;
 	_epsilon = p_epsilon;
+	_pow_beta1 = _beta1;
+	_pow_beta2 = _beta2;
 }
 
 void ADAM::update_momentum(const string p_id, Tensor& p_gradient) {
 
+	/*
 	Tensor* m = &_m[p_id];
 	Tensor* v = &_v[p_id];
 	Tensor* m_mean = &_m_mean[p_id];
@@ -32,7 +35,16 @@ void ADAM::update_momentum(const string p_id, Tensor& p_gradient) {
 		(*m_mean)[i] = (*m)[i] / (1 - _beta1);
 		(*v_mean)[i] = (*v)[i] / (1 - _beta2);
 	}
+	*/
 
+	_m[p_id] = _beta1 * _m[p_id] + (1 - _beta1) * p_gradient;
+	_v[p_id] = _beta2 * _v[p_id] + (1 - _beta2) * p_gradient.pow(2);
+
+	_m_mean[p_id] = _m[p_id] / (1 - _pow_beta1);
+	_v_mean[p_id] = _v[p_id] / (1 - _pow_beta2);
+
+	_pow_beta1 *= _beta1;
+	_pow_beta2 *= _beta2;
 }
 
 void ADAM::calc_update() {
@@ -41,6 +53,7 @@ void ADAM::calc_update() {
 	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
 		update_momentum(it->first, it->second);
 
+		/*
 		Tensor* update = &_update[it->first];
 		Tensor* m_mean = &_m_mean[it->first];
 		Tensor* v_mean = &_v_mean[it->first];
@@ -49,6 +62,9 @@ void ADAM::calc_update() {
 		for (int i = 0; i < it->second.size(); i++) {
 			(*update)[i] = -_alpha / (sqrt((*v_mean)[i]) + _epsilon) * (*m_mean)[i];
 		}
+		*/
+
+		_update[it->first] = -_alpha * _m_mean[it->first] / (_v_mean[it->first].sqrt() + _epsilon);
 	}
 }
 

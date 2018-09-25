@@ -35,12 +35,12 @@ MazeTask::~MazeTask() {
     delete maze;
 }
 
-bool MazeTask::isFinished() {
+bool MazeTask::isFinished() const {
     return (maze->actor() == maze->goal() || maze->kill());
 }
 
-double MazeTask::getReward() {
-    double reward = MazeTask::defautPenalty;
+double MazeTask::getReward() const {
+    double reward = defautPenalty;
 
     if (isFinished()) reward = finalReward;
     if (maze->bang()) reward = bangPenalty;

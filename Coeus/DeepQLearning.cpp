@@ -34,7 +34,7 @@ double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_sta
 		vector<ReplayBuffer::Item*>* sample = _replay_buffer->get_sample(_sample_size);
 
 		for (int i = 0; i < sample->size(); i++) {
-			const int maxQs1a = calc_max_qa(&sample->at(i)->s1);
+			const double maxQs1a = calc_max_qa(&sample->at(i)->s1);
 
 			_network->activate(&sample->at(i)->s0);
 			_input->at(i)->override(&sample->at(i)->s0);
@@ -43,7 +43,7 @@ double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_sta
 				_target->at(i)->set(sample->at(i)->a, sample->at(i)->r);
 			}
 			else {
-				_target->at(i)->set(sample->at(i)->a, sample->at(i)->r + _gamma * _network->get_output()->at(maxQs1a));
+				_target->at(i)->set(sample->at(i)->a, sample->at(i)->r + _gamma * maxQs1a);
 			}			
 		}
 
@@ -53,15 +53,9 @@ double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_sta
 	return error;
 }
 
-int DeepQLearning::calc_max_qa(Tensor* p_state) {
-	int maxQa = 0;
-
+double DeepQLearning::calc_max_qa(Tensor* p_state) {
 	_network->activate(p_state);
-	for (int i = 1; i < _network->get_output()->size(); i++) {
-		if (_network->get_output()->at(i) >  _network->get_output()->at(maxQa)) {
-			maxQa = i;
-		}
-	}
+	const int maxQa = _network->get_output()->max_value_index();
 
-	return maxQa;
+	return _network->get_output()->at(maxQa);
 }

@@ -33,18 +33,20 @@ void MazeExample::example_q() {
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 64));
-	network.add_layer(new CoreLayer("hidden0", 512, RELU));
+	network.add_layer(new InputLayer("input", 16));
+	network.add_layer(new CoreLayer("hidden", 128, RELU));
+	network.add_layer(new CoreLayer("hidden1", 32, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden", "hidden1", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden1", "output", Connection::LECUN_UNIFORM);
 	network.init();
 
 	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
+	//optimizer.init(new QuadraticCost(), 0.01);
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.01);
+	optimizer.init(new QuadraticCost(), 0.001);
 	QLearning agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;
@@ -52,7 +54,7 @@ void MazeExample::example_q() {
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 4000;
+	int epochs = 10000;
 
 	int wins = 0, loses = 0;
 
@@ -78,6 +80,7 @@ void MazeExample::example_q() {
 			sensors = maze->getSensors();
 			state1 = encode_state(&sensors);
 			reward = task.getReward();
+			
 			agent.train(&state0, action, &state1, reward);
 		}
 
@@ -203,16 +206,18 @@ void MazeExample::example_sarsa() {
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 64));
-	network.add_layer(new CoreLayer("hidden0", 512, RELU));
+	network.add_layer(new InputLayer("input", 16));
+	network.add_layer(new CoreLayer("hidden", 64, RELU));
+	network.add_layer(new CoreLayer("hidden1", 16, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden", "hidden1", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden1", "output", Connection::LECUN_UNIFORM);
 	network.init();
 
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.01);
+	optimizer.init(new QuadraticCost(), 0.001);
 	SARSA agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;
@@ -220,7 +225,7 @@ void MazeExample::example_sarsa() {
 	int action0, action1;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 4000;
+	int epochs = 6000;
 
 	int wins = 0, loses = 0;
 
@@ -280,8 +285,8 @@ void MazeExample::example_actor_critic() {
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new InputLayer("input", 64));
-	network_critic.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network_critic.add_layer(new InputLayer("input", 16));
+	network_critic.add_layer(new CoreLayer("hidden0", 128, RELU));
 	network_critic.add_layer(new CoreLayer("output", 1, LINEAR));
 	// feed-forward connections
 	network_critic.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
@@ -289,21 +294,21 @@ void MazeExample::example_actor_critic() {
 	network_critic.init();
 
 	ADAM optimizer1(&network_critic);
-	optimizer1.init(new QuadraticCost(), 0.01);
+	optimizer1.init(new QuadraticCost(), 0.001);
 	TD critic(&network_critic, &optimizer1, 0.9);
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new InputLayer("input", 64));
-	network_actor.add_layer(new CoreLayer("hidden0", 512, RELU));
-	network_actor.add_layer(new CoreLayer("output", 4, LINEAR));
+	network_actor.add_layer(new InputLayer("input", 16));
+	network_actor.add_layer(new CoreLayer("hidden0", 128, RELU));
+	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX));
 	// feed-forward connections
 	network_actor.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_actor.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_actor.init();
 
 	ADAM optimizer2(&network_actor);
-	optimizer2.init(new QuadraticCost(), 0.01);
+	optimizer2.init(new QuadraticCost(), 0.001);
 	Actor actor(&network_actor, &optimizer2, 0.9);
 
 	vector<double> sensors;
@@ -312,7 +317,7 @@ void MazeExample::example_actor_critic() {
 	int value0, value1;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 4000;
+	int epochs = 6000;
 
 	int wins = 0, loses = 0;
 
@@ -374,7 +379,7 @@ void MazeExample::example_deep_q() {
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 64));
+	network.add_layer(new InputLayer("input", 16));
 	network.add_layer(new CoreLayer("hidden0", 256, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
@@ -385,7 +390,7 @@ void MazeExample::example_deep_q() {
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.01);
+	optimizer.init(new QuadraticCost(), 0.001);
 	DeepQLearning agent(&network, &optimizer, 0.9, 1024, 64);
 
 	vector<double> sensors;
@@ -547,20 +552,10 @@ void MazeExample::example_icm() {
 }
 
 Tensor MazeExample::encode_state(vector<double>* p_sensors) {
-	const Tensor res({ 64 }, Tensor::ZERO);
-	Tensor encoded({ 4 }, Tensor::ZERO);
+	const Tensor res({ static_cast<int>(p_sensors->size()) }, Tensor::ZERO);
 
 	for (unsigned int i = 0; i < p_sensors->size(); i++) {
-		if (p_sensors->at(i) > 0) {
-			binary_encoding(p_sensors->at(i) - 1, &encoded);
-		}
-		else {
-			encoded.fill(0);
-		}
-
-		for (int j = 0; j < 4; j++) {
-			res[i * 4 + j] = encoded[j];
-		}
+		res[i] = p_sensors->at(i);
 	}
 
 	return Tensor(res);

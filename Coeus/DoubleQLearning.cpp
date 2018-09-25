@@ -22,32 +22,26 @@ double DoubleQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_s
 	double error;
 
 	if (RandomGenerator::getInstance().random() > 0.5) {
-		const int maxQs1a = calc_max_qa(p_state1, _network_a);
+		const double maxQs1a = calc_max_qa(p_state1, _network_a);
 		_network_a->activate(p_state0);
 		_target.override(_network_a->get_output());
-		_target[p_action0] = p_reward + _gamma * _network_b->get_output()->at(maxQs1a);
+		_target[p_action0] = p_reward + _gamma * maxQs1a;
 		error = _gradient_algorithm_a->train(p_state0, &_target);
 	}
 	else {
-		const int maxQs1a = calc_max_qa(p_state1, _network_b);
+		const double maxQs1a = calc_max_qa(p_state1, _network_b);
 		_network_b->activate(p_state0);
 		_target.override(_network_b->get_output());
-		_target[p_action0] = p_reward + _gamma * _network_a->get_output()->at(maxQs1a);
+		_target[p_action0] = p_reward + _gamma * maxQs1a;
 		error = _gradient_algorithm_b->train(p_state0, &_target);
 	}
 
 	return error;
 }
 
-int DoubleQLearning::calc_max_qa(Tensor* p_state, NeuralNetwork* p_network) {
-	int maxQa = 0;
-
+double DoubleQLearning::calc_max_qa(Tensor* p_state, NeuralNetwork* p_network) const {
 	p_network->activate(p_state);
-	for (int i = 1; i < p_network->get_output()->size(); i++) {
-		if (p_network->get_output()->at(i) >  p_network->get_output()->at(maxQa)) {
-			maxQa = i;
-		}
-	}
+	const int maxQa = p_network->get_output()->max_value_index();
 
-	return maxQa;
+	return p_network->get_output()->at(maxQa);
 }

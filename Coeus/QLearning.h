@@ -7,16 +7,17 @@ namespace Coeus {
 class __declspec(dllexport) QLearning
 {
 public:
-	QLearning(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, double p_gamma);
+	QLearning(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, double p_gamma, double p_alpha = 1.0);
 	virtual ~QLearning();
 
-	virtual double train(Tensor* p_state0, int p_action0, Tensor* p_state1, double p_reward);
+	double train(Tensor* p_state0, int p_action0, Tensor* p_state1, double p_reward);
 
-protected:
-	virtual int calc_max_qa(Tensor* p_state);	
+private:
+	double calc_max_qa(Tensor* p_state) const;	
 
 	NeuralNetwork* _network;
 	BaseGradientAlgorithm* _gradient_algorithm;
+	double _alpha;
 	double _gamma;
 
 	Tensor _target;

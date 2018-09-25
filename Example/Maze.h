@@ -17,29 +17,29 @@ public:
     Maze(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal);
     ~Maze();
 
-    vector<double> getSensors();
-    void performAction(double p_action);
-    void reset();
+    vector<double> getSensors() override;
+    void performAction(double p_action) override;
+    void reset() override;
 
     string toString();
 
-    int actor() {
+    int actor() const {
         return _actor;
     }
 
-    int goal() {
+    int goal() const {
         return _goal;
     }
 
-    bool bang() {
+    bool bang() const {
         return _bang;
     }
 
-    bool kill() {
+    bool kill() const {
         return _kill;
     }
 
-	int moves() {
+	int moves() const {
 		return _a;
     }
 
@@ -48,7 +48,6 @@ private:
     vector<int> freePos();
     int moveInDir(int p_x, int p_y);
 
-private:
     unsigned int _mazeX, _mazeY;
     vector<int> _initPos;
     vector<int> _mazeTable;

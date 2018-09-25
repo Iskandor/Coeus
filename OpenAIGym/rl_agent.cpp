@@ -11,8 +11,8 @@
 rl_agent::rl_agent()
 {
 	_network.add_layer(new InputLayer("input", 16));
-	_network.add_layer(new CoreLayer("hidden0", 16, RELU));
-	_network.add_layer(new CoreLayer("output", 4, SIGMOID));
+	_network.add_layer(new CoreLayer("hidden0", 16, SIGMOID));
+	_network.add_layer(new CoreLayer("output", 4, SOFTMAX));
 
 	_network.add_connection("input", "hidden0", Connection::UNIFORM, 0.01);
 	_network.add_connection("hidden0", "output", Connection::UNIFORM, 0.01);
