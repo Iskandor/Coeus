@@ -35,12 +35,10 @@ void MazeExample::example_q() {
 
 	network.add_layer(new InputLayer("input", 16));
 	network.add_layer(new CoreLayer("hidden", 128, RELU));
-	network.add_layer(new CoreLayer("hidden1", 32, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden", "hidden1", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden1", "output", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -300,7 +298,7 @@ void MazeExample::example_actor_critic() {
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new InputLayer("input", 16));
-	network_actor.add_layer(new CoreLayer("hidden0", 128, RELU));
+	network_actor.add_layer(new CoreLayer("hidden0", 256, RELU));
 	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX));
 	// feed-forward connections
 	network_actor.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
@@ -317,7 +315,7 @@ void MazeExample::example_actor_critic() {
 	int value0, value1;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 6000;
+	int epochs = 10000;
 
 	int wins = 0, loses = 0;
 
