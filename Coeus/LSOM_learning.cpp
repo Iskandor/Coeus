@@ -6,7 +6,7 @@ using namespace Coeus;
 
 LSOM_learning::LSOM_learning(LSOM* p_som, LSOM_params* p_params, SOM_analyzer* p_som_analyzer) : Base_SOM_learning(p_som, p_params, p_som_analyzer)
 {
-	_past = 2;
+	_past = 100;
 	_lsom = p_som;
 
 	const int dim_input = p_som->get_input_group()->get_dim();
@@ -44,8 +44,8 @@ void LSOM_learning::train(Tensor * p_input)
 	Tensor* li = _lsom->get_lateral()->get_weights();
 	Tensor* bi = _lsom->get_lattice()->get_bias();
 
-	const double alpha = static_cast<LSOM_params*>(_params)->alpha();
-	const double beta = static_cast<LSOM_params*>(_params)->beta();
+	const double alpha = dynamic_cast<LSOM_params*>(_params)->alpha();
+	const double beta = dynamic_cast<LSOM_params*>(_params)->beta();
 
 	_som_analyzer->update(_lsom, winner);
 	_winners.insert(winner);
@@ -96,7 +96,8 @@ void LSOM_learning::train(Tensor * p_input)
 				int s = 0;
 			}
 
-			const double val = beta * ro * abs(oi->at(i) * oi->at(j));
+			const double l = _dist_matrix.at(i, j) == 0 ? 0 : 1 / _dist_matrix.at(i, j);
+			const double val = beta * ro * l * abs(oi->at(i) * oi->at(j));
 			_delta_lw.set(i, j, val);
 
 			if (_delta_lw.at(j,i) != _delta_lw.at(j, i)) {

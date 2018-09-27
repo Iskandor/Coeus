@@ -8,7 +8,7 @@ LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const in
 {
 	_type = TYPE::LSOM;
 	_lateral = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
-	_lateral->init(Connection::UNIFORM, 1);
+	_lateral->init(Connection::UNIFORM, true, 1);
 
 	_auxoutput = Tensor::Zero({ _dim_x * _dim_y });
 	Tensor bias = Tensor::apply(*_output_group->get_bias(), Tensor::ew_abs);
