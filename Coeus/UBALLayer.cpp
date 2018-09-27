@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-UBALLayer::UBALLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation, BaseLayer* p_layer) : BaseLayer(p_id)
+UBALLayer::UBALLayer(string p_id, int p_dim, ACTIVATION p_activation, BaseLayer* p_layer) : BaseLayer(p_id)
 {
 	_input_group = p_layer->get_output_group();
 	_input_bp = new NeuralGroup(_input_group->get_dim(), p_activation, true);

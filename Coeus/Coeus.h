@@ -1,0 +1,13 @@
+#pragma once
+
+enum ACTIVATION {
+	LINEAR,
+	BINARY,
+	SIGMOID,
+	TANH,
+	SOFTMAX,
+	SOFTPLUS,
+	RELU,
+	EXPONENTIAL,
+	GAUSS
+};

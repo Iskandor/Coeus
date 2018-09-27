@@ -11,9 +11,9 @@ RNN::RNN()
 {
 	_network.add_layer(new InputLayer("input0", 1));
 	_network.add_layer(new InputLayer("input1", 1));
-	_network.add_layer(new LSTMLayer("hidden0", 2, NeuralGroup::ACTIVATION::SIGMOID));
-	_network.add_layer(new LSTMLayer("hidden1", 2, NeuralGroup::ACTIVATION::SIGMOID));
-	_network.add_layer(new CoreLayer("output", 1, NeuralGroup::ACTIVATION::SIGMOID));
+	_network.add_layer(new LSTMLayer("hidden0", 2, SIGMOID));
+	_network.add_layer(new LSTMLayer("hidden1", 2, SIGMOID));
+	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	_network.add_connection("input0", "hidden0", Connection::UNIFORM, 0.1);
 	_network.add_connection("input1", "hidden1", Connection::UNIFORM, 0.1);

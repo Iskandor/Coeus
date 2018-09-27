@@ -13,7 +13,7 @@ namespace Coeus
 		double train(Tensor* p_state0, int p_action0, Tensor* p_state1, double p_reward);
 
 	protected:
-		int calc_max_qa(Tensor* p_state, NeuralNetwork* p_network);
+		double calc_max_qa(Tensor* p_state, NeuralNetwork* p_network) const;
 
 		NeuralNetwork* _network_a;
 		BaseGradientAlgorithm* _gradient_algorithm_a;

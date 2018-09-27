@@ -115,37 +115,45 @@ void Tensor::operator=(const Tensor& p_copy) {
 }
 
 Tensor Tensor::operator+(const Tensor& p_tensor) const {
-	double* arr = alloc_arr(_size);
-	int* shape = copy_shape(_rank, _shape);
+	Tensor temp(*this);
 
-	for(int i = 0; i < _size; i++) {
-		arr[i] = _arr[i] + p_tensor._arr[i];
-	}
-
-	return Tensor(_rank, shape, arr);
+	return temp += p_tensor;
 }
 
-void Tensor::operator+=(const Tensor& p_tensor) const {
+Tensor Tensor::operator+(const double p_const) const {
+	Tensor temp(*this);
+
+	return temp += p_const;
+}
+
+Tensor& Tensor::operator+=(const Tensor& p_tensor) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] += p_tensor._arr[i];
 	}
+
+	return *this;
+}
+
+Tensor& Tensor::operator+=(const double p_const) {
+	for (int i = 0; i < _size; i++) {
+		_arr[i] += p_const;
+	}
+
+	return *this;
 }
 
 Tensor Tensor::operator-(const Tensor& p_tensor) const {
-	double* arr = alloc_arr(_size);
-	int* shape = copy_shape(_rank, _shape);
+	Tensor temp(*this);
 
-	for (int i = 0; i < _size; i++) {
-		arr[i] = _arr[i] - p_tensor._arr[i];
-	}
-
-	return Tensor(_rank, shape, arr);
+	return temp -= p_tensor;
 }
 
-void Tensor::operator-=(const Tensor& p_tensor) const {
+Tensor& Tensor::operator-=(const Tensor& p_tensor) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] -= p_tensor._arr[i];
 	}
+
+	return *this;
 }
 
 Tensor Tensor::operator*(const Tensor& p_tensor) const {
@@ -206,37 +214,42 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 }
 
 Tensor Tensor::operator*(const double p_const) const {
-	double* arr = alloc_arr(_size);
-	int* shape = copy_shape(_rank, _shape);
+	Tensor temp(*this);
 
-	for (int i = 0; i < _size; i++) {
-		arr[i] = _arr[i] * p_const;
-	}
-
-	return Tensor(_rank, shape, arr);
+	return temp *= p_const;
 }
 
-void Tensor::operator*=(const double p_const) const {
+Tensor& Tensor::operator*=(const double p_const) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] *= p_const;
 	}
+
+	return *this;
 }
 
 Tensor Tensor::operator/(const double p_const) const {
+	Tensor temp(*this);
+
+	return temp /= p_const;
+}
+
+Tensor Tensor::operator/(const Tensor& p_tensor) const {
 	double* arr = alloc_arr(_size);
 	int* shape = copy_shape(_rank, _shape);
 
 	for (int i = 0; i < _size; i++) {
-		arr[i] = _arr[i] / p_const;
+		arr[i] = _arr[i] / p_tensor._arr[i];
 	}
 
 	return Tensor(_rank, shape, arr);
 }
 
-void Tensor::operator/=(const double p_const) const {
+Tensor& Tensor::operator/=(const double p_const) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] /= p_const;
 	}
+
+	return *this;
 }
 
 double& Tensor::operator[](const int p_index) const {
@@ -268,6 +281,56 @@ Tensor Tensor::T() const {
 	return Tensor(_rank, shape, arr);
 }
 
+Tensor Tensor::diag() const {
+	const int rank = 2;
+	int* shape = alloc_shape(rank);
+	double* arr = alloc_arr(_size *_size);
+
+	shape[0] = _shape[0];
+	shape[1] = _shape[0];
+
+	for(int i = 0; i < _size; i++) {
+		for (int j = 0; j < _size; j++) {
+			arr[i * _size + j] = i == j ? _arr[i] : 0;
+		}
+	}
+
+	return Tensor(rank, shape, arr);
+}
+
+Tensor Tensor::pow(const double p_y) const {
+	double* arr = alloc_arr(_size);
+	int* shape = copy_shape(_rank, _shape);
+
+	for (int i = 0; i < _size; i++) {
+		arr[i] = std::pow(_arr[i], p_y);
+	}
+
+	return Tensor(_rank, shape, arr);
+}
+
+Tensor Tensor::sqrt() const {
+	double* arr = alloc_arr(_size);
+	int* shape = copy_shape(_rank, _shape);
+
+	for (int i = 0; i < _size; i++) {
+		arr[i] = std::sqrt(_arr[i]);
+	}
+
+	return Tensor(_rank, shape, arr);
+}
+
+Tensor Tensor::dot(const Tensor& p_tensor) const {
+	double* arr = alloc_arr(_size);
+	int* shape = copy_shape(_rank, _shape);
+
+	for (int i = 0; i < _size; i++) {
+		arr[i] = _arr[i] * p_tensor._arr[i];
+	}
+
+	return Tensor(_rank, shape, arr);
+}
+
 Tensor Tensor::apply(Tensor& p_source, double(*f)(double))
 {
 	double* arr = alloc_arr(p_source._size);
@@ -291,7 +354,7 @@ Tensor Tensor::apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, do
 	return Tensor(p_source1._rank, shape, arr);
 }
 
-int Tensor::max_index() const {
+int Tensor::max_value_index() const {
 	int max = 0;
 
 	for(int i = 0; i < _size; i++) {
@@ -377,14 +440,6 @@ double Tensor::ew_dot(const double p_x, const double p_y) {
 
 double Tensor::ew_div(const double p_x, const double p_y) {
 	return p_x / p_y;
-}
-
-double Tensor::ew_pow2(const double p_x) {
-	return pow(p_x, 2);
-}
-
-double Tensor::ew_sqrt(const double p_x) {
-	return sqrt(p_x);
 }
 
 double Tensor::ew_abs(const double p_x) {

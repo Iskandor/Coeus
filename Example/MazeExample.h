@@ -15,6 +15,7 @@ public:
 	void example_sarsa();
 	void example_actor_critic();
 	void example_deep_q();
+	void example_icm();
 
 private:
 	static Tensor encode_state(vector<double> *p_sensors);

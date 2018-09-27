@@ -7,7 +7,7 @@ namespace Coeus {
 class __declspec(dllexport) RecurrentLayer : 	public BaseLayer
 {
 public:
-	RecurrentLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation);
+	RecurrentLayer(string p_id, int p_dim, ACTIVATION p_activation);
 	RecurrentLayer(RecurrentLayer &p_copy);
 	~RecurrentLayer();
 

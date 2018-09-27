@@ -17,7 +17,9 @@ namespace Coeus {
 		void init_structures() override;
 
 		double _beta1;
+		double _pow_beta1;
 		double _beta2;
+		double _pow_beta2;
 		double _epsilon;
 
 		map<string, Tensor> _m;

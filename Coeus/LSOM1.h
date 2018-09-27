@@ -6,7 +6,7 @@ namespace Coeus {
 class __declspec(dllexport) LSOM1 : public SOM
 {
 public:
-	LSOM1(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation);
+	LSOM1(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const ACTIVATION p_activation);
 	~LSOM1();
 
 	void activate(Tensor* p_input = nullptr) override;

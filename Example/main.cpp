@@ -19,12 +19,12 @@ int main()
 	/*
 	FFN model;
 
-	model.run();
+	model.run_iris();
 	*/
 
 	MazeExample example;
 
-	example.example_q();
+	example.example_actor_critic();
 
 	/*
 	RNN model;

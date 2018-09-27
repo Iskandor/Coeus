@@ -13,7 +13,7 @@ namespace Coeus
 		double train(Tensor* p_state0, int p_action0, Tensor* p_state1, double p_reward, bool p_final);
 
 	private:
-		virtual int calc_max_qa(Tensor* p_state);
+		double calc_max_qa(Tensor* p_state);
 
 		NeuralNetwork* _network;
 		BaseGradientAlgorithm* _gradient_algorithm;

@@ -42,6 +42,7 @@ void Maze::reset() {
     _bang = false;
     _kill = false;
 	_actor = RandomGenerator::getInstance().choice(&_initPos)[0];
+	//_actor = 0;
 }
 
 vector<int> Maze::freePos() {
@@ -84,25 +85,9 @@ void Maze::performAction(double p_action) {
 }
 
 vector<double> Maze::getSensors() {
-    /*
-    vector<int> res(_numActions, 0);
-    int obs;
-
-    for(int i = 0; i < _numActions; i++) {
-        obs = moveInDir(_actions[i].X(), _actions[i].Y());
-        if (obs > 0 && obs < _mazeTable.size()) {
-            res[i] = _mazeTable[(unsigned int) obs];
-        }
-    }
-    */
     vector<double> res(_mazeTable.size(), 0);
 
-    for(int i = 0; i < _mazeTable.size(); i++) {
-        res[i] = _mazeTable[i];
-    }
-
-    res[_actor] = 3;
-    res[_goal] = 4;
+    res[_actor] = 1;
 
     return vector<double>(res);
 }

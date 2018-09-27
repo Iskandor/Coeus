@@ -55,7 +55,7 @@ void ModelMNS2::init(string p_timestamp) {
 			_sizeF5input + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y,
 			Config::instance().f5_config.dim_x,
 			Config::instance().f5_config.dim_y,
-			NeuralGroup::EXPONENTIAL,
+			EXPONENTIAL,
 			Config::instance().f5_config.alpha,
 			Config::instance().f5_config.beta);
 
@@ -64,7 +64,7 @@ void ModelMNS2::init(string p_timestamp) {
 			_sizeSTSinput + Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y,
 			Config::instance().sts_config.dim_x,
 			Config::instance().sts_config.dim_y,
-			NeuralGroup::EXPONENTIAL,
+			EXPONENTIAL,
 			Config::instance().sts_config.alpha,
 			Config::instance().sts_config.beta);
 
@@ -73,7 +73,7 @@ void ModelMNS2::init(string p_timestamp) {
 			Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y,
 			Config::instance().pf_config.dim_x,
 			Config::instance().pf_config.dim_y,
-			NeuralGroup::EXPONENTIAL);
+			EXPONENTIAL);
 
 		cout << "done" << endl;
 	}

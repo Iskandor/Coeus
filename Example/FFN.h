@@ -1,5 +1,6 @@
 #pragma once
 #include "NeuralNetwork.h"
+#include "IrisDataset.h"
 
 using namespace Coeus;
 
@@ -10,8 +11,10 @@ public:
 	~FFN();
 
 	void run();
+	void run_iris();
 
 private:
 	NeuralNetwork _network;
+	IrisDataset _dataset;
 };
 

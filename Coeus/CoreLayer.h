@@ -8,7 +8,7 @@ class __declspec(dllexport) CoreLayer : public BaseLayer
 {
 	friend class CoreLayerGradient;
 public:
-	CoreLayer(string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation);
+	CoreLayer(string p_id, int p_dim, ACTIVATION p_activation);
 	CoreLayer(CoreLayer &p_copy);
 	~CoreLayer();
 

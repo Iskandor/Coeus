@@ -1,22 +1,30 @@
 #include "NeuralGroup.h"
-#include "ActivationFunctions.h"
 #include "IDGen.h"
+#include "LinearActivation.h"
+#include "BinaryActivation.h"
+#include "SigmoidActivation.h"
+#include "TanhActivation.h"
+#include "SoftplusActivation.h"
+#include "ReluActivation.h"
+#include "SoftmaxActivation.h"
 
 using namespace std;
 using namespace Coeus;
 /**
  * NeuralGroup constructor creates layer of p_dim neurons with p_activationFunction
  * @param p_dim dimension of layer
- * @param p_activationFunction get_type of activation function
+ * @param p_activation_function get_type of activation function
  * @param p_bias
  */
-NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activationFunction, const bool p_bias)
+NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activation_function, const bool p_bias)
 {
     _id = IDGen::instance().next();
 	_bias_flag = p_bias;	
 	
     _dim = p_dim;
-    _activationFunction = p_activationFunction;
+    _activation_function = p_activation_function;
+	init_activation_function();
+
 
 	_output = Tensor::Zero({ _dim });
 	_ap = Tensor::Zero({ _dim });
@@ -26,7 +34,8 @@ NeuralGroup::NeuralGroup(const int p_dim, const ACTIVATION p_activationFunction,
 NeuralGroup::NeuralGroup(nlohmann::json p_data) {
 	_id = p_data["id"].get<string>();
 	_dim = p_data["dim"].get<int>();
-	_activationFunction = static_cast<ACTIVATION>(p_data["actfn"].get<int>());
+	_activation_function = static_cast<ACTIVATION>(p_data["actfn"].get<int>());
+	init_activation_function();
 	_bias_flag = p_data["bias"].get<bool>();
 	//#TODO doriesit _bias = ;
 
@@ -37,7 +46,8 @@ NeuralGroup::NeuralGroup(nlohmann::json p_data) {
 NeuralGroup::NeuralGroup(NeuralGroup &p_copy) {
     _id = p_copy._id;
     _dim = p_copy._dim;
-    _activationFunction = p_copy._activationFunction;
+    _activation_function = p_copy._activation_function;
+	init_activation_function();
 	_bias = Tensor(p_copy._bias);
 
 	_output = Tensor::Zero({ _dim });
@@ -50,7 +60,7 @@ NeuralGroup::NeuralGroup(NeuralGroup &p_copy) {
  */
 NeuralGroup::~NeuralGroup(void)
 {
-
+	if (_f != nullptr) delete _f;
 }
 
 /**
@@ -70,28 +80,7 @@ void NeuralGroup::activate() {
 		_ap += _bias;
 	}
 
-    switch (_activationFunction) {
-        case IDENTITY:
-        case LINEAR:
-			_output = Tensor::apply(_ap, ActivationFunctions::linear);
-            break;
-        case BINARY:
-			_output = Tensor::apply(_ap, ActivationFunctions::binary);
-            break;
-        case SIGMOID:
-			_output = Tensor::apply(_ap, ActivationFunctions::sigmoid);
-            break;
-        case TANH:
-			_output = Tensor::apply(_ap, ActivationFunctions::tanh);
-            break;
-        case SOFTPLUS:
-			_output = Tensor::apply(_ap, ActivationFunctions::softplus);
-            break;
-        case RELU:
-			_output = Tensor::apply(_ap, ActivationFunctions::relu);
-            break;
-	    default: ;
-    }
+	_output = _f->activate(_ap);
 	_ap.fill(0);
 }
 
@@ -101,5 +90,33 @@ void NeuralGroup::set_output(Tensor* p_output) const {
 
 void NeuralGroup::update_bias(Tensor& p_delta_b) {
 	_bias += p_delta_b;
+}
+
+void NeuralGroup::init_activation_function() {
+	switch (_activation_function) {
+	case LINEAR:
+		_f = new LinearActivation();
+		break;
+	case BINARY:
+		_f = new BinaryActivation();
+		break;
+	case SIGMOID:
+		_f = new SigmoidActivation();
+		break;
+	case TANH:
+		_f = new TanhActivation();
+		break;
+	case SOFTPLUS:
+		_f = new SoftplusActivation();
+		break;
+	case RELU:
+		_f = new ReluActivation();
+		break;
+	case SOFTMAX:
+		_f = new SoftmaxActivation();
+		break;
+	default:
+		_f = nullptr;
+	}
 }
 

@@ -15,8 +15,8 @@ public:
 
     void run();
 
-    bool isFinished();
-    double getReward();
+    bool isFinished() const;
+    double getReward() const;
 
     Maze *getEnvironment() {
         return maze;

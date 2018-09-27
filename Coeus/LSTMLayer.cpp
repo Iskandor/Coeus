@@ -4,14 +4,14 @@
 using namespace Coeus;
 
 
-LSTMLayer::LSTMLayer(const string p_id, int p_dim, NeuralGroup::ACTIVATION p_activation) : BaseLayer(p_id)
+LSTMLayer::LSTMLayer(const string p_id, int p_dim, ACTIVATION p_activation) : BaseLayer(p_id)
 {
 	_output_group = add_group(new NeuralGroup(p_dim, p_activation, true));
 
-	_hf = add_group(new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true));
-	_hi = add_group(new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true));
-	_ho = add_group(new NeuralGroup(p_dim, NeuralGroup::SIGMOID, true));
-	_hc = add_group(new NeuralGroup(p_dim, NeuralGroup::TANH, true));
+	_hf = add_group(new NeuralGroup(p_dim, SIGMOID, true));
+	_hi = add_group(new NeuralGroup(p_dim, SIGMOID, true));
+	_ho = add_group(new NeuralGroup(p_dim, SIGMOID, true));
+	_hc = add_group(new NeuralGroup(p_dim, TANH, true));
 
 	_c = new Tensor({ p_dim }, Tensor::INIT::ZERO);
 	_h = new Tensor({ p_dim }, Tensor::INIT::ZERO);
@@ -49,11 +49,11 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 		dim += p_input_layer->output_dim();
 	}
 
-	_input_group = new NeuralGroup(dim, NeuralGroup::LINEAR, false);
+	_input_group = new NeuralGroup(dim, LINEAR, false);
 
 	dim += output_dim();
 
-	_x = new NeuralGroup(dim, NeuralGroup::LINEAR, false);
+	_x = new NeuralGroup(dim, LINEAR, false);
 	_Wf = add_connection(new Connection(dim, output_dim(), _x->get_id(), _hf->get_id()));
 	_Wf->init(Connection::INIT::GLOROT_UNIFORM);
 	_Wi = add_connection(new Connection(dim, output_dim(), _x->get_id(), _hi->get_id()));

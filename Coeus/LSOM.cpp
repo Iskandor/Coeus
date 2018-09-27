@@ -4,7 +4,7 @@
 
 using namespace Coeus;
 
-LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const NeuralGroup::ACTIVATION p_activation) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
+LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const ACTIVATION p_activation) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
 {
 	_type = TYPE::LSOM;
 	_lateral = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
