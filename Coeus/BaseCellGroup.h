@@ -16,9 +16,7 @@ namespace Coeus {
 		// 'Coeus::BaseCellGroup': cannot instantiate abstract class
 		//BaseCellGroup(BaseCellGroup& p_copy) = delete;
 		//BaseCellGroup& operator = (const BaseCellGroup& p_copy) = delete;
-		template<typename T>
-		static BaseCellGroup *clone(const BaseCellGroup *obj);
-
+		virtual BaseCellGroup* clone() = 0;
 		virtual ~BaseCellGroup();
 
 
@@ -31,6 +29,8 @@ namespace Coeus {
 		void	set_output(Tensor* p_output) const;
 		Tensor* get_output() { return &_output; }
 
+		IActivationFunction* get_activation_function() const { return _f; }
+
 	protected:
 		void copy(const BaseCellGroup& p_copy);
 		static IActivationFunction* init_activation_function(ACTIVATION p_activation_function);
@@ -38,8 +38,9 @@ namespace Coeus {
 		string  _id;
 		int     _dim;
 
-		Tensor	_net;
-		Tensor	_output;
+		Tensor					_net;
+		IActivationFunction*	_f;
+		Tensor					_output;
 
 	};
 }

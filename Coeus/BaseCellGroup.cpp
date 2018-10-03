@@ -39,12 +39,6 @@ void BaseCellGroup::copy(const BaseCellGroup& p_copy)
 	_dim = p_copy._dim;
 }
 
-template <typename T>
-BaseCellGroup* BaseCellGroup::clone(const BaseCellGroup* obj)
-{
-	return new T(dynamic_cast<const T &>(*obj));
-}
-
 IActivationFunction* BaseCellGroup::init_activation_function(ACTIVATION p_activation_function)
 {
 	IActivationFunction* f;

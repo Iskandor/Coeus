@@ -10,7 +10,6 @@ using namespace Coeus;
  */
 SimpleCellGroup::SimpleCellGroup(const int p_dim, const ACTIVATION p_activation_function, const bool p_bias) : BaseCellGroup(p_dim)
 {
-	_activation_function = p_activation_function;
 	_f = init_activation_function(p_activation_function);
 
 	_bias_flag = p_bias;
@@ -19,16 +18,14 @@ SimpleCellGroup::SimpleCellGroup(const int p_dim, const ACTIVATION p_activation_
 
 SimpleCellGroup::SimpleCellGroup(nlohmann::json p_data): BaseCellGroup(p_data)
 {
-	_activation_function = static_cast<ACTIVATION>(p_data["actfn"].get<int>());
-	_f = init_activation_function(_activation_function);
+	_f = init_activation_function(static_cast<ACTIVATION>(p_data["actfn"].get<int>()));
 	_bias_flag = p_data["bias"].get<bool>();
 	//#TODO doriesit _bias = ;
 }
 
 SimpleCellGroup::SimpleCellGroup(SimpleCellGroup &p_copy) : BaseCellGroup(p_copy._dim)
 {
-	_activation_function = p_copy._activation_function;
-	_f = init_activation_function(_activation_function);
+	_f = init_activation_function(p_copy._f->get_type());
 	_bias = Tensor(p_copy._bias);
 	_bias_flag = p_copy._bias_flag;
 }
@@ -36,8 +33,7 @@ SimpleCellGroup::SimpleCellGroup(SimpleCellGroup &p_copy) : BaseCellGroup(p_copy
 SimpleCellGroup& SimpleCellGroup::operator=(const SimpleCellGroup& p_copy)
 {
 	copy(p_copy);
-	_activation_function = p_copy._activation_function;
-	_f = init_activation_function(_activation_function);
+	_f = init_activation_function(p_copy._f->get_type());
 	_bias = Tensor(p_copy._bias);
 	_bias_flag = p_copy._bias_flag;
 
@@ -75,4 +71,9 @@ void SimpleCellGroup::activate() {
 
 void SimpleCellGroup::update_bias(Tensor& p_delta_b) {
 	_bias += p_delta_b;
+}
+
+SimpleCellGroup* SimpleCellGroup::clone()
+{
+	return new SimpleCellGroup(*this);
 }

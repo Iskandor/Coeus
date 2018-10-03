@@ -12,9 +12,10 @@ SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_
 	_dim_y = p_dim_y;
 
 	_input_group = add_group(new SimpleCellGroup(p_input_dim, LINEAR, false));
-	_output_group = add_group(new SimpleCellGroup(p_dim_x * p_dim_y, p_activation, true));
+	_lattice_group = add_group(new SimpleCellGroup(p_dim_x * p_dim_y, p_activation, true));
+	_output_group = _lattice_group;
 
-	_afferent = new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id());
+	_afferent = new Connection(_input_group->get_dim(), _lattice_group->get_dim(), _input_group->get_id(), _lattice_group->get_id());
 	_afferent->init(Connection::UNIFORM, true, 1);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
@@ -32,7 +33,7 @@ SOM::SOM(nlohmann::json p_data) : BaseLayer(p_data) {
 	_dim_y = p_data["dim_y"].get<int>();
 
 	_input_group = IOUtils::read_neural_group(p_data["groups"]["input"]);
-	_output_group = IOUtils::read_neural_group(p_data["groups"]["lattice"]);
+	_lattice_group = IOUtils::read_neural_group(p_data["groups"]["lattice"]);
 	_afferent = IOUtils::read_connection(p_data["connections"]["input_lattice"]);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
@@ -56,8 +57,8 @@ void SOM::activate(Tensor* p_input) {
 
 	calc_distance();
 
-	_dist = _output_group->get_activation_function()->activate(_dist);
-	_output_group->set_output(&_dist);
+	_dist = _lattice_group->get_activation_function()->activate(_dist);
+	_lattice_group->set_output(&_dist);
 }
 
 double SOM::calc_distance(const int p_index) {
@@ -94,7 +95,7 @@ void SOM::init_conscience() const {
 }
 
 SOM * SOM::clone() const {
-	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _output_group->get_activation_function()->get_type());
+	SOM* result = new SOM(_id, _input_group->get_dim(), _dim_x, _dim_y, _lattice_group->get_activation_function()->get_type());
 
 	result->_afferent->get_weights()->override(_afferent->get_weights());
 	result->_conscience = _conscience;
@@ -153,7 +154,7 @@ void SOM::find_winner(Tensor* p_input, const bool p_conscience) {
 
 	_input_group->set_output(p_input);
 
-	for (int i = 0; i < _output_group->get_dim(); i++) {
+	for (int i = 0; i < _lattice_group->get_dim(); i++) {
 		double neuron_dist = calc_distance(i);
 
 		if (p_conscience) {

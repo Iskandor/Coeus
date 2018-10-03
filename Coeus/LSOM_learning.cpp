@@ -119,7 +119,7 @@ void LSOM_learning::train(Tensor * p_input)
 
 	_s++;
 
-	_lsom->get_output_group()->update_bias(_delta_b);
+	_lsom->get_lattice()->update_bias(_delta_b);
 
 	_lsom->get_afferent()->update_weights(_delta_w);
 	_lsom->get_lateral()->update_weights(_delta_lw);

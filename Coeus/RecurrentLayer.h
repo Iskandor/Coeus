@@ -7,7 +7,7 @@ namespace Coeus {
 class __declspec(dllexport) RecurrentLayer : 	public BaseLayer
 {
 public:
-	RecurrentLayer(string p_id, int p_dim, ACTIVATION p_activation);
+	RecurrentLayer(const string& p_id, int p_dim, ACTIVATION p_activation);
 	RecurrentLayer(RecurrentLayer &p_copy);
 	~RecurrentLayer();
 
@@ -16,8 +16,10 @@ public:
 	void override(BaseLayer* p_source) override;
 
 private:
-	Connection*		_rec_connection;
+	SimpleCellGroup*	_group{};
 	SimpleCellGroup*	_context_group;
+	Connection*			_rec_connection;
+	
 
 };
 

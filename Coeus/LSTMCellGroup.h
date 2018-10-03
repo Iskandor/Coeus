@@ -20,13 +20,13 @@ namespace Coeus {
 		void integrate(Tensor* p_input, Tensor* p_weights) override;
 		void activate() override;
 
+		LSTMCellGroup* clone() override;
+
 	private:
 		void activate(Tensor* p_input_gate, Tensor* p_output_gate);
 		Tensor	_state;
 
-		ACTIVATION _activation_function;
 		IActivationFunction* _g;
-		IActivationFunction* _h;
 
 		SimpleCellGroup* _input_gate;
 		SimpleCellGroup* _output_gate;

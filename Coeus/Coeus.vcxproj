@@ -241,7 +241,6 @@
     <ClCompile Include="TanhActivation.cpp" />
     <ClCompile Include="TD.cpp" />
     <ClCompile Include="UBAL.cpp" />
-    <ClCompile Include="UBALLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
@@ -325,7 +324,6 @@
     <ClInclude Include="TanhActivation.h" />
     <ClInclude Include="TD.h" />
     <ClInclude Include="UBAL.h" />
-    <ClInclude Include="UBALLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

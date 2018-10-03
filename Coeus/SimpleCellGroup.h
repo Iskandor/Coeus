@@ -28,12 +28,8 @@ public:
 	void set_bias(Tensor* p_bias) const { _bias.override(p_bias); }
 	Tensor* get_bias() { return &_bias; }
 
-	IActivationFunction* get_activation_function() const { return _f; }
-
+	SimpleCellGroup* clone() override;
 private:
-	ACTIVATION _activation_function;
-	IActivationFunction* _f;
-
 	bool	_bias_flag;
 	Tensor	_bias;
 };

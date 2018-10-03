@@ -21,7 +21,7 @@ public:
 		LSOM = 7
 	};
 
-	BaseLayer(string p_id);
+	BaseLayer(const string& p_id);
 	BaseLayer(nlohmann::json p_data);
 	virtual ~BaseLayer();
 
@@ -29,8 +29,8 @@ public:
 	virtual void integrate(Tensor* p_input, Tensor* p_weights) = 0;
 	virtual void activate(Tensor* p_input = nullptr) = 0;
 	virtual void override(BaseLayer* p_source) = 0;
+	void update(map<string, Tensor> &p_update);
 
-	Tensor* get_output() const { return _output_group->get_output(); }
 	TYPE	get_type() const { return _type; }
 	string	id() const { return _id; }
 
@@ -42,29 +42,50 @@ public:
 
 	IGradientComponent* gradient_component() const { return _gradient_component; }
 
-	SimpleCellGroup* get_output_group() const { return _output_group; }
-	SimpleCellGroup* get_input_group() const { return _input_group; }
+	BaseCellGroup* get_output_group() const { return _output_group; }
+	BaseCellGroup* get_input_group() const { return _input_group; }
 
 	map<string, Connection*>* get_connections() { return &_connections; }
-	map<string, SimpleCellGroup*>* get_groups() { return &_groups; }
+	map<string, BaseCellGroup*>* get_groups() { return &_groups; }
+
+	Tensor* get_output() const { return _output_group->get_output(); }
 
 protected:
-	Connection*			add_connection(Connection* p_connection);
-	SimpleCellGroup*	add_group(SimpleCellGroup* p_group);
+	Connection*		add_connection(Connection* p_connection);
+	template<typename T>
+	T*	add_group(T* p_group);
 
 	string		_id;
 	TYPE		_type;
-	SimpleCellGroup *_input_group;
-	SimpleCellGroup *_output_group;
 
 	IGradientComponent* _gradient_component;
 
-	map<string, Connection*> _connections;
-	map<string, SimpleCellGroup*> _groups;
+	map<string, Connection*>	_connections;
+	map<string, BaseCellGroup*>	_groups;
+	map<string, Tensor*>		_params;
+
+	BaseCellGroup* _output_group;
+	BaseCellGroup* _input_group;
 
 private:
 	bool	_valid;
 };
 
+template <typename T>
+T* BaseLayer::add_group(T* p_group)
+{
+	_groups[p_group->get_id()] = p_group;
+
+	if (dynamic_cast<SimpleCellGroup*>(p_group) != nullptr)
+	{
+		SimpleCellGroup* group = dynamic_cast<SimpleCellGroup*>(p_group);
+		if (group->is_bias())
+		{
+			_params[p_group->get_id()] = group->get_bias();
+		}		
+	}
+
+	return p_group;
+}
 }
 

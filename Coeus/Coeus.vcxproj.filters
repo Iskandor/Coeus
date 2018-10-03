@@ -228,9 +228,6 @@
     <ClCompile Include="Nadam.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
-    <ClCompile Include="UBALLayer.cpp">
-      <Filter>Source Files\Network\Layer</Filter>
-    </ClCompile>
     <ClCompile Include="UBAL.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
@@ -472,9 +469,6 @@
     </ClInclude>
     <ClInclude Include="Nadam.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="UBALLayer.h">
-      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="UBAL.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>

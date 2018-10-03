@@ -3,22 +3,22 @@
 
 using namespace Coeus;
 
-InputLayer::InputLayer(const string p_id, const int p_input_dim) : BaseLayer(p_id)
+InputLayer::InputLayer(const string& p_id, const int p_input_dim) : BaseLayer(p_id)
 {
-	_input_group = add_group(new SimpleCellGroup(p_input_dim, LINEAR, false));
-	_output_group = _input_group;
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_input_dim, LINEAR, false));
+	_input_group = _output_group = _group;
 	_type = INPUT;
 }
 
 InputLayer::InputLayer(InputLayer& p_copy) : BaseLayer(IDGen::instance().next()) {
-	_input_group = add_group(new SimpleCellGroup(*p_copy._input_group));
-	_output_group = _input_group;
+	_group = add_group<SimpleCellGroup>(p_copy._group->clone());
+	_input_group = _output_group = _group;
 	_type = INPUT;
 }
 
 InputLayer::~InputLayer()
 {
-	delete _input_group;
+	delete _group;
 }
 
 void InputLayer::integrate(Tensor* p_input, Tensor* p_weights) {
@@ -27,7 +27,7 @@ void InputLayer::integrate(Tensor* p_input, Tensor* p_weights) {
 void InputLayer::activate(Tensor * p_input)
 {
 	if (p_input != nullptr) {
-		_output_group->set_output(p_input);
+		_group->set_output(p_input);
 	}	
 }
 

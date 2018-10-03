@@ -8,13 +8,16 @@ class __declspec(dllexport) CoreLayer : public BaseLayer
 {
 	friend class CoreLayerGradient;
 public:
-	CoreLayer(string p_id, int p_dim, ACTIVATION p_activation);
+	CoreLayer(const string& p_id, int p_dim, ACTIVATION p_activation);
 	CoreLayer(CoreLayer &p_copy);
 	~CoreLayer();
 
 	void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
 	void activate(Tensor* p_input = nullptr) override;
 	void override(BaseLayer* p_source) override;
+
+private:
+	SimpleCellGroup *_group;
 };
 
 }

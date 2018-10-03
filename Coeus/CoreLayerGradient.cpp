@@ -13,7 +13,7 @@ CoreLayerGradient::~CoreLayerGradient()
 
 void CoreLayerGradient::init()
 {
-	SimpleCellGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
+	BaseCellGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
 	_deriv[g->get_id()] = Tensor::Zero({ g->get_dim() });
 	_delta[g->get_id()] = Tensor::Zero({ g->get_dim() });
 }
@@ -23,11 +23,11 @@ void CoreLayerGradient::calc_deriv() {
 }
 
 void CoreLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state) {
-	SimpleCellGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
+	BaseCellGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
 	_delta[g->get_id()] = _deriv[g->get_id()] * (p_weights->T() * p_state->delta);
 }
 
 void CoreLayerGradient::calc_gradient(map<string, Tensor> &p_w_gradient, map<string, Tensor> &p_b_gradient) {
-	SimpleCellGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
+	BaseCellGroup* g = dynamic_cast<CoreLayer*>(_layer)->_output_group;
 	p_b_gradient[g->get_id()] = _delta[g->get_id()];
 }

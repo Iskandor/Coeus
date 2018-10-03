@@ -6,7 +6,7 @@ using namespace Coeus;
 
 MSOM::MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, ACTIVATION p_activation, double p_alpha, double p_beta) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation) {
 	_context_group = new SimpleCellGroup(p_input_dim, LINEAR, false);
-	_context_lattice = new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id());
+	_context_lattice = new Connection(_context_group->get_dim(), _lattice_group->get_dim(), _context_group->get_id(), _lattice_group->get_id());
 	_context_lattice->init(Connection::UNIFORM, 0.01);
 	_alpha = p_alpha;
 	_beta = p_beta;
@@ -77,7 +77,7 @@ double MSOM::calc_distance(const int p_neuron1, const int p_neuron2)
 }
 
 MSOM * MSOM::clone() const {
-	MSOM* result = static_cast<MSOM*>(IOUtils::load_layer(IOUtils::save_layer((BaseLayer*)this)));
+	MSOM* result = dynamic_cast<MSOM*>(IOUtils::load_layer(IOUtils::save_layer((BaseLayer*)this)));
 
 	return result;
 }
@@ -86,7 +86,7 @@ void MSOM::override(BaseLayer * p_source)
 {
 	SOM::override(p_source);
 
-	MSOM* msom = static_cast<MSOM*>(p_source);
+	MSOM* msom = dynamic_cast<MSOM*>(p_source);
 
 	_context_lattice->set_weights(msom->get_context_lattice()->get_weights());
 }

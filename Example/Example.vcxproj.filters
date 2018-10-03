@@ -39,9 +39,6 @@
     <ClCompile Include="FFN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UBALTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ModelMNS.cpp">
       <Filter>Source Files\MNS</Filter>
     </ClCompile>
