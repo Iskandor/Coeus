@@ -17,7 +17,7 @@ namespace Coeus
 		void get_position(int p_index, int& p_x, int& p_y) const;
 		int get_position(int p_x, int p_y) const;
 
-		NeuralGroup* get_lattice() const { return _output_group; }
+		SimpleCellGroup* get_lattice() const { return _output_group; }
 		Connection*  get_afferent() const { return _afferent; }
 
 		virtual double calc_distance(int p_index);

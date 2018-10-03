@@ -1,5 +1,5 @@
 #pragma once
-#include "NeuralGroup.h"
+#include "SimpleCellGroup.h"
 #include "Connection.h"
 
 using namespace std;
@@ -42,25 +42,25 @@ public:
 
 	IGradientComponent* gradient_component() const { return _gradient_component; }
 
-	NeuralGroup* get_output_group() const { return _output_group; }
-	NeuralGroup* get_input_group() const { return _input_group; }
+	SimpleCellGroup* get_output_group() const { return _output_group; }
+	SimpleCellGroup* get_input_group() const { return _input_group; }
 
 	map<string, Connection*>* get_connections() { return &_connections; }
-	map<string, NeuralGroup*>* get_groups() { return &_groups; }
+	map<string, SimpleCellGroup*>* get_groups() { return &_groups; }
 
 protected:
-	Connection*		add_connection(Connection* p_connection);
-	NeuralGroup*	add_group(NeuralGroup* p_group);
+	Connection*			add_connection(Connection* p_connection);
+	SimpleCellGroup*	add_group(SimpleCellGroup* p_group);
 
 	string		_id;
 	TYPE		_type;
-	NeuralGroup *_input_group;
-	NeuralGroup *_output_group;
+	SimpleCellGroup *_input_group;
+	SimpleCellGroup *_output_group;
 
 	IGradientComponent* _gradient_component;
 
 	map<string, Connection*> _connections;
-	map<string, NeuralGroup*> _groups;
+	map<string, SimpleCellGroup*> _groups;
 
 private:
 	bool	_valid;

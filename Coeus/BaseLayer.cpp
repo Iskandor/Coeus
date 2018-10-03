@@ -28,7 +28,7 @@ Connection* BaseLayer::add_connection(Connection* p_connection) {
 	return p_connection;
 }
 
-NeuralGroup* BaseLayer::add_group(NeuralGroup* p_group) {
+SimpleCellGroup* BaseLayer::add_group(SimpleCellGroup* p_group) {
 	_groups[p_group->get_id()] = p_group;
 
 	return p_group;

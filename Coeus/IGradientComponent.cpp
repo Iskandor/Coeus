@@ -38,6 +38,6 @@ LayerState* IGradientComponent::get_state()
 	return _state;
 }
 
-void IGradientComponent::calc_deriv_group(NeuralGroup* p_group) {
+void IGradientComponent::calc_deriv_group(SimpleCellGroup* p_group) {
 	_deriv[p_group->get_id()] = p_group->get_activation_function()->deriv(*p_group->get_output());
 }

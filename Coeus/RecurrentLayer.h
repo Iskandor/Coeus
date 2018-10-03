@@ -17,7 +17,7 @@ public:
 
 private:
 	Connection*		_rec_connection;
-	NeuralGroup*	_context_group;
+	SimpleCellGroup*	_context_group;
 
 };
 

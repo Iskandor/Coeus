@@ -85,15 +85,18 @@
     <Filter Include="Source Files\Network\ActivationFunctions">
       <UniqueIdentifier>{5f0a3940-ec5b-415e-bc09-62ffb9755960}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Network\Group">
+      <UniqueIdentifier>{f9fb4bba-3de1-4a59-9fea-919945a677f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network\Group">
+      <UniqueIdentifier>{ea8444e6-41bd-4d30-b67a-a40c64250451}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Connection.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="NeuralGroup.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="ActivationFunctions.cpp">
@@ -324,12 +327,18 @@
     <ClCompile Include="ICM.cpp">
       <Filter>Source Files\Algorithm\IM</Filter>
     </ClCompile>
+    <ClCompile Include="LSTMCellGroup.cpp">
+      <Filter>Source Files\Network\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseCellGroup.cpp">
+      <Filter>Source Files\Network\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleCellGroup.cpp">
+      <Filter>Source Files\Network\Group</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="NeuralGroup.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="ActivationFunctions.h">
@@ -565,6 +574,15 @@
     </ClInclude>
     <ClInclude Include="ICM.h">
       <Filter>Header Files\Algorithm\IM</Filter>
+    </ClInclude>
+    <ClInclude Include="LSTMCellGroup.h">
+      <Filter>Header Files\Network\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseCellGroup.h">
+      <Filter>Header Files\Network\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleCellGroup.h">
+      <Filter>Header Files\Network\Group</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

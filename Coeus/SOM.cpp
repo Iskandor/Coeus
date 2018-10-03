@@ -11,8 +11,8 @@ SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_
 	_dim_x = p_dim_x;
 	_dim_y = p_dim_y;
 
-	_input_group = add_group(new NeuralGroup(p_input_dim, LINEAR, false));
-	_output_group = add_group(new NeuralGroup(p_dim_x * p_dim_y, p_activation, true));
+	_input_group = add_group(new SimpleCellGroup(p_input_dim, LINEAR, false));
+	_output_group = add_group(new SimpleCellGroup(p_dim_x * p_dim_y, p_activation, true));
 
 	_afferent = new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id());
 	_afferent->init(Connection::UNIFORM, true, 1);

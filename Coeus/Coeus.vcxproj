@@ -171,6 +171,7 @@
     <ClCompile Include="AdaMax.cpp" />
     <ClCompile Include="AMSGrad.cpp" />
     <ClCompile Include="BackProp.cpp" />
+    <ClCompile Include="BaseCellGroup.cpp" />
     <ClCompile Include="BaseGradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="Base_SOM_learning.cpp" />
@@ -210,6 +211,7 @@
     <ClCompile Include="LSOM1_params.cpp" />
     <ClCompile Include="LSOM_learning.cpp" />
     <ClCompile Include="LSOM_params.cpp" />
+    <ClCompile Include="LSTMCellGroup.cpp" />
     <ClCompile Include="LSTMLayer.cpp" />
     <ClCompile Include="LSTMLayerGradient.cpp" />
     <ClCompile Include="LSTMLayerState.cpp" />
@@ -219,7 +221,7 @@
     <ClCompile Include="MSOM_params.cpp" />
     <ClCompile Include="Nadam.cpp" />
     <ClCompile Include="NetworkGradient.cpp" />
-    <ClCompile Include="NeuralGroup.cpp" />
+    <ClCompile Include="SimpleCellGroup.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="QuadraticCost.cpp" />
@@ -251,6 +253,7 @@
     <ClInclude Include="AdaMax.h" />
     <ClInclude Include="AMSGrad.h" />
     <ClInclude Include="BackProph.h" />
+    <ClInclude Include="BaseCellGroup.h" />
     <ClInclude Include="BaseGradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />
@@ -292,6 +295,7 @@
     <ClInclude Include="LSOM1_params.h" />
     <ClInclude Include="LSOM_learning.h" />
     <ClInclude Include="LSOM_params.h" />
+    <ClInclude Include="LSTMCellGroup.h" />
     <ClInclude Include="LSTMLayer.h" />
     <ClInclude Include="LSTMLayerGradient.h" />
     <ClInclude Include="LSTMLayerState.h" />
@@ -301,7 +305,7 @@
     <ClInclude Include="MSOM_params.h" />
     <ClInclude Include="Nadam.h" />
     <ClInclude Include="NetworkGradient.h" />
-    <ClInclude Include="NeuralGroup.h" />
+    <ClInclude Include="SimpleCellGroup.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="QLearning.h" />
     <ClInclude Include="QuadraticCost.h" />

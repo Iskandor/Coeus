@@ -6,9 +6,9 @@ using namespace Coeus;
 
 RecurrentLayer::RecurrentLayer(const string p_id, const int p_dim, const ACTIVATION p_activation) : BaseLayer(p_id)
 {
-	_input_group = add_group(new NeuralGroup(p_dim, p_activation, true));
+	_input_group = add_group(new SimpleCellGroup(p_dim, p_activation, true));
 	_output_group = _input_group;
-	_context_group = add_group(new NeuralGroup(p_dim, LINEAR, false));
+	_context_group = add_group(new SimpleCellGroup(p_dim, LINEAR, false));
 
 	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id()));
 
@@ -18,9 +18,9 @@ RecurrentLayer::RecurrentLayer(const string p_id, const int p_dim, const ACTIVAT
 }
 
 RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(IDGen::instance().next()) {
-	_input_group = add_group(new NeuralGroup(*p_copy._input_group));
+	_input_group = add_group(new SimpleCellGroup(*p_copy._input_group));
 	_output_group = _input_group;
-	_context_group = add_group(new NeuralGroup(*p_copy._context_group));
+	_context_group = add_group(new SimpleCellGroup(*p_copy._context_group));
 
 	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _output_group->get_dim(), _context_group->get_id(), _output_group->get_id()));
 	_rec_connection->override(p_copy._rec_connection);

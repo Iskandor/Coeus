@@ -17,7 +17,7 @@ namespace Coeus
 		void update_context() const;
 		void reset_context() const;
 
-		NeuralGroup* get_context_group() const { return _context_group; }
+		SimpleCellGroup* get_context_group() const { return _context_group; }
 		Connection* get_context_lattice() const { return _context_lattice; }
 
 		double get_alpha() const { return _alpha; }
@@ -28,7 +28,7 @@ namespace Coeus
 
 	protected:		
 
-		NeuralGroup* _context_group;
+		SimpleCellGroup* _context_group;
 		Connection* _context_lattice;
 
 		double _alpha;

@@ -16,10 +16,10 @@ namespace Coeus {
 		void override(BaseLayer* p_source) override;
 
 	private:
-		NeuralGroup* _input_bp;
-		NeuralGroup* _input_echo;
-		NeuralGroup* _output_bp;
-		NeuralGroup* _output_echo;
+		SimpleCellGroup* _input_bp;
+		SimpleCellGroup* _input_echo;
+		SimpleCellGroup* _output_bp;
+		SimpleCellGroup* _output_echo;
 
 		Connection* _forward_W;
 		Connection* _backward_M;

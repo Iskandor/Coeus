@@ -17,7 +17,7 @@ IrisTest::~IrisTest()
 }
 
 void IrisTest::init() {
-	_lsom = new LSOM("LSOM", 128, 5, 5, NeuralGroup::TANH);
+	_lsom = new LSOM("LSOM", 128, 5, 5, TANH);
 	//_lsom = new SOM("LSOM", 4, 8, 8, NeuralGroup::EXPONENTIAL);
 }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "NeuralGroup.h"
+#include "SimpleCellGroup.h"
 
 using namespace std;
 

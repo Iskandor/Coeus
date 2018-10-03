@@ -26,7 +26,7 @@ namespace Coeus {
 		virtual LayerState* get_state();
 
 	protected:
-		void calc_deriv_group(NeuralGroup* p_group);
+		void calc_deriv_group(SimpleCellGroup* p_group);
 
 		BaseLayer*	_layer;
 		LayerState*	_state;

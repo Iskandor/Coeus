@@ -27,6 +27,7 @@ void LSTMLayerGradient::set_delta(Tensor* p_delta)
 
 void LSTMLayerGradient::init()
 {
+	/*
 	LSTMLayer* layer = dynamic_cast<LSTMLayer*>(_layer);
 	_deriv[layer->_output_group->get_id()] = Tensor::Zero({ layer->_output_group->get_dim() });
 	_delta[layer->_output_group->get_id()] = Tensor::Zero({ 2 * layer->_output_group->get_dim() });
@@ -42,20 +43,24 @@ void LSTMLayerGradient::init()
 	_delta[layer->_hi->get_id()] = Tensor::Zero({ layer->_hi->get_dim() });
 	_deriv[layer->_ho->get_id()] = Tensor::Zero({ layer->_ho->get_dim() });
 	_delta[layer->_ho->get_id()] = Tensor::Zero({ layer->_ho->get_dim() });
+	*/
 }
 
 void LSTMLayerGradient::calc_deriv()
 {
+	/*
 	LSTMLayer* layer = dynamic_cast<LSTMLayer*>(_layer);
 	calc_deriv_group(layer->_output_group);
 	calc_deriv_group(layer->_hf);
 	calc_deriv_group(layer->_hc);
 	calc_deriv_group(layer->_hi);
 	calc_deriv_group(layer->_ho);
+	*/
 }
 
 void LSTMLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state)
 {
+	/*
 	LSTMLayer* layer = dynamic_cast<LSTMLayer*>(_layer);
 
 	LSTMLayerState* state = dynamic_cast<LSTMLayerState*> (p_state);
@@ -90,10 +95,12 @@ void LSTMLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state)
 	}
 
 	_dc_next = Tensor::apply(*layer->_hf->get_output(), _delta["_c" + _layer->id()], Tensor::ew_dot);
+	*/
 }
 
 void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<string, Tensor>& p_b_gradient)
 {
+	/*
 	LSTMLayer* layer = dynamic_cast<LSTMLayer*>(_layer);
 
 	p_w_gradient[layer->_Wy->get_id()] = *layer->_h  * _delta[layer->_output_group->get_id()];
@@ -106,6 +113,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 	p_b_gradient[layer->_ho->get_id()] = _delta[layer->_ho->get_id()];
 	p_w_gradient[layer->_Wc->get_id()] = *layer->_input_group->get_output() * _delta[layer->_hc->get_id()];
 	p_b_gradient[layer->_hc->get_id()] = _delta[layer->_hc->get_id()];
+	*/
 }
 
 LSTMLayerState* LSTMLayerGradient::get_state()

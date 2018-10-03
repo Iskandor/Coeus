@@ -5,15 +5,15 @@ using namespace Coeus;
 UBALLayer::UBALLayer(string p_id, int p_dim, ACTIVATION p_activation, BaseLayer* p_layer) : BaseLayer(p_id)
 {
 	_input_group = p_layer->get_output_group();
-	_input_bp = new NeuralGroup(_input_group->get_dim(), p_activation, true);
+	_input_bp = new SimpleCellGroup(_input_group->get_dim(), p_activation, true);
 	_input_bp->set_bias(_input_group->get_bias());
-	_input_echo = new NeuralGroup(_input_group->get_dim(), p_activation, true);
+	_input_echo = new SimpleCellGroup(_input_group->get_dim(), p_activation, true);
 	_input_echo->set_bias(_input_group->get_bias());
 
-	_output_group = new NeuralGroup(p_dim, p_activation, true);
-	_output_bp = new NeuralGroup(p_dim, p_activation, true);
+	_output_group = new SimpleCellGroup(p_dim, p_activation, true);
+	_output_bp = new SimpleCellGroup(p_dim, p_activation, true);
 	_output_bp->set_bias(_output_group->get_bias());
-	_output_echo = new NeuralGroup(p_dim, p_activation, true);
+	_output_echo = new SimpleCellGroup(p_dim, p_activation, true);
 	_output_echo->set_bias(_output_group->get_bias());
 
 	_forward_W = add_connection(new Connection(_input_group->get_dim(), _output_group->get_dim(), _input_group->get_id(), _output_group->get_id()));
