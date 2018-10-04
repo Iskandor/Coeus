@@ -17,9 +17,15 @@ namespace Coeus
 		void override(BaseLayer* p_source) override;
 
 	private:
-		LSTMCellGroup*	_memory_cells;
+		LSTMCellGroup*		_cec;
 		SimpleCellGroup*	_input_gate;
 		SimpleCellGroup*	_output_gate;
+		SimpleCellGroup*	_aux_input;
+
+		Connection* _in_input_gate;
+		Connection* _in_output_gate;
+
+		vector<Tensor*> _input;
 	};
 }
 

@@ -6,9 +6,11 @@ using namespace Coeus;
 
 LSTMLayerGradient::LSTMLayerGradient(LSTMLayer* p_layer) : IGradientComponent(p_layer)
 {
+	/*
 	_state = new LSTMLayerState(p_layer->output_dim());
 	_dc_next = Tensor::Zero({ p_layer->output_dim() });
 	_dh_next = Tensor::Zero({ p_layer->output_dim() });
+	*/
 }
 
 

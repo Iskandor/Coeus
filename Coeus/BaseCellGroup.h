@@ -27,6 +27,7 @@ namespace Coeus {
 		int		get_dim() const { return _dim; }
 
 		void	set_output(Tensor* p_output) const;
+		void	set_output(vector<Tensor*>& p_output) const;
 		Tensor* get_output() { return &_output; }
 
 		IActivationFunction* get_activation_function() const { return _f; }

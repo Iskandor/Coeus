@@ -16,21 +16,21 @@ using namespace MNS;
 
 int main()
 {
+	/*
 	FFN model;
 
 	model.run();
+	*/
 
 	/*
 	MazeExample example;
 
-	example.example_actor_critic();
+	example.example_q();
 	*/
 
-	/*
 	RNN model;
 
 	model.run();
-	*/
 
 	/*
 	IrisTest iris;

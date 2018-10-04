@@ -33,6 +33,20 @@ void BaseCellGroup::set_output(Tensor* p_output) const
 	_output.override(p_output);
 }
 
+void BaseCellGroup::set_output(vector<Tensor*>& p_output) const
+{
+	int index = 0;
+
+	for (auto& tensor : p_output)
+	{
+		for(int j = 0; j < tensor->size(); j++)
+		{
+			_output.set(index, tensor->at(j));
+			index++;
+		}		
+	}
+}
+
 void BaseCellGroup::copy(const BaseCellGroup& p_copy)
 {
 	_id = p_copy._id;
