@@ -8,8 +8,8 @@ LSTMLayer::LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation) : B
 {
 	_type = LSTM;
 
-	_input_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, TANH, false));
-	_output_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, TANH, false));
+	_input_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, SIGMOID, false));
+	_output_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, SIGMOID, false));
 	_cec = add_group<LSTMCellGroup>(new LSTMCellGroup(p_dim, p_activation, _input_gate, _output_gate));
 	_input_group = _output_group = _cec;
 

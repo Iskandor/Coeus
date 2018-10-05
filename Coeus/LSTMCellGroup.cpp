@@ -7,7 +7,7 @@ LSTMCellGroup::LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, Simple
 	_state = Tensor::Zero({p_dim});
 
 	_f = init_activation_function(p_activation_function);
-	_g = init_activation_function(SIGMOID);
+	_g = init_activation_function(TANH);
 
 	_input_gate = p_input_gate;
 	_output_gate = p_output_gate;
@@ -22,7 +22,7 @@ LSTMCellGroup::LSTMCellGroup(LSTMCellGroup& p_copy) : BaseCellGroup(p_copy._dim)
 	_state = Tensor::Zero({ p_copy._dim });
 
 	_f = init_activation_function(p_copy._f->get_type());
-	_g = init_activation_function(SIGMOID);
+	_g = init_activation_function(TANH);
 	_input_gate = p_copy._input_gate;
 	_output_gate = p_copy._output_gate;
 
