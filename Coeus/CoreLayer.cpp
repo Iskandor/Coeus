@@ -10,7 +10,6 @@ CoreLayer::CoreLayer(const string& p_id, const int p_dim, const ACTIVATION p_act
 	_input_group = _output_group = _group;
 
 	_type = CORE;
-	_gradient_component = new CoreLayerGradient(this);
 }
 
 CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(IDGen::instance().next()) {
@@ -18,13 +17,11 @@ CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(IDGen::instance().next()) {
 	_input_group = _output_group = _group;
 
 	_type = CORE;
-	_gradient_component = new CoreLayerGradient(this);
 }
 
 CoreLayer::~CoreLayer()
 {
 	delete _group;
-	delete _gradient_component;
 }
 
 void CoreLayer::integrate(Tensor* p_input, Tensor* p_weights) {

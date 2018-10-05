@@ -3,6 +3,7 @@
 #include "Tensor.h"
 #include "BaseLayer.h"
 #include "LayerState.h"
+#include "NeuralNetwork.h"
 
 using namespace FLAB;
 
@@ -11,7 +12,7 @@ namespace Coeus {
 	class __declspec(dllexport) IGradientComponent
 	{
 	public:
-		explicit IGradientComponent(BaseLayer* p_layer);
+		IGradientComponent(BaseLayer* p_layer, NeuralNetwork* p_network);
 		virtual ~IGradientComponent();
 
 		void set_delta(Tensor* p_delta);
@@ -27,7 +28,9 @@ namespace Coeus {
 		void calc_deriv_group(BaseCellGroup* p_group);
 		template<typename T>
 		T*	get_layer() { return static_cast<T*>(_layer); }
-		BaseLayer*	_layer;
+		
+		BaseLayer*		_layer;
+		NeuralNetwork*	_network;
 
 		map<string, Tensor> _deriv;
 		map<string, Tensor> _delta;

@@ -13,8 +13,6 @@ RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVA
 	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _group->get_dim(), _context_group->get_id(), _group->get_id()));
 
 	_type = RECURRENT;
-
-	_gradient_component = new RecurrentLayerGradient(this);
 }
 
 RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(IDGen::instance().next()) {
@@ -26,8 +24,6 @@ RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(IDGen::instan
 	_rec_connection->override(p_copy._rec_connection);
 
 	_type = RECURRENT;
-
-	_gradient_component = new RecurrentLayerGradient(this);
 }
 
 RecurrentLayer::~RecurrentLayer()
@@ -35,7 +31,6 @@ RecurrentLayer::~RecurrentLayer()
 	delete _group;
 	delete _context_group;
 	delete _rec_connection;
-	delete _gradient_component;
 }
 
 void RecurrentLayer::integrate(Tensor* p_input, Tensor* p_weights) {

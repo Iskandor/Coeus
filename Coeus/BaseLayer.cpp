@@ -6,7 +6,6 @@ using namespace Coeus;
 BaseLayer::BaseLayer(const string& p_id): _input_group(nullptr), _output_group(nullptr) 
 {
 	_id = p_id;
-	_gradient_component = nullptr;
 }
 
 BaseLayer::BaseLayer(nlohmann::json p_data)

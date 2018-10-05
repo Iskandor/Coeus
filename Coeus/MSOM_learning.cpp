@@ -5,7 +5,7 @@ using namespace Coeus;
 MSOM_learning::MSOM_learning(MSOM* p_msom, MSOM_params *p_params, SOM_analyzer* p_analyzer): Base_SOM_learning(p_msom, p_params, p_analyzer) {
 	_msom = p_msom;
 
-	const int dim_input = _msom->get_input_group()->get_dim();
+	const int dim_input = _msom->get_input_group<SimpleCellGroup>()->get_dim();
 	const int dim_context = _msom->get_context_group()->get_dim();
 	const int dim_lattice = _msom->get_lattice()->get_dim();
 
@@ -27,14 +27,14 @@ void MSOM_learning::init_msom(MSOM * p_source) const {
 
 void MSOM_learning::train(Tensor* p_input) {
 	const int winner = _msom->find_winner(p_input);
-	const int dim_input = _msom->get_input_group()->get_dim();
+	const int dim_input = _msom->get_input_group<SimpleCellGroup>()->get_dim();
 	const int dim_lattice = _msom->get_lattice()->get_dim();
 
 	_msom->update_context();
 
 	Tensor* wi = _msom->get_afferent()->get_weights();
 	Tensor* ci = _msom->get_context_lattice()->get_weights();
-	Tensor* in = _msom->get_input_group()->get_output();
+	Tensor* in = _msom->get_input_group<SimpleCellGroup>()->get_output();
 	Tensor* ct = _msom->get_context_group()->get_output();
 
 	_som_analyzer->update(_msom, winner);

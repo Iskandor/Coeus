@@ -241,7 +241,6 @@
     <ClCompile Include="SOM_params.cpp" />
     <ClCompile Include="TanhActivation.cpp" />
     <ClCompile Include="TD.cpp" />
-    <ClCompile Include="UBAL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />

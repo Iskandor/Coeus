@@ -228,9 +228,6 @@
     <ClCompile Include="Nadam.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
-    <ClCompile Include="UBAL.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
     <ClCompile Include="AMSGrad.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>

@@ -204,8 +204,8 @@ void ModelMNS3::run(const int p_epochs) {
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->get_dim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->get_dim());
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
 		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
 		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
 
@@ -325,8 +325,8 @@ void ModelMNS3::run2(const int p_epochs) {
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->get_dim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->get_dim());
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
 		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
 		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
 
@@ -460,8 +460,8 @@ void ModelMNS3::testDistance() {
 		}
 	}
 
-	cout << " F5 qError: " << analyzerF5.q_error(_F5->get_input_group()->get_dim()) << " WD: " << analyzerF5.winner_diff(_F5->get_lattice()->get_dim()) << endl;
-	cout << " STS qError: " << analyzerSTS.q_error(_STS->get_input_group()->get_dim()) << " WD: " << analyzerSTS.winner_diff(_STS->get_lattice()->get_dim()) << endl;
+	cout << " F5 qError: " << analyzerF5.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim()) << " WD: " << analyzerF5.winner_diff(_F5->get_lattice()->get_dim()) << endl;
+	cout << " STS qError: " << analyzerSTS.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim()) << " WD: " << analyzerSTS.winner_diff(_STS->get_lattice()->get_dim()) << endl;
 
 	save_results(timestamp + "_F5.mot", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Motor, GRASPS);
 	save_results(timestamp + "_F5.vis", Config::instance().f5_config.dim_x, Config::instance().f5_config.dim_y, winRateF5_Visual, PERSPS);

@@ -7,7 +7,7 @@ namespace Coeus {
 	class __declspec(dllexport) CoreLayerGradient : public IGradientComponent
 	{
 	public:
-		explicit CoreLayerGradient(CoreLayer* p_layer);
+		CoreLayerGradient(BaseLayer* p_layer, NeuralNetwork* p_network);
 		~CoreLayerGradient();
 
 		void init() override;

@@ -2,11 +2,9 @@
 
 using namespace Coeus;
 
-IGradientComponent::IGradientComponent(BaseLayer* p_layer)
-{
-	_layer = p_layer;
+IGradientComponent::IGradientComponent(BaseLayer* p_layer, NeuralNetwork* p_network): _layer(p_layer),
+                                                                                      _network(p_network) {
 }
-
 
 IGradientComponent::~IGradientComponent()
 {

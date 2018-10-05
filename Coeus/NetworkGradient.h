@@ -20,11 +20,13 @@ public:
 	void check_gradient(Tensor* p_input, Tensor* p_target);
 
 private:
-	
+	IGradientComponent* create_component(BaseLayer* p_layer) const;
 	double check_estimate(Tensor* p_input, Tensor* p_target) const;
 
 	NeuralNetwork*	_network;
 	ICostFunction*	_cost_function;
+
+	map<string, IGradientComponent*> _gradient_component;
 
 	map<string, Tensor> _w_gradient;
 	map<string, Tensor> _b_gradient;

@@ -7,7 +7,7 @@ namespace Coeus
 	class __declspec(dllexport) RecurrentLayerGradient : public IGradientComponent
 	{
 	public:
-		explicit RecurrentLayerGradient(RecurrentLayer* p_recurrent_layer);
+		RecurrentLayerGradient(BaseLayer* p_layer, NeuralNetwork* p_network);
 		~RecurrentLayerGradient();
 
 		void init() override;

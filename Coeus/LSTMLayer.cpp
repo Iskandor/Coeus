@@ -13,8 +13,6 @@ LSTMLayer::LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation) : B
 	_forget_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, SIGMOID, false));
 	_cec = add_group<LSTMCellGroup>(new LSTMCellGroup(p_dim, p_activation, _input_gate, _output_gate, _forget_gate));
 	_input_group = _output_group = _cec;
-
-	_gradient_component = new LSTMLayerGradient(this);
 }
 
 LSTMLayer::~LSTMLayer()
@@ -27,7 +25,6 @@ LSTMLayer::~LSTMLayer()
 	delete _in_input_gate;
 	delete _in_output_gate;
 	delete _in_forget_gate;
-	delete _gradient_component;
 }
 
 void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)

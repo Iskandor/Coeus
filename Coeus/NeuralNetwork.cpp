@@ -40,7 +40,7 @@ NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) {
 			default: ;
 		}
 
-		_param_map[(*it).second->id()] = layer->id();
+		_param_map[(*it).second->get_id()] = layer->get_id();
 	}
 	Connection* connection = nullptr;
 
@@ -165,34 +165,38 @@ vector<Tensor*> NeuralNetwork::get_input() {
 void NeuralNetwork::activate()
 {
 	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {
-		for (auto input = _graph[(*layer)->id()].begin(); input != _graph[(*layer)->id()].end(); ++input) {
-			(*layer)->integrate(_layers[*input]->get_output(), _connections[(*layer)->id() + "_" + (*input)]->get_weights());
+		for (auto input = _graph[(*layer)->get_id()].begin(); input != _graph[(*layer)->get_id()].end(); ++input) {
+			(*layer)->integrate(_layers[*input]->get_output(), _connections[(*layer)->get_id() + "_" + (*input)]->get_weights());
 		}
 		(*layer)->activate();
 	}
 }
 
 BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
-	_layers[p_layer->id()] = p_layer;
+	_layers[p_layer->get_id()] = p_layer;
 
 	if (dynamic_cast<InputLayer*>(p_layer) != nullptr)
 	{
-		_input_layer.push_back(p_layer->id());
+		_input_layer.push_back(p_layer->get_id());
 	}
 
 	return p_layer;
+}
+
+BaseLayer* NeuralNetwork::get_layer(const string& p_layer) {
+	return _layers[p_layer];
 }
 
 Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const double p_limit, const bool p_trainable) {
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 
-	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->id(), out_layer->id());
+	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->get_id(), out_layer->get_id());
 	c->init(p_init, p_trainable, p_limit);
 
 	_connections[c->get_id()] = c;
 
-	_graph[out_layer->id()].push_back(in_layer->id());
+	_graph[out_layer->get_id()].push_back(in_layer->get_id());
 
 	return c;
 }
@@ -204,6 +208,16 @@ Connection* NeuralNetwork::get_connection(const string& p_input_layer, const str
 		if ((*it).second->get_in_id() == p_input_layer && (*it).second->get_out_id() == p_output_layer) {
 			result = (*it).second;
 		}
+	}
+
+	return result;
+}
+
+vector<BaseLayer*> NeuralNetwork::get_input_layers(const string& p_layer) {
+	vector<BaseLayer*> result;
+
+	for(auto it = _graph[p_layer].begin(); it != _graph[p_layer].end(); ++it) {
+		result.push_back(_layers[*it]);
 	}
 
 	return result;
@@ -259,13 +273,13 @@ void NeuralNetwork::create_param_map(NeuralNetwork* p_network) {
 	vector<string> target;
 
 	for (auto it = _forward_graph.begin(); it != _forward_graph.end(); ++it) {
-		target.push_back((*it)->id());
+		target.push_back((*it)->get_id());
 	}
 
 	vector<string> source;
 
 	for (auto it = p_network->_forward_graph.begin(); it != p_network->_forward_graph.end(); ++it) {
-		source.push_back((*it)->id());
+		source.push_back((*it)->get_id());
 	}
 
 	if (target.size() == source.size()) {

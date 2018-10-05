@@ -8,7 +8,7 @@ LSOM1_learning::LSOM1_learning(LSOM1* p_som, LSOM1_params* p_params, SOM_analyze
 {
 	_lsom = p_som;
 
-	const int dim_input = p_som->get_input_group()->get_dim();
+	const int dim_input = p_som->get_input_group<SimpleCellGroup>()->get_dim();
 	const int dim_lattice = p_som->get_lattice()->get_dim();
 
 	_friendship = Tensor::Value({ dim_lattice }, 1);
@@ -24,10 +24,10 @@ LSOM1_learning::~LSOM1_learning()
 void LSOM1_learning::train(Tensor * p_input)
 {
 	const int winner = _lsom->find_winner(p_input);
-	const int dim_input = _lsom->get_input_group()->get_dim();
+	const int dim_input = _lsom->get_input_group<SimpleCellGroup>()->get_dim();
 	const int dim_lattice = _lsom->get_lattice()->get_dim();
 	Tensor* oi = _lsom->get_output();
-	Tensor* in = _lsom->get_input_group()->get_output();
+	Tensor* in = _lsom->get_input_group<SimpleCellGroup>()->get_output();
 	Tensor* wi = _lsom->get_afferent()->get_weights();
 	Tensor* li = _lsom->get_lateral()->get_weights();
 

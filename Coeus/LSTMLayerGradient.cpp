@@ -4,14 +4,9 @@
 
 using namespace Coeus;
 
-LSTMLayerGradient::LSTMLayerGradient(LSTMLayer* p_layer) : IGradientComponent(p_layer)
+LSTMLayerGradient::LSTMLayerGradient(BaseLayer* p_layer, NeuralNetwork* p_network) : IGradientComponent(p_layer, p_network)
 {
-	_state_error = Tensor::Zero({ p_layer->get_output_group<LSTMCellGroup>()->get_dim() });
 
-	LSTMLayer* l = get_layer<LSTMLayer>();
-
-	_dc_input_gate = Tensor::Zero({ l->_input_gate->get_dim(), l->_aux_input->get_dim() });
-	_dc_forget_gate = Tensor::Zero({ l->_input_gate->get_dim(), l->_aux_input->get_dim() });
 }
 
 
@@ -21,7 +16,12 @@ LSTMLayerGradient::~LSTMLayerGradient()
 
 void LSTMLayerGradient::init()
 {
+	_state_error = Tensor::Zero({ _layer->get_output_group<LSTMCellGroup>()->get_dim() });
 
+	LSTMLayer* l = get_layer<LSTMLayer>();
+
+	_dc_input_gate = Tensor::Zero({ l->_input_gate->get_dim(), l->_aux_input->get_dim() });
+	_dc_forget_gate = Tensor::Zero({ l->_input_gate->get_dim(), l->_aux_input->get_dim() });
 }
 
 void LSTMLayerGradient::calc_deriv()

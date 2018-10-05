@@ -8,7 +8,7 @@ namespace Coeus
 	class __declspec(dllexport) LSTMLayerGradient : public IGradientComponent
 	{
 	public:
-		LSTMLayerGradient(LSTMLayer* p_layer);
+		LSTMLayerGradient(BaseLayer* p_layer, NeuralNetwork* p_network);
 		~LSTMLayerGradient();
 
 		void init() override;

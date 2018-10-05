@@ -23,9 +23,12 @@ public:
 	virtual void override(NeuralNetwork* p_network);
 
 	BaseLayer*	add_layer(BaseLayer* p_layer);
+	BaseLayer*	get_layer(const string& p_layer);
 	Connection* add_connection(const string& p_input_layer, const string& p_output_layer, Connection::INIT p_init, double p_limit = 0, bool p_trainable = true);
 	Connection* get_connection(const string& p_input_layer, const string& p_output_layer);
-	Tensor*		get_output() { return _layers[_output_layer]->get_output(); }
+	vector<BaseLayer*> get_input_layers(const string& p_layer);
+
+	Tensor*		get_output() { return _layers[_output_layer]->get_output(); }	
 	vector<Tensor*> get_input();
 
 protected:

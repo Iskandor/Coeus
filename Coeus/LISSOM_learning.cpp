@@ -14,10 +14,10 @@ void LISSOM_learning::train(Tensor* p_input) {
 	_lissom->activate(p_input);
 
 	const int dim_lattice = _lissom->get_lattice()->get_dim();
-	const int dim_input = _lissom->get_input_group()->get_dim();
+	const int dim_input = _lissom->get_input_group<SimpleCellGroup>()->get_dim();
 
 	Tensor* oi = _lissom->get_output();
-	Tensor* in = _lissom->get_input_group()->get_output();
+	Tensor* in = _lissom->get_input_group<SimpleCellGroup>()->get_output();
 	Tensor* wi = _lissom->get_afferent()->get_weights();
 	Tensor* le = _lissom->get_latteral_e()->get_weights();
 	Tensor* li = _lissom->get_latteral_i()->get_weights();

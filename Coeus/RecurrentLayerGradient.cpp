@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-RecurrentLayerGradient::RecurrentLayerGradient(RecurrentLayer* p_recurrent_layer) : IGradientComponent(p_recurrent_layer)
+RecurrentLayerGradient::RecurrentLayerGradient(BaseLayer* p_layer, NeuralNetwork* p_network) : IGradientComponent(p_layer, p_network)
 {
 
 }

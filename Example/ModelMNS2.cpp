@@ -218,8 +218,8 @@ void ModelMNS2::run(const int p_epochs) {
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->get_dim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->get_dim());
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
 		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
 		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
 
@@ -312,9 +312,9 @@ void ModelMNS2::run(const int p_epochs) {
 		chrono::duration<double> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group()->get_dim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group()->get_dim());
-		double qerrPFG = PFG_analyzer.q_error(_PFG->get_input_group()->get_dim());
+		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
+		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
+		double qerrPFG = PFG_analyzer.q_error(_PFG->get_input_group<SimpleCellGroup>()->get_dim());
 		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
 		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
 		double wdPFG = PFG_analyzer.winner_diff(_PFG->get_lattice()->get_dim());

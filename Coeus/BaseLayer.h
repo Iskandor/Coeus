@@ -32,7 +32,7 @@ public:
 	void update(map<string, Tensor> &p_update);
 
 	TYPE	get_type() const { return _type; }
-	string	id() const { return _id; }
+	string	get_id() const { return _id; }
 
 	int input_dim() const { return _input_group->get_dim(); }
 	int output_dim() const { return _output_group->get_dim(); }
@@ -40,7 +40,6 @@ public:
 	bool is_valid() const { return _valid; }
 	void set_valid(const bool p_val) { _valid = p_val; }
 
-	IGradientComponent* gradient_component() const { return _gradient_component; }
 	template<typename T>
 	T* get_output_group() const { return static_cast<T*>(_output_group); }
 	template<typename T>
@@ -58,8 +57,6 @@ protected:
 
 	string		_id;
 	TYPE		_type;
-
-	IGradientComponent* _gradient_component;
 
 	map<string, Connection*>	_connections;
 	map<string, BaseCellGroup*>	_groups;
