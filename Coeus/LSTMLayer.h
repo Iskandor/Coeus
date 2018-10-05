@@ -20,10 +20,12 @@ namespace Coeus
 		LSTMCellGroup*		_cec;
 		SimpleCellGroup*	_input_gate;
 		SimpleCellGroup*	_output_gate;
+		SimpleCellGroup*	_forget_gate;
 		SimpleCellGroup*	_aux_input;
 
 		Connection* _in_input_gate;
 		Connection* _in_output_gate;
+		Connection* _in_forget_gate;
 
 		vector<Tensor*> _input;
 	};

@@ -41,9 +41,10 @@ public:
 	void set_valid(const bool p_val) { _valid = p_val; }
 
 	IGradientComponent* gradient_component() const { return _gradient_component; }
-
-	BaseCellGroup* get_output_group() const { return _output_group; }
-	BaseCellGroup* get_input_group() const { return _input_group; }
+	template<typename T>
+	T* get_output_group() const { return static_cast<T*>(_output_group); }
+	template<typename T>
+	T* get_input_group() const { return static_cast<T*>(_input_group); }
 
 	map<string, Connection*>* get_connections() { return &_connections; }
 	map<string, BaseCellGroup*>* get_groups() { return &_groups; }

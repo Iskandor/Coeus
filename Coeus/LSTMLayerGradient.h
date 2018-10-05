@@ -17,5 +17,10 @@ namespace Coeus
 		void calc_gradient(map<string, Tensor> &p_w_gradient, map<string, Tensor> &p_b_gradient) override;
 
 	private:
+		Tensor _state_error;
+
+		Tensor _dc_input_gate;
+		Tensor _dc_forget_gate;
+		Tensor _dc_input;
 	};
 }
