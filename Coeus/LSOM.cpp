@@ -8,11 +8,11 @@ LSOM::LSOM(const string p_id, const int p_input_dim, const int p_dim_x, const in
 {
 	_type = TYPE::LSOM;
 	_lateral = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice");
-	_lateral->init(Connection::UNIFORM, 1);
+	_lateral->init(Connection::UNIFORM, true, 1);
 
 	_auxoutput = Tensor::Zero({ _dim_x * _dim_y });
-	Tensor bias = Tensor::apply(*_output_group->get_bias(), Tensor::ew_abs);
-	_output_group->set_bias(&bias);
+	Tensor bias = Tensor::apply(*_lattice_group->get_bias(), Tensor::ew_abs);
+	_lattice_group->set_bias(&bias);
 }
 
 
@@ -28,9 +28,9 @@ void LSOM::activate(Tensor * p_input)
 
 	//calc_distance();
 
-	_output_group->integrate(p_input, _afferent->get_weights());	
-	_output_group->activate();
-	_dist = *_output_group->get_output();
+	_lattice_group->integrate(p_input, _afferent->get_weights());
+	_lattice_group->activate();
+	_dist = *_lattice_group->get_output();
 
 	/*
 	switch (_output_group->get_activation_function()) {
@@ -84,7 +84,7 @@ void LSOM::activate(Tensor * p_input)
 		int i = 0;
 	}
 
-	_output_group->set_output(&_auxoutput);
+	_lattice_group->set_output(&_auxoutput);
 }
 
 int LSOM::find_winner(Tensor * p_input)
@@ -93,8 +93,8 @@ int LSOM::find_winner(Tensor * p_input)
 	
 	_winner = 0;
 
-	for (int i = 0; i < _output_group->get_dim(); i++) {
-		if (_output_group->get_output()->at(_winner) < _output_group->get_output()->at(i)) {
+	for (int i = 0; i < _lattice_group->get_dim(); i++) {
+		if (_lattice_group->get_output()->at(_winner) < _lattice_group->get_output()->at(i)) {
 			_winner = i;
 		}
 	}

@@ -60,7 +60,7 @@ void IrisDataset::load_data(const string p_filename) {
 
 void IrisDataset::encode() {
 	
-	Tensor result({ 8 }, Tensor::ZERO);
+	Tensor result({ 32 }, Tensor::ZERO);
 	
 	for (int i = 0; i < _data.size(); i++) {
 		Tensor val({ 0 }, Tensor::ZERO);

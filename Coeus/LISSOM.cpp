@@ -27,7 +27,7 @@ void LISSOM::activate(Tensor* p_input) {
 
 	_prime_activity = *_afferent->get_weights() * *p_input;
 
-	_output_group->get_activation_function()->activate(_prime_activity);
+	_lattice_group->get_activation_function()->activate(_prime_activity);
 
 	Tensor* lateral_e = _lateral_e->get_weights();
 	Tensor* lateral_i = _lateral_i->get_weights();
@@ -42,5 +42,5 @@ void LISSOM::activate(Tensor* p_input) {
 		_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::sigmoid);
 	}
 
-	_output_group->set_output(&_auxoutput);
+	_lattice_group->set_output(&_auxoutput);
 }

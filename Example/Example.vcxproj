@@ -178,7 +178,6 @@
     <ClCompile Include="RNN.cpp" />
     <ClCompile Include="rk4.cpp" />
     <ClCompile Include="Sequence.cpp" />
-    <ClCompile Include="UBALTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CartPole.h" />

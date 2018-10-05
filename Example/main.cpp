@@ -19,18 +19,17 @@ int main()
 	/*
 	FFN model;
 
-	model.run_iris();
+	model.run();
 	*/
 
+	/*
 	MazeExample example;
 
 	example.example_icm();
 
-	/*
 	RNN model;
 
 	model.run();
-	*/
 
 	/*
 	IrisTest iris;

@@ -17,7 +17,7 @@ IrisTest::~IrisTest()
 }
 
 void IrisTest::init() {
-	_lsom = new LSOM("LSOM", 32, 8, 8, TANH);
+	_lsom = new LSOM("LSOM", 128, 5, 5, TANH);
 	//_lsom = new SOM("LSOM", 4, 8, 8, NeuralGroup::EXPONENTIAL);
 }
 
@@ -26,7 +26,7 @@ void IrisTest::run(const int p_epochs) {
 	//SOM_params params(_lsom);
 	//params.init_training(0.8, p_epochs);
 	LSOM_params params(_lsom);
-	params.init_training(0.01, 0.01, p_epochs);
+	params.init_training(1e-4, 1e-4, p_epochs);
 	LSOM_learning learner(_lsom, &params, &analyzer);
 	//SOM_learning learner(_lsom, &params, &analyzer);
 

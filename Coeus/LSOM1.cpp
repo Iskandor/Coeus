@@ -25,7 +25,7 @@ void LSOM1::activate(Tensor * p_input)
 
 	calc_distance();
 
-	_output_group->get_activation_function()->activate(_dist);
+	_lattice_group->get_activation_function()->activate(_dist);
 
 	Tensor* lateral_w = _lateral->get_weights();
 
@@ -38,7 +38,7 @@ void LSOM1::activate(Tensor * p_input)
 	}
 	_auxoutput = Tensor::apply(_auxoutput, ActivationFunctions::relu);
 
-	_output_group->set_output(&_auxoutput);
+	_lattice_group->set_output(&_auxoutput);
 }
 
 int LSOM1::find_winner(Tensor * p_input)
@@ -47,8 +47,8 @@ int LSOM1::find_winner(Tensor * p_input)
 	
 	_winner = 0;
 
-	for (int i = 0; i < _output_group->get_dim(); i++) {
-		if (_output_group->get_output()->at(_winner) < _output_group->get_output()->at(i)) {
+	for (int i = 0; i < _lattice_group->get_dim(); i++) {
+		if (_lattice_group->get_output()->at(_winner) < _lattice_group->get_output()->at(i)) {
 			_winner = i;
 		}
 	}

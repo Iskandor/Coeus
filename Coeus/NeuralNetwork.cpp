@@ -68,18 +68,18 @@ NeuralNetwork::~NeuralNetwork()
 
 void NeuralNetwork::init()
 {
-	set<string> controll_set;
+	set<string> control_set;
 
 	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
 		if (_graph.find(it->first) != _graph.end()) {
 			for (auto ag = _graph[it->first].begin(); ag != _graph[it->first].end(); ++ag) {
-				controll_set.insert(*ag);
+				control_set.insert(*ag);
 			}
 		}
 	}
 
 	for (auto it = _graph.begin(); it != _graph.end(); ++it) {
-		if (controll_set.find((*it).first) == controll_set.end()) {
+		if (control_set.find((*it).first) == control_set.end()) {
 			_output_layer = (*it).first;
 		}
 	}

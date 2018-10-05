@@ -22,7 +22,7 @@ namespace Coeus
 		static void save_network(string p_filename, BaseLayer* p_layer);
 		static BaseLayer* load_network(string p_filename);
 
-		static NeuralGroup* read_neural_group(json p_data);
+		static SimpleCellGroup* read_neural_group(json p_data);
 		static Connection* read_connection(json p_data);
 
 	private:
@@ -32,7 +32,7 @@ namespace Coeus
 		static SOM* read_som(json p_data);
 		static MSOM* read_msom(json p_data);
 
-		static json write_neural_group(NeuralGroup* p_group);
+		static json write_neural_group(SimpleCellGroup* p_group);
 		static json write_connection(Connection* p_connection);
 
 

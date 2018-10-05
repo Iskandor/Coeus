@@ -86,7 +86,7 @@ json IOUtils::write_som(SOM* p_som) {
 	result["id"] = p_som->id();
 	result["dim_x"] = p_som->dim_x();
 	result["dim_y"] = p_som->dim_y();
-	result["groups"]["input"] = write_neural_group(p_som->get_input_group());
+	result["groups"]["input"] = write_neural_group(static_cast<SimpleCellGroup*>(p_som->get_input_group()));
 	result["groups"]["lattice"] = write_neural_group(p_som->get_lattice());
 	result["connections"]["input_lattice"] = write_connection(p_som->get_afferent());
 
@@ -112,7 +112,7 @@ MSOM* IOUtils::read_msom(const json p_data) {
 	return new MSOM(p_data);
 }
 
-json IOUtils::write_neural_group(NeuralGroup* p_group) {
+json IOUtils::write_neural_group(SimpleCellGroup* p_group) {
 	return json({ { "id", p_group->get_id() }, { "dim", p_group->get_dim() }, { "actfn", p_group->get_activation_function()->get_type() }, {"bias", p_group->is_bias()} });
 }
 
@@ -137,8 +137,8 @@ json IOUtils::write_connection(Connection* p_connection) {
 	return result;
 }
 
-NeuralGroup* IOUtils::read_neural_group(const json p_data) {
-	return new NeuralGroup(p_data);
+SimpleCellGroup* IOUtils::read_neural_group(const json p_data) {
+	return new SimpleCellGroup(p_data);
 }
 
 Connection* IOUtils::read_connection(const json p_data) {
