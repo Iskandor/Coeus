@@ -40,7 +40,7 @@ void NetworkGradient::calc_gradient(Tensor* p_target) {
 
 	for (auto it = ++_network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		if ((*it)->gradient_component() != nullptr) {
-			(*it)->gradient_component()->calc_delta(_network->get_connection((*it)->id(), prev_layer->id())->get_weights(), prev_layer->gradient_component()->get_state());
+			(*it)->gradient_component()->calc_delta(_network->get_connection((*it)->id(), prev_layer->id())->get_weights(), prev_layer->gradient_component()->get_input_delta());
 			prev_layer = *it;
 		}		
 	}

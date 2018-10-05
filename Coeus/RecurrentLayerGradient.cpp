@@ -18,12 +18,8 @@ void RecurrentLayerGradient::init() {
 void RecurrentLayerGradient::calc_deriv() {
 }
 
-void RecurrentLayerGradient::calc_delta(Tensor* p_weights, LayerState* p_state) {
+void RecurrentLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta) {
 }
 
 void RecurrentLayerGradient::calc_gradient(map<string, Tensor> &p_w_gradient, map<string, Tensor> &p_b_gradient) {
-}
-
-void RecurrentLayerGradient::set_delta(Tensor* p_delta)
-{
 }
