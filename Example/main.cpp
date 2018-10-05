@@ -24,7 +24,7 @@ int main()
 
 	MazeExample example;
 
-	example.example_actor_critic();
+	example.example_icm();
 
 	/*
 	RNN model;

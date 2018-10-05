@@ -181,6 +181,7 @@
     <ClCompile Include="CoreLayer.cpp" />
     <ClCompile Include="CoreLayerGradient.cpp" />
     <ClCompile Include="CrossEntropyCost.cpp" />
+    <ClCompile Include="DDPG.cpp" />
     <ClCompile Include="DeepQLearning.cpp" />
     <ClCompile Include="DoubleQLearning.cpp" />
     <ClCompile Include="Encoder.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="CoreLayer.h" />
     <ClInclude Include="CoreLayerGradient.h" />
     <ClInclude Include="CrossEntropyCost.h" />
+    <ClInclude Include="DDPG.h" />
     <ClInclude Include="DeepQLearning.h" />
     <ClInclude Include="DoubleQLearning.h" />
     <ClInclude Include="Encoder.h" />

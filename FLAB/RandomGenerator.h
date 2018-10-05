@@ -29,8 +29,8 @@ public:
 
 private:
     RandomGenerator();
-    std::random_device _rd;
-    std::mt19937 _mt;
+    random_device _rd;
+    mt19937 _mt;
 };
 
 }

@@ -41,8 +41,8 @@ void Maze::reset() {
 	_a = 0;
     _bang = false;
     _kill = false;
-	_actor = RandomGenerator::getInstance().choice(&_initPos)[0];
-	//_actor = 0;
+	//_actor = RandomGenerator::getInstance().choice(&_initPos)[0];
+	_actor = 0;
 }
 
 vector<int> Maze::freePos() {

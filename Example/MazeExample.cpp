@@ -15,6 +15,7 @@
 #include "DoubleQLearning.h"
 #include "DeepQLearning.h"
 #include "ICM.h"
+#include "Encoder.h"
 
 using namespace Coeus;
 
@@ -34,7 +35,7 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden", 128, RELU));
+	network.add_layer(new CoreLayer("hidden", 256, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
@@ -52,7 +53,7 @@ void MazeExample::example_q() {
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 10000;
+	int epochs = 2000;
 
 	int wins = 0, loses = 0;
 
@@ -454,7 +455,7 @@ void MazeExample::example_icm() {
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 64));
+	network.add_layer(new InputLayer("input", 16));
 	network.add_layer(new CoreLayer("hidden0", 256, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
@@ -462,40 +463,29 @@ void MazeExample::example_icm() {
 	network.init();
 
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.01);
-	DeepQLearning agent(&network, &optimizer, 0.9, 1024, 64);
+	optimizer.init(new QuadraticCost(), 0.001);
+	QLearning agent(&network, &optimizer, 0.9);
 
 
 	NeuralNetwork network_fm;
-	network_fm.add_layer(new InputLayer("input", 68));
-	network_fm.add_layer(new CoreLayer("hidden0", 256, RELU));
-	network_fm.add_layer(new CoreLayer("output", 64, LINEAR));
+	network_fm.add_layer(new InputLayer("input", 20));
+	network_fm.add_layer(new CoreLayer("hidden0", 512, RELU));
+	network_fm.add_layer(new CoreLayer("output", 16, SOFTMAX));
 	network_fm.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_fm.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_fm.init();
 
-	ADAM optimizer_fm(&network);
-	optimizer_fm.init(new QuadraticCost(), 0.01);
+	ADAM optimizer_fm(&network_fm);
+	optimizer_fm.init(new QuadraticCost(), 0.001);
 
-	NeuralNetwork network_im;
-	network_im.add_layer(new InputLayer("input", 128));
-	network_im.add_layer(new CoreLayer("hidden0", 256, RELU));
-	network_im.add_layer(new CoreLayer("output", 4, LINEAR));
-	network_im.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network_im.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
-	network_im.init();
-
-	ADAM optimizer_im(&network);
-	optimizer_im.init(new QuadraticCost(), 0.01);
-
-	ICM icm(&network_fm, &optimizer_fm, &network_im, &optimizer_im);
+	ICM icm(&network_fm, &optimizer_fm);
 
 	vector<double> sensors;
+	Tensor action = Tensor::Zero({ 4 });
 	Tensor state0, state1;
-	int action;
 	double reward = 0;
-	double epsilon = 1;
-	int epochs = 1000;
+	double epsilon = 0.1;
+	int epochs = 2000;
 
 	int wins = 0, loses = 0;
 
@@ -507,6 +497,7 @@ void MazeExample::example_icm() {
 		cout << "Epoch " << e << endl;
 
 		task.getEnvironment()->reset();
+		double int_error = 0;
 
 		while (!task.isFinished()) {
 			//cout << maze->toString() << endl;
@@ -515,19 +506,21 @@ void MazeExample::example_icm() {
 			state0 = encode_state(&sensors);
 			network.activate(&state0);
 			//action = exploration->chooseAction(network.getOutput());
-			action = choose_action(network.get_output(), epsilon);
-			maze->performAction(action);
+			const int action_index = choose_action(network.get_output(), epsilon);
+			Encoder::one_hot(action, action_index);
+			maze->performAction(action_index);
 
 			sensors = maze->getSensors();
 			state1 = encode_state(&sensors);
 			reward = task.getReward();
-			icm.train(&state0, action, &state1);
+			int_error += icm.train(&state0, &action, &state1);
 			reward += icm.get_intrinsic_reward();
-			agent.train(&state0, action, &state1, reward, task.isFinished());
+			agent.train(&state0, action_index, &state1, reward);
 		}
 
 		cout << task.getEnvironment()->moves() << endl;
 		cout << epsilon << endl;
+		cout << int_error / task.getEnvironment()->moves() << endl;
 
 		if (reward > 0) {
 			wins++;

@@ -10,10 +10,10 @@ namespace Coeus
 		DeepQLearning(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, double p_gamma, int p_size, int p_sample);
 		~DeepQLearning();
 
-		double train(Tensor* p_state0, int p_action0, Tensor* p_state1, double p_reward, bool p_final);
+		double train(Tensor* p_state0, int p_action0, Tensor* p_state1, double p_reward, bool p_final) const;
 
 	private:
-		double calc_max_qa(Tensor* p_state);
+		double calc_max_qa(Tensor* p_state) const;
 
 		NeuralNetwork* _network;
 		BaseGradientAlgorithm* _gradient_algorithm;

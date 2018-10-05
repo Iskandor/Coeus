@@ -324,6 +324,9 @@
     <ClCompile Include="ICM.cpp">
       <Filter>Source Files\Algorithm\IM</Filter>
     </ClCompile>
+    <ClCompile Include="DDPG.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -565,6 +568,9 @@
     </ClInclude>
     <ClInclude Include="ICM.h">
       <Filter>Header Files\Algorithm\IM</Filter>
+    </ClInclude>
+    <ClInclude Include="DDPG.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

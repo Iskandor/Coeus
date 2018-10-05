@@ -25,7 +25,7 @@ DeepQLearning::~DeepQLearning()
 	delete _replay_buffer;
 }
 
-double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const double p_reward, const bool p_final) {
+double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const double p_reward, const bool p_final) const {
 	_replay_buffer->add_item(p_state0, p_action0, p_state1, p_reward, p_final);
 
 	double error = 0;
@@ -53,7 +53,7 @@ double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_sta
 	return error;
 }
 
-double DeepQLearning::calc_max_qa(Tensor* p_state) {
+double DeepQLearning::calc_max_qa(Tensor* p_state) const {
 	_network->activate(p_state);
 	const int maxQa = _network->get_output()->max_value_index();
 
