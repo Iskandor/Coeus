@@ -24,6 +24,7 @@ namespace Coeus {
 
 		Tensor get_h();
 		Tensor get_dh();
+		Tensor get_g();
 		Tensor get_dg();
 
 	private:
