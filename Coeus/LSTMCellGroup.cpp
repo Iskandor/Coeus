@@ -70,25 +70,29 @@ LSTMCellGroup* LSTMCellGroup::clone()
 
 void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate)
 {
-	Tensor g = get_g();
-	_state = _state.dot(*p_forget_gate) + g.dot(*p_input_gate);
+	_g_output = _g->activate(_net);
+	_state = _state.dot(*p_forget_gate) + _g_output.dot(*p_input_gate);
 
-	Tensor h = get_h();
-	_output = h.dot(*p_output_gate);
+	_h_output = _f->activate(_state);
+	_output = _h_output.dot(*p_output_gate);
+
+	_net.fill(0);
 }
 
-Tensor LSTMCellGroup::get_h() {
-	return _f->activate(_state);
+Tensor LSTMCellGroup::get_h() const
+{
+	return _h_output;
 }
 
 Tensor LSTMCellGroup::get_dh() {
-	return _f->deriv(_state);
+	return _f->deriv(_h_output);
 }
 
-Tensor LSTMCellGroup::get_g() {
-	return _g->activate(_net);
+Tensor LSTMCellGroup::get_g() const
+{
+	return _g_output;
 }
 
 Tensor LSTMCellGroup::get_dg() {
-	return _g->deriv(_net);
+	return _g->deriv(_g_output);
 }

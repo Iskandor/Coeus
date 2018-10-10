@@ -23,14 +23,16 @@ namespace Coeus {
 
 		LSTMCellGroup* clone() override;
 
-		Tensor get_h();
+		Tensor get_h() const;
 		Tensor get_dh();
-		Tensor get_g();
+		Tensor get_g() const;
 		Tensor get_dg();
 
 	private:
 		void activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate);
-		Tensor	_state;
+		Tensor _state;
+		Tensor _h_output;
+		Tensor _g_output;
 
 		IActivationFunction* _g;
 

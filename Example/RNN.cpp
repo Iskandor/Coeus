@@ -6,6 +6,7 @@
 #include "ADAM.h"
 #include "BPTT.h"
 #include "AddProblemDataset.h"
+#include "BackProph.h"
 
 
 RNN::RNN()
@@ -74,10 +75,10 @@ void RNN::run()
 void RNN::run_add_problem()
 {
 	AddProblemDataset dataset;
-	dataset.load_data("./data/add_problem.dat");
+	dataset.load_data("./data/add_problem_easy.dat");
 
 	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new LSTMLayer("hidden", 4, TANH));
+	_network.add_layer(new LSTMLayer("hidden", 64, TANH));
 	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
@@ -86,12 +87,15 @@ void RNN::run_add_problem()
 	_network.init();
 
 	ADAM algorithm(&_network);
-	algorithm.init(new QuadraticCost(), 0.1);
+	algorithm.init(new QuadraticCost(), 0.001);
 
-	vector<AddProblemSequence>* data = dataset.permute();
+	double error = 1;
 
-	for (int t = 0; t < 200; t++) {
-		double error = 0;
+	while(error > 0.01) {
+		vector<AddProblemSequence>* data = dataset.permute();
+		error = 0;
+		_network.reset();
+
 		for (int i = 0; i < data->size(); i++) {
 
 			AddProblemSequence sequence = data->at(i);
@@ -102,8 +106,22 @@ void RNN::run_add_problem()
 			}
 
 			error += algorithm.train(&sequence.input[sequence.input.size() - 1], &sequence.target);
-			_network.reset();
+			
 		}
 		cout << error << endl;
+	}
+
+	vector<AddProblemSequence>* data = dataset.permute();
+
+	for (int i = 0; i < 20; i++) {
+		AddProblemSequence sequence = data->at(i);
+		_network.reset();
+
+		for (int s = 0; s < sequence.input.size() - 1; s++)
+		{
+			_network.activate(&sequence.input[s]);
+		}
+		cout << _network.get_output()->at(0) << " - " << sequence.target[0] << endl;
+		
 	}
 }

@@ -324,6 +324,11 @@ Tensor Tensor::dot(const Tensor& p_tensor) const {
 	double* arr = alloc_arr(_size);
 	int* shape = copy_shape(_rank, _shape);
 
+	if (_size != p_tensor.size() || _rank != p_tensor._rank)
+	{
+		assert(("Size or rank not equal", 0));
+	}
+
 	for (int i = 0; i < _size; i++) {
 		arr[i] = _arr[i] * p_tensor._arr[i];
 	}

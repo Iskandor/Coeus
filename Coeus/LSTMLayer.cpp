@@ -83,11 +83,11 @@ void LSTMLayer::activate(Tensor* p_input)
 			_dc_input.set(j, m, d0 + d1);
 
 			d0 = _dc_input_gate.at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = g[j] * _input_gate->get_deriv_output()->at(j) * _aux_input->get_output()->at(m);
+			d1 = g[j] * _input_gate->get_deriv_output()->at(j,j) * _aux_input->get_output()->at(m);
 			_dc_input_gate.set(j, m, d0 + d1);
 
 			d0 = _dc_forget_gate.at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = h[j] * _forget_gate->get_deriv_output()->at(j) * _aux_input->get_output()->at(m);
+			d1 = h[j] * _forget_gate->get_deriv_output()->at(j,j) * _aux_input->get_output()->at(m);
 			_dc_forget_gate.set(j, m, d0 + d1);
 		}
 	}

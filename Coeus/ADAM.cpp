@@ -38,13 +38,25 @@ void ADAM::update_momentum(const string p_id, Tensor& p_gradient) {
 	*/
 
 	_m[p_id] = _beta1 * _m[p_id] + (1 - _beta1) * p_gradient;
-	_v[p_id] = _beta2 * _v[p_id] + (1 - _beta2) * p_gradient.pow(2);
+	_v[p_id] = _beta2 * _v[p_id] + (1 - _beta2) * p_gradient.pow(2);	
 
-	_m_mean[p_id] = _m[p_id] / (1 - _pow_beta1);
-	_v_mean[p_id] = _v[p_id] / (1 - _pow_beta2);
+	if (_pow_beta1 > 1e-3) {
+		_m_mean[p_id] = _m[p_id] / (1 - _pow_beta1);
+		_pow_beta1 *= _beta1;
+	}
+	else
+	{
+		_m_mean[p_id] = _m[p_id];
+	}
 
-	_pow_beta1 *= _beta1;
-	_pow_beta2 *= _beta2;
+	if (_pow_beta2 > 1e-3) {
+		_v_mean[p_id] = _v[p_id] / (1 - _pow_beta2);
+		_pow_beta2 *= _beta2;
+	}
+	else
+	{
+		_v_mean[p_id] = _v[p_id];
+	}
 }
 
 void ADAM::calc_update() {

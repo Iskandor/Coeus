@@ -34,10 +34,11 @@ void LSTMLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta)
 	LSTMLayer* l = get_layer<LSTMLayer>();
 	const Tensor h = l->_cec->get_h();
 	const Tensor dh = l->_cec->get_dh();
+	const Tensor dkc = p_weights->T() * *p_delta;
 
-	_delta[l->_output_gate->get_id()] = _deriv[l->_output_gate->get_id()].dot(h) * (p_weights->T() * *p_delta);
+	_delta[l->_output_gate->get_id()] = (_deriv[l->_output_gate->get_id()] * h).dot(dkc);
 
-	_state_error = l->_output_gate->get_output()->dot(dh).dot(p_weights->T() * *p_delta);
+	_state_error = (dh * *l->_output_gate->get_output()).dot(dkc);
 }
 
 void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<string, Tensor>& p_b_gradient)
