@@ -6,8 +6,7 @@ CoreLayerGradient::CoreLayerGradient(BaseLayer* p_layer, NeuralNetwork* p_networ
 }
 
 CoreLayerGradient::~CoreLayerGradient()
-{
-}
+= default;
 
 void CoreLayerGradient::init()
 {

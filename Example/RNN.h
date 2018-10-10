@@ -10,8 +10,9 @@ public:
 	~RNN();
 
 	void run();
+	void run_add_problem();
 
 private:
-	Coeus::NeuralNetwork _network;
+	NeuralNetwork _network;
 };
 

@@ -29,6 +29,7 @@ public:
 	virtual void integrate(Tensor* p_input, Tensor* p_weights) = 0;
 	virtual void activate(Tensor* p_input = nullptr) = 0;
 	virtual void override(BaseLayer* p_source) = 0;
+	virtual void reset() = 0;
 	void update(map<string, Tensor> &p_update);
 
 	TYPE	get_type() const { return _type; }

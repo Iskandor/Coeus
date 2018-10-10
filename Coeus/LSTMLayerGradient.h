@@ -18,9 +18,5 @@ namespace Coeus
 
 	private:
 		Tensor _state_error;
-
-		Tensor _dc_input_gate;
-		Tensor _dc_forget_gate;
-		Tensor _dc_input;
 	};
 }

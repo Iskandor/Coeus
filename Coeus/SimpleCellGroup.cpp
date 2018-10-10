@@ -66,6 +66,7 @@ void SimpleCellGroup::activate() {
 	}
 
 	_output = _f->activate(_net);
+	_deriv_output = _f->deriv(_output);
 	_net.fill(0);
 }
 

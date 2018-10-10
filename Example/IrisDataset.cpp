@@ -1,5 +1,6 @@
 #include "IrisDataset.h"
 #include <fstream>
+#include <random>
 #include <vector>
 #include <algorithm>
 #include <set>
@@ -76,7 +77,7 @@ void IrisDataset::encode() {
 }
 
 vector<IrisDatasetItem>* IrisDataset::permute() {
-	random_shuffle(_data.begin(), _data.end());
+	shuffle(_data.begin(), _data.end(), std::mt19937(std::random_device()()));
 	return &_data;
 }
 

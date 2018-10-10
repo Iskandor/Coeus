@@ -21,8 +21,13 @@ BaseGradientAlgorithm::~BaseGradientAlgorithm()
 
 double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) {
 	_network->activate(p_input);
-	const double error = train(p_target);
 
+	double error = 0;
+
+	if (p_target != nullptr)
+	{
+		error = train(p_target);
+	}
 	//_network_gradient->check_gradient(p_input, p_target);
 
 	return error;

@@ -14,9 +14,10 @@ public:
 	void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
 	void activate(Tensor* p_input = nullptr) override;
 	void override(BaseLayer* p_source) override;
+	void reset() override;
 
 private:
-	SimpleCellGroup*	_group{};
+	SimpleCellGroup*	_group;
 	SimpleCellGroup*	_context_group;
 	Connection*			_rec_connection;
 	

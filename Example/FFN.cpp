@@ -54,9 +54,9 @@ void FFN::run() {
 	}
 
 	//BackProp model(&_network);
-	//RMSProp model(&_network);
+	RMSProp model(&_network);
 	//AdaMax model(&_network);
-	ADAM model(&_network);
+	//ADAM model(&_network);
 	//AMSGrad model(&_network);
 	//Nadam model(&_network);
 

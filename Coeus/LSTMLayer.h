@@ -15,6 +15,7 @@ namespace Coeus
 		void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
 		void activate(Tensor* p_input = nullptr) override;
 		void override(BaseLayer* p_source) override;
+		void reset() override;
 
 	private:
 		LSTMCellGroup*		_cec;
@@ -26,6 +27,10 @@ namespace Coeus
 		Connection* _in_input_gate;
 		Connection* _in_output_gate;
 		Connection* _in_forget_gate;
+
+		Tensor _dc_input_gate;
+		Tensor _dc_forget_gate;
+		Tensor _dc_input;
 
 		vector<Tensor*> _input;
 	};

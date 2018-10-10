@@ -10,19 +10,21 @@
 
 using namespace Coeus;
 
-BaseCellGroup::BaseCellGroup(int p_dim): _dim(p_dim)
+BaseCellGroup::BaseCellGroup(int p_dim): _dim(p_dim), _f(nullptr)
 {
 	_id = IDGen::instance().next();
 	_net = Tensor::Zero({p_dim});
 	_output = Tensor::Zero({p_dim});
+	_deriv_output = Tensor::Zero({p_dim});
 }
 
-BaseCellGroup::BaseCellGroup(nlohmann::json p_data)
+BaseCellGroup::BaseCellGroup(nlohmann::json p_data): _f(nullptr)
 {
 	_id = p_data["id"].get<string>();
 	_dim = p_data["dim"].get<int>();
-	_output = Tensor::Zero({ _dim });
-	_net = Tensor::Zero({ _dim });
+	_output = Tensor::Zero({_dim});
+	_deriv_output = Tensor::Zero({_dim});
+	_net = Tensor::Zero({_dim});
 }
 
 BaseCellGroup::~BaseCellGroup()

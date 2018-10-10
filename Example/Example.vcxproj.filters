@@ -31,6 +31,12 @@
     <Filter Include="Header Files\MNS">
       <UniqueIdentifier>{fbd5a953-f804-48c7-9707-ad146c5bf8e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RNN">
+      <UniqueIdentifier>{c45bc772-eebe-4a9c-8633-d21333bdc825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RNN">
+      <UniqueIdentifier>{64d3f9b9-5353-49d7-885f-87db65afa5c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,9 +66,6 @@
     <ClCompile Include="Sequence.cpp">
       <Filter>Source Files\MNS</Filter>
     </ClCompile>
-    <ClCompile Include="RNN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CartPole.cpp">
       <Filter>Source Files\RL</Filter>
     </ClCompile>
@@ -89,6 +92,12 @@
     </ClCompile>
     <ClCompile Include="MazeExample.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN.cpp">
+      <Filter>Source Files\RNN</Filter>
+    </ClCompile>
+    <ClCompile Include="AddProblemDataset.cpp">
+      <Filter>Source Files\RNN</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="MazeExample.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddProblemDataset.h">
+      <Filter>Header Files\RNN</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

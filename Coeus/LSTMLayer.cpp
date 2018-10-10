@@ -42,6 +42,10 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 	_in_output_gate->init(Connection::LECUN_UNIFORM);
 	_in_forget_gate = add_connection(new Connection(_aux_input->get_dim(), _forget_gate->get_dim(), _aux_input->get_id(), _forget_gate->get_id()));
 	_in_forget_gate->init(Connection::LECUN_UNIFORM);
+
+	_dc_input_gate = Tensor::Zero({ _cec->get_dim(), dim });
+	_dc_forget_gate = Tensor::Zero({ _cec->get_dim(), dim });
+	_dc_input = Tensor::Zero({ _cec->get_dim(), dim });
 }
 
 void LSTMLayer::integrate(Tensor* p_input, Tensor* p_weights)
@@ -63,10 +67,44 @@ void LSTMLayer::activate(Tensor* p_input)
 
 	_cec->activate();
 
+	const Tensor g = _cec->get_g();
+	const Tensor h = _cec->get_h();
+	const Tensor dg = _cec->get_dg();
+
+	double d0;
+	double d1;
+
+	for(int j = 0; j < _cec->get_dim(); j++)
+	{
+		for(int m = 0; m < _aux_input->get_dim(); m++)
+		{
+			d0 = _dc_input.at(j, m) * _forget_gate->get_output()->at(j);
+			d1 = dg[j] * _input_gate->get_output()->at(j) * _aux_input->get_output()->at(m);
+			_dc_input.set(j, m, d0 + d1);
+
+			d0 = _dc_input_gate.at(j, m) * _forget_gate->get_output()->at(j);
+			d1 = g[j] * _input_gate->get_deriv_output()->at(j) * _aux_input->get_output()->at(m);
+			_dc_input_gate.set(j, m, d0 + d1);
+
+			d0 = _dc_forget_gate.at(j, m) * _forget_gate->get_output()->at(j);
+			d1 = h[j] * _forget_gate->get_deriv_output()->at(j) * _aux_input->get_output()->at(m);
+			_dc_forget_gate.set(j, m, d0 + d1);
+		}
+	}
+
 	_input.clear();
 }
 
 void LSTMLayer::override(BaseLayer* p_source)
 {
 //#TODO doplnit prepis parametrov LSTM siete
+}
+
+void LSTMLayer::reset()
+{
+	_dc_input_gate.fill(0);
+	_dc_forget_gate.fill(0);
+	_dc_input.fill(0);
+
+	_cec->reset();
 }

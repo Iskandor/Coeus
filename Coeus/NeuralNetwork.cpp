@@ -152,6 +152,13 @@ void NeuralNetwork::override(NeuralNetwork* p_network) {
 	}
 }
 
+void NeuralNetwork::reset()
+{
+	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
+		(*it).second->reset();
+	}
+}
+
 vector<Tensor*> NeuralNetwork::get_input() {
 	vector<Tensor*> result;
 

@@ -29,6 +29,7 @@ namespace Coeus {
 		void	set_output(Tensor* p_output) const;
 		void	set_output(vector<Tensor*>& p_output) const;
 		Tensor* get_output() { return &_output; }
+		Tensor* get_deriv_output() { return &_deriv_output; }
 
 		IActivationFunction* get_activation_function() const { return _f; }
 
@@ -42,6 +43,7 @@ namespace Coeus {
 		Tensor					_net;
 		IActivationFunction*	_f;
 		Tensor					_output;
+		Tensor					_deriv_output;
 
 	};
 }

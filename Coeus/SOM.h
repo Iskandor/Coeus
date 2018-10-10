@@ -34,11 +34,13 @@ namespace Coeus
 
 		virtual SOM* clone() const;
 		void override(BaseLayer* p_source) override;
+		void reset() override {};
 
 	protected:
 		void find_winner(Tensor* p_input, bool p_conscience);
 		void calc_distance();
 
+	protected:
 		SimpleCellGroup* _lattice_group;
 		SimpleCellGroup* _input_group;
 		Connection*		_afferent;

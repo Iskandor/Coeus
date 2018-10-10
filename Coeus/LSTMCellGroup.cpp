@@ -58,6 +58,11 @@ void LSTMCellGroup::activate()
 	activate(_input_gate->get_output(), _output_gate->get_output(), _forget_gate->get_output());
 }
 
+void LSTMCellGroup::reset() const
+{
+	_state.fill(0);
+}
+
 LSTMCellGroup* LSTMCellGroup::clone()
 {
 	return new LSTMCellGroup(*this);

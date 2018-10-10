@@ -50,3 +50,8 @@ void RecurrentLayer::override(BaseLayer * p_source)
 	_group->get_bias()->override(source->_group->get_bias());
 	_rec_connection->override(source->_rec_connection);
 }
+
+void RecurrentLayer::reset()
+{
+	_context_group->get_output()->fill(0);
+}

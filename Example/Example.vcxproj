@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddProblemDataset.cpp" />
     <ClCompile Include="CartPole.cpp" />
     <ClCompile Include="CartPoleTask.cpp" />
     <ClCompile Include="Config.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Sequence.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddProblemDataset.h" />
     <ClInclude Include="CartPole.h" />
     <ClInclude Include="CartPoleTask.h" />
     <ClInclude Include="Config.h" />

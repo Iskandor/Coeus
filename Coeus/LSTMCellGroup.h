@@ -19,6 +19,7 @@ namespace Coeus {
 
 		void integrate(Tensor* p_input, Tensor* p_weights) override;
 		void activate() override;
+		void reset() const;
 
 		LSTMCellGroup* clone() override;
 
