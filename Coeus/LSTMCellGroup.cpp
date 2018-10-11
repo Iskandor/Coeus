@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-LSTMCellGroup::LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate) : BaseCellGroup(p_dim)
+LSTMCellGroup::LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate) : BaseCellGroup(p_dim, true)
 {
 	_state = Tensor::Zero({p_dim});
 
@@ -18,7 +18,7 @@ LSTMCellGroup::LSTMCellGroup(nlohmann::json p_data) : BaseCellGroup(p_data)
 {
 }
 
-LSTMCellGroup::LSTMCellGroup(LSTMCellGroup& p_copy) : BaseCellGroup(p_copy._dim)
+LSTMCellGroup::LSTMCellGroup(LSTMCellGroup& p_copy) : BaseCellGroup(p_copy._dim, p_copy._bias_flag)
 {
 	_state = Tensor::Zero({ p_copy._dim });
 
@@ -70,6 +70,10 @@ LSTMCellGroup* LSTMCellGroup::clone()
 
 void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate)
 {
+	if (is_bias()) {
+		_net += _bias;
+	}
+
 	_g_output = _g->activate(_net);
 	_state = _state.dot(*p_forget_gate) + _g_output.dot(*p_input_gate);
 

@@ -23,14 +23,7 @@ public:
 	void integrate(Tensor* p_input, Tensor* p_weights) override;
     void activate() override;
 
-	bool is_bias() const { return _bias_flag; }
-	void update_bias(Tensor& p_delta_b);
-	void set_bias(Tensor* p_bias) const { _bias.override(p_bias); }
-	Tensor* get_bias() { return &_bias; }
-
 	SimpleCellGroup* clone() override;
-private:
-	bool	_bias_flag;
-	Tensor	_bias;
+
 };
 }

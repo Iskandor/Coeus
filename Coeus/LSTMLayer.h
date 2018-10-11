@@ -23,14 +23,14 @@ namespace Coeus
 		SimpleCellGroup*	_output_gate;
 		SimpleCellGroup*	_forget_gate;
 		SimpleCellGroup*	_aux_input;
+		SimpleCellGroup*	_context;
 
 		Connection* _in_input_gate;
 		Connection* _in_output_gate;
 		Connection* _in_forget_gate;
+		Connection* _ct_cec;
 
-		Tensor _dc_input_gate;
-		Tensor _dc_forget_gate;
-		Tensor _dc_input;
+		map<string, Tensor> _partial_deriv;
 
 		vector<Tensor*> _input;
 	};

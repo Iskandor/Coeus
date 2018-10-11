@@ -117,22 +117,19 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 
 			for (auto g = (*it)->get_groups()->begin(); g != (*it)->get_groups()->end(); ++g) {				
 				cout << g->second->get_id() << endl;
-				SimpleCellGroup* group = dynamic_cast<SimpleCellGroup*>(g->second);
-				if (group != nullptr)
-				{
-					for (int i = 0; i < group->get_bias()->size(); i++) {
-						const double b = group->get_bias()->at(i);
-						group->get_bias()->set(i, b + epsilon);
-						const double Je_plus = check_estimate(p_input, p_target);
-						group->get_bias()->set(i, b - epsilon);
-						const double Je_minus = check_estimate(p_input, p_target);
 
-						group->get_bias()->set(i, b);
+				for (int i = 0; i < g->second->get_bias()->size(); i++) {
+					const double b = g->second->get_bias()->at(i);
+					g->second->get_bias()->set(i, b + epsilon);
+					const double Je_plus = check_estimate(p_input, p_target);
+					g->second->get_bias()->set(i, b - epsilon);
+					const double Je_minus = check_estimate(p_input, p_target);
 
-						const double de = (Je_plus - Je_minus) / (2 * epsilon);
+					g->second->get_bias()->set(i, b);
 
-						cout << i << " " << _b_gradient[g->second->get_id()].at(i) - de << endl;
-					}
+					const double de = (Je_plus - Je_minus) / (2 * epsilon);
+
+					cout << i << " " << _b_gradient[g->second->get_id()].at(i) - de << endl;
 				}
 			}
 		}

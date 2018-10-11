@@ -10,12 +10,14 @@
 
 using namespace Coeus;
 
-BaseCellGroup::BaseCellGroup(int p_dim): _dim(p_dim), _f(nullptr)
+BaseCellGroup::BaseCellGroup(int p_dim, bool p_bias): _dim(p_dim), _f(nullptr)
 {
 	_id = IDGen::instance().next();
 	_net = Tensor::Zero({p_dim});
 	_output = Tensor::Zero({p_dim});
 	_deriv_output = Tensor::Zero({p_dim});
+	_bias_flag = p_bias;
+	_bias = Tensor::Random({ _dim }, 1);
 }
 
 BaseCellGroup::BaseCellGroup(nlohmann::json p_data): _f(nullptr)
@@ -25,6 +27,8 @@ BaseCellGroup::BaseCellGroup(nlohmann::json p_data): _f(nullptr)
 	_output = Tensor::Zero({_dim});
 	_deriv_output = Tensor::Zero({_dim});
 	_net = Tensor::Zero({_dim});
+	_bias_flag = p_data["bias"].get<bool>();
+	//#TODO doriesit _bias = ;
 }
 
 BaseCellGroup::~BaseCellGroup()
@@ -47,6 +51,11 @@ void BaseCellGroup::set_output(vector<Tensor*>& p_output) const
 			index++;
 		}		
 	}
+}
+
+void BaseCellGroup::update_bias(Tensor& p_delta_b)
+{
+	_bias += p_delta_b;
 }
 
 void BaseCellGroup::copy(const BaseCellGroup& p_copy)

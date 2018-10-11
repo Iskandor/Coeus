@@ -78,7 +78,7 @@ void RNN::run_add_problem()
 	dataset.load_data("./data/add_problem_easy.dat");
 
 	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new LSTMLayer("hidden", 64, TANH));
+	_network.add_layer(new LSTMLayer("hidden", 4, TANH));
 	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
@@ -88,17 +88,20 @@ void RNN::run_add_problem()
 
 	ADAM algorithm(&_network);
 	algorithm.init(new QuadraticCost(), 0.001);
+	//BackProp algorithm(&_network);
+	//algorithm.init(new QuadraticCost(), 0.01, 0.9, true);
 
 	double error = 1;
 
 	while(error > 0.01) {
 		vector<AddProblemSequence>* data = dataset.permute();
 		error = 0;
-		_network.reset();
+		int correct = 0;
 
 		for (int i = 0; i < data->size(); i++) {
 
 			AddProblemSequence sequence = data->at(i);
+			_network.reset();
 
 			for(int s = 0; s < sequence.input.size() - 1; s++)
 			{
@@ -106,14 +109,22 @@ void RNN::run_add_problem()
 			}
 
 			error += algorithm.train(&sequence.input[sequence.input.size() - 1], &sequence.target);
+
+			if (abs(_network.get_output()->at(0) - sequence.target[0]) < 0.04)
+			{
+				correct++;
+			}
 			
 		}
 		cout << error << endl;
+		cout << correct << " / " << data->size() << endl;
 	}
 
 	vector<AddProblemSequence>* data = dataset.permute();
 
-	for (int i = 0; i < 20; i++) {
+	int correct = 0;
+
+	for (int i = 0; i < data->size(); i++) {
 		AddProblemSequence sequence = data->at(i);
 		_network.reset();
 
@@ -122,6 +133,12 @@ void RNN::run_add_problem()
 			_network.activate(&sequence.input[s]);
 		}
 		cout << _network.get_output()->at(0) << " - " << sequence.target[0] << endl;
-		
+
+		if (abs(_network.get_output()->at(0) - sequence.target[0]) < 0.04)
+		{
+			correct++;
+		}
 	}
+
+	cout << correct << " / " << data->size() << endl;
 }
