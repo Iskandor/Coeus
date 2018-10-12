@@ -95,7 +95,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 	p_w_gradient[l->_ct_cec->get_id()] = dwcc;
 
 	p_b_gradient[l->_cec->get_id()] = l->_partial_deriv[l->_cec->get_id()];
-	p_b_gradient[l->_input_gate->get_id()] = l->_partial_deriv[l->_input_gate->get_id()];
-	p_b_gradient[l->_forget_gate->get_id()] = l->_partial_deriv[l->_forget_gate->get_id()];
+	p_b_gradient[l->_input_gate->get_id()] = _state_error.dot(l->_partial_deriv[l->_input_gate->get_id()]);
+	p_b_gradient[l->_forget_gate->get_id()] = _state_error.dot(l->_partial_deriv[l->_forget_gate->get_id()]);
 	p_b_gradient[l->_output_gate->get_id()] = _delta[l->_output_gate->get_id()];
 }

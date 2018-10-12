@@ -96,7 +96,7 @@ void RNN::run_add_problem()
 	network.init();
 
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 0.0001);
+	algorithm.init(new QuadraticCost(), 0.001);
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
 
