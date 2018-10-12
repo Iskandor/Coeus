@@ -358,15 +358,15 @@ void ModelMNS2::save_umatrix(string p_timestamp)
 }
 
 void ModelMNS2::save(string p_timestamp) const {
-	IOUtils::save_network(p_timestamp + "_F5.json", _F5);
-	IOUtils::save_network(p_timestamp + "_STS.json", _STS);
-	IOUtils::save_network(p_timestamp + "_PFG.json", _PFG);
+	//IOUtils::save_network(p_timestamp + "_F5.json", _F5);
+	//IOUtils::save_network(p_timestamp + "_STS.json", _STS);
+	//IOUtils::save_network(p_timestamp + "_PFG.json", _PFG);
 }
 
 void ModelMNS2::load(const string p_timestamp) {
-	_F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
-	_STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
-	_PFG = static_cast<SOM*>(IOUtils::load_network(p_timestamp + "_PFG.json"));
+	//_F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
+	//_STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
+	//_PFG = static_cast<SOM*>(IOUtils::load_network(p_timestamp + "_PFG.json"));
 }
 
 void ModelMNS2::prepareInputSTS(Tensor* p_output, Tensor *p_input, SOM* p_pfg) const {

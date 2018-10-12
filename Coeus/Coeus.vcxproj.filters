@@ -180,9 +180,6 @@
     <ClCompile Include="IGradientComponent.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
     </ClCompile>
-    <ClCompile Include="ActivationFunctionsDeriv.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="CoreLayerGradient.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
     </ClCompile>
@@ -421,9 +418,6 @@
     </ClInclude>
     <ClInclude Include="IGradientComponent.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivationFunctionsDeriv.h">
-      <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="CoreLayerGradient.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>

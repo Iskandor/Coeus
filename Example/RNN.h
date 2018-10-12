@@ -11,8 +11,6 @@ public:
 
 	void run();
 	void run_add_problem();
-
-private:
-	NeuralNetwork _network;
+	void test(NeuralNetwork& p_network) const;
 };
 

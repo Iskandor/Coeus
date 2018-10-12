@@ -1,8 +1,9 @@
 #include "LSTMCellGroup.h"
+#include "IOUtils.h"
 
 using namespace Coeus;
 
-LSTMCellGroup::LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate) : BaseCellGroup(p_dim)
+LSTMCellGroup::LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate) : BaseCellGroup(p_dim, true)
 {
 	_state = Tensor::Zero({p_dim});
 
@@ -14,11 +15,19 @@ LSTMCellGroup::LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, Simple
 	_forget_gate = p_forget_gate;
 }
 
-LSTMCellGroup::LSTMCellGroup(nlohmann::json p_data) : BaseCellGroup(p_data)
+LSTMCellGroup::LSTMCellGroup(json p_data, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup*p_forget_gate) : BaseCellGroup(p_data)
 {
+	_state = Tensor::Zero({ _dim });
+
+	_f = IOUtils::init_activation_function(p_data["f"]);
+	_g = IOUtils::init_activation_function(p_data["g"]);
+
+	_input_gate = p_input_gate;
+	_output_gate = p_output_gate;
+	_forget_gate = p_forget_gate;
 }
 
-LSTMCellGroup::LSTMCellGroup(LSTMCellGroup& p_copy) : BaseCellGroup(p_copy._dim)
+LSTMCellGroup::LSTMCellGroup(LSTMCellGroup& p_copy) : BaseCellGroup(p_copy._dim, p_copy._bias_flag)
 {
 	_state = Tensor::Zero({ p_copy._dim });
 
@@ -36,7 +45,7 @@ LSTMCellGroup& LSTMCellGroup::operator=(const LSTMCellGroup& p_copy)
 
 	_state = Tensor::Zero({ p_copy._dim });
 	_f = init_activation_function(p_copy._f->get_type());
-	_g = init_activation_function(SIGMOID);
+	_g = init_activation_function(TANH);
 	_input_gate = p_copy._input_gate;
 	_output_gate = p_copy._output_gate;
 
@@ -70,6 +79,10 @@ LSTMCellGroup* LSTMCellGroup::clone()
 
 void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate)
 {
+	if (is_bias()) {
+		_net += _bias;
+	}
+
 	_g_output = _g->activate(_net);
 	_state = _state.dot(*p_forget_gate) + _g_output.dot(*p_input_gate);
 
@@ -95,4 +108,14 @@ Tensor LSTMCellGroup::get_g() const
 
 Tensor LSTMCellGroup::get_dg() {
 	return _g->deriv(_g_output);
+}
+
+json LSTMCellGroup::get_json() const
+{
+	json data = BaseCellGroup::get_json();
+
+	data["f"] = _f->get_json();
+	data["g"] = _g->get_json();
+
+	return data;
 }

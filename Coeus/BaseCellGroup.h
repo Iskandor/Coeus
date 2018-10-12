@@ -11,7 +11,7 @@ namespace Coeus {
 	class __declspec(dllexport) BaseCellGroup
 	{
 	public:
-		BaseCellGroup(int p_dim);
+		BaseCellGroup(int p_dim, bool p_bias);
 		explicit BaseCellGroup(nlohmann::json p_data);
 		// 'Coeus::BaseCellGroup': cannot instantiate abstract class
 		//BaseCellGroup(BaseCellGroup& p_copy) = delete;
@@ -31,11 +31,18 @@ namespace Coeus {
 		Tensor* get_output() { return &_output; }
 		Tensor* get_deriv_output() { return &_deriv_output; }
 
+		bool is_bias() const { return _bias_flag; }
+		void update_bias(Tensor& p_delta_b);
+		void set_bias(Tensor* p_bias) const { _bias.override(p_bias); }
+		Tensor* get_bias() { return &_bias; }
+
 		IActivationFunction* get_activation_function() const { return _f; }
+
+		virtual json get_json() const;
 
 	protected:
 		void copy(const BaseCellGroup& p_copy);
-		static IActivationFunction* init_activation_function(ACTIVATION p_activation_function);
+		static IActivationFunction* init_activation_function(ACTIVATION p_activation_function);		
 
 		string  _id;
 		int     _dim;
@@ -44,6 +51,8 @@ namespace Coeus {
 		IActivationFunction*	_f;
 		Tensor					_output;
 		Tensor					_deriv_output;
+		bool					_bias_flag;
+		Tensor					_bias;
 
 	};
 }

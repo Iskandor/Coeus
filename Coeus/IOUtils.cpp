@@ -1,55 +1,30 @@
 #include "IOUtils.h"
 #include <fstream>
+#include "InputLayer.h"
+#include "CoreLayer.h"
+#include "LinearActivation.h"
+#include "BinaryActivation.h"
+#include "SigmoidActivation.h"
+#include "TanhActivation.h"
+#include "SoftplusActivation.h"
+#include "ReluActivation.h"
+#include "SoftmaxActivation.h"
+#include "LSTMLayer.h"
 
 using namespace Coeus;
 
 IOUtils::IOUtils()
-{
-}
+= default;
 
 IOUtils::~IOUtils()
-{
-}
+= default;
 
-json IOUtils::save_layer(BaseLayer* p_layer) {
+void IOUtils::save_network(NeuralNetwork& p_network, const string& p_filename)
+{
 	json data;
 
-	data["_header"] = "Coeus";
-	data["_type"] = p_layer->get_type();
-
-	switch (p_layer->get_type()) {
-	case BaseLayer::SOM:
-		data["_network"] = write_som(static_cast<SOM*>(p_layer));
-		break;
-	case BaseLayer::MSOM:
-		data["_network"] = write_msom(static_cast<MSOM*>(p_layer));
-		break;
-	default:;
-	}
-
-	return data;
-}
-
-BaseLayer* IOUtils::load_layer(json p_data) {
-	BaseLayer* result = nullptr;
-
-	const BaseLayer::TYPE type = static_cast<BaseLayer::TYPE>(p_data["_type"].get<int>());
-
-	switch (type) {
-	case BaseLayer::SOM:
-		result = read_som(p_data["_network"]);
-		break;
-	case BaseLayer::MSOM:
-		result = read_msom(p_data["_network"]);
-		break;
-	default:;
-	}
-
-	return result;
-}
-
-void IOUtils::save_network(const string p_filename, BaseLayer* p_layer) {
-	json data = save_layer(p_layer);
+	data["header"] = "Coeus " + VERSION;
+	data["network"] = p_network.get_json();
 
 	ofstream file;
 	file.open(p_filename);
@@ -57,90 +32,83 @@ void IOUtils::save_network(const string p_filename, BaseLayer* p_layer) {
 	file.close();
 }
 
-BaseLayer* IOUtils::load_network(const string p_filename) {
-	BaseLayer* result = nullptr;
-
+json IOUtils::load_network(const string& p_filename)
+{
 	json data;
 	ifstream file;
 
-	try {
-		file.open(p_filename);
-	}
-	catch (std::ios_base::failure& e) {
-		std::cerr << e.what() << '\n';
-	}
-
-	if (file.is_open()) {
-		file >> data;
-		
-		result = load_layer(data);
-	}
+	file.open(p_filename);
+	file >> data;
 	file.close();
 
-	return result;
+	string header = data["header"];
+
+	return data["network"];
 }
 
-json IOUtils::write_som(SOM* p_som) {
-	json result;
+BaseLayer* IOUtils::create_layer(json p_data)
+{
+	BaseLayer* layer = nullptr;
 
-	result["id"] = p_som->get_id();
-	result["dim_x"] = p_som->dim_x();
-	result["dim_y"] = p_som->dim_y();
-	result["groups"]["input"] = write_neural_group(static_cast<SimpleCellGroup*>(p_som->get_input_group<SimpleCellGroup>()));
-	result["groups"]["lattice"] = write_neural_group(p_som->get_lattice());
-	result["connections"]["input_lattice"] = write_connection(p_som->get_afferent());
+	const auto type = static_cast<BaseLayer::TYPE>(p_data["type"].get<int>());
 
-	return result;
-}
-
-json IOUtils::write_msom(MSOM* p_msom) {
-	json result = write_som(p_msom);
-
-	result["alpha"] = p_msom->get_alpha();
-	result["beta"] = p_msom->get_beta();
-	result["groups"]["context"] = write_neural_group(p_msom->get_context_group());
-	result["connections"]["context_lattice"] = write_connection(p_msom->get_context_lattice());
-
-	return result;
-}
-
-SOM* IOUtils::read_som(const json p_data) {
-	return new SOM(p_data);
-}
-
-MSOM* IOUtils::read_msom(const json p_data) {
-	return new MSOM(p_data);
-}
-
-json IOUtils::write_neural_group(SimpleCellGroup* p_group) {
-	return json({ { "id", p_group->get_id() }, { "dim", p_group->get_dim() }, { "actfn", p_group->get_activation_function()->get_type() }, {"bias", p_group->is_bias()} });
-}
-
-json IOUtils::write_connection(Connection* p_connection) {
-	json result;
-
-	result["id"] = p_connection->get_id();
-	result["in_id"] = p_connection->get_in_id();
-	result["out_id"] = p_connection->get_out_id();
-	result["in_dim"] = p_connection->get_in_dim();
-	result["out_dim"] = p_connection->get_out_dim();
-
-	stringstream ss;
-
-	for (int i = 0; i < p_connection->get_weights()->size(); i++) {
-		double w = p_connection->get_weights()->at(i);
-		ss.write((char*)&w, sizeof(double));		
+	switch(type)
+	{
+	case BaseLayer::SOM: 
+		break;
+	case BaseLayer::MSOM: 
+		break;
+	case BaseLayer::INPUT:
+		layer = create_layer<InputLayer>(p_data);
+		break;
+	case BaseLayer::CORE:
+		layer = create_layer<CoreLayer>(p_data);
+		break;
+	case BaseLayer::RECURRENT: 
+		break;
+	case BaseLayer::LSTM:
+		layer = create_layer<LSTMLayer>(p_data);
+		break;
+	case BaseLayer::LSOM:
+		break;
+	default: 
+		layer = nullptr;
 	}
 
-	result["weights"] = ss.str();
-
-	return result;
+	return layer;
 }
 
-SimpleCellGroup* IOUtils::read_neural_group(const json p_data) {
-	return new SimpleCellGroup(p_data);
-}
+IActivationFunction* IOUtils::init_activation_function(json p_data)
+{
+	IActivationFunction* f;
 
-Connection* IOUtils::read_connection(const json p_data) {
-	return new Connection(p_data);
+	const auto type = static_cast<ACTIVATION>(p_data["type"].get<int>());
+
+	switch (type) {
+	case LINEAR:
+		f = new LinearActivation();
+		break;
+	case BINARY:
+		f = new BinaryActivation();
+		break;
+	case SIGMOID:
+		f = new SigmoidActivation();
+		break;
+	case TANH:
+		f = new TanhActivation();
+		break;
+	case SOFTPLUS:
+		f = new SoftplusActivation();
+		break;
+	case RELU:
+		f = new ReluActivation();
+		break;
+	case SOFTMAX:
+		f = new SoftmaxActivation();
+		break;
+	default:
+		f = nullptr;
+	}
+
+	return f;
 }

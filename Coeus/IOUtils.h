@@ -4,6 +4,7 @@
 #include "SOM.h"
 #include "MSOM.h"
 #include "json.hpp"
+#include "NeuralNetwork.h"
 
 using namespace nlohmann;
 
@@ -16,27 +17,20 @@ namespace Coeus
 		IOUtils();
 		~IOUtils();
 
-		static json save_layer(BaseLayer* p_layer);
-		static BaseLayer* load_layer(json p_data);
-
-		static void save_network(string p_filename, BaseLayer* p_layer);
-		static BaseLayer* load_network(string p_filename);
-
-		static SimpleCellGroup* read_neural_group(json p_data);
-		static Connection* read_connection(json p_data);
-
+		static void save_network(NeuralNetwork& p_network, const string& p_filename);
+		static json load_network(const string& p_filename);
+		static BaseLayer* create_layer(json p_data);
+		static IActivationFunction* init_activation_function(json p_data);
 	private:
-		static json write_som(SOM* p_som);
-		static json write_msom(MSOM* p_msom);
-
-		static SOM* read_som(json p_data);
-		static MSOM* read_msom(json p_data);
-
-		static json write_neural_group(SimpleCellGroup* p_group);
-		static json write_connection(Connection* p_connection);
-
-
+		template<typename T>
+		static T* create_layer(json p_data);
 	};
+
+	template <typename T>
+	T* IOUtils::create_layer(json p_data)
+	{
+		return new T(p_data);
+	}
 }
 
 
