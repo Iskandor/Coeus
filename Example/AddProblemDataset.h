@@ -29,6 +29,7 @@ public:
 	void parse_line(string& p_line, INPUT_TYPE p_input);
 	void load_data(const string& p_filename);
 	vector<AddProblemSequence>* permute();
+	vector<AddProblemSequence>* data() { return &_data; }
 
 private:
 	void add_item();

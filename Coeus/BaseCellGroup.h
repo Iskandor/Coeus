@@ -38,9 +38,11 @@ namespace Coeus {
 
 		IActivationFunction* get_activation_function() const { return _f; }
 
+		virtual json get_json() const;
+
 	protected:
 		void copy(const BaseCellGroup& p_copy);
-		static IActivationFunction* init_activation_function(ACTIVATION p_activation_function);
+		static IActivationFunction* init_activation_function(ACTIVATION p_activation_function);		
 
 		string  _id;
 		int     _dim;

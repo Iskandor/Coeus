@@ -239,13 +239,13 @@ void ModelMNS::run(const int p_epochs) {
 }
 
 void ModelMNS::save(string p_timestamp) const {
-	IOUtils::save_network(p_timestamp + "_F5.json", _F5);
-	IOUtils::save_network(p_timestamp + "_STS.json", _STS);
+	//IOUtils::save_network(p_timestamp + "_F5.json", _F5);
+	//IOUtils::save_network(p_timestamp + "_STS.json", _STS);
 }
 
 void ModelMNS::load(const string p_timestamp) {
-	_F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
-	_STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
+	//_F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
+	//_STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
 }
 
 void ModelMNS::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) {

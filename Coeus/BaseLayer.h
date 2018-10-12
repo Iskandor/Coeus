@@ -22,7 +22,7 @@ public:
 	};
 
 	BaseLayer(const string& p_id);
-	BaseLayer(nlohmann::json p_data);
+	BaseLayer(json p_data);
 	virtual ~BaseLayer();
 
 	virtual void init(vector<BaseLayer*>& p_input_layers);
@@ -50,6 +50,8 @@ public:
 	map<string, BaseCellGroup*>* get_groups() { return &_groups; }
 
 	Tensor* get_output() const { return _output_group->get_output(); }
+
+	virtual json get_json() const;
 
 protected:
 	Connection*		add_connection(Connection* p_connection);
@@ -87,4 +89,3 @@ T* BaseLayer::add_group(T* p_group)
 	return p_group;
 }
 }
-

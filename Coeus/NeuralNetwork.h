@@ -14,6 +14,7 @@ class __declspec(dllexport) NeuralNetwork
 	friend class NetworkGradient;
 public:
 	NeuralNetwork();
+	explicit NeuralNetwork(json p_data);
 	NeuralNetwork(NeuralNetwork &p_copy);
 	virtual ~NeuralNetwork();
 
@@ -32,13 +33,16 @@ public:
 	Tensor*		get_output() { return _layers[_output_layer]->get_output(); }	
 	vector<Tensor*> get_input();
 
+	json get_json() const;
+
 protected:
 	void activate();
 	void create_directed_graph();
 
 private:
 	void create_param_map(NeuralNetwork* p_network);
-
+	void add_connection(Connection* p_connection);
+	
 	map<string, BaseLayer*> _layers;
 	map<string, Connection*> _connections;
 	map<string, vector<string>> _graph;

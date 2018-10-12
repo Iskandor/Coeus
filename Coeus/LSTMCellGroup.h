@@ -11,7 +11,7 @@ namespace Coeus {
 	{
 	public:
 		LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup*p_forget_gate);
-		explicit LSTMCellGroup(nlohmann::json p_data);
+		LSTMCellGroup(json p_data, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup*p_forget_gate);
 		LSTMCellGroup(LSTMCellGroup& p_copy);
 		LSTMCellGroup& operator = (const LSTMCellGroup& p_copy);
 
@@ -27,6 +27,8 @@ namespace Coeus {
 		Tensor get_dh();
 		Tensor get_g() const;
 		Tensor get_dg();
+
+		json get_json() const override;
 
 	private:
 		void activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate);

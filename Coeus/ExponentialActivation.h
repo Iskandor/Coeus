@@ -11,6 +11,8 @@ namespace Coeus
 		Tensor activate(Tensor& p_input) override;
 		Tensor deriv(Tensor& p_input) override;
 
+		json get_json() override;
+
 	private:
 		int _k;
 	};

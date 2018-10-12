@@ -32,9 +32,9 @@ SOM::SOM(nlohmann::json p_data) : BaseLayer(p_data) {
 	_dim_x = p_data["dim_x"].get<int>();
 	_dim_y = p_data["dim_y"].get<int>();
 
-	_input_group = IOUtils::read_neural_group(p_data["groups"]["input"]);
-	_lattice_group = IOUtils::read_neural_group(p_data["groups"]["lattice"]);
-	_afferent = IOUtils::read_connection(p_data["connections"]["input_lattice"]);
+	_input_group = new SimpleCellGroup(p_data["groups"]["input"]);
+	_lattice_group = new SimpleCellGroup(p_data["groups"]["lattice"]);
+	_afferent = new Connection(p_data["connections"]["input_lattice"]);
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });

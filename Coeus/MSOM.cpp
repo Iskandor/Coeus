@@ -18,8 +18,8 @@ MSOM::MSOM(nlohmann::json p_data) : SOM(p_data) {
 	_alpha = p_data["alpha"].get<double>();
 	_beta = p_data["beta"].get<double>();
 
-	_context_group = IOUtils::read_neural_group(p_data["groups"]["context"]);
-	_context_lattice = IOUtils::read_connection(p_data["connections"]["context_lattice"]);
+	_context_group = new SimpleCellGroup(p_data["groups"]["context"]);
+	_context_lattice = new Connection(p_data["connections"]["context_lattice"]);
 }
 
 MSOM::~MSOM()
@@ -77,9 +77,12 @@ double MSOM::calc_distance(const int p_neuron1, const int p_neuron2)
 }
 
 MSOM * MSOM::clone() const {
+	/*
 	MSOM* result = dynamic_cast<MSOM*>(IOUtils::load_layer(IOUtils::save_layer((BaseLayer*)this)));
 
 	return result;
+	*/
+	return nullptr;
 }
 
 void MSOM::override(BaseLayer * p_source)

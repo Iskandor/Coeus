@@ -7,6 +7,13 @@
 #include "BPTT.h"
 #include "AddProblemDataset.h"
 #include "BackProph.h"
+#include "IOUtils.h"
+#include "Nadam.h"
+#include "AMSGrad.h"
+#include "RMSProp.h"
+#include "KLDivergence.h"
+#include "ExponentialCost.h"
+#include "HellingerDistance.h"
 
 
 RNN::RNN()
@@ -20,14 +27,15 @@ RNN::~RNN()
 
 void RNN::run()
 {
-	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new LSTMLayer("hidden", 4, SIGMOID));
-	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
+	NeuralNetwork network;
+	network.add_layer(new InputLayer("input", 2));
+	network.add_layer(new LSTMLayer("hidden", 4, SIGMOID));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	_network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
-	_network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
+	network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
+	network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
 
-	_network.init();
+	network.init();
 
 	double data_i[4][2]{ {0,0},{0,1},{1,0},{1,1} };
 	double data_t[4]{ 0,1,1,0 };
@@ -49,7 +57,7 @@ void RNN::run()
 	//BackProp model(&_network);
 	//RMSProp model(&_network);
 	//AdaMax model(&_network);
-	ADAM algorithm(&_network);
+	ADAM algorithm(&network);
 	//AMSGrad model(&_network);
 	//Nadam model(&_network);
 
@@ -67,8 +75,8 @@ void RNN::run()
 	cout << endl;
 
 	for (int i = 0; i < 4; i++) {
-		_network.activate(&input[i]);
-		cout << _network.get_output()->at(0) << endl;
+		network.activate(&input[i]);
+		cout << network.get_output()->at(0) << endl;
 	}
 }
 
@@ -77,31 +85,33 @@ void RNN::run_add_problem()
 	AddProblemDataset dataset;
 	dataset.load_data("./data/add_problem_easy.dat");
 
-	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new LSTMLayer("hidden", 4, TANH));
-	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
+	NeuralNetwork network;
+	network.add_layer(new InputLayer("input", 2));
+	network.add_layer(new LSTMLayer("hidden", 4, TANH));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	_network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
-	_network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
+	network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
+	network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
 
-	_network.init();
+	network.init();
 
-	ADAM algorithm(&_network);
-	algorithm.init(new QuadraticCost(), 0.001);
-	//BackProp algorithm(&_network);
-	//algorithm.init(new QuadraticCost(), 0.01, 0.9, true);
+	Nadam algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.0001);
+	//BackProp algorithm(&network);
+	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
 
-	double error = 1;
+	
+	int correct = 0;
+	const int bound = dataset.permute()->size() * 0.99;
 
-	while(error > 0.01) {
+	while(correct < bound) {
 		vector<AddProblemSequence>* data = dataset.permute();
-		error = 0;
-		int correct = 0;
+		double error = 0;
+		correct = 0;
 
-		for (int i = 0; i < data->size(); i++) {
-
-			AddProblemSequence sequence = data->at(i);
-			_network.reset();
+		for (auto sequence : *data)
+		{
+			network.reset();
 
 			for(int s = 0; s < sequence.input.size() - 1; s++)
 			{
@@ -110,7 +120,7 @@ void RNN::run_add_problem()
 
 			error += algorithm.train(&sequence.input[sequence.input.size() - 1], &sequence.target);
 
-			if (abs(_network.get_output()->at(0) - sequence.target[0]) < 0.04)
+			if (abs(network.get_output()->at(0) - sequence.target[0]) < 0.04)
 			{
 				correct++;
 			}
@@ -120,21 +130,33 @@ void RNN::run_add_problem()
 		cout << correct << " / " << data->size() << endl;
 	}
 
-	vector<AddProblemSequence>* data = dataset.permute();
+	IOUtils::save_network(network, "add_problem.net");
+	test(network);
+
+	NeuralNetwork network_test(IOUtils::load_network("add_problem.net"));
+	test(network_test);
+}
+
+void RNN::test(NeuralNetwork& p_network) const
+{
+	AddProblemDataset testset;
+	testset.load_data("./data/add_problem_easy_test.dat");
+
+	vector<AddProblemSequence>* data = testset.data();
 
 	int correct = 0;
 
-	for (int i = 0; i < data->size(); i++) {
-		AddProblemSequence sequence = data->at(i);
-		_network.reset();
+	for (auto sequence : *data)
+	{
+		p_network.reset();
 
-		for (int s = 0; s < sequence.input.size() - 1; s++)
+		for (int s = 0; s < sequence.input.size(); s++)
 		{
-			_network.activate(&sequence.input[s]);
+			p_network.activate(&sequence.input[s]);
 		}
-		cout << _network.get_output()->at(0) << " - " << sequence.target[0] << endl;
+		cout << p_network.get_output()->at(0) << " - " << sequence.target[0] << endl;
 
-		if (abs(_network.get_output()->at(0) - sequence.target[0]) < 0.04)
+		if (abs(p_network.get_output()->at(0) - sequence.target[0]) < 0.04)
 		{
 			correct++;
 		}

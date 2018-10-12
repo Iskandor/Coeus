@@ -32,3 +32,12 @@ Tensor ExponentialActivation::deriv(Tensor& p_input) {
 	return Tensor({ p_input.size(), p_input.size() }, arr);
 
 }
+
+json ExponentialActivation::get_json()
+{
+	json result = IActivationFunction::get_json();
+
+	result["k"] = _k;
+
+	return result;
+}

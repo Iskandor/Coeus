@@ -8,7 +8,7 @@ BaseLayer::BaseLayer(const string& p_id): _output_group(nullptr), _input_group(n
 	_id = p_id;
 }
 
-BaseLayer::BaseLayer(nlohmann::json p_data)
+BaseLayer::BaseLayer(json p_data)
 {
 	_id = p_data["id"].get<string>();
 }
@@ -22,9 +22,20 @@ void BaseLayer::init(vector<BaseLayer*>& p_input_layers)
 
 void BaseLayer::update(map<string, Tensor>& p_update)
 {
-	for (auto it = _params.begin(); it != _params.end(); ++it) {
-		*_params[it->first] += p_update[it->first];
+	for (auto& _param : _params)
+	{
+		*_params[_param.first] += p_update[_param.first];
 	}
+}
+
+json BaseLayer::get_json() const
+{
+	json data;
+
+	data["id"] = _id;
+	data["type"] = _type;
+
+	return data;
 }
 
 Connection* BaseLayer::add_connection(Connection* p_connection) {

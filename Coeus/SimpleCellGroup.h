@@ -2,7 +2,6 @@
 
 #include <Tensor.h>
 #include "json.hpp"
-#include "IActivationFunction.h"
 #include "Coeus.h"
 #include "BaseCellGroup.h"
 
@@ -15,7 +14,7 @@ class __declspec(dllexport) SimpleCellGroup : public BaseCellGroup
 {
 public:
     SimpleCellGroup(int p_dim, ACTIVATION p_activation_function, bool p_bias);
-	explicit SimpleCellGroup(nlohmann::json p_data);
+	explicit SimpleCellGroup(json p_data);
     SimpleCellGroup(SimpleCellGroup& p_copy);
 	SimpleCellGroup& operator = (const SimpleCellGroup& p_copy);
     ~SimpleCellGroup();
@@ -25,5 +24,6 @@ public:
 
 	SimpleCellGroup* clone() override;
 
+	json get_json() const override;
 };
 }

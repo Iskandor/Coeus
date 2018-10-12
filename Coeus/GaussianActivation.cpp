@@ -26,3 +26,12 @@ Tensor GaussianActivation::deriv(Tensor& p_input) {
 	assert(0);
 	return Tensor::Zero({ p_input.size() }).diag();
 }
+
+json GaussianActivation::get_json()
+{
+	json result = IActivationFunction::get_json();
+
+	result["sigma"] = _sigma;
+
+	return result;
+}

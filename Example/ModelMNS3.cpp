@@ -363,13 +363,13 @@ void ModelMNS3::save_umatrix(string p_timestamp)
 }
 
 void ModelMNS3::save(string p_timestamp) const {
-    IOUtils::save_network(p_timestamp + "_F5.json", _F5);
-	IOUtils::save_network(p_timestamp + "_STS.json", _STS);
+    //IOUtils::save_network(p_timestamp + "_F5.json", _F5);
+	//IOUtils::save_network(p_timestamp + "_STS.json", _STS);
 }
 
 void ModelMNS3::load(const string p_timestamp) {
-    _F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
-    _STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
+    //_F5 = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_F5.json"));
+    //_STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
 }
 
 void ModelMNS3::prepareInputSTS(Tensor* p_output, Tensor *p_input, MSOM* p_f5) const {

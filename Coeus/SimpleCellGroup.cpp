@@ -1,4 +1,5 @@
 #include "SimpleCellGroup.h"
+#include "IOUtils.h"
 
 using namespace std;
 using namespace Coeus;
@@ -15,22 +16,19 @@ SimpleCellGroup::SimpleCellGroup(const int p_dim, const ACTIVATION p_activation_
 
 SimpleCellGroup::SimpleCellGroup(nlohmann::json p_data): BaseCellGroup(p_data)
 {
-	_f = init_activation_function(static_cast<ACTIVATION>(p_data["actfn"].get<int>()));
+	_f = IOUtils::init_activation_function(p_data["f"]);
 }
 
 SimpleCellGroup::SimpleCellGroup(SimpleCellGroup &p_copy) : BaseCellGroup(p_copy._dim, p_copy._bias_flag)
 {
+	copy(p_copy);
 	_f = init_activation_function(p_copy._f->get_type());
-	_bias = Tensor(p_copy._bias);
-	_bias_flag = p_copy._bias_flag;
 }
 
 SimpleCellGroup& SimpleCellGroup::operator=(const SimpleCellGroup& p_copy)
 {
 	copy(p_copy);
 	_f = init_activation_function(p_copy._f->get_type());
-	_bias = Tensor(p_copy._bias);
-	_bias_flag = p_copy._bias_flag;
 
 	return *this;
 }
@@ -68,4 +66,13 @@ void SimpleCellGroup::activate() {
 SimpleCellGroup* SimpleCellGroup::clone()
 {
 	return new SimpleCellGroup(*this);
+}
+
+json SimpleCellGroup::get_json() const
+{
+	json data = BaseCellGroup::get_json();
+
+	data["f"] = _f->get_json();
+
+	return data;
 }

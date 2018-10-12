@@ -40,6 +40,8 @@ public:
 	int get_out_dim() const { return _out_dim; };
 	bool is_trainable() const { return _trainable; };
 
+	json get_json() const;
+
 private:
 	
     void uniform(double p_limit);

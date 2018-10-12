@@ -14,6 +14,7 @@
 #include "AMSGrad.h"
 #include "LSTMLayer.h"
 #include "CrossEntropyCost.h"
+#include "IOUtils.h"
 
 FFN::FFN()
 {
@@ -63,7 +64,7 @@ void FFN::run() {
 	//model.init(new QuadraticCost(), 0.05, 0.9, true);
 	model.init(new QuadraticCost(), 0.1);
 
-	for(int t = 0; t < 2000; t++) {
+	for(int t = 0; t < 500; t++) {
 		const double error = model.train(&input, &target);
 		cout << "Error: " << error << endl;
 	}
@@ -79,16 +80,27 @@ void FFN::run() {
 	copy.init();
 
 	cout << endl;
-
 	for (int i = 0; i < 4; i++) {
 		copy.activate(input[i]);
 		cout << copy.get_output()->at(0) << endl;
+	}
+
+	IOUtils::save_network(copy, "test.net");
+
+	NeuralNetwork loaded(IOUtils::load_network("test.net"));
+
+	cout << endl;
+	for (int i = 0; i < 4; i++) {
+		loaded.activate(input[i]);
+		cout << loaded.get_output()->at(0) << endl;
 	}
 
 	for (int i = 0; i < 4; i++) {
 		delete input[i];
 		delete target[i];
 	}
+
+	
 }
 
 void FFN::run_iris() {

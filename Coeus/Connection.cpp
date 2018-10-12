@@ -14,7 +14,7 @@ Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_
 	_norm = Tensor::Zero({ _out_dim });
 }
 
-Connection::Connection(nlohmann::json p_data) {
+Connection::Connection(json p_data) {
 	_id = p_data["id"].get<string>();
 	_in_id = p_data["in_id"].get<string>();
 	_out_id = p_data["out_id"].get<string>();
@@ -57,6 +57,29 @@ void Connection::init(const INIT p_init, const bool p_trainable, const double p_
             break;
     }
 	_trainable = p_trainable;
+}
+
+json Connection::get_json() const
+{
+	json result;
+
+	result["id"] = _id;
+	result["in_id"] = _in_id;
+	result["out_id"] = _out_id;
+	result["in_dim"] = _in_dim;
+	result["out_dim"] = _out_dim;
+	result["trainable"] = _trainable;
+
+	stringstream ss;
+
+	for (int i = 0; i < _weights.size(); i++) {
+		double w = _weights[i];
+		ss.write((char*)&w, sizeof(double));
+	}
+
+	result["weights"] = ss.str();
+
+	return result;
 }
 
 void Connection::uniform(const double p_limit) {

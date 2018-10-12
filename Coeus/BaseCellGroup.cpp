@@ -24,11 +24,25 @@ BaseCellGroup::BaseCellGroup(nlohmann::json p_data): _f(nullptr)
 {
 	_id = p_data["id"].get<string>();
 	_dim = p_data["dim"].get<int>();
-	_output = Tensor::Zero({_dim});
-	_deriv_output = Tensor::Zero({_dim});
-	_net = Tensor::Zero({_dim});
-	_bias_flag = p_data["bias"].get<bool>();
-	//#TODO doriesit _bias = ;
+	_bias_flag = p_data["bias_flag"].get<bool>();
+
+	if (_bias_flag)
+	{
+		double* data = Tensor::alloc_arr(_dim);
+
+		stringstream ss(p_data["bias"].get<string>());
+
+		ss.seekg(0, ios::end);
+		const streampos size = ss.tellg();
+		ss.seekg(0, ios::beg);
+		ss.read((char*)(data), size);
+
+		_bias = Tensor({ _dim }, data);
+	}
+
+	_output = Tensor::Zero({ _dim });
+	_deriv_output = Tensor::Zero({ _dim });
+	_net = Tensor::Zero({ _dim });
 }
 
 BaseCellGroup::~BaseCellGroup()
@@ -58,10 +72,39 @@ void BaseCellGroup::update_bias(Tensor& p_delta_b)
 	_bias += p_delta_b;
 }
 
+json BaseCellGroup::get_json() const
+{
+	json data;
+
+	data["id"] = _id;
+	data["dim"] = _dim;
+	data["bias_flag"] = _bias_flag;
+
+	if (_bias_flag)
+	{
+		stringstream ss;
+
+		for (int i = 0; i < _bias.size(); i++) {
+			double b = _bias[i];
+			ss.write(reinterpret_cast<char*>(&b), sizeof(double));
+		}
+
+		data["bias"] = ss.str();
+	}
+
+	return data;
+}
+
 void BaseCellGroup::copy(const BaseCellGroup& p_copy)
 {
 	_id = p_copy._id;
 	_dim = p_copy._dim;
+	_bias_flag = p_copy._bias_flag;
+	_bias = p_copy._bias;
+
+	_output = Tensor::Zero({ _dim });
+	_deriv_output = Tensor::Zero({ _dim });
+	_net = Tensor::Zero({ _dim });
 }
 
 IActivationFunction* BaseCellGroup::init_activation_function(ACTIVATION p_activation_function)

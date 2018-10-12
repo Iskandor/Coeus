@@ -4,11 +4,26 @@
 #include "InputLayer.h"
 #include "CoreLayer.h"
 #include "RecurrentLayer.h"
+#include <numeric>
+#include "IOUtils.h"
 
 
 using namespace Coeus;
 
 NeuralNetwork::NeuralNetwork() = default;
+
+NeuralNetwork::NeuralNetwork(json p_data)
+{
+	for (json::iterator it = p_data["layers"].begin(); it != p_data["layers"].end(); ++it) {
+		add_layer(IOUtils::create_layer(it.value()));
+	}
+
+	for (json::iterator it = p_data["connections"].begin(); it != p_data["connections"].end(); ++it) {
+		add_connection(new Connection(it.value()));
+	}
+
+	init();
+}
 
 NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) {
 	_param_map.clear();
@@ -154,8 +169,9 @@ void NeuralNetwork::override(NeuralNetwork* p_network) {
 
 void NeuralNetwork::reset()
 {
-	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
-		(*it).second->reset();
+	for (auto& _layer : _layers)
+	{
+		_layer.second->reset();
 	}
 }
 
@@ -303,4 +319,25 @@ void NeuralNetwork::create_param_map(NeuralNetwork* p_network) {
 			_param_map[(*c + "_" + (*it).first)] = _param_map[(*c)] + "_" + _param_map[(*it).first];
 		}
 	}
+}
+
+void NeuralNetwork::add_connection(Connection* p_connection)
+{
+	_connections[p_connection->get_id()] = p_connection;
+	_graph[p_connection->get_out_id()].push_back(p_connection->get_in_id());
+}
+
+json NeuralNetwork::get_json() const
+{
+	json data;
+
+	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
+		data["layers"][it->first] = it->second->get_json();
+	}
+
+	for (auto it = _connections.begin(); it != _connections.end(); ++it) {
+		data["connections"][it->first] = it->second->get_json();
+	}
+
+	return data;
 }
