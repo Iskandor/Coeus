@@ -90,13 +90,13 @@ void RNN::run_add_problem()
 	network.add_layer(new LSTMLayer("hidden", 4, TANH));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
-	network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
+	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
 
 	network.init();
 
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 0.001);
+	algorithm.init(new QuadraticCost(), 0.005);
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
 
@@ -130,11 +130,7 @@ void RNN::run_add_problem()
 		cout << correct << " / " << data->size() << endl;
 	}
 
-	IOUtils::save_network(network, "add_problem.net");
 	test(network);
-
-	NeuralNetwork network_test(IOUtils::load_network("add_problem.net"));
-	test(network_test);
 }
 
 void RNN::test(NeuralNetwork& p_network) const

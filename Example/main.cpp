@@ -22,7 +22,6 @@ int main()
 	model.run();
 	*/
 
-
 	RNN model;
 
 	model.run_add_problem();
