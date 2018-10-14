@@ -46,12 +46,9 @@ Tensor::Tensor(const Tensor& p_copy) {
 	_rank = p_copy._rank;
 	_shape = alloc_shape(_rank);
 	_size = p_copy._size;
-
-	for(int i = 0; i < _rank; i++) {
-		_shape[i] = p_copy._shape[i];
-	}
-	
 	_arr = alloc_arr(_size);
+
+	memcpy(_shape, p_copy._shape, sizeof(int) * _rank);
 	memcpy(_arr, p_copy._arr, sizeof(double) * static_cast<size_t>(_size));
 }
 
@@ -91,27 +88,26 @@ Tensor Tensor::Random(const initializer_list<int> p_shape, const double p_limit)
 }
 
 void Tensor::operator=(const Tensor& p_copy) {
-	if (_shape != nullptr) {
-		free_shape();
+	if (_rank != p_copy._rank) {
+		if (_shape != nullptr) {
+			free_shape();
+		}
+
+		_rank = p_copy._rank;
+		_shape = alloc_shape(_rank);
 	}
 
-	if (_arr != nullptr) {
-		free_arr();
+	if (_size != p_copy._size) {
+		if (_arr != nullptr) {
+			free_arr();
+		}
+
+		_size = p_copy._size;
+		_arr = alloc_arr(_size);
 	}
 
-	_rank = p_copy._rank;
-	_shape = alloc_shape(_rank);
-	_size = p_copy._size;
-
-	for (int i = 0; i < _rank; i++) {
-		_shape[i] = p_copy._shape[i];
-	}
-
-	_arr = alloc_arr(_size);
-
-	for (int i = 0; i < _size; i++) {
-		_arr[i] = p_copy._arr[i];
-	}
+	memcpy(_shape, p_copy._shape, sizeof(int) * _rank);
+	memcpy(_arr, p_copy._arr, sizeof(double) * _size);
 }
 
 Tensor Tensor::operator+(const Tensor& p_tensor) const {

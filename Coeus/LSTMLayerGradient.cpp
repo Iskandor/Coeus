@@ -52,17 +52,23 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 	Tensor dwf = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
 	Tensor dwi = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
 
+	Tensor* pd_in_forget_gate = &l->_partial_deriv[l->_in_forget_gate->get_id()];
+	Tensor* pd_in_input_gate = &l->_partial_deriv[l->_in_input_gate->get_id()];
+
 	for (int j = 0; j < l->_cec->get_dim(); j++)
 	{
 		for (int m = 0; m < l->_aux_input->get_dim(); m++)
 		{
-			dwf.set(j, m, _state_error[j] * l->_partial_deriv[l->_in_forget_gate->get_id()].at(j, m));
-			dwi.set(j, m, _state_error[j] * l->_partial_deriv[l->_in_input_gate->get_id()].at(j, m));
+			dwf.set(j, m, _state_error[j] * pd_in_forget_gate->at(j, m));
+			dwi.set(j, m, _state_error[j] * pd_in_input_gate->at(j, m));
 		}
 	}
 
 	p_w_gradient[l->_in_forget_gate->get_id()] = dwf;
 	p_w_gradient[l->_in_input_gate->get_id()] = dwi;
+
+	
+	Tensor* pd_in_cec = &l->_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
 
 	vector<BaseLayer*> input_layers = _network->get_input_layers(_layer->get_id());
 
@@ -75,7 +81,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 			{
 				for (int m = 0; m < c->get_in_dim(); m++)
 				{
-					dwc.set(j, m, _state_error[j] * l->_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()].at(j, m));
+					dwc.set(j, m, _state_error[j] * pd_in_cec->at(j, m));
 				}
 			}
 
@@ -84,11 +90,13 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 	}
 
 	Tensor dwcc = Tensor::Zero({ l->_ct_cec->get_out_dim(), l->_ct_cec->get_in_dim() });
+	Tensor* pd_ct_cec = &l->_partial_deriv[l->_ct_cec->get_id()];
+
 	for (int j = 0; j < l->_ct_cec->get_out_dim(); j++)
 	{
 		for (int m = 0; m < l->_ct_cec->get_in_dim(); m++)
 		{
-			dwcc.set(j, m, _state_error[j] * l->_partial_deriv[l->_ct_cec->get_id()].at(j, m));
+			dwcc.set(j, m, _state_error[j] * pd_ct_cec->at(j, m));
 		}
 	}
 

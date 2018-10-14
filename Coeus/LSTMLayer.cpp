@@ -137,44 +137,53 @@ void LSTMLayer::activate(Tensor* p_input)
 	double d0;
 	double d1;
 
+	Tensor* pd_in_input_gate = &_partial_deriv[_in_input_gate->get_id()];
+	Tensor* pd_in_forget_gate = &_partial_deriv[_in_forget_gate->get_id()];
+	Tensor* pd_in_cec = &_partial_deriv[_input_group->get_id() + " " + _cec->get_id()];
+	Tensor* pd_ct_cec = &_partial_deriv[_ct_cec->get_id()];
+
+	Tensor* pd_input_gate = &_partial_deriv[_input_gate->get_id()];
+	Tensor* pd_forget_gate = &_partial_deriv[_forget_gate->get_id()];
+	Tensor* pd_cec = &_partial_deriv[_cec->get_id()];
+
 	for(int j = 0; j < _cec->get_dim(); j++)
 	{
 		for(int m = 0; m < _aux_input->get_dim(); m++)
 		{
-			d0 = _partial_deriv[_in_input_gate->get_id()].at(j, m) * _forget_gate->get_output()->at(j);
+			d0 = pd_in_input_gate->at(j, m) * _forget_gate->get_output()->at(j);
 			d1 = g[j] * _input_gate->get_deriv_output()->at(j,j) * _aux_input->get_output()->at(m);
-			_partial_deriv[_in_input_gate->get_id()].set(j, m, d0 + d1);
+			pd_in_input_gate->set(j, m, d0 + d1);
 
-			d0 = _partial_deriv[_in_forget_gate->get_id()].at(j, m) * _forget_gate->get_output()->at(j);
+			d0 = pd_in_forget_gate->at(j, m) * _forget_gate->get_output()->at(j);
 			d1 = h[j] * _forget_gate->get_deriv_output()->at(j,j) * _aux_input->get_output()->at(m);
-			_partial_deriv[_in_forget_gate->get_id()].set(j, m, d0 + d1);
+			pd_in_forget_gate->set(j, m, d0 + d1);
 		}
 
 		for (int m = 0; m < _input_group->get_dim(); m++)
 		{
-			d0 = _partial_deriv[_input_group->get_id() + " " + _cec->get_id()].at(j, m) * _forget_gate->get_output()->at(j);
+			d0 = pd_in_cec->at(j, m) * _forget_gate->get_output()->at(j);
 			d1 = dg[j] * _input_gate->get_output()->at(j) * _input_group->get_output()->at(m);
-			_partial_deriv[_input_group->get_id() + " " + _cec->get_id()].set(j, m, d0 + d1);
+			pd_in_cec->set(j, m, d0 + d1);
 		}
 
 		for (int m = 0; m < _context->get_dim(); m++)
 		{
-			d0 = _partial_deriv[_ct_cec->get_id()].at(j, m) * _forget_gate->get_output()->at(j);
+			d0 = pd_ct_cec->at(j, m) * _forget_gate->get_output()->at(j);
 			d1 = dg[j] * _input_gate->get_output()->at(j) * _context->get_output()->at(m);
-			_partial_deriv[_ct_cec->get_id()].set(j, m, d0 + d1);
+			pd_ct_cec->set(j, m, d0 + d1);
 		}
 
-		d0 = _partial_deriv[_input_gate->get_id()][j] * _forget_gate->get_output()->at(j);
+		d0 = (*pd_input_gate)[j] * _forget_gate->get_output()->at(j);
 		d1 = g[j] * _input_gate->get_deriv_output()->at(j, j);
-		_partial_deriv[_input_gate->get_id()][j] = d0 + d1;
+		(*pd_input_gate)[j] = d0 + d1;
 
-		d0 = _partial_deriv[_forget_gate->get_id()][j] * _forget_gate->get_output()->at(j);
+		d0 = (*pd_forget_gate)[j] * _forget_gate->get_output()->at(j);
 		d1 = g[j] * _forget_gate->get_deriv_output()->at(j, j);
-		_partial_deriv[_forget_gate->get_id()][j] = d0 + d1;
+		(*pd_forget_gate)[j] = d0 + d1;
 
-		d0 = _partial_deriv[_cec->get_id()].at(j) * _forget_gate->get_output()->at(j);
+		d0 = (*pd_cec)[j] * _forget_gate->get_output()->at(j);
 		d1 = dg[j] * _input_gate->get_output()->at(j);
-		_partial_deriv[_cec->get_id()].set(j, d0 + d1);
+		(*pd_cec)[j] = d0 + d1;
 	}
 
 	_input.clear();
