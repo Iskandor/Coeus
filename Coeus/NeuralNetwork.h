@@ -9,7 +9,7 @@ using namespace std;
 
 namespace Coeus {
 
-class __declspec(dllexport) NeuralNetwork
+class __declspec(dllexport) NeuralNetwork : public ParamModel
 {
 	friend class NetworkGradient;
 public:

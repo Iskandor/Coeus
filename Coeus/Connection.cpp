@@ -31,17 +31,16 @@ Connection::Connection(json p_data) {
 	ss.seekg(0, ios::beg);
 	ss.read(reinterpret_cast<char*>(data), size);
 
-	_weights = Tensor({_out_dim, _in_dim}, data);
+	_weights = new Tensor({_out_dim, _in_dim}, data);
 }
 
 Connection::~Connection()
-{
-}
+= default;
 
 void Connection::init(const INIT p_init, const bool p_trainable, const double p_limit) {
     switch(p_init) {
 		case NONE:			
-			_weights = Tensor::Zero({ _out_dim, _in_dim });
+			_weights = add_param(_id, new Tensor({ _out_dim, _in_dim }, Tensor::ZERO));
 			break;
         case UNIFORM:
             uniform(p_limit);
@@ -72,8 +71,8 @@ json Connection::get_json() const
 
 	stringstream ss;
 
-	for (int i = 0; i < _weights.size(); i++) {
-		double w = _weights[i];
+	for (int i = 0; i < _weights->size(); i++) {
+		double w = (*_weights)[i];
 		ss.write((char*)&w, sizeof(double));
 	}
 
@@ -83,19 +82,20 @@ json Connection::get_json() const
 }
 
 void Connection::uniform(const double p_limit) {
-	_weights = Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit);
+	_weights = add_param(_id, new Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit));
 }
 
 void Connection::identity() {
-	_weights = Tensor::Ones({ _out_dim, _in_dim });
+	_weights = add_param(_id, new Tensor({ _out_dim, _in_dim }, Tensor::ONES));
 }
 
 void Connection::set_weights(Tensor *p_weights) const {
-    _weights.override(p_weights);
+    _weights->override(p_weights);
 }
 
-void Connection::update_weights(Tensor& p_delta_w) {
-	_weights += p_delta_w;
+void Connection::update_weights(Tensor& p_delta_w) const
+{
+	*_weights += p_delta_w;
 }
 
 void Connection::normalize_weights(const NORM p_norm) const {
@@ -106,7 +106,7 @@ void Connection::normalize_weights(const NORM p_norm) const {
 		for (int i = 0; i < _out_dim; i++) {
 			_norm[i] = 0;
 			for (int j = 0; j < _in_dim; j++) {
-				_norm[i] += abs(_weights.at(i, j));
+				_norm[i] += abs(_weights->at(i, j));
 			}
 		}
 
@@ -115,7 +115,7 @@ void Connection::normalize_weights(const NORM p_norm) const {
 		for (int i = 0; i < _out_dim; i++) {
 			_norm[i] = 0;
 			for (int j = 0; j < _in_dim; j++) {
-				_norm[i] += pow(_weights.at(i, j), 2);
+				_norm[i] += pow(_weights->at(i, j), 2);
 			}
 			_norm[i] = sqrt(_norm[i]);
 		}
@@ -127,13 +127,13 @@ void Connection::normalize_weights(const NORM p_norm) const {
 	for (int i = 0; i < _out_dim; i++) {
 		for (int j = 0; j < _in_dim; j++) {
 			if (_norm[i] > 0) {
-				_weights.set(i, j, _weights.at(i, j) / _norm[i]);
+				_weights->set(i, j, _weights->at(i, j) / _norm[i]);
 			}			
 		}
 	}
 }
 
 void Connection::override(Connection* p_copy) {
-	_weights.override(&p_copy->_weights);
+	_weights->override(p_copy->_weights);
 	_trainable = p_copy->_trainable;
 }

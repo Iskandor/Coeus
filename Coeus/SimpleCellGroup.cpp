@@ -55,7 +55,7 @@ void SimpleCellGroup::integrate(Tensor* p_input, Tensor* p_weights) {
  */
 void SimpleCellGroup::activate() {
 	if (is_bias()) {
-		_net += _bias;
+		_net += *_bias;
 	}
 
 	_output = _f->activate(_net);

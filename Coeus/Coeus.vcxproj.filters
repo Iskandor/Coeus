@@ -330,6 +330,9 @@
     <ClCompile Include="SimpleCellGroup.cpp">
       <Filter>Source Files\Network\Group</Filter>
     </ClCompile>
+    <ClCompile Include="ParamModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -574,6 +577,9 @@
     </ClInclude>
     <ClInclude Include="SimpleCellGroup.h">
       <Filter>Header Files\Network\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamModel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

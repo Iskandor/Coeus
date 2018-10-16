@@ -58,15 +58,8 @@ void NetworkGradient::calc_gradient(Tensor* p_target) {
 }
 
 void NetworkGradient::update(map<string, Tensor> &p_update) const {
-	for (auto it = _network->_connections.begin(); it != _network->_connections.end(); ++it) {
-		if (it->second->is_trainable())
-		{
-			it->second->update_weights(p_update[it->first]);
-		}
-	}
-
-	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		(*it)->update(p_update);
+	for (auto it = _network->_params.begin(); it != _network->_params.end(); ++it) {
+		*it->second += p_update[it->first];
 	}
 }
 

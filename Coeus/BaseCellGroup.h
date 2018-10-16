@@ -4,11 +4,12 @@
 #include "Coeus.h"
 #include "IActivationFunction.h"
 #include "json.hpp"
+#include "ParamModel.h"
 
 using namespace FLAB;
 
 namespace Coeus {
-	class __declspec(dllexport) BaseCellGroup
+	class __declspec(dllexport) BaseCellGroup : public ParamModel
 	{
 	public:
 		BaseCellGroup(int p_dim, bool p_bias);
@@ -32,9 +33,9 @@ namespace Coeus {
 		Tensor* get_deriv_output() { return &_deriv_output; }
 
 		bool is_bias() const { return _bias_flag; }
-		void update_bias(Tensor& p_delta_b);
-		void set_bias(Tensor* p_bias) const { _bias.override(p_bias); }
-		Tensor* get_bias() { return &_bias; }
+		void update_bias(Tensor& p_delta_b) const;
+		void set_bias(Tensor* p_bias) const { _bias->override(p_bias); }
+		Tensor* get_bias() { return _bias; }
 
 		IActivationFunction* get_activation_function() const { return _f; }
 
@@ -52,7 +53,7 @@ namespace Coeus {
 		Tensor					_output;
 		Tensor					_deriv_output;
 		bool					_bias_flag;
-		Tensor					_bias;
+		Tensor*					_bias;
 
 	};
 }

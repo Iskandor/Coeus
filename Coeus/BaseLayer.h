@@ -1,12 +1,13 @@
 #pragma once
 #include "SimpleCellGroup.h"
 #include "Connection.h"
+#include "ParamModel.h"
 
 using namespace std;
 
 namespace Coeus {
 
-class __declspec(dllexport) BaseLayer
+class __declspec(dllexport) BaseLayer : public ParamModel
 {
 	friend class IGradientComponent;
 public:
@@ -30,7 +31,6 @@ public:
 	virtual void activate(Tensor* p_input = nullptr) = 0;
 	virtual void override(BaseLayer* p_source) = 0;
 	virtual void reset() = 0;
-	void update(map<string, Tensor> &p_update);
 
 	TYPE	get_type() const { return _type; }
 	string	get_id() const { return _id; }
@@ -62,8 +62,7 @@ protected:
 	TYPE		_type;
 
 	map<string, Connection*>	_connections;
-	map<string, BaseCellGroup*>	_groups;
-	map<string, Tensor*>		_params;
+	map<string, BaseCellGroup*>	_groups;	
 
 	BaseCellGroup* _output_group;
 	BaseCellGroup* _input_group;
@@ -77,14 +76,10 @@ T* BaseLayer::add_group(T* p_group)
 {
 	_groups[p_group->get_id()] = p_group;
 
-	if (dynamic_cast<SimpleCellGroup*>(p_group) != nullptr)
+	if (p_group->is_bias())
 	{
-		SimpleCellGroup* group = dynamic_cast<SimpleCellGroup*>(p_group);
-		if (group->is_bias())
-		{
-			_params[p_group->get_id()] = group->get_bias();
-		}		
-	}
+		_params[p_group->get_id()] = p_group->get_bias();
+	}		
 
 	return p_group;
 }

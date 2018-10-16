@@ -222,6 +222,7 @@
     <ClCompile Include="MSOM_params.cpp" />
     <ClCompile Include="Nadam.cpp" />
     <ClCompile Include="NetworkGradient.cpp" />
+    <ClCompile Include="ParamModel.cpp" />
     <ClCompile Include="SimpleCellGroup.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="QLearning.cpp" />
@@ -304,6 +305,7 @@
     <ClInclude Include="MSOM_params.h" />
     <ClInclude Include="Nadam.h" />
     <ClInclude Include="NetworkGradient.h" />
+    <ClInclude Include="ParamModel.h" />
     <ClInclude Include="SimpleCellGroup.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="QLearning.h" />

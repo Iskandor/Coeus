@@ -20,14 +20,6 @@ void BaseLayer::init(vector<BaseLayer*>& p_input_layers)
 {
 }
 
-void BaseLayer::update(map<string, Tensor>& p_update)
-{
-	for (auto& _param : _params)
-	{
-		*_params[_param.first] += p_update[_param.first];
-	}
-}
-
 json BaseLayer::get_json() const
 {
 	json data;

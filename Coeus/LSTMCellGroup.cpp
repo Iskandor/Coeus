@@ -80,7 +80,7 @@ LSTMCellGroup* LSTMCellGroup::clone()
 void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate)
 {
 	if (is_bias()) {
-		_net += _bias;
+		_net += *_bias;
 	}
 
 	_g_output = _g->activate(_net);

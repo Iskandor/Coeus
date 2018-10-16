@@ -203,6 +203,8 @@ BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
 		_input_layer.push_back(p_layer->get_id());
 	}
 
+	add_param(p_layer);
+
 	return p_layer;
 }
 
@@ -220,6 +222,8 @@ Connection* NeuralNetwork::add_connection(const string& p_input_layer, const str
 	_connections[c->get_id()] = c;
 
 	_graph[out_layer->get_id()].push_back(in_layer->get_id());
+
+	add_param(c);
 
 	return c;
 }
