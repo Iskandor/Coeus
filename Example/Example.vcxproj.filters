@@ -99,15 +99,15 @@
     <ClCompile Include="AddProblemDataset.cpp">
       <Filter>Source Files\RNN</Filter>
     </ClCompile>
+    <ClCompile Include="PackDataset.cpp">
+      <Filter>Source Files\RNN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UBALTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RNN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CartPole.h">
@@ -159,6 +159,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AddProblemDataset.h">
+      <Filter>Header Files\RNN</Filter>
+    </ClInclude>
+    <ClInclude Include="PackDataset.h">
+      <Filter>Header Files\RNN</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN.h">
       <Filter>Header Files\RNN</Filter>
     </ClInclude>
   </ItemGroup>

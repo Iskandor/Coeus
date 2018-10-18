@@ -9,6 +9,7 @@
 #include "RNN.h"
 #include "MazeExample.h"
 #include "Encoder.h"
+#include <bitset>
 
 
 using namespace std;

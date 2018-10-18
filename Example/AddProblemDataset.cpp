@@ -94,20 +94,33 @@ vector<AddProblemSequence>* AddProblemDataset::permute()
 	return &_data;
 }
 
+pair<vector<Tensor*>, vector<Tensor*>> AddProblemDataset::to_vector()
+{
+	vector<Tensor*> input;
+	vector<Tensor*> target;
+
+	vector<AddProblemSequence>* data = permute();
+
+	for(auto it = data->begin(); it != data->end(); ++it)
+	{
+		input.push_back(&(*it).input);
+		target.push_back(&(*it).target);
+	}
+
+	return pair<vector<Tensor*>, vector<Tensor*>>(input, target);
+}
+
 void AddProblemDataset::add_item()
 {
 	AddProblemSequence item;
 
 	if (_input.size() == _mask.size() && _target.size() == 1)
 	{
+		item.input = Tensor::Zero({ _input.size(), 2 });
 		for (int i = 0; i < _input.size(); i++)
 		{
-			Tensor input = Tensor::Zero({ 2 });
-
-			input[0] = _input[i];
-			input[1] = _mask[i];
-
-			item.input.push_back(input);
+			item.input.set(i, 0, _input[i]);
+			item.input.set(i, 1, _mask[i]);
 		}
 
 		item.target = _target;

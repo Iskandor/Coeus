@@ -39,7 +39,7 @@ double DDPG::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, cons
 			(*_target.end())->set(sample->at(i)->a, sample->at(i)->r + _gamma * maxQs1a);
 		}
 
-		error = _gradient_algorithm_critic->train(&_input, &_target);
+		error = _gradient_algorithm_critic->train(&_input, &_target, sample->size());
 	}
 
 	return error;

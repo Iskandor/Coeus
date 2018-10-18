@@ -43,31 +43,45 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, Tensor* p_target)
 	return error;
 }
 
-double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target) {
+double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
 	double error = 0;
 
-	_batch = p_target->size();
+	_batch = p_batch;
 
-	for (auto it = _update_batch.begin(); it != _update_batch.end(); ++it) {
-		it->second.fill(0);
-	}
+	const int nbatch = p_input->size() / _batch + 1;
 
-	for(int i = 0; i < _batch; i++) {
-		_network->activate(p_input->at(i));
-		error += _cost_function->cost(_network->get_output(), p_target->at(i));
-		_network_gradient->calc_gradient(p_target->at(i));
-		calc_update();
-
-		for(auto it = _update.begin(); it != _update.end(); ++it) {
-			_update_batch[it->first] += it->second;
+	for(int b = 0; b < nbatch; b++)
+	{
+		for (auto it = _update_batch.begin(); it != _update_batch.end(); ++it) {
+			it->second.fill(0);
 		}
-	}
 
-	for (auto it = _update.begin(); it != _update.end(); ++it) {
-		_update_batch[it->first] /= _batch;
-	}
+		if (p_input->size() < b * _batch + _batch)
+		{
+			_batch = p_input->size() - b * _batch;
+		}
 
-	_network_gradient->update(_update_batch);
+		for (int i = 0; i < _batch; i++) {
+			const int index = b * _batch + i;
+			_network->activate(p_input->at(index));
+			error += _cost_function->cost(_network->get_output(), p_target->at(index));
+			_network_gradient->calc_gradient(p_target->at(index));
+			calc_update();
+
+			for (auto it = _update.begin(); it != _update.end(); ++it) {
+				_update_batch[it->first] += it->second;
+			}
+		}
+
+		for (auto it = _update.begin(); it != _update.end(); ++it) {
+			_update_batch[it->first] /= _batch;
+		}
+
+		_network_gradient->update(_update_batch);
+		//_alpha = lr_module.update();
+	}
+	
+	//cout << _alpha << endl;
 
 	return error;
 }
@@ -87,8 +101,10 @@ double BaseGradientAlgorithm::train(Tensor* p_target)
 void BaseGradientAlgorithm::init(ICostFunction* p_cost_function, const double p_alpha) {
 	_cost_function = p_cost_function;
 	_network_gradient = new NetworkGradient(_network, _cost_function);
-	_alpha = p_alpha;
 	_init_structures = false;
+
+	lr_module.init(p_alpha * 1e-3, p_alpha, 1, 2);
+	_alpha = p_alpha;
 }
 
 void BaseGradientAlgorithm::calc_update() {

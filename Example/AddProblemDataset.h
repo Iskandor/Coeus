@@ -8,7 +8,7 @@ using namespace FLAB;
 
 struct AddProblemSequence
 {
-	vector<Tensor> input;
+	Tensor  input;
 	Tensor	target;
 };
 
@@ -30,6 +30,7 @@ public:
 	void load_data(const string& p_filename);
 	vector<AddProblemSequence>* permute();
 	vector<AddProblemSequence>* data() { return &_data; }
+	pair<vector<Tensor*>, vector<Tensor*>> to_vector();
 
 private:
 	void add_item();

@@ -57,6 +57,9 @@ public:
 	Tensor& operator /= (const double p_const);
 	double& operator [](const int p_index) const;
 
+	void get_row(Tensor& p_tensor, int p_row) const;
+	void get_column(Tensor& p_tensor, int p_column) const;
+
 	Tensor T() const;
 	Tensor diag() const;
 	Tensor pow(double p_y) const;

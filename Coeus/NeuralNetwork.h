@@ -22,7 +22,7 @@ public:
 	virtual void activate(Tensor* p_input);
 	virtual void activate(vector<Tensor*>* p_input);
 	virtual void override(NeuralNetwork* p_network);
-	void reset();
+	
 
 	BaseLayer*	add_layer(BaseLayer* p_layer);
 	BaseLayer*	get_layer(const string& p_layer);
@@ -37,6 +37,7 @@ public:
 
 protected:
 	void activate();
+	void reset();
 	void create_directed_graph();
 
 private:

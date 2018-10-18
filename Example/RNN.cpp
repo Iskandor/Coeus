@@ -83,7 +83,7 @@ void RNN::run()
 void RNN::run_add_problem()
 {
 	AddProblemDataset dataset;
-	dataset.load_data("./data/add_problem_easy.dat");
+	dataset.load_data("./data/add_problem.dat");
 
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 2));
@@ -96,38 +96,36 @@ void RNN::run_add_problem()
 	network.init();
 
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 0.005);
+	algorithm.init(new QuadraticCost(), 0.1);
 	//BackProp algorithm(&network);
-	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
+	//algorithm.init(new QuadraticCost(), 0.1, 0.9);
 
 	
 	int correct = 0;
-	const int bound = dataset.permute()->size() * 0.99;
+	const int size = dataset.permute()->size();
+	const int bound =  size * 0.99;
 
 	while(correct < bound) {
-		vector<AddProblemSequence>* data = dataset.permute();
+		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
+		vector<AddProblemSequence>* test = dataset.data();
+
 		double error = 0;
 		correct = 0;
 
-		for (auto sequence : *data)
+		error += algorithm.train(&data.first, &data.second, 512);
+
+		for (auto sequence : *test)
 		{
-			network.reset();
-
-			for(int s = 0; s < sequence.input.size() - 1; s++)
-			{
-				algorithm.train(&sequence.input[s], nullptr);
-			}
-
-			error += algorithm.train(&sequence.input[sequence.input.size() - 1], &sequence.target);
+			network.activate(&sequence.input);
 
 			if (abs(network.get_output()->at(0) - sequence.target[0]) < 0.04)
 			{
 				correct++;
 			}
-			
 		}
+
 		cout << error << endl;
-		cout << correct << " / " << data->size() << endl;
+		cout << correct << " / " << size << endl;
 	}
 
 	test(network);
@@ -136,7 +134,7 @@ void RNN::run_add_problem()
 void RNN::test(NeuralNetwork& p_network) const
 {
 	AddProblemDataset testset;
-	testset.load_data("./data/add_problem_easy_test.dat");
+	testset.load_data("./data/add_problem_test.dat");
 
 	vector<AddProblemSequence>* data = testset.data();
 
@@ -144,12 +142,7 @@ void RNN::test(NeuralNetwork& p_network) const
 
 	for (auto sequence : *data)
 	{
-		p_network.reset();
-
-		for (int s = 0; s < sequence.input.size(); s++)
-		{
-			p_network.activate(&sequence.input[s]);
-		}
+		p_network.activate(&sequence.input);
 		cout << p_network.get_output()->at(0) << " - " << sequence.target[0] << endl;
 
 		if (abs(p_network.get_output()->at(0) - sequence.target[0]) < 0.04)

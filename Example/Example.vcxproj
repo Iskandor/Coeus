@@ -177,6 +177,7 @@
     <ClCompile Include="ModelMNS.cpp" />
     <ClCompile Include="ModelMNS2.cpp" />
     <ClCompile Include="ModelMNS3.cpp" />
+    <ClCompile Include="PackDataset.cpp" />
     <ClCompile Include="RNN.cpp" />
     <ClCompile Include="rk4.cpp" />
     <ClCompile Include="Sequence.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="ModelMNS.h" />
     <ClInclude Include="ModelMNS2.h" />
     <ClInclude Include="ModelMNS3.h" />
+    <ClInclude Include="PackDataset.h" />
     <ClInclude Include="RNN.h" />
     <ClInclude Include="rk4.hpp" />
     <ClInclude Include="Sequence.h" />

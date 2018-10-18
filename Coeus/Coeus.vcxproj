@@ -201,6 +201,7 @@
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
     <ClCompile Include="LayerState.cpp" />
+    <ClCompile Include="LearningRateModule.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="LISSOM.cpp" />
     <ClCompile Include="LISSOM_learning.cpp" />
@@ -283,6 +284,7 @@
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="KLDivergence.h" />
     <ClInclude Include="LayerState.h" />
+    <ClInclude Include="LearningRateModule.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="LISSOM.h" />
     <ClInclude Include="LISSOM_learning.h" />
