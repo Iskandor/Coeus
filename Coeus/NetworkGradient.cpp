@@ -6,10 +6,9 @@
 
 using namespace Coeus;
 
-NetworkGradient::NetworkGradient(NeuralNetwork* p_network, ICostFunction* p_cost_function)
+NetworkGradient::NetworkGradient(NeuralNetwork* p_network)
 {
 	_network = p_network;
-	_cost_function = p_cost_function;
 
 	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		IGradientComponent* component = create_component(*it);
@@ -54,12 +53,6 @@ void NetworkGradient::calc_gradient(Tensor* p_target) {
 		if (_gradient_component[(*it)->get_id()] != nullptr) {
 			_gradient_component[(*it)->get_id()]->calc_gradient(_w_gradient, _b_gradient);
 		}
-	}
-}
-
-void NetworkGradient::update(map<string, Tensor> &p_update) const {
-	for (auto it = _network->_params.begin(); it != _network->_params.end(); ++it) {
-		*it->second += p_update[it->first];
 	}
 }
 
@@ -127,6 +120,11 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 			}
 		}
 	}
+}
+
+void NetworkGradient::init(ICostFunction* p_cost_function)
+{
+	_cost_function = p_cost_function;
 }
 
 IGradientComponent* NetworkGradient::create_component(BaseLayer* p_layer) const {

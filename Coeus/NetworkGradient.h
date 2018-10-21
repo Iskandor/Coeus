@@ -9,15 +9,15 @@ class __declspec(dllexport) NetworkGradient
 {
 
 public:
-	NetworkGradient(NeuralNetwork* p_network, ICostFunction* p_cost_function);
+	NetworkGradient(NeuralNetwork* p_network);
 	~NetworkGradient();
 
 	void calc_gradient(Tensor* p_target);
 	map<string, Tensor>* get_w_gradient() { return &_w_gradient; }
 	map<string, Tensor>* get_b_gradient() { return &_b_gradient; }	
-	void update(map<string, Tensor> &p_update) const;
-
 	void check_gradient(Tensor* p_input, Tensor* p_target);
+
+	void init(ICostFunction* p_cost_function);
 
 private:
 	IGradientComponent* create_component(BaseLayer* p_layer) const;

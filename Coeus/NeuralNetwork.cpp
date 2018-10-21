@@ -167,6 +167,13 @@ void NeuralNetwork::override(NeuralNetwork* p_network) {
 	}
 }
 
+void NeuralNetwork::update(map<string, Tensor>* p_update) const
+{
+	for (auto it = _params.begin(); it != _params.end(); ++it) {
+		*it->second += (*p_update)[it->first];
+	}
+}
+
 void NeuralNetwork::reset()
 {
 	for (auto& _layer : _layers)
