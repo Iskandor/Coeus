@@ -15,6 +15,9 @@ namespace Coeus {
 		virtual ~IUpdateRule();
 
 		virtual void calc_update();
+		virtual void merge(IUpdateRule* p_rule) = 0;
+		virtual IUpdateRule* clone(NetworkGradient* p_network_gradient) = 0;
+
 		map<string, Tensor>* get_update() { return &_update; }
 
 	protected:
@@ -25,8 +28,7 @@ namespace Coeus {
 
 		double _alpha;
 
-		map<string, Tensor> _update;
-		map<string, Tensor> _update_batch;
+		map<string, Tensor> _update;		
 	};
 }
 

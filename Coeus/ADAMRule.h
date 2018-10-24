@@ -9,11 +9,14 @@ namespace Coeus {
 		~ADAMRule();
 
 		void calc_update() override;
+		void merge(IUpdateRule* p_rule) override;
+		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 
 	private:
 		void update_momentum(string p_id, Tensor &p_gradient);
 		void init_structures() override;
 
+	private:
 		double _beta1;
 		double _pow_beta1;
 		double _beta2;

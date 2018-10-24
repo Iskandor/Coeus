@@ -14,7 +14,7 @@ namespace Coeus {
 
 		double train(Tensor* p_input, Tensor* p_target);
 		double train(vector<Tensor*>* p_input, Tensor* p_target);
-		double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target);
+		double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch);
 
 	protected:
 		double train(Tensor* p_target) const;
@@ -27,6 +27,7 @@ namespace Coeus {
 
 	private:
 		int	 _batch;
+		map<string, Tensor> _update_batch;
 		
 	};
 }

@@ -207,7 +207,6 @@
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
-    <ClCompile Include="LayerState.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="LISSOM.cpp" />
     <ClCompile Include="LISSOM_learning.cpp" />
@@ -222,7 +221,6 @@
     <ClCompile Include="LSTMCellGroup.cpp" />
     <ClCompile Include="LSTMLayer.cpp" />
     <ClCompile Include="LSTMLayerGradient.cpp" />
-    <ClCompile Include="LSTMLayerState.cpp" />
     <ClCompile Include="Metrics.cpp" />
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
@@ -230,6 +228,7 @@
     <ClCompile Include="Nadam.cpp" />
     <ClCompile Include="NadamRule.cpp" />
     <ClCompile Include="NetworkGradient.cpp" />
+    <ClCompile Include="ParallelModule.cpp" />
     <ClCompile Include="ParamModel.cpp" />
     <ClCompile Include="RMSPropRule.cpp" />
     <ClCompile Include="SimpleCellGroup.cpp" />
@@ -299,7 +298,6 @@
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="KLDivergence.h" />
-    <ClInclude Include="LayerState.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="LISSOM.h" />
     <ClInclude Include="LISSOM_learning.h" />
@@ -314,7 +312,6 @@
     <ClInclude Include="LSTMCellGroup.h" />
     <ClInclude Include="LSTMLayer.h" />
     <ClInclude Include="LSTMLayerGradient.h" />
-    <ClInclude Include="LSTMLayerState.h" />
     <ClInclude Include="Metrics.h" />
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
@@ -322,6 +319,7 @@
     <ClInclude Include="Nadam.h" />
     <ClInclude Include="NadamRule.h" />
     <ClInclude Include="NetworkGradient.h" />
+    <ClInclude Include="ParallelModule.h" />
     <ClInclude Include="ParamModel.h" />
     <ClInclude Include="RMSPropRule.h" />
     <ClInclude Include="SimpleCellGroup.h" />

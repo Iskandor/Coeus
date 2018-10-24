@@ -17,6 +17,7 @@ public:
 	explicit NeuralNetwork(json p_data);
 	NeuralNetwork(NeuralNetwork &p_copy);
 	virtual ~NeuralNetwork();
+	NeuralNetwork* clone() const;
 
 	void init();
 	virtual void activate(Tensor* p_input);

@@ -252,6 +252,32 @@ double& Tensor::operator[](const int p_index) const {
 	return _arr[p_index];
 }
 
+void Tensor::get_row(Tensor& p_tensor, const int p_row) const
+{
+	if (p_tensor.size() != _shape[1])
+	{
+		assert(0);
+	}
+
+	for(int i = 0; i < _shape[1]; i++)
+	{
+		p_tensor[i] = _arr[p_row * _shape[1] + i];
+	}
+}
+
+void Tensor::get_column(Tensor& p_tensor, const int p_column) const
+{
+	if (p_tensor.size() != _shape[0])
+	{
+		assert(0);
+	}
+
+	for (int i = 0; i < _shape[0]; i++)
+	{
+		p_tensor[i] = _arr[i * _shape[1] + p_column];
+	}
+}
+
 Tensor Tensor::T() const {
 	double* arr = alloc_arr(_size);
 

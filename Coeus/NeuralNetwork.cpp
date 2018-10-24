@@ -81,6 +81,11 @@ NeuralNetwork::~NeuralNetwork()
 	}
 }
 
+NeuralNetwork* NeuralNetwork::clone() const
+{
+	return nullptr;
+}
+
 void NeuralNetwork::init()
 {
 	set<string> control_set;
@@ -114,9 +119,28 @@ void NeuralNetwork::init()
 
 void NeuralNetwork::activate(Tensor * p_input)
 {
-	_layers[_input_layer[0]]->activate(p_input);
-	
-	activate();
+	// single input
+	if (p_input->rank() == 1)
+	{
+		_layers[_input_layer[0]]->activate(p_input);
+
+		activate();
+	}
+
+	// sequence
+	if (p_input->rank() == 2)
+	{
+		Tensor input = Tensor::Zero({ p_input->shape(1) });
+
+		reset();
+		for (int i = 0; i < p_input->shape(0); i++)
+		{
+			p_input->get_row(input, i);
+			_layers[_input_layer[0]]->activate(&input);
+
+			activate();
+		}
+	}
 }
 
 void NeuralNetwork::activate(vector<Tensor*>* p_input)
