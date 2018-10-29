@@ -9,9 +9,10 @@ namespace Coeus {
 		~RMSPropRule();
 
 		void calc_update() override;
-	private:		
-		void init_structures() override;
+		void merge(IUpdateRule** p_rule, int p_size) override;
+		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 
+	private:
 		double _decay;
 		double _epsilon;
 

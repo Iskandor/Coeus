@@ -20,7 +20,7 @@ CoreLayer::CoreLayer(json p_data) : BaseLayer(p_data)
 
 CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(IDGen::instance().next()) {
 	_type = CORE;
-	_group = add_group<SimpleCellGroup>(p_copy._group->clone());
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(*p_copy._group));
 	_input_group = _output_group = _group;
 }
 
@@ -51,4 +51,16 @@ json CoreLayer::get_json() const
 	data["group"] = _group->get_json();
 
 	return data;
+}
+
+CoreLayer::CoreLayer(CoreLayer* p_source) : BaseLayer(p_source)
+{
+	_type = CORE;
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_group));
+	_input_group = _output_group = _group;
+}
+
+CoreLayer* CoreLayer::clone()
+{
+	return new CoreLayer(this);
 }

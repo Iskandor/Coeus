@@ -11,6 +11,7 @@ namespace Coeus
 		LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation);
 		explicit LSTMLayer(json p_data);
 		~LSTMLayer();
+		LSTMLayer* clone() override;
 
 		void init(vector<BaseLayer*>& p_input_layers) override;
 		void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
@@ -20,7 +21,9 @@ namespace Coeus
 		json get_json() const override;
 
 	private:
-		LSTMCellGroup*		_cec;
+		explicit LSTMLayer(LSTMLayer* p_source);
+
+		LSTMCellGroup*		_cec{};
 		SimpleCellGroup*	_input_gate;
 		SimpleCellGroup*	_output_gate;
 		SimpleCellGroup*	_forget_gate;

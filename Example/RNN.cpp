@@ -3,13 +3,9 @@
 #include "LSTMLayer.h"
 #include "CoreLayer.h"
 #include "QuadraticCost.h"
-#include "ADAM.h"
 #include "BPTT.h"
 #include "AddProblemDataset.h"
-#include "BackProph.h"
 #include "IOUtils.h"
-#include "Nadam.h"
-#include "AMSGrad.h"
 #include "RMSProp.h"
 #include "KLDivergence.h"
 #include "ExponentialCost.h"
@@ -55,19 +51,19 @@ void RNN::run()
 	}
 
 	//BackProp model(&_network);
-	//RMSProp model(&_network);
+	RMSProp model(&network);
 	//AdaMax model(&_network);
-	ADAM algorithm(&network);
+	//ADAM algorithm(&network);
 	//AMSGrad model(&_network);
 	//Nadam model(&_network);
 
 	//model.init(new QuadraticCost(), 0.1, 0.99, true);
-	algorithm.init(new QuadraticCost(), 0.05);
+	model.init(new QuadraticCost(), 0.05);
 
 	for (int t = 0; t < 2000; t++) {
 		double error = 0;
 		for (int i = 0; i < 4; i++) {
-			error += algorithm.train(&input[i], &target[i]);
+			error += model.train(&input[i], &target[i]);
 		}
 		cout << error << endl;
 	}
@@ -95,7 +91,8 @@ void RNN::run_add_problem()
 
 	network.init();
 
-	Nadam algorithm(&network);
+	RMSProp algorithm(&network);
+	//Nadam algorithm(&network);
 	algorithm.init(new QuadraticCost(), 0.001);
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);

@@ -25,6 +25,7 @@ public:
 	BaseLayer(const string& p_id);
 	BaseLayer(json p_data);
 	virtual ~BaseLayer();
+	virtual BaseLayer* clone() = 0;
 
 	virtual void init(vector<BaseLayer*>& p_input_layers);
 	virtual void integrate(Tensor* p_input, Tensor* p_weights) = 0;
@@ -54,6 +55,7 @@ public:
 	virtual json get_json() const;
 
 protected:
+	explicit BaseLayer(BaseLayer* p_source);
 	Connection*		add_connection(Connection* p_connection);
 	template<typename T>
 	T*	add_group(T* p_group);
@@ -75,11 +77,7 @@ template <typename T>
 T* BaseLayer::add_group(T* p_group)
 {
 	_groups[p_group->get_id()] = p_group;
-
-	if (p_group->is_bias())
-	{
-		_params[p_group->get_id()] = p_group->get_bias();
-	}		
+	add_param(p_group);
 
 	return p_group;
 }

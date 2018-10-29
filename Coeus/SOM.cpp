@@ -49,6 +49,11 @@ SOM::~SOM()
 	_afferent = nullptr;
 }
 
+SOM* SOM::clone()
+{
+	return nullptr;
+}
+
 void SOM::integrate(Tensor* p_input, Tensor* p_weights) {
 }
 

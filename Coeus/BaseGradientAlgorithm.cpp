@@ -8,6 +8,7 @@ BaseGradientAlgorithm::BaseGradientAlgorithm(NeuralNetwork* p_network)
 	_network_gradient = new NetworkGradient(p_network);
 	_cost_function = nullptr;	
 	_update_rule = nullptr;
+	_parallel_module = nullptr;
 	_batch = 0;
 }
 
@@ -17,6 +18,7 @@ BaseGradientAlgorithm::~BaseGradientAlgorithm()
 	delete _update_rule;
 	delete _cost_function;
 	delete _network_gradient;
+	delete _parallel_module;
 }
 
 double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) {
@@ -48,47 +50,29 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p
 
 	_batch = p_batch;
 
-	const int nbatch = p_input->size() / _batch + 1;
+	int nbatch = p_input->size() / _batch;
 
-	/*
-	if (_batch > 0) {
-	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
-	_update_batch[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
+	if (p_input->size() % _batch > 0)
+	{
+		nbatch++;
 	}
-	for (auto it = _network_gradient->get_b_gradient()->begin(); it != _network_gradient->get_b_gradient()->end(); ++it) {
-	_update_batch[it->first] = Tensor(it->second.rank(), it->second.shape(), Tensor::INIT::ZERO);
+
+	if (_parallel_module == nullptr)
+	{
+		_parallel_module = new ParallelModule(_network, _update_rule, _cost_function, _batch);
 	}
-	}
-	*/
+
 
 	for (int b = 0; b < nbatch; b++)
 	{
-		for (auto it = _update_batch.begin(); it != _update_batch.end(); ++it) {
-			it->second.fill(0);
-		}
-
 		if (p_input->size() < b * _batch + _batch)
 		{
 			_batch = p_input->size() - b * _batch;
 		}
 
-		for (int i = 0; i < _batch; i++) {
-			const int index = b * _batch + i;
-			_network->activate(p_input->at(index));
-			error += _cost_function->cost(_network->get_output(), p_target->at(index));
-			_network_gradient->calc_gradient(p_target->at(index));
-			_update_rule->calc_update();
+		error += _parallel_module->run_batch(b, _batch, p_input, p_target);
 
-			for (auto it = _update_rule->get_update()->begin(); it != _update_rule->get_update()->end(); ++it) {
-				_update_batch[it->first] += it->second;
-			}
-		}
-
-		for (auto it = _update_batch.begin(); it != _update_batch.end(); ++it) {
-			_update_batch[it->first] /= _batch;
-		}
-
-		_network->update(&_update_batch);
+		_network->update(_parallel_module->get_update());
 	}
 
 	return error;

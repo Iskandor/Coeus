@@ -1,9 +1,11 @@
 #include "BaseLayer.h"
-#include "IDGen.h"
 
 using namespace Coeus;
 
-BaseLayer::BaseLayer(const string& p_id): _output_group(nullptr), _input_group(nullptr), _valid(false)
+BaseLayer::BaseLayer(const string& p_id): 
+	_output_group(nullptr), 
+	_input_group(nullptr), 
+	_valid(false)
 {
 	_id = p_id;
 }
@@ -28,6 +30,14 @@ json BaseLayer::get_json() const
 	data["type"] = _type;
 
 	return data;
+}
+
+BaseLayer::BaseLayer(BaseLayer* p_source): 
+	_output_group(nullptr), 
+	_input_group(nullptr), 
+	_valid(false)
+{
+	_id = p_source->_id;
 }
 
 Connection* BaseLayer::add_connection(Connection* p_connection) {

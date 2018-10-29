@@ -11,6 +11,8 @@ namespace Coeus
 		SOM(nlohmann::json p_data);
 		~SOM();
 
+		SOM* clone() override;
+
 		void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
 		void activate(Tensor* p_input = nullptr) override;
 		virtual int find_winner(Tensor* p_input);

@@ -127,6 +127,18 @@ void NetworkGradient::init(ICostFunction* p_cost_function)
 	_cost_function = p_cost_function;
 }
 
+map<string, Tensor> NetworkGradient::get_empty_params() const
+{
+	map<string, Tensor> result;
+
+	for(auto it = _network->_params.begin(); it != _network->_params.end(); ++it)
+	{
+		result[it->first] = Tensor(it->second->rank(), it->second->shape(), Tensor::ZERO);
+	}
+
+	return result;
+}
+
 IGradientComponent* NetworkGradient::create_component(BaseLayer* p_layer) const {
 	IGradientComponent* component = nullptr;
 

@@ -18,6 +18,7 @@ public:
 	void check_gradient(Tensor* p_input, Tensor* p_target);
 
 	void init(ICostFunction* p_cost_function);
+	map<string, Tensor> get_empty_params() const;
 
 private:
 	IGradientComponent* create_component(BaseLayer* p_layer) const;

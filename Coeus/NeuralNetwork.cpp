@@ -83,7 +83,19 @@ NeuralNetwork::~NeuralNetwork()
 
 NeuralNetwork* NeuralNetwork::clone() const
 {
-	return nullptr;
+	NeuralNetwork* result = new NeuralNetwork();
+
+	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
+		result->add_layer((*it).second->clone());
+	}
+
+	for (auto it = _connections.begin(); it != _connections.end(); ++it) {
+		result->add_connection(it->second->clone());
+	}
+
+	result->init();
+
+	return result;
 }
 
 void NeuralNetwork::init()
@@ -360,6 +372,7 @@ void NeuralNetwork::add_connection(Connection* p_connection)
 {
 	_connections[p_connection->get_id()] = p_connection;
 	_graph[p_connection->get_out_id()].push_back(p_connection->get_in_id());
+	add_param(p_connection);
 }
 
 json NeuralNetwork::get_json() const

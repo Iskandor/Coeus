@@ -10,20 +10,40 @@
 
 using namespace Coeus;
 
-BaseCellGroup::BaseCellGroup(int p_dim, bool p_bias): _dim(p_dim), _f(nullptr)
+BaseCellGroup::BaseCellGroup(int p_dim, bool p_bias): 
+	_dim(p_dim), 
+	_f(nullptr),
+	_bias_flag(p_bias)
 {
 	_id = IDGen::instance().next();
 	_net = Tensor::Zero({p_dim});
 	_output = Tensor::Zero({p_dim});
 	_deriv_output = Tensor::Zero({p_dim});
-	_bias_flag = p_bias;
-	if (_bias_flag)
+
+	if (p_bias)
 	{
 		_bias = add_param(_id, new Tensor({ _dim }, Tensor::RANDOM, 1));
 	}
 }
 
-BaseCellGroup::BaseCellGroup(nlohmann::json p_data): _f(nullptr)
+BaseCellGroup::BaseCellGroup(BaseCellGroup* p_source):
+	_dim(p_source->_dim),
+	_f(nullptr),
+	_bias_flag(p_source->_bias_flag)
+{
+	_id = p_source->_id;
+	_net = Tensor::Zero({ p_source->_dim });
+	_output = Tensor::Zero({ p_source->_dim });
+	_deriv_output = Tensor::Zero({ p_source->_dim });
+
+	if (_bias_flag)
+	{
+		_bias = add_param(_id, p_source->_bias);
+	}
+}
+
+BaseCellGroup::BaseCellGroup(nlohmann::json p_data): 
+	_f(nullptr)
 {
 	_id = p_data["id"].get<string>();
 	_dim = p_data["dim"].get<int>();
@@ -103,7 +123,7 @@ void BaseCellGroup::copy(const BaseCellGroup& p_copy)
 	_id = p_copy._id;
 	_dim = p_copy._dim;
 	_bias_flag = p_copy._bias_flag;
-	_bias = p_copy._bias;
+	_bias->override(p_copy._bias);
 
 	_output = Tensor::Zero({ _dim });
 	_deriv_output = Tensor::Zero({ _dim });

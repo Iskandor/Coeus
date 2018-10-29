@@ -72,11 +72,6 @@ void LSTMCellGroup::reset() const
 	_state.fill(0);
 }
 
-LSTMCellGroup* LSTMCellGroup::clone()
-{
-	return new LSTMCellGroup(*this);
-}
-
 void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate)
 {
 	if (is_bias()) {
@@ -118,4 +113,16 @@ json LSTMCellGroup::get_json() const
 	data["g"] = _g->get_json();
 
 	return data;
+}
+
+LSTMCellGroup::LSTMCellGroup(LSTMCellGroup* p_source, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate) : BaseCellGroup(p_source)
+{
+	_state = Tensor::Zero({ p_source->_dim });
+
+	_f = init_activation_function(p_source->_f->get_type());
+	_g = init_activation_function(TANH);
+
+	_input_gate = p_input_gate;
+	_forget_gate = p_forget_gate;
+	_output_gate = p_output_gate;
 }

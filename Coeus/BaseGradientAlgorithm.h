@@ -3,6 +3,7 @@
 #include "ICostFunction.h"
 #include "NetworkGradient.h"
 #include "IUpdateRule.h"
+#include "ParallelModule.h"
 
 namespace Coeus {
 
@@ -27,7 +28,7 @@ namespace Coeus {
 
 	private:
 		int	 _batch;
-		map<string, Tensor> _update_batch;
+		ParallelModule*		_parallel_module;
 		
 	};
 }

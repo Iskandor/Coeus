@@ -24,6 +24,7 @@ public:
 	};
 
 	explicit Connection(nlohmann::json p_data);
+	Connection* clone() const;
     ~Connection(void);
 
     void init(INIT p_init, bool p_trainable = true, double p_limit = 0);

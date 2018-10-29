@@ -12,6 +12,7 @@ public:
 	explicit CoreLayer(json p_data);
 	CoreLayer(CoreLayer &p_copy);
 	~CoreLayer();
+	CoreLayer* clone() override;
 
 	void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
 	void activate(Tensor* p_input = nullptr) override;
@@ -20,7 +21,10 @@ public:
 	void init(vector<BaseLayer*>& p_input_layers) override {}
 	json get_json() const override;
 
+	
 private:
+	explicit CoreLayer(CoreLayer* p_source);
+
 	SimpleCellGroup *_group;
 };
 

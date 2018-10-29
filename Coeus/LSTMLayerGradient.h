@@ -1,7 +1,6 @@
 #pragma once
 #include "IGradientComponent.h"
 #include "LSTMLayer.h"
-#include "LSTMLayerState.h"
 
 namespace Coeus
 {

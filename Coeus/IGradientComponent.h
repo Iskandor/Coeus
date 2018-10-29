@@ -2,7 +2,6 @@
 
 #include "Tensor.h"
 #include "BaseLayer.h"
-#include "LayerState.h"
 #include "NeuralNetwork.h"
 
 using namespace FLAB;

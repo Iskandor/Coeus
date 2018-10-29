@@ -1,5 +1,4 @@
 #include "LSTMLayerGradient.h"
-#include "LSTMLayerState.h"
 
 using namespace Coeus;
 

@@ -34,13 +34,27 @@ Connection::Connection(json p_data) {
 	_weights = new Tensor({_out_dim, _in_dim}, data);
 }
 
+Connection* Connection::clone() const
+{
+	Connection* result = new Connection(_in_dim, _out_dim, _in_id, _out_id);
+	result->_weights = _weights;
+	result->_trainable = _trainable;
+
+	if (result->_trainable)
+	{
+		result->add_param(result->_id, result->_weights);
+	}
+
+	return result;
+}
+
 Connection::~Connection()
 = default;
 
 void Connection::init(const INIT p_init, const bool p_trainable, const double p_limit) {
     switch(p_init) {
 		case NONE:			
-			_weights = add_param(_id, new Tensor({ _out_dim, _in_dim }, Tensor::ZERO));
+			_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ZERO);
 			break;
         case UNIFORM:
             uniform(p_limit);
@@ -56,6 +70,11 @@ void Connection::init(const INIT p_init, const bool p_trainable, const double p_
             break;
     }
 	_trainable = p_trainable;
+
+	if (p_trainable)
+	{
+		add_param(_id, _weights);
+	}
 }
 
 json Connection::get_json() const
@@ -82,11 +101,11 @@ json Connection::get_json() const
 }
 
 void Connection::uniform(const double p_limit) {
-	_weights = add_param(_id, new Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit));
+	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit);
 }
 
 void Connection::identity() {
-	_weights = add_param(_id, new Tensor({ _out_dim, _in_dim }, Tensor::ONES));
+	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ONES);
 }
 
 void Connection::set_weights(Tensor *p_weights) const {

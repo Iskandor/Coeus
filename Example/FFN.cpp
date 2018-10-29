@@ -4,14 +4,7 @@
 #include "CoreLayer.h"
 #include "BaseGradientAlgorithm.h"
 #include "QuadraticCost.h"
-#include "BackProph.h"
 #include "RMSProp.h"
-#include "Adagrad.h"
-#include "Adadelta.h"
-#include "ADAM.h"
-#include "AdaMax.h"
-#include "Nadam.h"
-#include "AMSGrad.h"
 #include "LSTMLayer.h"
 #include "CrossEntropyCost.h"
 #include "IOUtils.h"
@@ -55,23 +48,20 @@ void FFN::run() {
 	}
 
 	//BackProp model(&_network);
-	//RMSProp model(&_network);
+	RMSProp model(&_network);
 	//AdaMax model(&_network);
 	//ADAM model(&_network);
 	//AMSGrad model(&_network);
-	Nadam model(&_network);
+	//Nadam model(&_network);
 
 	//model.init(new QuadraticCost(), 0.1, 0.9, true);
 	model.init(new QuadraticCost(), 0.1);
 
-	for(int t = 0; t < 500; t++) {
+	for(int t = 0; t < 2000; t++) {
 		//const double error = model.train(&input, &target);
 		double error = 0;
 
-		for(int i = 0; i < 4; i++)
-		{
-			error += model.train(input[i], target[i]);
-		}
+		error += model.train(&input, &target, 4);
 
 		cout << "Error: " << error << endl;
 	}
@@ -135,7 +125,8 @@ void FFN::run_iris() {
 
 	//BackProp model(&_network);
 	//model.init(new CrossEntropyCost(), 0.0001, 0.9, false);
-	ADAM model(&_network);
+	//ADAM model(&_network);
+	RMSProp model(&_network);
 	model.init(new CrossEntropyCost(), 0.0002);
 
 	for (int t = 0; t < epochs; t++) {
