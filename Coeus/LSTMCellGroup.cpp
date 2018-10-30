@@ -89,6 +89,7 @@ void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor
 	_h_output = _f->activate(_state);
 	_output = _h_output.dot(*p_output_gate);
 
+	_deriv_input = _net;
 	_net.fill(0);
 }
 
@@ -98,7 +99,7 @@ Tensor LSTMCellGroup::get_h() const
 }
 
 Tensor LSTMCellGroup::get_dh() {
-	return _f->deriv(_h_output);
+	return _f->deriv(_state);
 }
 
 Tensor LSTMCellGroup::get_g() const
@@ -107,7 +108,7 @@ Tensor LSTMCellGroup::get_g() const
 }
 
 Tensor LSTMCellGroup::get_dg() {
-	return _g->deriv(_g_output);
+	return _g->deriv(_deriv_input);
 }
 
 json LSTMCellGroup::get_json() const

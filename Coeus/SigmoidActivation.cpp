@@ -26,8 +26,10 @@ Tensor SigmoidActivation::deriv(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 	memset(arr, 0, sizeof(double) * p_input.size() * p_input.size());
 
+	const Tensor activation = activate(p_input);
+
 	for (int i = 0; i < p_input.size(); i++) {
-		arr[i*p_input.size() + i] = p_input[i] * (1 - p_input[i]);;
+		arr[i*p_input.size() + i] = activation[i] * (1 - activation[i]);
 	}
 
 	return Tensor({ p_input.size(), p_input.size() }, arr);

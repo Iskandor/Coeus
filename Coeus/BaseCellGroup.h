@@ -29,7 +29,7 @@ namespace Coeus {
 		void	set_output(Tensor* p_output) const;
 		void	set_output(vector<Tensor*>& p_output) const;
 		Tensor* get_output() { return &_output; }
-		Tensor* get_deriv_output() { return &_deriv_output; }
+		Tensor  get_deriv_output() { return _f->deriv(_deriv_input); }
 
 		bool is_bias() const { return _bias_flag; }
 		void update_bias(Tensor& p_delta_b);
@@ -50,7 +50,7 @@ namespace Coeus {
 		Tensor					_net;
 		IActivationFunction*	_f;
 		Tensor					_output;
-		Tensor					_deriv_output;
+		Tensor					_deriv_input;
 		bool					_bias_flag;
 		Tensor					_bias;
 

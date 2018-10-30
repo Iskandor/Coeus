@@ -17,5 +17,5 @@ void IGradientComponent::calc_gradient(map<string, Tensor> &p_w_gradient, map<st
 }
 
 void IGradientComponent::calc_deriv_group(BaseCellGroup* p_group) {
-	_deriv[p_group->get_id()] = *p_group->get_deriv_output();
+	_deriv[p_group->get_id()] = p_group->get_deriv_output();
 }

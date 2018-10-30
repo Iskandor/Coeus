@@ -146,16 +146,19 @@ void LSTMLayer::activate(Tensor* p_input)
 	Tensor* pd_forget_gate = &_partial_deriv[_forget_gate->get_id()];
 	Tensor* pd_cec = &_partial_deriv[_cec->get_id()];
 
+	Tensor input_gate_doutput = _input_gate->get_deriv_output();
+	Tensor forget_gate_doutput = _forget_gate->get_deriv_output();
+
 	for(int j = 0; j < _cec->get_dim(); j++)
 	{
 		for(int m = 0; m < _aux_input->get_dim(); m++)
 		{
 			d0 = pd_in_input_gate->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = g[j] * _input_gate->get_deriv_output()->at(j,j) * _aux_input->get_output()->at(m);
+			d1 = g[j] * input_gate_doutput.at(j,j) * _aux_input->get_output()->at(m);
 			pd_in_input_gate->set(j, m, d0 + d1);
 
 			d0 = pd_in_forget_gate->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = h[j] * _forget_gate->get_deriv_output()->at(j,j) * _aux_input->get_output()->at(m);
+			d1 = h[j] * forget_gate_doutput.at(j,j) * _aux_input->get_output()->at(m);
 			pd_in_forget_gate->set(j, m, d0 + d1);
 		}
 
@@ -174,11 +177,11 @@ void LSTMLayer::activate(Tensor* p_input)
 		}
 
 		d0 = (*pd_input_gate)[j] * _forget_gate->get_output()->at(j);
-		d1 = g[j] * _input_gate->get_deriv_output()->at(j, j);
+		d1 = g[j] * input_gate_doutput.at(j, j);
 		(*pd_input_gate)[j] = d0 + d1;
 
 		d0 = (*pd_forget_gate)[j] * _forget_gate->get_output()->at(j);
-		d1 = g[j] * _forget_gate->get_deriv_output()->at(j, j);
+		d1 = g[j] * forget_gate_doutput.at(j, j);
 		(*pd_forget_gate)[j] = d0 + d1;
 
 		d0 = (*pd_cec)[j] * _forget_gate->get_output()->at(j);

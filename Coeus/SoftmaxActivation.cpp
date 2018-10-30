@@ -32,9 +32,11 @@ Tensor SoftmaxActivation::activate(Tensor& p_input) {
 Tensor SoftmaxActivation::deriv(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 
+	const Tensor activation = activate(p_input);
+
 	for (int i = 0; i < p_input.size(); i++) {
 		for (int j = 0; j < p_input.size(); j++) {
-			arr[i * p_input.size() + j] = p_input[i] * (kronecker_delta(i, j) - p_input[j]);
+			arr[i * p_input.size() + j] = activation[i] * (kronecker_delta(i, j) - activation[j]);
 		}
 	}
 

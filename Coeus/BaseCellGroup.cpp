@@ -15,7 +15,7 @@ BaseCellGroup::BaseCellGroup(int p_dim, bool p_bias): _dim(p_dim), _f(nullptr)
 	_id = IDGen::instance().next();
 	_net = Tensor::Zero({p_dim});
 	_output = Tensor::Zero({p_dim});
-	_deriv_output = Tensor::Zero({p_dim});
+	_deriv_input = Tensor::Zero({p_dim});
 	_bias_flag = p_bias;
 	_bias = Tensor::Random({ _dim }, 1);
 }
@@ -41,7 +41,7 @@ BaseCellGroup::BaseCellGroup(nlohmann::json p_data): _f(nullptr)
 	}
 
 	_output = Tensor::Zero({ _dim });
-	_deriv_output = Tensor::Zero({ _dim });
+	_deriv_input = Tensor::Zero({ _dim });
 	_net = Tensor::Zero({ _dim });
 }
 
@@ -103,7 +103,7 @@ void BaseCellGroup::copy(const BaseCellGroup& p_copy)
 	_bias = p_copy._bias;
 
 	_output = Tensor::Zero({ _dim });
-	_deriv_output = Tensor::Zero({ _dim });
+	_deriv_input = Tensor::Zero({ _dim });
 	_net = Tensor::Zero({ _dim });
 }
 
