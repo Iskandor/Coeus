@@ -15,7 +15,4 @@ IUpdateRule::~IUpdateRule()
 
 void IUpdateRule::calc_update()
 {
-	for (auto it = _network_gradient->get_b_gradient()->begin(); it != _network_gradient->get_b_gradient()->end(); ++it) {
-		_update[it->first] = -_alpha * it->second;
-	}
 }

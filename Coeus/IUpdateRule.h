@@ -14,7 +14,7 @@ namespace Coeus {
 		IUpdateRule(NetworkGradient* p_network_gradient, double p_alpha);
 		virtual ~IUpdateRule();
 
-		virtual void calc_update();
+		virtual void calc_update() = 0;
 		virtual void merge(IUpdateRule** p_rule, int p_size) = 0;
 		virtual IUpdateRule* clone(NetworkGradient* p_network_gradient) = 0;
 

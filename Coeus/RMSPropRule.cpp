@@ -12,9 +12,7 @@ RMSPropRule::~RMSPropRule()
 = default;
 
 void RMSPropRule::calc_update() {
-	IUpdateRule::calc_update();
-
-	for (auto it = _network_gradient->get_w_gradient()->begin(); it != _network_gradient->get_w_gradient()->end(); ++it) {
+	for (auto it = _network_gradient->get_gradient()->begin(); it != _network_gradient->get_gradient()->end(); ++it) {
 
 		/*
 		for(int i = 0; i < it->second.size(); i++) {
@@ -30,10 +28,13 @@ void RMSPropRule::calc_update() {
 
 void RMSPropRule::merge(IUpdateRule** p_rule, int p_size)
 {
+	/*
 	for (auto it = _cache.begin(); it != _cache.end(); ++it)
 	{
 		_cache[it->first].fill(0);
 	}
+	*/
+	map<string, Tensor> cache = _cache;
 
 	RMSPropRule** rule = reinterpret_cast<RMSPropRule**>(p_rule);
 
@@ -41,14 +42,16 @@ void RMSPropRule::merge(IUpdateRule** p_rule, int p_size)
 	{
 		for (auto it = _cache.begin(); it != _cache.end(); ++it)
 		{
-			_cache[it->first] += rule[i]->_cache[it->first];
+			_cache[it->first] = _decay * _cache[it->first] + (rule[i]->_cache[it->first] - _decay * cache[it->first]);
 		}
 	}
 
+	/*
 	for (auto it = _cache.begin(); it != _cache.end(); ++it)
 	{
 		_cache[it->first] /= p_size;
 	}
+	*/
 }
 
 IUpdateRule* RMSPropRule::clone(NetworkGradient* p_network_gradient)

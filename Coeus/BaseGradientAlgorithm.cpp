@@ -74,6 +74,30 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p
 
 		_network->update(_parallel_module->get_update());
 	}
+	
+	/*
+	for (int b = 0; b < nbatch; b++)
+	{
+		if (p_input->size() < b * _batch + _batch)
+		{
+			_batch = p_input->size() - b * _batch;
+		}
+
+		for (int i = 0; i < _batch; i++) {
+			const int index = b * _batch + i;
+			_network->activate(p_input->at(index));
+			error += _cost_function->cost(_network->get_output(), p_target->at(index));
+			_network_gradient->calc_gradient(p_target->at(index));
+			_update_rule->calc_update();
+		}
+
+		for (auto it = _update.begin(); it != _update.end(); ++it) {
+			_update_batch[it->first] /= _batch;
+		}
+
+		_network->update(_update_batch);
+	}
+	*/
 
 	return error;
 }

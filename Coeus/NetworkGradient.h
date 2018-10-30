@@ -13,8 +13,7 @@ public:
 	~NetworkGradient();
 
 	void calc_gradient(Tensor* p_target);
-	map<string, Tensor>* get_w_gradient() { return &_w_gradient; }
-	map<string, Tensor>* get_b_gradient() { return &_b_gradient; }	
+	map<string, Tensor>* get_gradient() { return &_gradient; }
 	void check_gradient(Tensor* p_input, Tensor* p_target);
 
 	void init(ICostFunction* p_cost_function);
@@ -29,8 +28,7 @@ private:
 
 	map<string, IGradientComponent*> _gradient_component;
 
-	map<string, Tensor> _w_gradient;
-	map<string, Tensor> _b_gradient;
+	map<string, Tensor> _gradient;
 
 };
 

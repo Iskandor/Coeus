@@ -51,7 +51,7 @@ void NetworkGradient::calc_gradient(Tensor* p_target) {
 
 	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->calc_gradient(_w_gradient, _b_gradient);
+			_gradient_component[(*it)->get_id()]->calc_gradient(_gradient);
 		}
 	}
 }
@@ -74,7 +74,7 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 
 				const double de = (Je_plus - Je_minus) / (2 * epsilon);
 
-				cout << i << " " << _w_gradient[it->second->get_id()].at(i) - de << endl;
+				cout << i << " " << _gradient[it->second->get_id()].at(i) - de << endl;
 			}
 			
 		}
@@ -97,7 +97,7 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 
 					const double de = (Je_plus - Je_minus) / (2 * epsilon);
 
-					cout << i << " " << _w_gradient[c->second->get_id()].at(i) - de << endl;
+					cout << i << " " << _gradient[c->second->get_id()].at(i) - de << endl;
 				}
 			}
 
@@ -115,7 +115,7 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 
 					const double de = (Je_plus - Je_minus) / (2 * epsilon);
 
-					cout << i << " " << _b_gradient[g->second->get_id()].at(i) - de << endl;
+					cout << i << " " << _gradient[g->second->get_id()].at(i) - de << endl;
 				}
 			}
 		}

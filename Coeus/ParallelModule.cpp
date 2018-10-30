@@ -52,6 +52,8 @@ double ParallelModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input,
 		_clone_update_rule[i]->calc_update();
 	});
 
+	_update_rule->merge(_clone_update_rule, _batch);
+
 	for (int i = 0; i < _batch; i++)
 	{
 		error += _error[i];

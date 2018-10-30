@@ -57,7 +57,7 @@ void FFN::run() {
 	//model.init(new QuadraticCost(), 0.1, 0.9, true);
 	model.init(new QuadraticCost(), 0.1);
 
-	for(int t = 0; t < 2000; t++) {
+	for(int t = 0; t < 500; t++) {
 		//const double error = model.train(&input, &target);
 		double error = 0;
 
