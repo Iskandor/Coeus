@@ -81,6 +81,23 @@ NeuralNetwork::~NeuralNetwork()
 	}
 }
 
+NeuralNetwork* NeuralNetwork::clone() const
+{
+	NeuralNetwork* result = new NeuralNetwork();
+
+	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
+		result->add_layer((*it).second->clone());
+	}
+
+	for (auto it = _connections.begin(); it != _connections.end(); ++it) {
+		result->add_connection(it->second->clone());
+	}
+
+	result->init();
+
+	return result;
+}
+
 void NeuralNetwork::init()
 {
 	set<string> control_set;
@@ -128,7 +145,7 @@ void NeuralNetwork::activate(Tensor * p_input)
 		Tensor input = Tensor::Zero({ p_input->shape(1) });
 
 		reset();
-		for(int i = 0; i < p_input->shape(0); i++)
+		for (int i = 0; i < p_input->shape(0); i++)
 		{
 			p_input->get_row(input, i);
 			_layers[_input_layer[0]]->activate(&input);
@@ -136,7 +153,6 @@ void NeuralNetwork::activate(Tensor * p_input)
 			activate();
 		}
 	}
-
 }
 
 void NeuralNetwork::activate(vector<Tensor*>* p_input)
@@ -187,6 +203,13 @@ void NeuralNetwork::override(NeuralNetwork* p_network) {
 	}
 }
 
+void NeuralNetwork::update(map<string, Tensor>* p_update) const
+{
+	for (auto it = _params.begin(); it != _params.end(); ++it) {
+		*it->second += (*p_update)[it->first];
+	}
+}
+
 void NeuralNetwork::reset()
 {
 	for (auto& _layer : _layers)
@@ -223,6 +246,8 @@ BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
 		_input_layer.push_back(p_layer->get_id());
 	}
 
+	add_param(p_layer);
+
 	return p_layer;
 }
 
@@ -240,6 +265,8 @@ Connection* NeuralNetwork::add_connection(const string& p_input_layer, const str
 	_connections[c->get_id()] = c;
 
 	_graph[out_layer->get_id()].push_back(in_layer->get_id());
+
+	add_param(c);
 
 	return c;
 }
@@ -345,6 +372,7 @@ void NeuralNetwork::add_connection(Connection* p_connection)
 {
 	_connections[p_connection->get_id()] = p_connection;
 	_graph[p_connection->get_out_id()].push_back(p_connection->get_in_id());
+	add_param(p_connection);
 }
 
 json NeuralNetwork::get_json() const

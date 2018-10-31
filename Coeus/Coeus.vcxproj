@@ -166,11 +166,17 @@
     <ClCompile Include="ActivationFunctions.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Adadelta.cpp" />
+    <ClCompile Include="AdadeltaRule.cpp" />
     <ClCompile Include="Adagrad.cpp" />
+    <ClCompile Include="AdagradRule.cpp" />
     <ClCompile Include="ADAM.cpp" />
     <ClCompile Include="AdaMax.cpp" />
+    <ClCompile Include="AdaMaxRule.cpp" />
+    <ClCompile Include="ADAMRule.cpp" />
     <ClCompile Include="AMSGrad.cpp" />
+    <ClCompile Include="AMSGradRule.cpp" />
     <ClCompile Include="BackProp.cpp" />
+    <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BaseCellGroup.cpp" />
     <ClCompile Include="BaseGradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
@@ -192,6 +198,7 @@
     <ClCompile Include="GenKLDivergence.cpp" />
     <ClCompile Include="HellingerDistance.cpp" />
     <ClCompile Include="IActivationFunction.cpp" />
+    <ClCompile Include="IBatchModule.cpp" />
     <ClCompile Include="ICM.cpp" />
     <ClCompile Include="ICostFunction.cpp" />
     <ClCompile Include="IDGen.cpp" />
@@ -199,8 +206,8 @@
     <ClCompile Include="InputLayer.cpp" />
     <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
+    <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
-    <ClCompile Include="LayerState.cpp" />
     <ClCompile Include="LearningRateModule.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="LISSOM.cpp" />
@@ -216,13 +223,16 @@
     <ClCompile Include="LSTMCellGroup.cpp" />
     <ClCompile Include="LSTMLayer.cpp" />
     <ClCompile Include="LSTMLayerGradient.cpp" />
-    <ClCompile Include="LSTMLayerState.cpp" />
     <ClCompile Include="Metrics.cpp" />
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
     <ClCompile Include="MSOM_params.cpp" />
     <ClCompile Include="Nadam.cpp" />
+    <ClCompile Include="NadamRule.cpp" />
     <ClCompile Include="NetworkGradient.cpp" />
+    <ClCompile Include="PPLBatchModule.cpp" />
+    <ClCompile Include="ParamModel.cpp" />
+    <ClCompile Include="RMSPropRule.cpp" />
     <ClCompile Include="SimpleCellGroup.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="QLearning.cpp" />
@@ -234,6 +244,7 @@
     <ClCompile Include="RMSProp.cpp" />
     <ClCompile Include="SARSA.cpp" />
     <ClCompile Include="SigmoidActivation.cpp" />
+    <ClCompile Include="SingleBatchModule.cpp" />
     <ClCompile Include="SoftmaxActivation.cpp" />
     <ClCompile Include="SoftplusActivation.cpp" />
     <ClCompile Include="SOM.cpp" />
@@ -247,11 +258,17 @@
     <ClInclude Include="ActivationFunctions.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Adadelta.h" />
+    <ClInclude Include="AdadeltaRule.h" />
     <ClInclude Include="Adagrad.h" />
+    <ClInclude Include="AdagradRule.h" />
     <ClInclude Include="ADAM.h" />
     <ClInclude Include="AdaMax.h" />
+    <ClInclude Include="AdaMaxRule.h" />
+    <ClInclude Include="ADAMRule.h" />
     <ClInclude Include="AMSGrad.h" />
+    <ClInclude Include="AMSGradRule.h" />
     <ClInclude Include="BackProph.h" />
+    <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BaseCellGroup.h" />
     <ClInclude Include="BaseGradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
@@ -275,6 +292,7 @@
     <ClInclude Include="GenKLDivergence.h" />
     <ClInclude Include="HellingerDistance.h" />
     <ClInclude Include="IActivationFunction.h" />
+    <ClInclude Include="IBatchModule.h" />
     <ClInclude Include="ICM.h" />
     <ClInclude Include="ICostFunction.h" />
     <ClInclude Include="IDGen.h" />
@@ -282,8 +300,8 @@
     <ClInclude Include="InputLayer.h" />
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="ItakuraSaitoDistance.h" />
+    <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="KLDivergence.h" />
-    <ClInclude Include="LayerState.h" />
     <ClInclude Include="LearningRateModule.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="LISSOM.h" />
@@ -299,13 +317,16 @@
     <ClInclude Include="LSTMCellGroup.h" />
     <ClInclude Include="LSTMLayer.h" />
     <ClInclude Include="LSTMLayerGradient.h" />
-    <ClInclude Include="LSTMLayerState.h" />
     <ClInclude Include="Metrics.h" />
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
     <ClInclude Include="MSOM_params.h" />
     <ClInclude Include="Nadam.h" />
+    <ClInclude Include="NadamRule.h" />
     <ClInclude Include="NetworkGradient.h" />
+    <ClInclude Include="PPLBatchModule.h" />
+    <ClInclude Include="ParamModel.h" />
+    <ClInclude Include="RMSPropRule.h" />
     <ClInclude Include="SimpleCellGroup.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="QLearning.h" />
@@ -317,6 +338,7 @@
     <ClInclude Include="RMSProp.h" />
     <ClInclude Include="SARSA.h" />
     <ClInclude Include="SigmoidActivation.h" />
+    <ClInclude Include="SingleBatchModule.h" />
     <ClInclude Include="SoftmaxActivation.h" />
     <ClInclude Include="SoftplusActivation.h" />
     <ClInclude Include="SOM.h" />
@@ -325,7 +347,6 @@
     <ClInclude Include="SOM_params.h" />
     <ClInclude Include="TanhActivation.h" />
     <ClInclude Include="TD.h" />
-    <ClInclude Include="UBAL.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

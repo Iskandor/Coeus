@@ -1,5 +1,4 @@
 #include "LSTMLayerGradient.h"
-#include "LSTMLayerState.h"
 
 using namespace Coeus;
 
@@ -43,11 +42,11 @@ void LSTMLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta)
 	_delta[l->_input_group->get_id()] = _state_error;
 }
 
-void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<string, Tensor>& p_b_gradient)
+void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 {
 	LSTMLayer* l = get_layer<LSTMLayer>();
 
-	p_w_gradient[l->_in_output_gate->get_id()] = _delta[l->_output_gate->get_id()] * *l->_aux_input->get_output();
+	p_gradient[l->_in_output_gate->get_id()] = _delta[l->_output_gate->get_id()] * *l->_aux_input->get_output();
 
 	Tensor dwf = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
 	Tensor dwi = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
@@ -64,8 +63,8 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 		}
 	}
 
-	p_w_gradient[l->_in_forget_gate->get_id()] = dwf;
-	p_w_gradient[l->_in_input_gate->get_id()] = dwi;
+	p_gradient[l->_in_forget_gate->get_id()] = dwf;
+	p_gradient[l->_in_input_gate->get_id()] = dwi;
 
 	
 	Tensor* pd_in_cec = &l->_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
@@ -85,7 +84,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 				}
 			}
 
-			p_w_gradient[c->get_id()] = dwc;
+			p_gradient[c->get_id()] = dwc;
 		}
 	}
 
@@ -100,10 +99,10 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_w_gradient, map<str
 		}
 	}
 
-	p_w_gradient[l->_ct_cec->get_id()] = dwcc;
+	p_gradient[l->_ct_cec->get_id()] = dwcc;
 
-	p_b_gradient[l->_cec->get_id()] = l->_partial_deriv[l->_cec->get_id()];
-	p_b_gradient[l->_input_gate->get_id()] = _state_error.dot(l->_partial_deriv[l->_input_gate->get_id()]);
-	p_b_gradient[l->_forget_gate->get_id()] = _state_error.dot(l->_partial_deriv[l->_forget_gate->get_id()]);
-	p_b_gradient[l->_output_gate->get_id()] = _delta[l->_output_gate->get_id()];
+	p_gradient[l->_cec->get_id()] = l->_partial_deriv[l->_cec->get_id()];
+	p_gradient[l->_input_gate->get_id()] = _state_error.dot(l->_partial_deriv[l->_input_gate->get_id()]);
+	p_gradient[l->_forget_gate->get_id()] = _state_error.dot(l->_partial_deriv[l->_forget_gate->get_id()]);
+	p_gradient[l->_output_gate->get_id()] = _delta[l->_output_gate->get_id()];
 }

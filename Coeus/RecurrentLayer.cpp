@@ -16,9 +16,9 @@ RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVA
 }
 
 RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(IDGen::instance().next()) {
-	_group = add_group<SimpleCellGroup>(p_copy._group->clone());
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(*p_copy._group));
 	_input_group = _output_group = _group;
-	_context_group = add_group<SimpleCellGroup>(p_copy._context_group->clone());
+	_context_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_copy._context_group));
 
 	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _group->get_dim(), _context_group->get_id(), _group->get_id()));
 	_rec_connection->override(p_copy._rec_connection);
@@ -31,6 +31,11 @@ RecurrentLayer::~RecurrentLayer()
 	delete _group;
 	delete _context_group;
 	delete _rec_connection;
+}
+
+RecurrentLayer* RecurrentLayer::clone()
+{
+	return new RecurrentLayer(this);
 }
 
 void RecurrentLayer::integrate(Tensor* p_input, Tensor* p_weights) {
@@ -54,4 +59,15 @@ void RecurrentLayer::override(BaseLayer * p_source)
 void RecurrentLayer::reset()
 {
 	_context_group->get_output()->fill(0);
+}
+
+RecurrentLayer::RecurrentLayer(RecurrentLayer* p_source) : BaseLayer(p_source)
+{
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_group));
+	_input_group = _output_group = _group;
+	_context_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_group));
+
+	_rec_connection = add_connection(p_source->_rec_connection->clone());
+
+	_type = RECURRENT;
 }

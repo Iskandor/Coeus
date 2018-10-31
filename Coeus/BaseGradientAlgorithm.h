@@ -2,7 +2,8 @@
 #include "NeuralNetwork.h"
 #include "ICostFunction.h"
 #include "NetworkGradient.h"
-#include "LearningRateModule.h"
+#include "IUpdateRule.h"
+#include "PPLBatchModule.h"
 
 namespace Coeus {
 
@@ -12,31 +13,24 @@ namespace Coeus {
 		BaseGradientAlgorithm(NeuralNetwork* p_network);
 		virtual ~BaseGradientAlgorithm();
 
-		double train(Tensor* p_input, Tensor* p_target);
-		double train(vector<Tensor*>* p_input, Tensor* p_target);
+		double train(Tensor* p_input, Tensor* p_target) const;
+		double train(vector<Tensor*>* p_input, Tensor* p_target) const;
 		double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch);
 
 		LearningRateModule	lr_module;
 
 	protected:
-		double train(Tensor* p_target);
-		void init(ICostFunction* p_cost_function, double p_alpha);
-		virtual void calc_update();
-		virtual void init_structures();
-
+		double train(Tensor* p_target) const;
+		void init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule);
+		
 		NeuralNetwork*		_network;
 		ICostFunction*		_cost_function;
+		IUpdateRule*		_update_rule;
 		NetworkGradient*	_network_gradient;
 		
 
-		map<string, Tensor> _update;
-		map<string, Tensor> _update_batch;
-
-		double _alpha;
-
 	private:
-		bool _init_structures;
-		int	 _batch;
+		IBatchModule*		_batch_module;
 		
 	};
 }

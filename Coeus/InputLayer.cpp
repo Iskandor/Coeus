@@ -18,14 +18,19 @@ InputLayer::InputLayer(json p_data) : BaseLayer(p_data)
 }
 
 InputLayer::InputLayer(InputLayer& p_copy) : BaseLayer(IDGen::instance().next()) {
-	_group = add_group<SimpleCellGroup>(p_copy._group->clone());
-	_input_group = _output_group = _group;
 	_type = INPUT;
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_copy._group));
+	_input_group = _output_group = _group;
 }
 
 InputLayer::~InputLayer()
 {
 	delete _group;
+}
+
+InputLayer* InputLayer::clone()
+{
+	return new InputLayer(this);
 }
 
 void InputLayer::integrate(Tensor* p_input, Tensor* p_weights) {
@@ -49,4 +54,11 @@ json InputLayer::get_json() const
 	data["group"] = _group->get_json();
 
 	return data;
+}
+
+InputLayer::InputLayer(InputLayer* p_source) : BaseLayer(p_source)
+{
+	_type = INPUT;
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_group));
+	_input_group = _output_group = _group;
 }

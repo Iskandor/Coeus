@@ -61,12 +61,6 @@
     <Filter Include="Header Files\Network\Layer">
       <UniqueIdentifier>{7619e07b-8f30-4242-aa7a-0e7a326ef563}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Algorithm\Gradient\State">
-      <UniqueIdentifier>{7e00f4a7-18ae-4f9a-9144-4fbf8e83dea4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Algorithm\Gradient\State">
-      <UniqueIdentifier>{be1c7aa5-ed52-4bca-943e-957cb0986b2c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Algorithm\RL">
       <UniqueIdentifier>{91801bd2-5bd4-42e3-acbe-a6feea738b41}</UniqueIdentifier>
     </Filter>
@@ -90,6 +84,18 @@
     </Filter>
     <Filter Include="Header Files\Network\Group">
       <UniqueIdentifier>{ea8444e6-41bd-4d30-b67a-a40c64250451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Algorithm\Supervised\Rules">
+      <UniqueIdentifier>{f3a20436-e1d0-4c90-9a44-898c1d02157c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\Supervised\Rules">
+      <UniqueIdentifier>{f34fc5d9-0e3b-41c7-8ff5-0120e700b233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Algorithm\Supervised\Modules">
+      <UniqueIdentifier>{c224426b-e9e1-4088-bc68-abbd051da29a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\Supervised\Modules">
+      <UniqueIdentifier>{1cbd490f-d433-436d-8d25-5935871b6926}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -204,41 +210,14 @@
     <ClCompile Include="BaseGradientAlgorithm.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
-    <ClCompile Include="BackProp.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
     <ClCompile Include="RMSProp.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
-    <ClCompile Include="Adagrad.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
-    <ClCompile Include="Adadelta.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
-    <ClCompile Include="ADAM.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
-    <ClCompile Include="AdaMax.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
-    <ClCompile Include="Nadam.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
-    <ClCompile Include="AMSGrad.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
     <ClCompile Include="LSTMLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="LayerState.cpp">
-      <Filter>Source Files\Algorithm\Gradient\State</Filter>
-    </ClCompile>
     <ClCompile Include="LSTMLayerGradient.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
-    </ClCompile>
-    <ClCompile Include="LSTMLayerState.cpp">
-      <Filter>Source Files\Algorithm\Gradient\State</Filter>
     </ClCompile>
     <ClCompile Include="BPTT.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
@@ -332,6 +311,66 @@
     </ClCompile>
     <ClCompile Include="LearningRateModule.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IUpdateRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="RMSPropRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamModel.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="PPLBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="IBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="AdadeltaRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Adadelta.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="AdagradRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Adagrad.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="ADAM.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="ADAMRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="AdaMaxRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="AdaMax.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="AMSGrad.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="AMSGradRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="BackProp.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="BackPropRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Nadam.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="NadamRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -446,44 +485,14 @@
     <ClInclude Include="BaseGradientAlgorithm.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
-    <ClInclude Include="BackProph.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
     <ClInclude Include="RMSProp.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="Adagrad.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="Adadelta.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="ADAM.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="AdaMax.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="Nadam.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="UBAL.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="AMSGrad.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
     <ClInclude Include="LSTMLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="LayerState.h">
-      <Filter>Header Files\Algorithm\Gradient\State</Filter>
-    </ClInclude>
     <ClInclude Include="LSTMLayerGradient.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
-    </ClInclude>
-    <ClInclude Include="LSTMLayerState.h">
-      <Filter>Header Files\Algorithm\Gradient\State</Filter>
     </ClInclude>
     <ClInclude Include="BPTT.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
@@ -580,6 +589,66 @@
     </ClInclude>
     <ClInclude Include="LearningRateModule.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IUpdateRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="RMSPropRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamModel.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="PPLBatchModule.h">
+      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="IBatchModule.h">
+      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleBatchModule.h">
+      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="AdadeltaRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Adadelta.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="Adagrad.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="AdagradRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ADAM.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="ADAMRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="AdaMax.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="AdaMaxRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="AMSGradRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="AMSGrad.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="BackProph.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="BackPropRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Nadam.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="NadamRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

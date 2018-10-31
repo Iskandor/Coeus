@@ -61,6 +61,11 @@ LSTMLayer::~LSTMLayer()
 	delete _ct_cec;
 }
 
+LSTMLayer* LSTMLayer::clone()
+{
+	return new LSTMLayer(this);
+}
+
 void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 {
 	int dim = 0;
@@ -228,4 +233,24 @@ json LSTMLayer::get_json() const
 	data["in_forget_gate"] = _in_forget_gate->get_json();
 
 	return data;
+}
+
+LSTMLayer::LSTMLayer(LSTMLayer* p_source) : BaseLayer(p_source)
+{
+	_type = LSTM;
+
+	_input_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_input_gate));
+	_output_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_output_gate));
+	_forget_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_forget_gate));
+	_cec = add_group<LSTMCellGroup>(new LSTMCellGroup(p_source->_cec, _input_gate, _output_gate, _forget_gate));
+	_context = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_context));
+
+	_aux_input = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_aux_input));
+	_in_input_gate = add_connection(p_source->_in_input_gate->clone());
+	_in_output_gate = add_connection(p_source->_in_output_gate->clone());
+	_in_forget_gate = add_connection(p_source->_in_forget_gate->clone());
+
+	_output_group = _cec;
+
+	_ct_cec = add_connection(p_source->_ct_cec->clone());
 }

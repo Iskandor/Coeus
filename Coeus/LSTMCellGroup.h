@@ -10,18 +10,16 @@ namespace Coeus {
 	class __declspec(dllexport) LSTMCellGroup : public BaseCellGroup
 	{
 	public:
-		LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup*p_forget_gate);
-		LSTMCellGroup(json p_data, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup*p_forget_gate);
+		LSTMCellGroup(int p_dim, ACTIVATION p_activation_function, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate);
+		LSTMCellGroup(json p_data, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate);
 		LSTMCellGroup(LSTMCellGroup& p_copy);
+		LSTMCellGroup(LSTMCellGroup* p_source, SimpleCellGroup* p_input_gate, SimpleCellGroup* p_output_gate, SimpleCellGroup* p_forget_gate);
 		LSTMCellGroup& operator = (const LSTMCellGroup& p_copy);
-
 		~LSTMCellGroup();
 
 		void integrate(Tensor* p_input, Tensor* p_weights) override;
 		void activate() override;
 		void reset() const;
-
-		LSTMCellGroup* clone() override;
 
 		Tensor get_h() const;
 		Tensor get_dh();
@@ -31,6 +29,7 @@ namespace Coeus {
 		json get_json() const override;
 
 	private:
+		
 		void activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor* p_forget_gate);
 		Tensor _state;
 		Tensor _h_output;

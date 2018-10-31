@@ -11,11 +11,5 @@ namespace Coeus {
 		~BackProp();
 
 		void init(ICostFunction* p_cost_function, double p_alpha, double p_momentum = 0, bool p_nesterov = false);
-
-	private:
-		void calc_update() override;
-
-		double	_momentum;
-		bool	_nesterov;
 	};
 }

@@ -6,10 +6,9 @@
 
 using namespace Coeus;
 
-NetworkGradient::NetworkGradient(NeuralNetwork* p_network, ICostFunction* p_cost_function)
+NetworkGradient::NetworkGradient(NeuralNetwork* p_network)
 {
 	_network = p_network;
-	_cost_function = p_cost_function;
 
 	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		IGradientComponent* component = create_component(*it);
@@ -52,21 +51,8 @@ void NetworkGradient::calc_gradient(Tensor* p_target) {
 
 	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->calc_gradient(_w_gradient, _b_gradient);
+			_gradient_component[(*it)->get_id()]->calc_gradient(_gradient);
 		}
-	}
-}
-
-void NetworkGradient::update(map<string, Tensor> &p_update) const {
-	for (auto it = _network->_connections.begin(); it != _network->_connections.end(); ++it) {
-		if (it->second->is_trainable())
-		{
-			it->second->update_weights(p_update[it->first]);
-		}
-	}
-
-	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		(*it)->update(p_update);
 	}
 }
 
@@ -88,7 +74,7 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 
 				const double de = (Je_plus - Je_minus) / (2 * epsilon);
 
-				cout << i << " " << _w_gradient[it->second->get_id()].at(i) - de << endl;
+				cout << i << " " << _gradient[it->second->get_id()].at(i) - de << endl;
 			}
 			
 		}
@@ -111,7 +97,7 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 
 					const double de = (Je_plus - Je_minus) / (2 * epsilon);
 
-					cout << i << " " << _w_gradient[c->second->get_id()].at(i) - de << endl;
+					cout << i << " " << _gradient[c->second->get_id()].at(i) - de << endl;
 				}
 			}
 
@@ -129,11 +115,28 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 
 					const double de = (Je_plus - Je_minus) / (2 * epsilon);
 
-					cout << i << " " << _b_gradient[g->second->get_id()].at(i) - de << endl;
+					cout << i << " " << _gradient[g->second->get_id()].at(i) - de << endl;
 				}
 			}
 		}
 	}
+}
+
+void NetworkGradient::init(ICostFunction* p_cost_function)
+{
+	_cost_function = p_cost_function;
+}
+
+map<string, Tensor> NetworkGradient::get_empty_params() const
+{
+	map<string, Tensor> result;
+
+	for(auto it = _network->_params.begin(); it != _network->_params.end(); ++it)
+	{
+		result[it->first] = Tensor(it->second->rank(), it->second->shape(), Tensor::ZERO);
+	}
+
+	return result;
 }
 
 IGradientComponent* NetworkGradient::create_component(BaseLayer* p_layer) const {

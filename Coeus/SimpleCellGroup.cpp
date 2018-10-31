@@ -55,17 +55,12 @@ void SimpleCellGroup::integrate(Tensor* p_input, Tensor* p_weights) {
  */
 void SimpleCellGroup::activate() {
 	if (is_bias()) {
-		_net += _bias;
+		_net += *_bias;
 	}
 
 	_output = _f->activate(_net);
 	_deriv_input = _net;
 	_net.fill(0);
-}
-
-SimpleCellGroup* SimpleCellGroup::clone()
-{
-	return new SimpleCellGroup(*this);
 }
 
 json SimpleCellGroup::get_json() const
@@ -75,4 +70,9 @@ json SimpleCellGroup::get_json() const
 	data["f"] = _f->get_json();
 
 	return data;
+}
+
+SimpleCellGroup::SimpleCellGroup(SimpleCellGroup* p_source) : BaseCellGroup(p_source)
+{
+	_f = init_activation_function(p_source->_f->get_type());
 }

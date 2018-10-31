@@ -3,7 +3,6 @@
 #include <iostream>
 #include "QLearning.h"
 #include "MazeTask.h"
-#include "ADAM.h"
 #include "QuadraticCost.h"
 #include "InputLayer.h"
 #include "CoreLayer.h"
@@ -11,7 +10,6 @@
 #include "SARSA.h"
 #include "TD.h"
 #include "Actor.h"
-#include "BackProph.h"
 #include "DoubleQLearning.h"
 #include "DeepQLearning.h"
 #include "ICM.h"
@@ -44,7 +42,7 @@ void MazeExample::example_q() {
 
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.01);
-	ADAM optimizer(&network);
+	RMSProp optimizer(&network);
 	optimizer.init(new QuadraticCost(), 0.001);
 	QLearning agent(&network, &optimizer, 0.9);
 
@@ -120,7 +118,7 @@ void MazeExample::example_double_q() {
 	network_a.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_a.init();
 
-	ADAM optimizer1(&network_a);
+	RMSProp optimizer1(&network_a);
 	optimizer1.init(new QuadraticCost(), 0.003);
 
 	NeuralNetwork network_b;
@@ -133,7 +131,7 @@ void MazeExample::example_double_q() {
 	network_b.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_b.init();
 
-	ADAM optimizer2(&network_b);
+	RMSProp optimizer2(&network_b);
 	optimizer2.init(new QuadraticCost(), 0.003);
 
 	DoubleQLearning critic(&network_a, &optimizer1, &network_b, &optimizer2, 0.9);
@@ -215,7 +213,7 @@ void MazeExample::example_sarsa() {
 	network.add_connection("hidden1", "output", Connection::LECUN_UNIFORM);
 	network.init();
 
-	ADAM optimizer(&network);
+	RMSProp optimizer(&network);
 	optimizer.init(new QuadraticCost(), 0.001);
 	SARSA agent(&network, &optimizer, 0.9);
 
@@ -292,7 +290,7 @@ void MazeExample::example_actor_critic() {
 	network_critic.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_critic.init();
 
-	ADAM optimizer1(&network_critic);
+	RMSProp optimizer1(&network_critic);
 	optimizer1.init(new QuadraticCost(), 0.001);
 	TD critic(&network_critic, &optimizer1, 0.9);
 
@@ -306,7 +304,7 @@ void MazeExample::example_actor_critic() {
 	network_actor.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_actor.init();
 
-	ADAM optimizer2(&network_actor);
+	RMSProp optimizer2(&network_actor);
 	optimizer2.init(new QuadraticCost(), 0.001);
 	Actor actor(&network_actor, &optimizer2, 0.9);
 
@@ -388,7 +386,7 @@ void MazeExample::example_deep_q() {
 
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
-	ADAM optimizer(&network);
+	RMSProp optimizer(&network);
 	optimizer.init(new QuadraticCost(), 0.001);
 	DeepQLearning agent(&network, &optimizer, 0.9, 1024, 64);
 
@@ -462,7 +460,7 @@ void MazeExample::example_icm() {
 	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network.init();
 
-	ADAM optimizer(&network);
+	RMSProp optimizer(&network);
 	optimizer.init(new QuadraticCost(), 0.001);
 	QLearning agent(&network, &optimizer, 0.9);
 
@@ -475,7 +473,7 @@ void MazeExample::example_icm() {
 	network_fm.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_fm.init();
 
-	ADAM optimizer_fm(&network_fm);
+	RMSProp optimizer_fm(&network_fm);
 	optimizer_fm.init(new QuadraticCost(), 0.001);
 
 	ICM icm(&network_fm, &optimizer_fm);

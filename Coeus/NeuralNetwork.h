@@ -9,7 +9,7 @@ using namespace std;
 
 namespace Coeus {
 
-class __declspec(dllexport) NeuralNetwork
+class __declspec(dllexport) NeuralNetwork : public ParamModel
 {
 	friend class NetworkGradient;
 public:
@@ -17,11 +17,13 @@ public:
 	explicit NeuralNetwork(json p_data);
 	NeuralNetwork(NeuralNetwork &p_copy);
 	virtual ~NeuralNetwork();
+	NeuralNetwork* clone() const;
 
 	void init();
 	virtual void activate(Tensor* p_input);
 	virtual void activate(vector<Tensor*>* p_input);
 	virtual void override(NeuralNetwork* p_network);
+	virtual void update(map<string, Tensor> *p_update) const;
 	void reset();
 
 	BaseLayer*	add_layer(BaseLayer* p_layer);

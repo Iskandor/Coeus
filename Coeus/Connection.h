@@ -5,7 +5,7 @@ using namespace std;
 
 namespace Coeus {
 
-class __declspec(dllexport) Connection
+class __declspec(dllexport) Connection : public ParamModel
 {
 public:
     enum INIT {
@@ -24,12 +24,13 @@ public:
 	};
 
 	explicit Connection(nlohmann::json p_data);
+	Connection* clone() const;
     ~Connection(void);
 
     void init(INIT p_init, bool p_trainable = true, double p_limit = 0);
     void set_weights(Tensor* p_weights) const;
-    Tensor* get_weights() { return &_weights; };
-	void update_weights(Tensor& p_delta_w);
+    Tensor* get_weights() const { return _weights; };
+	void update_weights(Tensor& p_delta_w) const;
 	void normalize_weights(NORM p_norm) const;
 	void override(Connection* p_copy);
 
@@ -51,7 +52,7 @@ private:
     string _id;
 	string _in_id, _out_id;
     int _in_dim, _out_dim;
-    Tensor _weights;
+    Tensor* _weights;
 	Tensor _norm;
 	bool _trainable;
 };

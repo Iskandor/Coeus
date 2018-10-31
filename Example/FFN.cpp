@@ -4,17 +4,18 @@
 #include "CoreLayer.h"
 #include "BaseGradientAlgorithm.h"
 #include "QuadraticCost.h"
-#include "BackProph.h"
 #include "RMSProp.h"
-#include "Adagrad.h"
-#include "Adadelta.h"
-#include "ADAM.h"
-#include "AdaMax.h"
-#include "Nadam.h"
-#include "AMSGrad.h"
 #include "LSTMLayer.h"
 #include "CrossEntropyCost.h"
 #include "IOUtils.h"
+#include <chrono>
+#include "Adadelta.h"
+#include "Adagrad.h"
+#include "ADAM.h"
+#include "AdaMax.h"
+#include "AMSGrad.h"
+#include "BackProph.h"
+#include "Nadam.h"
 
 FFN::FFN()
 {
@@ -27,7 +28,7 @@ FFN::~FFN()
 
 void FFN::run() {
 	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new CoreLayer("hidden", 8, RELU));
+	_network.add_layer(new CoreLayer("hidden", 8, SIGMOID));
 	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
@@ -54,34 +55,41 @@ void FFN::run() {
 		target.push_back(new Tensor({ 1 }, t));
 	}
 
+	//Adadelta model(&_network);
+	//Adagrad model(&_network);
 	//BackProp model(&_network);
-	RMSProp model(&_network);
+	//RMSProp model(&_network);
 	//AdaMax model(&_network);
 	//ADAM model(&_network);
 	//AMSGrad model(&_network);
-	//Nadam model(&_network);
+	Nadam model(&_network);
 
-	//model.init(new QuadraticCost(), 0.05, 0.9, true);
+	//model.init(new QuadraticCost(), 0.1, 0.9, true);
 	model.init(new QuadraticCost(), 0.1);
 
-	for(int t = 0; t < 500; t++) {
-		//const double error = model.train(&input, &target, 4);
+	const auto start = chrono::system_clock::now();
+
+	for(int t = 0; t < 150; t++) {
+		//const double error = model.train(&input, &target);
 		double error = 0;
-		for(int i = 0; i < 4; i++)
-		{
-			error += model.train(input[i], target[i]);
-		}
+
+		error += model.train(&input, &target, 4);
 
 		cout << "Error: " << error << endl;
 	}
 
 	cout << endl;
 
+	const auto end = chrono::system_clock::now();
+	chrono::duration<double> elapsed_seconds = end - start;
+	cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
 	for (int i = 0; i < 4; i++) {
 		_network.activate(input[i]);
 		cout << _network.get_output()->at(0) << endl;
 	}
 
+	/*
 	NeuralNetwork copy(_network);
 	copy.init();
 
@@ -100,6 +108,7 @@ void FFN::run() {
 		loaded.activate(input[i]);
 		cout << loaded.get_output()->at(0) << endl;
 	}
+	*/
 
 	for (int i = 0; i < 4; i++) {
 		delete input[i];
@@ -132,7 +141,8 @@ void FFN::run_iris() {
 
 	//BackProp model(&_network);
 	//model.init(new CrossEntropyCost(), 0.0001, 0.9, false);
-	ADAM model(&_network);
+	//ADAM model(&_network);
+	RMSProp model(&_network);
 	model.init(new CrossEntropyCost(), 0.0002);
 
 	for (int t = 0; t < epochs; t++) {
