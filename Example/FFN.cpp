@@ -65,7 +65,13 @@ void FFN::run() {
 	model.init(new QuadraticCost(), 0.1);
 
 	for(int t = 0; t < 500; t++) {
-		const double error = model.train(&input, &target, 4);
+		//const double error = model.train(&input, &target, 4);
+		double error = 0;
+		for(int i = 0; i < 4; i++)
+		{
+			error += model.train(input[i], target[i]);
+		}
+
 		cout << "Error: " << error << endl;
 	}
 

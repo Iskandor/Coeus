@@ -1,6 +1,7 @@
 #include "Encoder.h"
 #include <cassert>
 #include "Metrics.h"
+#include <bitset>
 
 using namespace Coeus;
 
@@ -11,6 +12,16 @@ Encoder::Encoder()
 
 Encoder::~Encoder()
 {
+}
+
+void Encoder::one_hot(int* p_result, const int p_size, const int p_value)
+{
+	for(int i = 0; i < p_size; i++)
+	{
+		p_result[i] = 0;
+	}
+
+	p_result[p_value] = 1;
 }
 
 void Encoder::one_hot(Tensor& p_result, const int p_value)

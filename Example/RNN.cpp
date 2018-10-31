@@ -14,6 +14,7 @@
 #include "KLDivergence.h"
 #include "ExponentialCost.h"
 #include "HellingerDistance.h"
+#include "PackDataset.h"
 
 
 RNN::RNN()
@@ -83,7 +84,7 @@ void RNN::run()
 void RNN::run_add_problem()
 {
 	AddProblemDataset dataset;
-	dataset.load_data("./data/add_problem.dat");
+	dataset.load_data("./data/add_problem_easy.dat");
 
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 2));
@@ -131,10 +132,32 @@ void RNN::run_add_problem()
 	test(network);
 }
 
+void RNN::run_pack()
+{
+	PackDataset dataset;
+	dataset.load_data("./data/dataset-000-000-000.csv");
+
+	NeuralNetwork network;
+	network.add_layer(new InputLayer("input", 2));
+	network.add_layer(new LSTMLayer("hidden", 4, TANH));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID));
+
+	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
+
+	network.init();
+
+	Nadam algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.1);
+
+
+
+}
+
 void RNN::test(NeuralNetwork& p_network) const
 {
 	AddProblemDataset testset;
-	testset.load_data("./data/add_problem_test.dat");
+	testset.load_data("./data/add_problem_easy_test.dat");
 
 	vector<AddProblemSequence>* data = testset.data();
 

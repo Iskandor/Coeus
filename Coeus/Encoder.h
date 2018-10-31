@@ -11,6 +11,7 @@ namespace Coeus {
 		Encoder();
 		~Encoder();
 
+		static void one_hot(int* p_result, int p_size, int p_value);
 		static void one_hot(Tensor& p_result, int p_value);
 		static void pop_code(Tensor& p_result, double p_value, double p_lower_limit = 0, double p_upper_limit = 1);
 	};

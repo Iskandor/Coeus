@@ -20,14 +20,32 @@ BaseGradientAlgorithm::~BaseGradientAlgorithm()
 }
 
 double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) {
-	_network->activate(p_input);
-
 	double error = 0;
 
-	if (p_target != nullptr)
+	if (p_target->rank() == 1)
 	{
+		_network->activate(p_input);
+
 		error = train(p_target);
 	}
+
+	if (p_input->rank() == 2 && p_target->rank() == 2)
+	{
+		_network->reset();
+
+		Tensor input = Tensor::Zero({ p_input->shape(1) });
+		Tensor target = Tensor::Zero({ p_target->shape(1) });
+
+		for (int i = 0; i < p_input->shape(0); i++)
+		{
+			p_input->get_row(input, i);
+			p_target->get_row(target, i);
+
+			_network->activate(&input);
+			error += train(&target);
+		}
+	}
+
 	//_network_gradient->check_gradient(p_input, p_target);
 
 	return error;
