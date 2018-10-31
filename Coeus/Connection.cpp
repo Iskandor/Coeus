@@ -2,16 +2,28 @@
 
 using namespace Coeus;
 
-Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id)
+Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id, bool p_trainable)
+{
+	_id = p_out_id + "_" + p_in_id;
+	_in_dim = p_in_dim;
+	_out_dim = p_out_dim;
+	_in_id = p_in_id;
+	_out_id = p_out_id;
+	_trainable = p_trainable;
+	_norm = Tensor::Zero({_out_dim});
+	_weights = nullptr;
+}
+
+Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable, double p_limit)
 {
     _id = p_out_id + "_" + p_in_id;
 	_in_dim = p_in_dim;
     _out_dim = p_out_dim;
 	_in_id = p_in_id;
 	_out_id = p_out_id;
-	_trainable = true;
-
+	_trainable = p_trainable;
 	_norm = Tensor::Zero({ _out_dim });
+	init(p_init, p_trainable, p_limit);
 }
 
 Connection::Connection(json p_data) {
@@ -32,13 +44,17 @@ Connection::Connection(json p_data) {
 	ss.read(reinterpret_cast<char*>(data), size);
 
 	_weights = new Tensor({_out_dim, _in_dim}, data);
+
+	if (_trainable)
+	{
+		add_param(_id, _weights);
+	}
 }
 
 Connection* Connection::clone() const
 {
-	Connection* result = new Connection(_in_dim, _out_dim, _in_id, _out_id);
+	Connection* result = new Connection(_in_dim, _out_dim, _in_id, _out_id, _trainable);
 	result->_weights = _weights;
-	result->_trainable = _trainable;
 
 	if (result->_trainable)
 	{

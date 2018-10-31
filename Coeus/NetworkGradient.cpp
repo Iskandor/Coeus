@@ -24,7 +24,9 @@ NetworkGradient::~NetworkGradient()
 {
 }
 
-void NetworkGradient::calc_gradient(Tensor* p_target) {
+void NetworkGradient::calc_gradient(Tensor* p_input, Tensor* p_target) {
+
+	_network->calc_partial_derivs(p_input);
 
 	const Tensor error = _cost_function->cost_deriv(_network->get_output(), p_target);
 

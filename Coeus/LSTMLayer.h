@@ -18,6 +18,7 @@ namespace Coeus
 		void activate(Tensor* p_input = nullptr) override;
 		void override(BaseLayer* p_source) override;
 		void reset() override;
+		void calc_partial_derivs() override;
 		json get_json() const override;
 
 	private:

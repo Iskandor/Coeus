@@ -38,10 +38,12 @@ public:
 	json get_json() const;
 
 protected:
+	void calc_partial_derivs(Tensor* p_input);
 	void activate();	
 	void create_directed_graph();
 
 private:
+	void calc_partial_derivs();
 	void create_param_map(NeuralNetwork* p_network);
 	void add_connection(Connection* p_connection);
 	

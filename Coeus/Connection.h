@@ -16,7 +16,8 @@ public:
         IDENTITY = 4
     };
 
-	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id);
+	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, bool p_trainable = true);
+	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable = true, double p_limit = 0);
 	enum NORM
 	{
 		L1_NORM = 1,
@@ -27,7 +28,6 @@ public:
 	Connection* clone() const;
     ~Connection(void);
 
-    void init(INIT p_init, bool p_trainable = true, double p_limit = 0);
     void set_weights(Tensor* p_weights) const;
     Tensor* get_weights() const { return _weights; };
 	void update_weights(Tensor& p_delta_w) const;
@@ -44,10 +44,9 @@ public:
 	json get_json() const;
 
 private:
-	
+	void init(INIT p_init, bool p_trainable, double p_limit);
     void uniform(double p_limit);
     void identity();
-
 
     string _id;
 	string _in_id, _out_id;

@@ -126,6 +126,7 @@ void NeuralNetwork::init()
 		}
 
 		_layers[it->first]->init(input);
+		add_param(_layers[it->first]);
 	}
 }
 
@@ -259,16 +260,22 @@ Connection* NeuralNetwork::add_connection(const string& p_input_layer, const str
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 
-	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->get_id(), out_layer->get_id());
-	c->init(p_init, p_trainable, p_limit);
+	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->get_id(), out_layer->get_id(), p_init, p_trainable, p_limit);
 
 	_connections[c->get_id()] = c;
 
 	_graph[out_layer->get_id()].push_back(in_layer->get_id());
 
-	add_param(c);
+	if (p_trainable) add_param(c);
 
 	return c;
+}
+
+void NeuralNetwork::add_connection(Connection* p_connection)
+{
+	_connections[p_connection->get_id()] = p_connection;
+	_graph[p_connection->get_out_id()].push_back(p_connection->get_in_id());
+	if (p_connection->is_trainable()) add_param(p_connection);
 }
 
 Connection* NeuralNetwork::get_connection(const string& p_input_layer, const string& p_output_layer) {
@@ -337,6 +344,14 @@ void NeuralNetwork::create_directed_graph()
 	}
 }
 
+void NeuralNetwork::calc_partial_derivs()
+{
+	for (auto it = _layers.begin(); it != _layers.end(); ++it)
+	{
+		it->second->calc_partial_derivs();
+	}
+}
+
 void NeuralNetwork::create_param_map(NeuralNetwork* p_network) {
 	_param_map.clear();
 
@@ -368,13 +383,6 @@ void NeuralNetwork::create_param_map(NeuralNetwork* p_network) {
 	}
 }
 
-void NeuralNetwork::add_connection(Connection* p_connection)
-{
-	_connections[p_connection->get_id()] = p_connection;
-	_graph[p_connection->get_out_id()].push_back(p_connection->get_in_id());
-	add_param(p_connection);
-}
-
 json NeuralNetwork::get_json() const
 {
 	json data;
@@ -388,4 +396,32 @@ json NeuralNetwork::get_json() const
 	}
 
 	return data;
+}
+
+void NeuralNetwork::calc_partial_derivs(Tensor* p_input)
+{
+	// single input
+	if (p_input->rank() == 1)
+	{
+		_layers[_input_layer[0]]->activate(p_input);
+
+		activate();
+		calc_partial_derivs();
+	}
+
+	// sequence
+	if (p_input->rank() == 2)
+	{
+		Tensor input = Tensor::Zero({ p_input->shape(1) });
+
+		reset();
+		for (int i = 0; i < p_input->shape(0); i++)
+		{
+			p_input->get_row(input, i);
+			_layers[_input_layer[0]]->activate(&input);
+
+			activate();
+			calc_partial_derivs();
+		}
+	}
 }

@@ -21,8 +21,7 @@ LSTMLayer::LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation) : B
 
 	_output_group = _cec;
 
-	_ct_cec = add_connection(new Connection(p_dim, p_dim, _context->get_id(), _cec->get_id()));
-	_ct_cec->init(Connection::LECUN_UNIFORM);
+	_ct_cec = add_connection(new Connection(p_dim, p_dim, _context->get_id(), _cec->get_id(), Connection::LECUN_UNIFORM));
 }
 
 LSTMLayer::LSTMLayer(json p_data) : BaseLayer(p_data)
@@ -85,20 +84,20 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 
 	if (_in_input_gate == nullptr)
 	{
-		_in_input_gate = add_connection(new Connection(_aux_input->get_dim(), _input_gate->get_dim(), _aux_input->get_id(), _input_gate->get_id()));
-		_in_input_gate->init(Connection::LECUN_UNIFORM);
+		_in_input_gate = add_connection(new Connection(_aux_input->get_dim(), _input_gate->get_dim(), _aux_input->get_id(), _input_gate->get_id(), Connection::LECUN_UNIFORM));
+		add_param(_in_input_gate);
 	}
 
 	if (_in_output_gate == nullptr)
 	{
-		_in_output_gate = add_connection(new Connection(_aux_input->get_dim(), _output_gate->get_dim(), _aux_input->get_id(), _output_gate->get_id()));
-		_in_output_gate->init(Connection::LECUN_UNIFORM);
+		_in_output_gate = add_connection(new Connection(_aux_input->get_dim(), _output_gate->get_dim(), _aux_input->get_id(), _output_gate->get_id(), Connection::LECUN_UNIFORM));
+		add_param(_in_output_gate);
 	}
 
 	if (_in_forget_gate == nullptr)
 	{
-		_in_forget_gate = add_connection(new Connection(_aux_input->get_dim(), _forget_gate->get_dim(), _aux_input->get_id(), _forget_gate->get_id()));
-		_in_forget_gate->init(Connection::LECUN_UNIFORM);
+		_in_forget_gate = add_connection(new Connection(_aux_input->get_dim(), _forget_gate->get_dim(), _aux_input->get_id(), _forget_gate->get_id(), Connection::LECUN_UNIFORM));
+		add_param(_in_forget_gate);
 	}
 
 	_partial_deriv[_in_input_gate->get_id()] = Tensor::Zero({ _cec->get_dim(), aux_dim });
@@ -135,6 +134,31 @@ void LSTMLayer::activate(Tensor* p_input)
 	_cec->integrate(_context->get_output(), _ct_cec->get_weights());
 	_cec->activate();
 
+	_input.clear();
+}
+
+void LSTMLayer::override(BaseLayer* p_source)
+{
+//#TODO doplnit prepis parametrov LSTM siete
+}
+
+void LSTMLayer::reset()
+{
+	_partial_deriv[_in_input_gate->get_id()].fill(0);
+	_partial_deriv[_in_forget_gate->get_id()].fill(0);
+	_partial_deriv[_input_group->get_id() + " " + _cec->get_id()].fill(0);
+	_partial_deriv[_ct_cec->get_id()].fill(0);
+
+	_partial_deriv[_input_gate->get_id()].fill(0);
+	_partial_deriv[_forget_gate->get_id()].fill(0);
+	_partial_deriv[_cec->get_id()].fill(0);
+
+	_cec->reset();
+	_context->get_output()->fill(0);
+}
+
+void LSTMLayer::calc_partial_derivs()
+{
 	const Tensor g = _cec->get_g();
 	const Tensor h = _cec->get_h();
 	const Tensor dg = _cec->get_dg();
@@ -154,16 +178,16 @@ void LSTMLayer::activate(Tensor* p_input)
 	Tensor input_gate_doutput = _input_gate->get_deriv_output();
 	Tensor forget_gate_doutput = _forget_gate->get_deriv_output();
 
-	for(int j = 0; j < _cec->get_dim(); j++)
+	for (int j = 0; j < _cec->get_dim(); j++)
 	{
-		for(int m = 0; m < _aux_input->get_dim(); m++)
+		for (int m = 0; m < _aux_input->get_dim(); m++)
 		{
 			d0 = pd_in_input_gate->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = g[j] * input_gate_doutput.at(j,j) * _aux_input->get_output()->at(m);
+			d1 = g[j] * input_gate_doutput.at(j, j) * _aux_input->get_output()->at(m);
 			pd_in_input_gate->set(j, m, d0 + d1);
 
 			d0 = pd_in_forget_gate->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = h[j] * forget_gate_doutput.at(j,j) * _aux_input->get_output()->at(m);
+			d1 = h[j] * forget_gate_doutput.at(j, j) * _aux_input->get_output()->at(m);
 			pd_in_forget_gate->set(j, m, d0 + d1);
 		}
 
@@ -193,28 +217,6 @@ void LSTMLayer::activate(Tensor* p_input)
 		d1 = dg[j] * _input_gate->get_output()->at(j);
 		(*pd_cec)[j] = d0 + d1;
 	}
-
-	_input.clear();
-}
-
-void LSTMLayer::override(BaseLayer* p_source)
-{
-//#TODO doplnit prepis parametrov LSTM siete
-}
-
-void LSTMLayer::reset()
-{
-	_partial_deriv[_in_input_gate->get_id()].fill(0);
-	_partial_deriv[_in_forget_gate->get_id()].fill(0);
-	_partial_deriv[_input_group->get_id() + " " + _cec->get_id()].fill(0);
-	_partial_deriv[_ct_cec->get_id()].fill(0);
-
-	_partial_deriv[_input_gate->get_id()].fill(0);
-	_partial_deriv[_forget_gate->get_id()].fill(0);
-	_partial_deriv[_cec->get_id()].fill(0);
-
-	_cec->reset();
-	_context->get_output()->fill(0);
 }
 
 json LSTMLayer::get_json() const

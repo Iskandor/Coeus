@@ -49,10 +49,8 @@ double PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input,
 
 	parallel_for(0, p_batch, [&](const int i) {
 		const int index = p_b * p_batch + i;
-		_clone_network[i]->activate(p_input->at(index));
+		_network_gradient[i]->calc_gradient(p_input->at(index), p_target->at(index));
 		_error[i] = _cost_function->cost(_clone_network[i]->get_output(), p_target->at(i));
-		
-		_network_gradient[i]->calc_gradient(p_target->at(index));
 		mutex.lock();
 		_update_rule->calc_update(_network_gradient[i]->get_gradient());
 		for (auto it = _update_rule->get_update()->begin(); it != _update_rule->get_update()->end(); ++it) {

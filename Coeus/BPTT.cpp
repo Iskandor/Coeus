@@ -14,5 +14,6 @@ BPTT::~BPTT()
 
 double BPTT::train(vector<Tensor*>* p_input, Tensor* p_target) const
 {
-	return _gradient_algorithm->train(p_input, p_target);
+	//return _gradient_algorithm->train(p_input, p_target);
+	return 0;
 }

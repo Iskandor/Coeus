@@ -6,8 +6,7 @@ using namespace Coeus;
 
 MSOM::MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, ACTIVATION p_activation, double p_alpha, double p_beta) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation) {
 	_context_group = new SimpleCellGroup(p_input_dim, LINEAR, false);
-	_context_lattice = new Connection(_context_group->get_dim(), _lattice_group->get_dim(), _context_group->get_id(), _lattice_group->get_id());
-	_context_lattice->init(Connection::UNIFORM, true, 0.01);
+	_context_lattice = new Connection(_context_group->get_dim(), _lattice_group->get_dim(), _context_group->get_id(), _lattice_group->get_id(), Connection::UNIFORM, true, 0.01);
 	_alpha = p_alpha;
 	_beta = p_beta;
 	_type = TYPE::MSOM;

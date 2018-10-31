@@ -24,9 +24,8 @@ double SingleBatchModule::run_batch(const int p_b, const int p_batch, vector<Ten
 
 	for (int i = 0; i < p_batch; i++) {
 		const int index = p_b * p_batch + i;
-		_network->activate(p_input->at(index));
+		_network_gradient->calc_gradient(p_input->at(index), p_target->at(index));
 		error += _cost_function->cost(_network->get_output(), p_target->at(index));
-		_network_gradient->calc_gradient(p_target->at(index));
 
 		_update_rule->calc_update(_network_gradient->get_gradient());
 		for (auto it = _update_rule->get_update()->begin(); it != _update_rule->get_update()->end(); ++it) {

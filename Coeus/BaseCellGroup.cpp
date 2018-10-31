@@ -34,7 +34,7 @@ BaseCellGroup::BaseCellGroup(BaseCellGroup* p_source):
 	_id = p_source->_id;
 	_net = Tensor::Zero({ p_source->_dim });
 	_output = Tensor::Zero({ p_source->_dim });
-	_deriv_output = Tensor::Zero({ p_source->_dim });
+	_deriv_input = Tensor::Zero({ p_source->_dim });
 
 	if (_bias_flag)
 	{

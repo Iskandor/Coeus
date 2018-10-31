@@ -16,6 +16,8 @@ public:
 	void activate(Tensor* p_input = nullptr) override;
 	void override(BaseLayer* p_source) override;
 	void reset() override;
+	void init(vector<BaseLayer*>& p_input_layers) override {}
+	void calc_partial_derivs() override;
 
 
 private:

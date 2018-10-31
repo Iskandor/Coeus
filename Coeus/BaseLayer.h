@@ -32,6 +32,7 @@ public:
 	virtual void activate(Tensor* p_input = nullptr) = 0;
 	virtual void override(BaseLayer* p_source) = 0;
 	virtual void reset() = 0;
+	virtual void calc_partial_derivs() {}
 
 	TYPE	get_type() const { return _type; }
 	string	get_id() const { return _id; }
@@ -58,7 +59,7 @@ protected:
 	explicit BaseLayer(BaseLayer* p_source);
 	Connection*		add_connection(Connection* p_connection);
 	template<typename T>
-	T*	add_group(T* p_group);
+	T*	add_group(BaseCellGroup* p_group);
 
 	string		_id;
 	TYPE		_type;
@@ -74,11 +75,12 @@ private:
 };
 
 template <typename T>
-T* BaseLayer::add_group(T* p_group)
+T* BaseLayer::add_group(BaseCellGroup* p_group)
 {
 	_groups[p_group->get_id()] = p_group;
-	add_param(p_group);
 
-	return p_group;
+	if (p_group->is_bias())	add_param(p_group);
+
+	return static_cast<T*>(p_group);
 }
 }

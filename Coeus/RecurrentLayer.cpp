@@ -6,9 +6,9 @@ using namespace Coeus;
 
 RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation) : BaseLayer(p_id)
 {
-	_group = add_group(new SimpleCellGroup(p_dim, p_activation, true));
+	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, p_activation, true));
 	_input_group = _output_group = _group;
-	_context_group = add_group(new SimpleCellGroup(p_dim, LINEAR, false));
+	_context_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, LINEAR, false));
 
 	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _group->get_dim(), _context_group->get_id(), _group->get_id()));
 
@@ -59,6 +59,10 @@ void RecurrentLayer::override(BaseLayer * p_source)
 void RecurrentLayer::reset()
 {
 	_context_group->get_output()->fill(0);
+}
+
+void RecurrentLayer::calc_partial_derivs()
+{
 }
 
 RecurrentLayer::RecurrentLayer(RecurrentLayer* p_source) : BaseLayer(p_source)

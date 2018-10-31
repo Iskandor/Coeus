@@ -11,12 +11,11 @@ SOM::SOM(string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_
 	_dim_x = p_dim_x;
 	_dim_y = p_dim_y;
 
-	_input_group = add_group(new SimpleCellGroup(p_input_dim, LINEAR, false));
-	_lattice_group = add_group(new SimpleCellGroup(p_dim_x * p_dim_y, p_activation, true));
+	_input_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_input_dim, LINEAR, false));
+	_lattice_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim_x * p_dim_y, p_activation, true));
 	_output_group = _lattice_group;
 
-	_afferent = new Connection(_input_group->get_dim(), _lattice_group->get_dim(), _input_group->get_id(), _lattice_group->get_id());
-	_afferent->init(Connection::UNIFORM, true, 1);
+	_afferent = add_connection(new Connection(_input_group->get_dim(), _lattice_group->get_dim(), _input_group->get_id(), _lattice_group->get_id(), Connection::UNIFORM, true, 1));
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });
@@ -32,9 +31,9 @@ SOM::SOM(nlohmann::json p_data) : BaseLayer(p_data) {
 	_dim_x = p_data["dim_x"].get<int>();
 	_dim_y = p_data["dim_y"].get<int>();
 
-	_input_group = new SimpleCellGroup(p_data["groups"]["input"]);
-	_lattice_group = new SimpleCellGroup(p_data["groups"]["lattice"]);
-	_afferent = new Connection(p_data["connections"]["input_lattice"]);
+	_input_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_data["groups"]["input"]));
+	_lattice_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_data["groups"]["lattice"]));
+	_afferent = add_connection(new Connection(p_data["connections"]["input_lattice"]));
 
 	_dist = Tensor::Zero({ _dim_x * _dim_y });
 	_p = Tensor::Zero({ _dim_x * _dim_y });
@@ -45,7 +44,7 @@ SOM::SOM(nlohmann::json p_data) : BaseLayer(p_data) {
 
 SOM::~SOM()
 {
-	if (_afferent != nullptr) delete _afferent;
+	delete _afferent;
 	_afferent = nullptr;
 }
 

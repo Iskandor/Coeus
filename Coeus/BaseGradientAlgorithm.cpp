@@ -27,9 +27,10 @@ double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) const
 
 	if (p_target->rank() == 1)
 	{
-		_network->activate(p_input);
-
-		error = train(p_target);
+		_network_gradient->calc_gradient(p_input, p_target);
+		error = _cost_function->cost(_network->get_output(), p_target);	
+		_update_rule->calc_update(_network_gradient->get_gradient());
+		_network->update(_update_rule->get_update());
 	}
 
 	if (p_input->rank() == 2 && p_target->rank() == 2)
@@ -44,8 +45,10 @@ double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) const
 			p_input->get_row(input, i);
 			p_target->get_row(target, i);
 
-			_network->activate(&input);
-			error += train(&target);
+			_network_gradient->calc_gradient(p_input, p_target);
+			error += _cost_function->cost(_network->get_output(), p_target);
+			_update_rule->calc_update(_network_gradient->get_gradient());
+			_network->update(_update_rule->get_update());
 		}
 	}
 
@@ -56,12 +59,15 @@ double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) const
 
 double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, Tensor* p_target) const
 {
+	/*
 	_network->activate(p_input);
 	const double error = train(p_target);
 
 	//_network_gradient->check_gradient(p_input, p_target);
 
 	return error;
+	*/
+	return 0;
 }
 
 double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
@@ -98,17 +104,6 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p
 		_network->update(_batch_module->get_update());
 	}
 	
-	return error;
-}
-
-double BaseGradientAlgorithm::train(Tensor* p_target) const
-{
-	const double error = _cost_function->cost(_network->get_output(), p_target);
-
-	_network_gradient->calc_gradient(p_target);
-	_update_rule->calc_update(_network_gradient->get_gradient());
-	_network->update(_update_rule->get_update());
-
 	return error;
 }
 

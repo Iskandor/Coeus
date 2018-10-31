@@ -11,6 +11,9 @@
 #include "ExponentialCost.h"
 #include "HellingerDistance.h"
 #include "PackDataset.h"
+#include "Nadam.h"
+#include "BackProph.h"
+#include "ADAM.h"
 
 
 RNN::RNN()
@@ -92,11 +95,11 @@ void RNN::run_add_problem()
 
 	network.init();
 
-	RMSProp algorithm(&network);
-	//Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 0.1);
+	//ADAM algorithm(&network);
+	Nadam algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.01);
 	//BackProp algorithm(&network);
-	//algorithm.init(new QuadraticCost(), 0.1, 0.9);
+	//algorithm.init(new QuadraticCost(), 0.1);
 
 	
 	int correct = 0;
@@ -107,13 +110,14 @@ void RNN::run_add_problem()
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<AddProblemSequence>* test = dataset.data();
 
-		double error = 0;
+		const double error = algorithm.train(&data.first, &data.second, 32);
+		//double error = 0;
 		correct = 0;
-
-		error += algorithm.train(&data.first, &data.second, 512);
 
 		for (auto sequence : *test)
 		{
+			//error += algorithm.train(&sequence.input, &sequence.target);
+
 			network.activate(&sequence.input);
 
 			if (abs(network.get_output()->at(0) - sequence.target[0]) < 0.04)

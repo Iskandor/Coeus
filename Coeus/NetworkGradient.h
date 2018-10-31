@@ -12,7 +12,7 @@ public:
 	NetworkGradient(NeuralNetwork* p_network);
 	~NetworkGradient();
 
-	void calc_gradient(Tensor* p_target);
+	void calc_gradient(Tensor* p_input, Tensor* p_target);
 	map<string, Tensor>* get_gradient() { return &_gradient; }
 	void check_gradient(Tensor* p_input, Tensor* p_target);
 

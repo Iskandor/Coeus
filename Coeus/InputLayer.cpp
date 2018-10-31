@@ -47,6 +47,10 @@ void InputLayer::override(BaseLayer * p_source)
 {
 }
 
+void InputLayer::calc_partial_derivs()
+{
+}
+
 json InputLayer::get_json() const
 {
 	json data = BaseLayer::get_json();

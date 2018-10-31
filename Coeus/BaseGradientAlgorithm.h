@@ -4,6 +4,7 @@
 #include "NetworkGradient.h"
 #include "IUpdateRule.h"
 #include "PPLBatchModule.h"
+#include "LearningRateModule.h"
 
 namespace Coeus {
 
@@ -20,7 +21,6 @@ namespace Coeus {
 		LearningRateModule	lr_module;
 
 	protected:
-		double train(Tensor* p_target) const;
 		void init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule);
 		
 		NeuralNetwork*		_network;
