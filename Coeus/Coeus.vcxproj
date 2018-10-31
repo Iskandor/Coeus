@@ -165,6 +165,18 @@
   <ItemGroup>
     <ClCompile Include="ActivationFunctions.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Adadelta.cpp" />
+    <ClCompile Include="AdadeltaRule.cpp" />
+    <ClCompile Include="Adagrad.cpp" />
+    <ClCompile Include="AdagradRule.cpp" />
+    <ClCompile Include="ADAM.cpp" />
+    <ClCompile Include="AdaMax.cpp" />
+    <ClCompile Include="AdaMaxRule.cpp" />
+    <ClCompile Include="ADAMRule.cpp" />
+    <ClCompile Include="AMSGrad.cpp" />
+    <ClCompile Include="AMSGradRule.cpp" />
+    <ClCompile Include="BackProp.cpp" />
+    <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BaseCellGroup.cpp" />
     <ClCompile Include="BaseGradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
@@ -214,6 +226,8 @@
     <ClCompile Include="MSOM.cpp" />
     <ClCompile Include="MSOM_learning.cpp" />
     <ClCompile Include="MSOM_params.cpp" />
+    <ClCompile Include="Nadam.cpp" />
+    <ClCompile Include="NadamRule.cpp" />
     <ClCompile Include="NetworkGradient.cpp" />
     <ClCompile Include="PPLBatchModule.cpp" />
     <ClCompile Include="ParamModel.cpp" />
@@ -242,6 +256,18 @@
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="Adadelta.h" />
+    <ClInclude Include="AdadeltaRule.h" />
+    <ClInclude Include="Adagrad.h" />
+    <ClInclude Include="AdagradRule.h" />
+    <ClInclude Include="ADAM.h" />
+    <ClInclude Include="AdaMax.h" />
+    <ClInclude Include="AdaMaxRule.h" />
+    <ClInclude Include="ADAMRule.h" />
+    <ClInclude Include="AMSGrad.h" />
+    <ClInclude Include="AMSGradRule.h" />
+    <ClInclude Include="BackProph.h" />
+    <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BaseCellGroup.h" />
     <ClInclude Include="BaseGradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
@@ -293,6 +319,8 @@
     <ClInclude Include="MSOM.h" />
     <ClInclude Include="MSOM_learning.h" />
     <ClInclude Include="MSOM_params.h" />
+    <ClInclude Include="Nadam.h" />
+    <ClInclude Include="NadamRule.h" />
     <ClInclude Include="NetworkGradient.h" />
     <ClInclude Include="PPLBatchModule.h" />
     <ClInclude Include="ParamModel.h" />

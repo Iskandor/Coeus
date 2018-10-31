@@ -9,6 +9,13 @@
 #include "CrossEntropyCost.h"
 #include "IOUtils.h"
 #include <chrono>
+#include "Adadelta.h"
+#include "Adagrad.h"
+#include "ADAM.h"
+#include "AdaMax.h"
+#include "AMSGrad.h"
+#include "BackProph.h"
+#include "Nadam.h"
 
 FFN::FFN()
 {
@@ -48,12 +55,14 @@ void FFN::run() {
 		target.push_back(new Tensor({ 1 }, t));
 	}
 
+	//Adadelta model(&_network);
+	//Adagrad model(&_network);
 	//BackProp model(&_network);
-	RMSProp model(&_network);
+	//RMSProp model(&_network);
 	//AdaMax model(&_network);
 	//ADAM model(&_network);
 	//AMSGrad model(&_network);
-	//Nadam model(&_network);
+	Nadam model(&_network);
 
 	//model.init(new QuadraticCost(), 0.1, 0.9, true);
 	model.init(new QuadraticCost(), 0.1);

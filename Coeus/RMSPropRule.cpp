@@ -21,11 +21,6 @@ void RMSPropRule::calc_update(map<string, Tensor>* p_gradient) {
 			(*cache)[i] = _decay * (*cache)[i] + (1 - _decay) * pow(it->second[i], 2);
 			(*update)[i] = -_alpha / sqrt((*cache)[i] + _epsilon) * it->second[i];
 		}
-
-		/*
-		_cache[it->first] = _decay * _cache[it->first] + (1 - _decay) * it->second.pow(2);
-		_update[it->first] = (-_alpha / (_cache[it->first] + _epsilon).sqrt()).dot(it->second);
-		*/
 	}
 }
 
