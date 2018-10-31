@@ -8,8 +8,7 @@ namespace Coeus {
 		RMSPropRule(NetworkGradient* p_network_gradient, double p_alpha, double p_decay, double p_epsilon);
 		~RMSPropRule();
 
-		void calc_update() override;
-		void merge(IUpdateRule** p_rule, int p_size) override;
+		void calc_update(map<string, Tensor>* p_gradient) override;
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 
 	private:

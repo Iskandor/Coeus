@@ -11,54 +11,25 @@ RMSPropRule::RMSPropRule(NetworkGradient* p_network_gradient, const double p_alp
 RMSPropRule::~RMSPropRule()
 = default;
 
-void RMSPropRule::calc_update() {
-	for (auto it = _network_gradient->get_gradient()->begin(); it != _network_gradient->get_gradient()->end(); ++it) {
+void RMSPropRule::calc_update(map<string, Tensor>* p_gradient) {
+	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
+
+		Tensor* cache = &_cache[it->first];
+		Tensor* update = &_update[it->first];
+
+		for(int i = 0; i < it->second.size(); i++) {
+			(*cache)[i] = _decay * (*cache)[i] + (1 - _decay) * pow(it->second[i], 2);
+			(*update)[i] = -_alpha / sqrt((*cache)[i] + _epsilon) * it->second[i];
+		}
 
 		/*
-		for(int i = 0; i < it->second.size(); i++) {
-		_cache[it->first][i] = _decay * _cache[it->first][i] + (1 - _decay) * pow(it->second[i], 2);
-		_update[it->first][i] = -_alpha / sqrt(_cache[it->first][i] + _epsilon) * it->second[i];
-		}
-		*/
-
 		_cache[it->first] = _decay * _cache[it->first] + (1 - _decay) * it->second.pow(2);
 		_update[it->first] = (-_alpha / (_cache[it->first] + _epsilon).sqrt()).dot(it->second);
+		*/
 	}
-}
-
-void RMSPropRule::merge(IUpdateRule** p_rule, int p_size)
-{
-	/*
-	for (auto it = _cache.begin(); it != _cache.end(); ++it)
-	{
-		_cache[it->first].fill(0);
-	}
-	*/
-	map<string, Tensor> cache = _cache;
-
-	RMSPropRule** rule = reinterpret_cast<RMSPropRule**>(p_rule);
-
-	for(int i = 0; i < p_size; i++)
-	{
-		for (auto it = _cache.begin(); it != _cache.end(); ++it)
-		{
-			_cache[it->first] = _decay * _cache[it->first] + (rule[i]->_cache[it->first] - _decay * cache[it->first]);
-		}
-	}
-
-	/*
-	for (auto it = _cache.begin(); it != _cache.end(); ++it)
-	{
-		_cache[it->first] /= p_size;
-	}
-	*/
 }
 
 IUpdateRule* RMSPropRule::clone(NetworkGradient* p_network_gradient)
 {
-	RMSPropRule* result = new RMSPropRule(p_network_gradient, _alpha, _decay, _epsilon);
-
-	result->_cache = p_network_gradient->get_empty_params();
-
-	return result;
+	return new RMSPropRule(p_network_gradient, _alpha, _decay, _epsilon);
 }

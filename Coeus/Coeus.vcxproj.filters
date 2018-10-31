@@ -91,6 +91,12 @@
     <Filter Include="Header Files\Algorithm\Supervised\Rules">
       <UniqueIdentifier>{f34fc5d9-0e3b-41c7-8ff5-0120e700b233}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Algorithm\Supervised\Modules">
+      <UniqueIdentifier>{c224426b-e9e1-4088-bc68-abbd051da29a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\Supervised\Modules">
+      <UniqueIdentifier>{1cbd490f-d433-436d-8d25-5935871b6926}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -303,17 +309,23 @@
     <ClCompile Include="SimpleCellGroup.cpp">
       <Filter>Source Files\Network\Group</Filter>
     </ClCompile>
-    <ClCompile Include="ParamModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IUpdateRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
     <ClCompile Include="RMSPropRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="ParallelModule.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ParamModel.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="PPLBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="IBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -530,17 +542,23 @@
     <ClInclude Include="SimpleCellGroup.h">
       <Filter>Header Files\Network\Group</Filter>
     </ClInclude>
-    <ClInclude Include="ParamModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IUpdateRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
     </ClInclude>
     <ClInclude Include="RMSPropRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
     </ClInclude>
-    <ClInclude Include="ParallelModule.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ParamModel.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="PPLBatchModule.h">
+      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="IBatchModule.h">
+      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleBatchModule.h">
+      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

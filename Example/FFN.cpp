@@ -8,6 +8,7 @@
 #include "LSTMLayer.h"
 #include "CrossEntropyCost.h"
 #include "IOUtils.h"
+#include <chrono>
 
 FFN::FFN()
 {
@@ -57,7 +58,9 @@ void FFN::run() {
 	//model.init(new QuadraticCost(), 0.1, 0.9, true);
 	model.init(new QuadraticCost(), 0.1);
 
-	for(int t = 0; t < 500; t++) {
+	const auto start = chrono::system_clock::now();
+
+	for(int t = 0; t < 150; t++) {
 		//const double error = model.train(&input, &target);
 		double error = 0;
 
@@ -67,6 +70,10 @@ void FFN::run() {
 	}
 
 	cout << endl;
+
+	const auto end = chrono::system_clock::now();
+	chrono::duration<double> elapsed_seconds = end - start;
+	cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
 	for (int i = 0; i < 4; i++) {
 		_network.activate(input[i]);

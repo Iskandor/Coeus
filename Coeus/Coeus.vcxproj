@@ -186,6 +186,7 @@
     <ClCompile Include="GenKLDivergence.cpp" />
     <ClCompile Include="HellingerDistance.cpp" />
     <ClCompile Include="IActivationFunction.cpp" />
+    <ClCompile Include="IBatchModule.cpp" />
     <ClCompile Include="ICM.cpp" />
     <ClCompile Include="ICostFunction.cpp" />
     <ClCompile Include="IDGen.cpp" />
@@ -214,7 +215,7 @@
     <ClCompile Include="MSOM_learning.cpp" />
     <ClCompile Include="MSOM_params.cpp" />
     <ClCompile Include="NetworkGradient.cpp" />
-    <ClCompile Include="ParallelModule.cpp" />
+    <ClCompile Include="PPLBatchModule.cpp" />
     <ClCompile Include="ParamModel.cpp" />
     <ClCompile Include="RMSPropRule.cpp" />
     <ClCompile Include="SimpleCellGroup.cpp" />
@@ -228,6 +229,7 @@
     <ClCompile Include="RMSProp.cpp" />
     <ClCompile Include="SARSA.cpp" />
     <ClCompile Include="SigmoidActivation.cpp" />
+    <ClCompile Include="SingleBatchModule.cpp" />
     <ClCompile Include="SoftmaxActivation.cpp" />
     <ClCompile Include="SoftplusActivation.cpp" />
     <ClCompile Include="SOM.cpp" />
@@ -263,6 +265,7 @@
     <ClInclude Include="GenKLDivergence.h" />
     <ClInclude Include="HellingerDistance.h" />
     <ClInclude Include="IActivationFunction.h" />
+    <ClInclude Include="IBatchModule.h" />
     <ClInclude Include="ICM.h" />
     <ClInclude Include="ICostFunction.h" />
     <ClInclude Include="IDGen.h" />
@@ -291,7 +294,7 @@
     <ClInclude Include="MSOM_learning.h" />
     <ClInclude Include="MSOM_params.h" />
     <ClInclude Include="NetworkGradient.h" />
-    <ClInclude Include="ParallelModule.h" />
+    <ClInclude Include="PPLBatchModule.h" />
     <ClInclude Include="ParamModel.h" />
     <ClInclude Include="RMSPropRule.h" />
     <ClInclude Include="SimpleCellGroup.h" />
@@ -305,6 +308,7 @@
     <ClInclude Include="RMSProp.h" />
     <ClInclude Include="SARSA.h" />
     <ClInclude Include="SigmoidActivation.h" />
+    <ClInclude Include="SingleBatchModule.h" />
     <ClInclude Include="SoftmaxActivation.h" />
     <ClInclude Include="SoftplusActivation.h" />
     <ClInclude Include="SOM.h" />
