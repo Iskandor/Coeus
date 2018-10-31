@@ -14,6 +14,8 @@
 #include "DeepQLearning.h"
 #include "ICM.h"
 #include "Encoder.h"
+#include "ADAM.h"
+#include "BackProph.h"
 
 using namespace Coeus;
 
@@ -33,7 +35,7 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden", 256, RELU));
+	network.add_layer(new CoreLayer("hidden", 8, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
@@ -41,9 +43,9 @@ void MazeExample::example_q() {
 	network.init();
 
 	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), 0.01);
-	RMSProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.001);
+	//optimizer.init(new QuadraticCost(), 0.1, 0.9, true);
+	ADAM optimizer(&network);
+	optimizer.init(new QuadraticCost(), 0.01);
 	QLearning agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;
@@ -51,7 +53,7 @@ void MazeExample::example_q() {
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 2000;
+	int epochs = 4000;
 
 	int wins = 0, loses = 0;
 
@@ -377,7 +379,7 @@ void MazeExample::example_deep_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network.add_layer(new CoreLayer("hidden0", 64, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
@@ -386,7 +388,7 @@ void MazeExample::example_deep_q() {
 
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
-	RMSProp optimizer(&network);
+	ADAM optimizer(&network);
 	optimizer.init(new QuadraticCost(), 0.001);
 	DeepQLearning agent(&network, &optimizer, 0.9, 1024, 64);
 

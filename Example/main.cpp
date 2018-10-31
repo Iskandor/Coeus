@@ -17,9 +17,11 @@ using namespace MNS;
 
 int main()
 {
+	/*
 	FFN model;
 
 	model.run();
+	*/
 
 	/*
 	RNN model;
@@ -27,11 +29,9 @@ int main()
 	model.run_add_problem();
 	*/
 
-	/*
 	MazeExample example;
 
-	example.example_icm();
-	*/
+	example.example_q();
 
 	/*
 	IrisTest iris;
