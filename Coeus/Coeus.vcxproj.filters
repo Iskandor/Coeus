@@ -91,10 +91,10 @@
     <Filter Include="Header Files\Algorithm\Supervised\Rules">
       <UniqueIdentifier>{f34fc5d9-0e3b-41c7-8ff5-0120e700b233}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Algorithm\Supervised\Modules">
+    <Filter Include="Source Files\Algorithm\Modules">
       <UniqueIdentifier>{c224426b-e9e1-4088-bc68-abbd051da29a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Algorithm\Supervised\Modules">
+    <Filter Include="Header Files\Algorithm\Modules">
       <UniqueIdentifier>{1cbd490f-d433-436d-8d25-5935871b6926}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -309,9 +309,6 @@
     <ClCompile Include="SimpleCellGroup.cpp">
       <Filter>Source Files\Network\Group</Filter>
     </ClCompile>
-    <ClCompile Include="LearningRateModule.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IUpdateRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
@@ -322,13 +319,13 @@
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="PPLBatchModule.cpp">
-      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+      <Filter>Source Files\Algorithm\Modules</Filter>
     </ClCompile>
     <ClCompile Include="IBatchModule.cpp">
-      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+      <Filter>Source Files\Algorithm\Modules</Filter>
     </ClCompile>
     <ClCompile Include="SingleBatchModule.cpp">
-      <Filter>Source Files\Algorithm\Supervised\Modules</Filter>
+      <Filter>Source Files\Algorithm\Modules</Filter>
     </ClCompile>
     <ClCompile Include="AdadeltaRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
@@ -371,6 +368,15 @@
     </ClCompile>
     <ClCompile Include="NadamRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="WarmStartup.cpp">
+      <Filter>Source Files\Algorithm\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="AnnealingScheduler.cpp">
+      <Filter>Source Files\Algorithm\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ILearningRateModule.cpp">
+      <Filter>Source Files\Algorithm\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -587,9 +593,6 @@
     <ClInclude Include="SimpleCellGroup.h">
       <Filter>Header Files\Network\Group</Filter>
     </ClInclude>
-    <ClInclude Include="LearningRateModule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IUpdateRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
     </ClInclude>
@@ -600,13 +603,13 @@
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="PPLBatchModule.h">
-      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+      <Filter>Header Files\Algorithm\Modules</Filter>
     </ClInclude>
     <ClInclude Include="IBatchModule.h">
-      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+      <Filter>Header Files\Algorithm\Modules</Filter>
     </ClInclude>
     <ClInclude Include="SingleBatchModule.h">
-      <Filter>Header Files\Algorithm\Supervised\Modules</Filter>
+      <Filter>Header Files\Algorithm\Modules</Filter>
     </ClInclude>
     <ClInclude Include="AdadeltaRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
@@ -649,6 +652,15 @@
     </ClInclude>
     <ClInclude Include="NadamRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="WarmStartup.h">
+      <Filter>Header Files\Algorithm\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ILearningRateModule.h">
+      <Filter>Header Files\Algorithm\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="AnnealingScheduler.h">
+      <Filter>Header Files\Algorithm\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

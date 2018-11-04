@@ -17,6 +17,7 @@ using namespace MNS;
 
 int main()
 {
+
 	/*
 	FFN model;
 

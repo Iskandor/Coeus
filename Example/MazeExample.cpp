@@ -35,7 +35,7 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden", 8, RELU));
+	network.add_layer(new CoreLayer("hidden", 256, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
@@ -44,8 +44,9 @@ void MazeExample::example_q() {
 
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.1, 0.9, true);
-	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.01);
+	RMSProp optimizer(&network);
+	optimizer.init(new QuadraticCost(), 0.001);
+	optimizer.add_learning_rate_module(new WarmStartup(1e-4, 1e-3, 10, 2));
 	QLearning agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;
@@ -53,7 +54,7 @@ void MazeExample::example_q() {
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 4000;
+	int epochs = 20000;
 
 	int wins = 0, loses = 0;
 
@@ -100,7 +101,7 @@ void MazeExample::example_q() {
 
 		//exploration->update((double)e / epochs);
 
-		if (epsilon > 0.1) {
+		if (epsilon > 0.01) {
 			epsilon -= (1.0 / epochs);
 		}
 	}

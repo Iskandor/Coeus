@@ -12,12 +12,11 @@ public:
 	NetworkGradient(NeuralNetwork* p_network);
 	~NetworkGradient();
 
+	void init(ICostFunction* p_cost_function);
 	void calc_gradient(Tensor* p_input, Tensor* p_target);
 	map<string, Tensor>* get_gradient() { return &_gradient; }
-	void check_gradient(Tensor* p_input, Tensor* p_target);
-
-	void init(ICostFunction* p_cost_function);
 	map<string, Tensor> get_empty_params() const;
+	void check_gradient(Tensor* p_input, Tensor* p_target);
 
 private:
 	IGradientComponent* create_component(BaseLayer* p_layer) const;
@@ -27,7 +26,6 @@ private:
 	ICostFunction*	_cost_function;
 
 	map<string, IGradientComponent*> _gradient_component;
-
 	map<string, Tensor> _gradient;
 
 };

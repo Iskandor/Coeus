@@ -18,6 +18,8 @@ IUpdateRule* BackPropRule::clone(NetworkGradient* p_network_gradient)
 
 void BackPropRule::calc_update(map<string, Tensor>* p_gradient)
 {
+	IUpdateRule::calc_update(p_gradient);
+
 	Tensor prev_update;
 
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {

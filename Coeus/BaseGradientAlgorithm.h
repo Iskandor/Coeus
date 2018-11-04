@@ -4,7 +4,8 @@
 #include "NetworkGradient.h"
 #include "IUpdateRule.h"
 #include "PPLBatchModule.h"
-#include "LearningRateModule.h"
+#include "WarmStartup.h"
+#include "AnnealingScheduler.h"
 
 namespace Coeus {
 
@@ -18,16 +19,14 @@ namespace Coeus {
 		double train(vector<Tensor*>* p_input, Tensor* p_target) const;
 		double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch);
 
-		LearningRateModule	lr_module;
-
+		void add_learning_rate_module(ILearningRateModule* p_learning_rate_module) const;
 	protected:
 		void init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule);
 		
 		NeuralNetwork*		_network;
 		ICostFunction*		_cost_function;
 		IUpdateRule*		_update_rule;
-		NetworkGradient*	_network_gradient;
-		
+		NetworkGradient*	_network_gradient;		
 
 	private:
 		IBatchModule*		_batch_module;

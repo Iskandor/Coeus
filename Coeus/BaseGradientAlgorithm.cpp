@@ -9,7 +9,7 @@ BaseGradientAlgorithm::BaseGradientAlgorithm(NeuralNetwork* p_network)
 	_network_gradient = new NetworkGradient(p_network);
 	_cost_function = nullptr;	
 	_update_rule = nullptr;
-	_batch_module = nullptr;
+	_batch_module = nullptr;	
 }
 
 
@@ -107,10 +107,14 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p
 	return error;
 }
 
+void BaseGradientAlgorithm::add_learning_rate_module(ILearningRateModule* p_learning_rate_module) const
+{
+	_update_rule->init_learning_rate_module(p_learning_rate_module);
+}
+
 void BaseGradientAlgorithm::init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule)
 {
 	_network_gradient->init(p_cost_function);
 	_cost_function = p_cost_function;
 	_update_rule = p_update_rule;
-
 }

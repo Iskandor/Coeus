@@ -247,8 +247,6 @@ BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
 		_input_layer.push_back(p_layer->get_id());
 	}
 
-	add_param(p_layer);
-
 	return p_layer;
 }
 

@@ -175,6 +175,7 @@
     <ClCompile Include="ADAMRule.cpp" />
     <ClCompile Include="AMSGrad.cpp" />
     <ClCompile Include="AMSGradRule.cpp" />
+    <ClCompile Include="AnnealingScheduler.cpp" />
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BaseCellGroup.cpp" />
@@ -203,12 +204,13 @@
     <ClCompile Include="ICostFunction.cpp" />
     <ClCompile Include="IDGen.cpp" />
     <ClCompile Include="IGradientComponent.cpp" />
+    <ClCompile Include="ILearningRateModule.cpp" />
     <ClCompile Include="InputLayer.cpp" />
     <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
-    <ClCompile Include="LearningRateModule.cpp" />
+    <ClCompile Include="WarmStartup.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="LISSOM.cpp" />
     <ClCompile Include="LISSOM_learning.cpp" />
@@ -267,6 +269,7 @@
     <ClInclude Include="ADAMRule.h" />
     <ClInclude Include="AMSGrad.h" />
     <ClInclude Include="AMSGradRule.h" />
+    <ClInclude Include="AnnealingScheduler.h" />
     <ClInclude Include="BackProph.h" />
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BaseCellGroup.h" />
@@ -297,12 +300,13 @@
     <ClInclude Include="ICostFunction.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IGradientComponent.h" />
+    <ClInclude Include="ILearningRateModule.h" />
     <ClInclude Include="InputLayer.h" />
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="KLDivergence.h" />
-    <ClInclude Include="LearningRateModule.h" />
+    <ClInclude Include="WarmStartup.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="LISSOM.h" />
     <ClInclude Include="LISSOM_learning.h" />
