@@ -46,7 +46,7 @@ public:
 
 private:
     vector<int> freePos();
-    int moveInDir(int p_x, int p_y);
+    int moveInDir(int p_x, int p_y) const;
 
     unsigned int _mazeX, _mazeY;
     vector<int> _initPos;

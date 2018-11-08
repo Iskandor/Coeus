@@ -38,15 +38,16 @@ void MazeExample::example_q() {
 	network.add_layer(new CoreLayer("hidden", 256, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
-	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
+	network.add_connection("input", "hidden", Connection::GLOROT_UNIFORM);
+	network.add_connection("hidden", "output", Connection::GLOROT_UNIFORM);
 	network.init();
 
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.1, 0.9, true);
+	//ADAM optimizer(&network);
 	RMSProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.001);
-	optimizer.add_learning_rate_module(new WarmStartup(1e-4, 1e-3, 10, 2));
+	optimizer.init(new QuadraticCost(), 1e-3);
+	//optimizer.add_learning_rate_module(new WarmStartup(1e-4, 1e-3, 10, 2));
 	QLearning agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;
@@ -54,7 +55,7 @@ void MazeExample::example_q() {
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 20000;
+	int epochs = 3000;
 
 	int wins = 0, loses = 0;
 
@@ -101,10 +102,12 @@ void MazeExample::example_q() {
 
 		//exploration->update((double)e / epochs);
 
-		if (epsilon > 0.01) {
+		if (epsilon > 0.1) {
 			epsilon -= (1.0 / epochs);
 		}
 	}
+
+	test(&network);
 }
 
 void MazeExample::example_double_q() {
@@ -541,6 +544,36 @@ void MazeExample::example_icm() {
 			epsilon -= (1.0 / epochs);
 		}
 	}
+}
+
+void MazeExample::test(NeuralNetwork* p_network) const
+{
+	MazeTask task;
+	Maze* maze = task.getEnvironment();
+	task.getEnvironment()->reset();
+
+	vector<double> sensors;
+	Tensor action = Tensor::Zero({ 4 });
+	Tensor state;
+
+	int step = 0;
+
+	cout << "--- TEST ---" << endl;
+	cout << maze->toString() << endl;
+
+	while (!task.isFinished() && step < 20) {
+		sensors = maze->getSensors();
+		state = encode_state(&sensors);
+		p_network->activate(&state);
+		const int action_index = choose_action(p_network->get_output(), 0);
+		Encoder::one_hot(action, action_index);
+		maze->performAction(action_index);
+		step++;
+		cout << action_index << endl;
+		cout << maze->toString() << endl;
+	}
+
+	cout << task.getEnvironment()->moves() << endl;
 }
 
 Tensor MazeExample::encode_state(vector<double>* p_sensors) {

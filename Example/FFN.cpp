@@ -140,10 +140,12 @@ void FFN::run_iris() {
 	}
 
 	//BackProp model(&_network);
-	//model.init(new CrossEntropyCost(), 0.0001, 0.9, false);
+	//model.init(new CrossEntropyCost(), 0.001, 0.9, true);
 	//ADAM model(&_network);
 	RMSProp model(&_network);
-	model.init(new CrossEntropyCost(), 0.0002);
+	//Nadam model(&_network);
+	model.init(new CrossEntropyCost(), 0.001);
+	model.add_learning_rate_module(new WarmStartup(1e-4, 1e-2, 10, 2));
 
 	for (int t = 0; t < epochs; t++) {
 		data = _dataset.permute();

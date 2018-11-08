@@ -57,8 +57,18 @@ vector<int> Maze::freePos() {
     return vector<int>(res);
 }
 
-int Maze::moveInDir(int p_x, int p_y) {
-    return _actor + p_y * _mazeX + p_x;
+int Maze::moveInDir(int p_x, int p_y) const
+{
+	int pos = _actor;
+	const int x = _actor % _mazeX;
+	const int y = _actor / _mazeX;
+
+	if (x + p_x >= 0 && x + p_x < _mazeX && y + p_y >= 0 && y + p_y < _mazeY)
+	{
+		pos = (y + p_y) * _mazeX + (x + p_x);
+	}
+
+    return pos;
 }
 
 void Maze::performAction(double p_action) {
@@ -66,7 +76,7 @@ void Maze::performAction(double p_action) {
     int newPos = moveInDir(_actions[(int)p_action].X(), _actions[(int)p_action].Y());
 	_a++;
 
-    if (newPos < 0 || newPos >= _mazeTable.size()) {
+    if (newPos == _actor) {
         _bang = true;
     }
     else {
@@ -77,9 +87,6 @@ void Maze::performAction(double p_action) {
         else if (_mazeTable[newPos] == 2) {
             _actor = newPos;
             _kill = true;
-        }
-        else {
-            _bang = true;
         }
     }
 }
