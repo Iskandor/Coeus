@@ -32,6 +32,7 @@ int main()
 
 	MazeExample example;
 
+	//for(int i = 0; i < 10; i++)	example.example_q();
 	example.example_q();
 
 	/*

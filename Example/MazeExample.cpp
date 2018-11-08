@@ -35,8 +35,8 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden", 256, RELU));
-	network.add_layer(new CoreLayer("output", 4, LINEAR));
+	network.add_layer(new CoreLayer("hidden", 160, RELU));
+	network.add_layer(new CoreLayer("output", 4, SIGMOID));
 	// feed-forward connections
 	network.add_connection("input", "hidden", Connection::GLOROT_UNIFORM);
 	network.add_connection("hidden", "output", Connection::GLOROT_UNIFORM);
@@ -55,7 +55,7 @@ void MazeExample::example_q() {
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 3000;
+	int epochs = 7500;
 
 	int wins = 0, loses = 0;
 
@@ -383,7 +383,7 @@ void MazeExample::example_deep_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden0", 64, RELU));
+	network.add_layer(new CoreLayer("hidden0", 256, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
@@ -393,15 +393,15 @@ void MazeExample::example_deep_q() {
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.001);
-	DeepQLearning agent(&network, &optimizer, 0.9, 1024, 64);
+	optimizer.init(new QuadraticCost(), 1e-3);
+	DeepQLearning agent(&network, &optimizer, 0.9, 64, 8);
 
 	vector<double> sensors;
 	Tensor state0, state1;
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 1000;
+	int epochs = 2000;
 
 	int wins = 0, loses = 0;
 
@@ -451,6 +451,8 @@ void MazeExample::example_deep_q() {
 			epsilon -= (1.0 / epochs);
 		}
 	}
+
+	test(&network);
 }
 
 void MazeExample::example_icm() {
@@ -559,7 +561,6 @@ void MazeExample::test(NeuralNetwork* p_network) const
 	int step = 0;
 
 	cout << "--- TEST ---" << endl;
-	cout << maze->toString() << endl;
 
 	while (!task.isFinished() && step < 20) {
 		sensors = maze->getSensors();
@@ -568,12 +569,28 @@ void MazeExample::test(NeuralNetwork* p_network) const
 		const int action_index = choose_action(p_network->get_output(), 0);
 		Encoder::one_hot(action, action_index);
 		maze->performAction(action_index);
-		step++;
-		cout << action_index << endl;
-		cout << maze->toString() << endl;
+		step++;		
 	}
 
+	cout << maze->toString() << endl;
 	cout << task.getEnvironment()->moves() << endl;
+	cout << task.getReward() << endl;
+
+	Tensor s = Tensor::Zero({ (int)maze->getSensors().size() });
+
+	for(int i = 0; i < maze->getSensors().size(); i++)
+	{
+
+		Encoder::one_hot(s, i);
+		p_network->activate(&s);
+
+		cout << i << endl;
+		for(int j = 0; j < p_network->get_output()->size(); j++)
+		{
+			cout << p_network->get_output()->at(j) << " ";
+		}
+		cout << endl;
+	}
 }
 
 Tensor MazeExample::encode_state(vector<double>* p_sensors) {
