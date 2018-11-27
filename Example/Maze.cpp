@@ -68,6 +68,11 @@ int Maze::moveInDir(int p_x, int p_y) const
 		pos = (y + p_y) * _mazeX + (x + p_x);
 	}
 
+	if (_mazeTable[pos] == 1)
+	{
+		pos = _actor;
+	}
+
     return pos;
 }
 
@@ -80,12 +85,11 @@ void Maze::performAction(double p_action) {
         _bang = true;
     }
     else {
+		_actor = newPos;
         if (_mazeTable[newPos] == 0) {
-            _actor = newPos;
             _bang = false;
         }
         else if (_mazeTable[newPos] == 2) {
-            _actor = newPos;
             _kill = true;
         }
     }

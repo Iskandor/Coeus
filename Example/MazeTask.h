@@ -16,6 +16,7 @@ public:
     void run();
 
     bool isFinished() const;
+	bool isWinner() const;
     double getReward() const;
 
     Maze *getEnvironment() {
@@ -26,7 +27,7 @@ public:
 private:
     const double defautPenalty = 0;
     const double bangPenalty = 0;
-    const double killPenalty = 0;
+    const double killPenalty = -1;
     const double finalReward = 1;
 
     Maze *maze;

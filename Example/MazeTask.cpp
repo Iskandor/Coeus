@@ -36,13 +36,18 @@ MazeTask::~MazeTask() {
 }
 
 bool MazeTask::isFinished() const {
-    return (maze->actor() == maze->goal() || maze->kill());
+    return (isWinner() || maze->kill() || maze->moves() > 100);
+}
+
+bool MazeTask::isWinner() const
+{
+	return maze->actor() == maze->goal();
 }
 
 double MazeTask::getReward() const {
     double reward = defautPenalty;
 
-    if (isFinished()) reward = finalReward;
+    if (isWinner()) reward = finalReward;
     if (maze->bang()) reward = bangPenalty;
     if (maze->kill()) reward = killPenalty;
 

@@ -43,6 +43,15 @@ public:
 		return _a;
     }
 
+	unsigned int mazeX() const
+	{
+		return _mazeX;
+    }
+
+	unsigned int mazeY() const
+	{
+		return _mazeY;
+	}
 
 private:
     vector<int> freePos();
