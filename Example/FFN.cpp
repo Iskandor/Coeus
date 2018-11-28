@@ -75,6 +75,13 @@ void FFN::run() {
 
 		error += model.train(&input, &target, 4);
 
+		/*
+		for(int i = 0; i < 4; i++)
+		{
+			error += model.train(input[i], target[i]);
+		}
+		*/
+
 		cout << "Error: " << error << endl;
 	}
 

@@ -17,7 +17,6 @@ using namespace MNS;
 
 int main()
 {
-
 	/*
 	FFN model;
 
@@ -32,8 +31,8 @@ int main()
 
 	MazeExample example;
 
-	//for(int i = 0; i < 10; i++)	example.example_q();
-	example.example_q();
+	for(int i = 0; i < 10; i++)	example.example_q();
+	//example.example_q();
 
 	/*
 	IrisTest iris;

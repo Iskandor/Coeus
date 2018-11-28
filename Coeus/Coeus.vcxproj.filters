@@ -97,6 +97,12 @@
     <Filter Include="Header Files\Algorithm\Modules">
       <UniqueIdentifier>{1cbd490f-d433-436d-8d25-5935871b6926}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Algorithm\RL\Rules">
+      <UniqueIdentifier>{cbf11517-0a20-4432-81a7-0157f2ff597c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\RL\Rules">
+      <UniqueIdentifier>{072be60b-4087-422e-a35c-da5c11e6d567}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -377,6 +383,12 @@
     </ClCompile>
     <ClCompile Include="ILearningRateModule.cpp">
       <Filter>Source Files\Algorithm\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="QLearningRule.cpp">
+      <Filter>Source Files\Algorithm\RL\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="QLearning2.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -661,6 +673,12 @@
     </ClInclude>
     <ClInclude Include="AnnealingScheduler.h">
       <Filter>Header Files\Algorithm\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="QLearningRule.h">
+      <Filter>Header Files\Algorithm\RL\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="QLearning2.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,10 @@ double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) const
 
 	if (p_target->rank() == 1)
 	{
-		_network_gradient->calc_gradient(p_input, p_target);
+		_network->calc_partial_derivs(p_input);
+		Tensor dloss = _cost_function->cost_deriv(_network->get_output(), p_target);
+
+		_network_gradient->calc_gradient(&dloss);
 		error = _cost_function->cost(_network->get_output(), p_target);	
 		_update_rule->calc_update(_network_gradient->get_gradient());
 		_network->update(_update_rule->get_update());
@@ -45,7 +48,10 @@ double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) const
 			p_input->get_row(input, i);
 			p_target->get_row(target, i);
 
-			_network_gradient->calc_gradient(p_input, p_target);
+			_network->calc_partial_derivs(&input);
+			Tensor dloss = _cost_function->cost_deriv(_network->get_output(), &target);
+
+			_network_gradient->calc_gradient(&dloss);
 			error += _cost_function->cost(_network->get_output(), p_target);
 			_update_rule->calc_update(_network_gradient->get_gradient());
 			_network->update(_update_rule->get_update());
@@ -114,7 +120,6 @@ void BaseGradientAlgorithm::add_learning_rate_module(ILearningRateModule* p_lear
 
 void BaseGradientAlgorithm::init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule)
 {
-	_network_gradient->init(p_cost_function);
 	_cost_function = p_cost_function;
 	_update_rule = p_update_rule;
 }

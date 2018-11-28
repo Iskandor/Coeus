@@ -24,11 +24,7 @@ NetworkGradient::~NetworkGradient()
 {
 }
 
-void NetworkGradient::calc_gradient(Tensor* p_input, Tensor* p_target) {
-
-	_network->calc_partial_derivs(p_input);
-
-	const Tensor error = _cost_function->cost_deriv(_network->get_output(), p_target);
+void NetworkGradient::calc_gradient(Tensor* p_value) {
 
 	for(auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		if (_gradient_component[(*it)->get_id()] != nullptr) {
@@ -38,7 +34,17 @@ void NetworkGradient::calc_gradient(Tensor* p_input, Tensor* p_target) {
 
 	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
 
-	Tensor delta = *_gradient_component[output_layer->get_id()]->get_output_deriv() * error;
+	Tensor delta;
+
+	if (p_value == nullptr)
+	{
+		delta = *_gradient_component[output_layer->get_id()]->get_output_deriv() * Tensor::Ones({_network->get_output()->size()});
+	}
+	else
+	{
+		delta = *_gradient_component[output_layer->get_id()]->get_output_deriv() * *p_value;
+	}
+	
 
 	_gradient_component[output_layer->get_id()]->set_delta(&delta);
 
@@ -58,7 +64,7 @@ void NetworkGradient::calc_gradient(Tensor* p_input, Tensor* p_target) {
 	}
 }
 
-void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
+void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss) {
 	const double epsilon = 1e-4;
 
 	for (auto it = _network->_connections.begin(); it != _network->_connections.end(); ++it) {
@@ -68,9 +74,9 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 			for(int i = 0; i < it->second->get_weights()->size(); i++) {
 				const double w = it->second->get_weights()->at(i);
 				it->second->get_weights()->set(i, w + epsilon);
-				const double Je_plus = check_estimate(p_input, p_target);
+				const double Je_plus = check_estimate(p_input, p_target, p_loss);
 				it->second->get_weights()->set(i, w - epsilon);
-				const double Je_minus = check_estimate(p_input, p_target);
+				const double Je_minus = check_estimate(p_input, p_target, p_loss);
 
 				it->second->get_weights()->set(i, w);
 
@@ -91,9 +97,9 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 				for (int i = 0; i < c->second->get_weights()->size(); i++) {
 					const double w = c->second->get_weights()->at(i);
 					c->second->get_weights()->set(i, w + epsilon);
-					const double Je_plus = check_estimate(p_input, p_target);
+					const double Je_plus = check_estimate(p_input, p_target, p_loss);
 					c->second->get_weights()->set(i, w - epsilon);
-					const double Je_minus = check_estimate(p_input, p_target);
+					const double Je_minus = check_estimate(p_input, p_target, p_loss);
 
 					c->second->get_weights()->set(i, w);
 
@@ -109,9 +115,9 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 				for (int i = 0; i < g->second->get_bias()->size(); i++) {
 					const double b = g->second->get_bias()->at(i);
 					g->second->get_bias()->set(i, b + epsilon);
-					const double Je_plus = check_estimate(p_input, p_target);
+					const double Je_plus = check_estimate(p_input, p_target, p_loss);
 					g->second->get_bias()->set(i, b - epsilon);
-					const double Je_minus = check_estimate(p_input, p_target);
+					const double Je_minus = check_estimate(p_input, p_target, p_loss);
 
 					g->second->get_bias()->set(i, b);
 
@@ -122,11 +128,6 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target) {
 			}
 		}
 	}
-}
-
-void NetworkGradient::init(ICostFunction* p_cost_function)
-{
-	_cost_function = p_cost_function;
 }
 
 map<string, Tensor> NetworkGradient::get_empty_params() const
@@ -164,7 +165,7 @@ IGradientComponent* NetworkGradient::create_component(BaseLayer* p_layer) const 
 	return component;
 }
 
-double NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target) const {
+double NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss) const {
 	_network->activate(p_input);
-	return _cost_function->cost(_network->get_output(), p_target);
+	return p_loss->cost(_network->get_output(), p_target);
 }

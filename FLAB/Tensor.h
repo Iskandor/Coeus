@@ -1,5 +1,6 @@
 #pragma once
 #include <initializer_list>
+#include <ostream>
 
 using namespace std;
 
@@ -105,6 +106,20 @@ public:
 	static double sgn(double p_x);
 
 	static int control;
+
+
+	friend ostream &operator<<(ostream &output, const Tensor &p_tensor) {
+		for (int i = 0; i < p_tensor._size; i++) {
+			if (i == p_tensor._size - 1) {
+				output << p_tensor._arr[i] << endl;
+			}
+			else {
+				output << p_tensor._arr[i] << ",";
+			}
+		}
+
+		return output;
+	}
 
 private:
 	void free_arr() const;

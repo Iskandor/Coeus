@@ -37,8 +37,9 @@ public:
 
 	json get_json() const;
 
-protected:
 	void calc_partial_derivs(Tensor* p_input);
+
+protected:	
 	void activate();	
 	void create_directed_graph();
 

@@ -44,19 +44,19 @@ void MazeExample::example_q() {
 	network.init();
 
 	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), 0.1, 0.9, true);
-	ADAM optimizer(&network);
+	//optimizer.init(new QuadraticCost(), 0.1, 0.9, false);
+	//ADAM optimizer(&network);
 	//RMSProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), 1e-3);
+	//optimizer.init(new QuadraticCost(), 1e-3);
 	//optimizer.add_learning_rate_module(new WarmStartup(1e-4, 1e-3, 10, 2));
-	QLearning agent(&network, &optimizer, 0.9);
-	//QLearning2 agent(&network, 1e-1, 0.8, 0.5);
+	//QLearning agent(&network, &optimizer, 0.9);
+	QLearning2 agent(&network, 1e-3, 0.9);
 
 	vector<double> sensors;
 	Tensor state0, state1;
 	double reward = 0;
 	double epsilon = 1;
-	const int epochs = 10000;
+	const int epochs = 3000;
 
 	int wins = 0, loses = 0;
 
@@ -64,10 +64,10 @@ void MazeExample::example_q() {
 	//Output2FILE::Stream() = pFile;
 	//FILELog::ReportingLevel() = FILELog::FromString("DEBUG1");
 
-	test(&network);
+	//test(&network);
 
 	for (int e = 0; e < epochs; e++) {
-		cout << "Epoch " << e << endl;
+		//cout << "Epoch " << e << endl;
 
 		task.getEnvironment()->reset();
 
@@ -94,8 +94,8 @@ void MazeExample::example_q() {
 		}
 
 		//agent.reset_traces();
-		cout << task.getEnvironment()->moves() << endl;
-		cout << epsilon << endl;
+		//cout << task.getEnvironment()->moves() << endl;
+		//cout << epsilon << endl;
 
 		if (task.isWinner()) {
 			wins++;
@@ -105,7 +105,7 @@ void MazeExample::example_q() {
 		}
 
 		//cout << maze->toString() << endl;
-		cout << wins << " / " << loses << endl;
+		//cout << wins << " / " << loses << endl;
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
@@ -639,6 +639,10 @@ int MazeExample::choose_action(Tensor* p_input, const double epsilon) {
 	}
 	else {
 		for (int i = 1; i < p_input->size(); i++) {
+			if ((*p_input)[i] != (*p_input)[i])
+			{
+				assert(0);
+			}
 			if ((*p_input)[i] >(*p_input)[action]) {
 				action = i;
 			}

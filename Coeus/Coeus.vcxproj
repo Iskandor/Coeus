@@ -210,6 +210,8 @@
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
+    <ClCompile Include="QLearning2.cpp" />
+    <ClCompile Include="QLearningRule.cpp" />
     <ClCompile Include="WarmStartup.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="LISSOM.cpp" />
@@ -306,6 +308,8 @@
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="KLDivergence.h" />
+    <ClInclude Include="QLearning2.h" />
+    <ClInclude Include="QLearningRule.h" />
     <ClInclude Include="WarmStartup.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="LISSOM.h" />

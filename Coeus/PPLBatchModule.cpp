@@ -17,7 +17,6 @@ PPLBatchModule::PPLBatchModule(NeuralNetwork* p_network, IUpdateRule* p_update_r
 	{
 		_clone_network[i] = p_network->clone();
 		_network_gradient[i] = new NetworkGradient(_clone_network[i]);
-		_network_gradient[i]->init(_cost_function);
 	}
 
 	_update_batch = _network_gradient[0]->get_empty_params();
@@ -49,7 +48,9 @@ double PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input,
 
 	parallel_for(0, p_batch, [&](const int i) {
 		const int index = p_b * p_batch + i;
-		_network_gradient[i]->calc_gradient(p_input->at(index), p_target->at(index));
+		_clone_network[i]->calc_partial_derivs(p_input->at(index));
+		Tensor dloss = _cost_function->cost_deriv(_clone_network[i]->get_output(), p_target->at(index));
+		_network_gradient[i]->calc_gradient(&dloss);
 		_error[i] = _cost_function->cost(_clone_network[i]->get_output(), p_target->at(i));
 		mutex.lock();
 		_update_rule->calc_update(_network_gradient[i]->get_gradient());
