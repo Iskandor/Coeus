@@ -29,9 +29,19 @@ int main()
 	model.run_add_problem();
 	*/
 
-	MazeExample example;
-
-	for(int i = 0; i < 10; i++)	example.example_q();
+	/*
+	parallel_for(0, 10, [&](const int i) {
+			MazeExample example;
+			example.example_q();
+		},
+		static_partitioner()
+	);
+	*/
+	for(int i = 0; i < 10; i++)
+	{
+		MazeExample example;
+		example.example_q();
+	}
 	//example.example_q();
 
 	/*

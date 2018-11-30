@@ -36,11 +36,13 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden", 256, RELU));
+	//for(int i = 0; i < 8; i++) network.add_layer(new CoreLayer("hidden" + to_string(i), 16, RELU));
+	network.add_layer(new CoreLayer("hidden0", 256, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
-	network.add_connection("input", "hidden", Connection::UNIFORM, 1e-2);
-	network.add_connection("hidden", "output", Connection::UNIFORM, 1e-2);
+	network.add_connection("input", "hidden0", Connection::UNIFORM, 1e-2);
+	//for (int i = 0; i < 7; i++) network.add_connection("hidden" + to_string(i), "hidden" + to_string(i+1), Connection::UNIFORM, 1e-2);
+	network.add_connection("hidden0", "output", Connection::UNIFORM, 1e-2);
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -48,15 +50,15 @@ void MazeExample::example_q() {
 	//ADAM optimizer(&network);
 	//RMSProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 1e-3);
-	//optimizer.add_learning_rate_module(new WarmStartup(1e-4, 1e-3, 10, 2));
+	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
 	//QLearning agent(&network, &optimizer, 0.9);
-	QLearning2 agent(&network, 1e-3, 0.9);
+	QLearning2 agent(&network, 2e-4, 0.9, 0.6);
 
 	vector<double> sensors;
 	Tensor state0, state1;
 	double reward = 0;
 	double epsilon = 1;
-	const int epochs = 3000;
+	const int epochs = 6000;
 
 	int wins = 0, loses = 0;
 
@@ -93,7 +95,7 @@ void MazeExample::example_q() {
 			state0.override(&state1);
 		}
 
-		//agent.reset_traces();
+		agent.reset_traces();
 		//cout << task.getEnvironment()->moves() << endl;
 		//cout << epsilon << endl;
 
