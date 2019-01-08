@@ -373,11 +373,11 @@ void ModelMNS3::load(const string p_timestamp) {
 }
 
 void ModelMNS3::prepareInputSTS(Tensor* p_output, Tensor *p_input, MSOM* p_f5) const {
-    Tensor::Concat(p_output, p_input, p_f5->get_output());
+    Tensor::concat(p_output, p_input, p_f5->get_output());
 }
 
 void ModelMNS3::prepareInputF5(Tensor* p_output, Tensor *p_input, MSOM* p_sts) const {
-    Tensor::Concat(p_output, p_input, p_sts->get_output());
+    Tensor::concat(p_output, p_input, p_sts->get_output());
 }
 
 void ModelMNS3::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) {

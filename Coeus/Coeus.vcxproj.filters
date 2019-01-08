@@ -390,6 +390,15 @@
     <ClCompile Include="QLearning2.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
+    <ClCompile Include="PowerSignRule.cpp">
+      <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerSign.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenMPBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -679,6 +688,15 @@
     </ClInclude>
     <ClInclude Include="QLearning2.h">
       <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerSignRule.h">
+      <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerSign.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenMPBatchModule.h">
+      <Filter>Header Files\Algorithm\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

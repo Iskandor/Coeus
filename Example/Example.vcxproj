@@ -163,6 +163,7 @@
     <ClCompile Include="AddProblemDataset.cpp" />
     <ClCompile Include="CartPole.cpp" />
     <ClCompile Include="CartPoleTask.cpp" />
+    <ClCompile Include="CisLoader.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="Environment.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="AddProblemDataset.h" />
     <ClInclude Include="CartPole.h" />
     <ClInclude Include="CartPoleTask.h" />
+    <ClInclude Include="CisLoader.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Dataset.h" />
     <ClInclude Include="Environment.h" />

@@ -10,6 +10,9 @@ namespace Coeus {
 
 		void calc_update(map<string, Tensor>* p_gradient) override;
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
+		void merge(IUpdateRule** p_rule, int p_size) override;
+		void reset() override;
+		void override(IUpdateRule* p_rule) override;
 	private:
 		void update_momentum(const string& p_id, Tensor &p_gradient);
 

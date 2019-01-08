@@ -111,6 +111,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\FLAB;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +149,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\FLAB;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -210,6 +212,9 @@
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
+    <ClCompile Include="OpenMPBatchModule.cpp" />
+    <ClCompile Include="PowerSign.cpp" />
+    <ClCompile Include="PowerSignRule.cpp" />
     <ClCompile Include="QLearning2.cpp" />
     <ClCompile Include="QLearningRule.cpp" />
     <ClCompile Include="WarmStartup.cpp" />
@@ -308,6 +313,9 @@
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="KLDivergence.h" />
+    <ClInclude Include="OpenMPBatchModule.h" />
+    <ClInclude Include="PowerSign.h" />
+    <ClInclude Include="PowerSignRule.h" />
     <ClInclude Include="QLearning2.h" />
     <ClInclude Include="QLearningRule.h" />
     <ClInclude Include="WarmStartup.h" />

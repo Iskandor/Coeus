@@ -29,3 +29,10 @@ IUpdateRule* RMSPropRule::clone(NetworkGradient* p_network_gradient)
 {
 	return new RMSPropRule(p_network_gradient, _alpha, _decay, _epsilon);
 }
+
+void RMSPropRule::reset()
+{
+	for (auto it = _update.begin(); it != _update.end(); ++it) {
+		_cache[it->first].fill(0);
+	}
+}

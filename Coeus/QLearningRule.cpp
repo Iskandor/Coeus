@@ -65,6 +65,11 @@ IUpdateRule* QLearningRule::clone(NetworkGradient* p_network_gradient)
 	return new QLearningRule(p_network_gradient, _alpha, _gamma, _lambda);
 }
 
+void QLearningRule::reset()
+{
+	_rule->reset();
+}
+
 void QLearningRule::reset_traces()
 {
 	for (auto it = _e_traces.begin(); it != _e_traces.end(); ++it) {

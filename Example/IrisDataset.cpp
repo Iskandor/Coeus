@@ -68,7 +68,7 @@ void IrisDataset::encode() {
 
 		for (int j = 0; j < SIZE; j++) {
 			Encoder::pop_code(result, _data[i].data->at(j));
-			val = Tensor::Concat(val, result);
+			val = Tensor::concat(val, result);
 		}
 
 		delete _data[i].data;

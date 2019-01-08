@@ -1,5 +1,7 @@
 #include "BaseGradientAlgorithm.h"
 #include "SingleBatchModule.h"
+#include <chrono>
+#include "OpenMPBatchModule.h"
 
 using namespace Coeus;
 
@@ -90,12 +92,14 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p
 	{
 		//_batch_module = new SingleBatchModule(_network, _network_gradient, _update_rule, _cost_function, p_batch);
 		_batch_module = new PPLBatchModule(_network, _update_rule, _cost_function, p_batch);
+		//_batch_module = new OpenMPBatchModule(_network, _update_rule, _cost_function, p_batch);
 	}
 	else if (_batch_module->get_batch_size() < p_batch)
 	{
 		delete _batch_module;
 		//_batch_module = new SingleBatchModule(_network, _network_gradient, _update_rule, _cost_function, p_batch);
 		_batch_module = new PPLBatchModule(_network, _update_rule, _cost_function, p_batch);
+		//_batch_module = new OpenMPBatchModule(_network, _update_rule, _cost_function, p_batch);
 	}
 
 	for (int b = 0; b < nbatch; b++)
@@ -108,7 +112,10 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p
 		error += _batch_module->run_batch(b, p_batch, p_input, p_target);
 
 		_network->update(_batch_module->get_update());
+		
+		//cout << b << "/" << nbatch << "  ";
 	}
+	//cout << endl;
 	
 	return error;
 }

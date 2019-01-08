@@ -2,19 +2,17 @@
 #include "IUpdateRule.h"
 
 namespace Coeus {
-	class __declspec(dllexport) AdagradRule : public IUpdateRule
+	class __declspec(dllexport) PowerSignRule : public IUpdateRule
 	{
 	public:
-		AdagradRule(NetworkGradient* p_network_gradient, double p_alpha, double p_epsilon);
-		~AdagradRule();
+		PowerSignRule(NetworkGradient* p_network_gradient, double p_alpha);
+		~PowerSignRule();
 
 		void calc_update(map<string, Tensor>* p_gradient) override;
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 		void reset() override;
 
 	private:
-		double _epsilon;
-		map<string, Tensor> _G;
+		map<string, Tensor> _m;
 	};
 }
-

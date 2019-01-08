@@ -16,6 +16,7 @@
 #include "AMSGrad.h"
 #include "BackProph.h"
 #include "Nadam.h"
+#include "PowerSign.h"
 
 FFN::FFN()
 {
@@ -61,15 +62,17 @@ void FFN::run() {
 	//RMSProp model(&_network);
 	//AdaMax model(&_network);
 	//ADAM model(&_network);
-	//AMSGrad model(&_network);
 	Nadam model(&_network);
+	//AMSGrad model(&_network);
+	//PowerSign model(&_network);
 
 	//model.init(new QuadraticCost(), 0.1, 0.9, true);
-	model.init(new QuadraticCost(), 0.1);
+	//model.init(new QuadraticCost(), 8e-2);
+	model.init(new QuadraticCost(), 1e-1);
 
 	const auto start = chrono::system_clock::now();
 
-	for(int t = 0; t < 150; t++) {
+	for(int t = 0; t < 200; t++) {
 		//const double error = model.train(&input, &target);
 		double error = 0;
 

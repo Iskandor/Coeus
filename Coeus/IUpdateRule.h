@@ -18,6 +18,9 @@ namespace Coeus {
 
 		virtual void calc_update(map<string, Tensor>* p_gradient);
 		virtual IUpdateRule* clone(NetworkGradient* p_network_gradient) = 0;
+		virtual void merge(IUpdateRule** p_rule, int p_size);
+		virtual void reset() = 0;
+		virtual void override(IUpdateRule* p_rule);
 
 		map<string, Tensor>* get_update() { return &_update; }
 
@@ -25,6 +28,7 @@ namespace Coeus {
 
 	protected:
 		double _alpha;
+		NetworkGradient* _network_gradient;
 		ILearningRateModule* _learning_rate_module;
 		map<string, Tensor> _update;
 		

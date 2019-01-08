@@ -50,3 +50,11 @@ void AdadeltaRule::calc_update(map<string, Tensor>* p_gradient) {
 		update_cache_delta(it->first, it->second);
 	}
 }
+
+void AdadeltaRule::reset()
+{
+	for (auto it = _update.begin(); it != _update.end(); ++it) {
+		_cache[it->first].fill(0);
+		_cache_delta[it->first].fill(0);
+	}
+}
