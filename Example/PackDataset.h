@@ -4,54 +4,33 @@
 #include <map>
 #include <vector>
 #include "Tensor.h"
+#include "CisLoader.h"
 
 using namespace FLAB;
 using namespace std;
 
+#define BIG_ENDIAN 0
+#define LITTLE_ENDIAN 1
+
 struct PackDataRow
 {
-	int pack;
-	string pack_date;
-	string date;
 	bool bought;
 	int price_category;
 	int region;
-
-	double revenues_lifetime_count;
-	double revenues_lifetime_sum_netto;
-	double revenues_lifetime_sum_brutto;
-	double revenues_lifetime_min_brutto;
-	double revenues_lifetime_max_brutto;
-	string revenues_lifetime_first_payment;
-	string revenues_lifetime_last_payment;
-	double revenues_7d_count;
-	double revenues_7d_sum_brutto;
-	double revenues_7d_min_brutto;
-	double revenues_7d_max_brutto;
-	double revenues_28d_count;
-	double revenues_28d_sum_brutto;
-	double revenues_28d_min_brutto;
-	double revenues_28d_max_brutto;
-	double revenues_56d_count;
-	double revenues_56d_sum_brutto;
-	double revenues_56d_min_brutto;
-	double revenues_56d_max_brutto;
-	double revenues_84d_count;
-	double revenues_84d_sum_netto;
-	double revenues_84d_sum_brutto;
-	double revenues_84d_min_brutto;
-	double revenues_84d_max_brutto;
-
-	int activity_7d_login_count;
-	int activity_28d_login_count;
-	string activity_last_login;
-	string profiles_register_time;
 	string profiles_register_platform;
 	string profiles_register_device;
-	string profiles_birthday;
 	string profiles_gender;
 	string profiles_country;
 	int level;
+	double netto;
+	int order;
+	int login_count;
+	int target;
+
+	static bool compare(const PackDataRow &a, const PackDataRow &b)
+	{
+		return a.order < b.order;
+	}
 };
 
 struct PackDataSequence
@@ -68,23 +47,35 @@ public:
 
 	
 	void load_data(const string& p_filename);
+	vector<PackDataSequence>* permute();
+	vector<PackDataSequence>* data() { return &_data; }
+	pair<vector<Tensor*>, vector<Tensor*>> to_vector();
 
 
 
 private:
 	void parse_line(string& p_line);
 	void create_sequence(vector<PackDataRow>& p_row);
+	bool has_target(vector<PackDataRow>& p_row) const;
 
 	template<typename T>
 	void add_bin_data(T* p_value, vector<double> &p_data) const;
 	template<typename T>
 	void add_data(T* p_value, int p_size, vector<double> &p_data) const;
-
+	
 	template<typename T>
-	int* to_binary(T p_value) const;
+	int* to_binary(T p_value, int p_size = 0) const;
+
+	int get_endian() const;
 
 	map<int, vector<PackDataRow>> *_data_tree;
 	vector<PackDataSequence> _data;
+
+	CisLoader _cis_price_category;
+	CisLoader _cis_device;
+	CisLoader _cis_platform;
+	CisLoader _cis_gender;
+	CisLoader _cis_country;
 };
 
 template <typename T>
@@ -106,21 +97,31 @@ void PackDataset::add_data(T* p_value, int p_size, vector<double>& p_data) const
 }
 
 template <typename T>
-int* PackDataset::to_binary(T p_value) const
+int* PackDataset::to_binary(T p_value, int p_size) const
 {
-	int* binary = new int[sizeof(T)*8];
+	const int size = p_size == 0 ? sizeof(T) * 8 : p_size;
+	int* binary = new int[size];
 	char data[sizeof(T)];
 	memcpy(data, &p_value, sizeof p_value);
 
-	for (int i = 0; i < sizeof(T); i++)
+	int limit = p_size == 0 ? sizeof(T) : p_size / 8;
+
+	for (int i = 0; i < limit; i++)
 	{
 		const bitset<8> set(data[i]);
 		for(int j = 0; j < 8; j++)
 		{
-			binary[i * 8 + j] = set[j];
+			if (get_endian() == BIG_ENDIAN)
+			{
+				binary[i * 8 + j] = set[j];
+			}
+			if (get_endian() == LITTLE_ENDIAN)
+			{
+				binary[i * 8 + j] = set[7 - j];
+			}
+			
 		}
 	}
 
 	return binary;
 }
-

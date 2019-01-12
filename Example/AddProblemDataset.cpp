@@ -71,6 +71,8 @@ void AddProblemDataset::load_data(const string& p_filename)
 
 	ifstream file(p_filename);
 
+	int i = 0;
+
 	if (file.is_open())
 	{
 		while (!file.eof())
@@ -83,6 +85,8 @@ void AddProblemDataset::load_data(const string& p_filename)
 			if (!line.empty()) parse_line(line, TARGET);
 
 			add_item();
+			i++;
+			//if (i == 10) break;
 		}
 		file.close();
 	}
@@ -100,6 +104,7 @@ pair<vector<Tensor*>, vector<Tensor*>> AddProblemDataset::to_vector()
 	vector<Tensor*> target;
 
 	vector<AddProblemSequence>* data = permute();
+	//vector<AddProblemSequence>* data = &_data;
 
 	for(auto it = data->begin(); it != data->end(); ++it)
 	{

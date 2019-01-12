@@ -22,7 +22,7 @@ double ICM::train(Tensor* p_state0, Tensor* p_action, Tensor* p_state1) {
 		_forward_model_input = new Tensor({ p_action->size() + p_state0->size() }, Tensor::ZERO);
 	}
 
-	Tensor::Concat(_forward_model_input, p_action, p_state0);
+	Tensor::concat(_forward_model_input, p_action, p_state0);
 
 	_forward_model->activate(_forward_model_input);
 	_forward_reward = _L.cost(_forward_model->get_output(), p_state1);

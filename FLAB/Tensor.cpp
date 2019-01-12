@@ -265,6 +265,19 @@ void Tensor::get_row(Tensor& p_tensor, const int p_row) const
 	}
 }
 
+void Tensor::set_row(Tensor& p_tensor, const int p_row) const
+{
+	if (p_tensor.size() != _shape[1])
+	{
+		assert(0);
+	}
+
+	for (int i = 0; i < _shape[1]; i++)
+	{
+		_arr[p_row * _shape[1] + i] = p_tensor[i];
+	}
+}
+
 void Tensor::get_column(Tensor& p_tensor, const int p_column) const
 {
 	if (p_tensor.size() != _shape[0])
@@ -275,6 +288,19 @@ void Tensor::get_column(Tensor& p_tensor, const int p_column) const
 	for (int i = 0; i < _shape[0]; i++)
 	{
 		p_tensor[i] = _arr[i * _shape[1] + p_column];
+	}
+}
+
+void Tensor::set_column(Tensor& p_tensor, const int p_column) const
+{
+	if (p_tensor.size() != _shape[0])
+	{
+		assert(0);
+	}
+
+	for (int i = 0; i < _shape[0]; i++)
+	{
+		_arr[i * _shape[1] + p_column] = p_tensor[i];
 	}
 }
 
@@ -393,6 +419,20 @@ int Tensor::max_value_index() const {
 
 void Tensor::override(Tensor* p_tensor) const {
 	memcpy(_arr, p_tensor->_arr, sizeof(double) * static_cast<size_t>(_size));
+}
+
+void Tensor::override(const double* p_data) const
+{
+	for (int i = 0; i < _size; i++) {
+		_arr[i] = p_data[i];
+	}
+}
+
+void Tensor::override(const int* p_data) const
+{
+	for (int i = 0; i < _size; i++) {
+		_arr[i] = p_data[i];
+	}
 }
 
 void Tensor::fill(const double p_value) const {
@@ -547,7 +587,7 @@ void Tensor::fill(const INIT p_init, const double p_value) const {
 	}
 }
 
-Tensor Tensor::Concat(Tensor& p_tensor1, Tensor& p_tensor2) {
+Tensor Tensor::concat(Tensor& p_tensor1, Tensor& p_tensor2) {
 	double *res = alloc_arr(p_tensor1._size + p_tensor2._size);
 
 	int index = 0;
@@ -565,7 +605,7 @@ Tensor Tensor::Concat(Tensor& p_tensor1, Tensor& p_tensor2) {
 	return Tensor({ p_tensor1._size + p_tensor2._size }, res);
 }
 
-void Tensor::Concat(Tensor* p_result, Tensor* p_tensor1, Tensor* p_tensor2) {
+void Tensor::concat(Tensor* p_result, Tensor* p_tensor1, Tensor* p_tensor2) {
 	int index = 0;
 
 	for (int i = 0; i < p_tensor1->_size; i++) {
@@ -578,3 +618,28 @@ void Tensor::Concat(Tensor* p_result, Tensor* p_tensor1, Tensor* p_tensor2) {
 		index++;
 	}
 }
+
+Tensor Tensor::concat(vector<Tensor>& p_vector)
+{
+	int size = 0;
+	for (auto& v : p_vector)
+	{
+		size += v.size();
+	}
+
+	double *res = alloc_arr(size);
+
+	int i = 0;
+
+	for (auto& v : p_vector)
+	{
+		for(int j = 0; j < v.size(); j++)
+		{
+			res[i] = v[j];
+			i++;
+		}
+	}
+
+	return Tensor({ size }, res);
+}
+

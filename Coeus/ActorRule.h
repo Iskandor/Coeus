@@ -11,7 +11,7 @@ namespace Coeus
 
 		void calc_update(map<string, Tensor>* p_gradient, double p_delta, Tensor* p_policy);
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
-
+		void reset() override;
 	private:
 		IUpdateRule* _rule;
 	};

@@ -75,3 +75,11 @@ void ADAMRule::calc_update(map<string, Tensor>* p_gradient) {
 		//_update[it->first] = -_alpha * _m_mean[it->first] / (_v_mean[it->first].sqrt() + _epsilon);
 	}
 }
+
+void ADAMRule::reset()
+{
+	for (auto it = _update.begin(); it != _update.end(); ++it) {
+		_m[it->first].fill(0);
+		_v[it->first].fill(0);
+	}
+}

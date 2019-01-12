@@ -102,6 +102,9 @@
     <ClCompile Include="PackDataset.cpp">
       <Filter>Source Files\RNN</Filter>
     </ClCompile>
+    <ClCompile Include="CisLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFN.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="RNN.h">
       <Filter>Header Files\RNN</Filter>
+    </ClInclude>
+    <ClInclude Include="CisLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

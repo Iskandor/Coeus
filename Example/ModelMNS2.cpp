@@ -370,16 +370,16 @@ void ModelMNS2::load(const string p_timestamp) {
 }
 
 void ModelMNS2::prepareInputSTS(Tensor* p_output, Tensor *p_input, SOM* p_pfg) const {
-	Tensor::Concat(p_output, p_input, p_pfg->get_output());
+	Tensor::concat(p_output, p_input, p_pfg->get_output());
 }
 
 void ModelMNS2::prepareInputPFG(Tensor* p_output, MSOM* p_f5, MSOM* p_sts) const
 {
-	Tensor::Concat(p_output, p_f5->get_output(), p_sts->get_output());
+	Tensor::concat(p_output, p_f5->get_output(), p_sts->get_output());
 }
 
 void ModelMNS2::prepareInputF5(Tensor* p_output, Tensor *p_input, SOM* p_pfg) const {
-	Tensor::Concat(p_output, p_input, p_pfg->get_output());
+	Tensor::concat(p_output, p_input, p_pfg->get_output());
 }
 
 void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) {

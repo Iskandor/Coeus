@@ -18,6 +18,14 @@ IUpdateRule* AMSGradRule::clone(NetworkGradient* p_network_gradient)
 	return new AMSGradRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
 }
 
+void AMSGradRule::reset()
+{
+	for (auto it = _update.begin(); it != _update.end(); ++it) {
+		_m[it->first].fill(0);
+		_v[it->first].fill(0);
+	}
+}
+
 void AMSGradRule::update_momentum(const string& p_id, Tensor& p_gradient) {
 
 	Tensor* m = &_m[p_id];

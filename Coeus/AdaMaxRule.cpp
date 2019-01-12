@@ -37,6 +37,14 @@ void AdaMaxRule::update_momentum(const string& p_id, Tensor& p_gradient) {
 
 }
 
+void AdaMaxRule::reset()
+{
+	for (auto it = _update.begin(); it != _update.end(); ++it) {
+		_m[it->first].fill(0);
+		_u[it->first].fill(0);
+	}
+}
+
 void AdaMaxRule::calc_update(map<string, Tensor>* p_gradient) {
 	IUpdateRule::calc_update(p_gradient);
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {

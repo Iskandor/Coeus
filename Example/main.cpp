@@ -17,17 +17,13 @@ using namespace MNS;
 
 int main()
 {
-	/*
-	FFN model;
+	//FFN model;
+	//model.run();
 
-	model.run();
-	*/
-
-	/*
-	RNN model;
-
-	model.run_add_problem();
-	*/
+	//RNN model;
+	//model.run_pack();
+	//model.test_pack();
+	//model.run_add_problem();
 
 	/*
 	parallel_for(0, 10, [&](const int i) {

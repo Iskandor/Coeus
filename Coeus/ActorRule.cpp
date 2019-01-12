@@ -52,3 +52,7 @@ IUpdateRule* ActorRule::clone(NetworkGradient* p_network_gradient)
 {
 	return new ActorRule(p_network_gradient, _rule->clone(p_network_gradient), _alpha);
 }
+
+void ActorRule::reset()
+{
+}

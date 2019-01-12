@@ -111,6 +111,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\FLAB;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +149,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\FLAB;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -216,6 +218,10 @@
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="GeneralTDRule.cpp" />
     <ClCompile Include="RuleFactory.cpp" />
+    <ClCompile Include="OpenMPBatchModule.cpp" />
+    <ClCompile Include="PowerSign.cpp" />
+    <ClCompile Include="PowerSignRule.cpp" />
+    <ClCompile Include="QLearningRule.cpp" />
     <ClCompile Include="WarmStartup.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="LISSOM.cpp" />
@@ -317,6 +323,10 @@
     <ClInclude Include="QLearning.h" />
     <ClInclude Include="GeneralTDRule.h" />
     <ClInclude Include="RuleFactory.h" />
+    <ClInclude Include="OpenMPBatchModule.h" />
+    <ClInclude Include="PowerSign.h" />
+    <ClInclude Include="PowerSignRule.h" />
+    <ClInclude Include="QLearningRule.h" />
     <ClInclude Include="WarmStartup.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="LISSOM.h" />

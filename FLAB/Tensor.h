@@ -1,6 +1,7 @@
 #pragma once
 #include <initializer_list>
 #include <ostream>
+#include <vector>
 
 using namespace std;
 
@@ -30,8 +31,9 @@ public:
 	static Tensor Ones(const initializer_list<int> p_shape);
 	static Tensor Value(const initializer_list<int> p_shape, double p_value);
 	static Tensor Random(const initializer_list<int> p_shape, double p_limit);
-	static Tensor Concat(Tensor& p_vector1, Tensor& p_vector2);
-	static void Concat(Tensor* p_result, Tensor* p_vector1, Tensor* p_vector2);
+	static Tensor concat(Tensor& p_vector1, Tensor& p_vector2);
+	static void concat(Tensor* p_result, Tensor* p_vector1, Tensor* p_vector2);
+	static Tensor concat(vector<Tensor>& p_vector);
 
 	void operator = (const Tensor& p_tensor);
 	Tensor operator + (const Tensor& p_tensor) const;
@@ -59,7 +61,9 @@ public:
 	double& operator [](const int p_index) const;
 
 	void get_row(Tensor& p_tensor, int p_row) const;
+	void set_row(Tensor& p_tensor, int p_row) const;
 	void get_column(Tensor& p_tensor, int p_column) const;
+	void set_column(Tensor& p_tensor, int p_column) const;
 
 	Tensor T() const;
 	Tensor diag() const;
@@ -73,6 +77,8 @@ public:
 
 	int max_value_index() const;
 	void override(Tensor* p_tensor) const;
+	void override(const double* p_data) const;
+	void override(const int* p_data) const;
 
 	void fill(double p_value) const;
 
@@ -111,7 +117,7 @@ public:
 	friend ostream &operator<<(ostream &output, const Tensor &p_tensor) {
 		for (int i = 0; i < p_tensor._size; i++) {
 			if (i == p_tensor._size - 1) {
-				output << p_tensor._arr[i] << endl;
+				output << p_tensor._arr[i];
 			}
 			else {
 				output << p_tensor._arr[i] << ",";
