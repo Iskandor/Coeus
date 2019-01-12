@@ -48,6 +48,10 @@ IUpdateRule* GeneralTDRule::clone(NetworkGradient* p_network_gradient)
 	return new GeneralTDRule(p_network_gradient, _rule->clone(p_network_gradient), _alpha, _gamma, _lambda);
 }
 
+void GeneralTDRule::reset()
+{
+}
+
 void GeneralTDRule::reset_traces()
 {
 	for (auto it = _e_traces.begin(); it != _e_traces.end(); ++it) {

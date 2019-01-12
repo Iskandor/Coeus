@@ -17,8 +17,8 @@ using namespace MNS;
 
 int main()
 {
-	//FFN model;
-	//model.run();
+	FFN model;
+	model.run();
 
 	//RNN model;
 	//model.run_pack();
@@ -34,11 +34,13 @@ int main()
 	);
 	*/
 
+	/*
 	for(int i = 0; i < 1; i++)
 	{
 		MazeExample example;
 		example.example_sarsa();
 	}
+	*/
 
 	/*
 	IrisTest iris;
