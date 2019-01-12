@@ -1,29 +1,34 @@
 #include "TD.h"
+#include "RuleFactory.h"
 
 using namespace Coeus;
 
-TD::TD(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, const double p_gamma, const double p_alpha) {
+TD::TD(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, double p_alpha, double p_gamma, double p_lambda) :
+	_gamma(p_gamma)
+{
 	_network = p_network;
-	_gradient_algorithm = p_gradient_algorithm;
-	_alpha = p_alpha;
-	_gamma = p_gamma;
-
-	_target = Tensor::Zero({ _network->get_output()->size() });
+	_network_gradient = new NetworkGradient(p_network);
+	_update_rule = new GeneralTDRule(_network_gradient, RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha), p_alpha, p_gamma, p_lambda);
 }
 
 TD::~TD()
 {
+	delete _network_gradient;
+	delete _update_rule;
 }
 
-double TD::train(Tensor* p_state0, Tensor* p_state1, const double p_reward) {
-	_network->activate(p_state1);
+double TD::train(Tensor* p_state0, Tensor* p_state1, const double p_reward) const
+{
+	_network->activate(p_state0);
 	const double Vs0 = _network->get_output()->at(0);
 	_network->activate(p_state1);
 	const double Vs1 = _network->get_output()->at(0);
 
-	_target[0] = Vs0 + _alpha * (p_reward + _gamma * Vs1 - Vs0);
+	const double delta = p_reward + _gamma * Vs1 - Vs0;
 
-	const double error = _gradient_algorithm->train(p_state0, &_target);
+	_network_gradient->calc_gradient();
+	_update_rule->calc_update(_network_gradient->get_gradient(), delta);
+	_network->update(_update_rule->get_update());
 
-	return error;
+	return delta;
 }

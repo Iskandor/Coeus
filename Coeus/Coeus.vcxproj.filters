@@ -249,9 +249,6 @@
     <ClCompile Include="LSOM_params.cpp">
       <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
-    <ClCompile Include="QLearning.cpp">
-      <Filter>Source Files\Algorithm\RL</Filter>
-    </ClCompile>
     <ClCompile Include="TD.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
@@ -384,11 +381,23 @@
     <ClCompile Include="ILearningRateModule.cpp">
       <Filter>Source Files\Algorithm\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="QLearningRule.cpp">
+    <ClCompile Include="QLearning.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="ICuriosityModule.cpp">
+      <Filter>Source Files\Algorithm\IM</Filter>
+    </ClCompile>
+    <ClCompile Include="CountModule.cpp">
+      <Filter>Source Files\Algorithm\IM</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleFactory.cpp">
+      <Filter>Source Files\Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralTDRule.cpp">
       <Filter>Source Files\Algorithm\RL\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="QLearning2.cpp">
-      <Filter>Source Files\Algorithm\RL</Filter>
+    <ClCompile Include="ActorRule.cpp">
+      <Filter>Source Files\Algorithm\RL\Rules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -536,9 +545,6 @@
     <ClInclude Include="LSOM_params.h">
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
-    <ClInclude Include="QLearning.h">
-      <Filter>Header Files\Algorithm\RL</Filter>
-    </ClInclude>
     <ClInclude Include="TD.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
@@ -674,11 +680,23 @@
     <ClInclude Include="AnnealingScheduler.h">
       <Filter>Header Files\Algorithm\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="QLearningRule.h">
+    <ClInclude Include="QLearning.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="ICuriosityModule.h">
+      <Filter>Header Files\Algorithm\IM</Filter>
+    </ClInclude>
+    <ClInclude Include="CountModule.h">
+      <Filter>Header Files\Algorithm\IM</Filter>
+    </ClInclude>
+    <ClInclude Include="RuleFactory.h">
+      <Filter>Header Files\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralTDRule.h">
       <Filter>Header Files\Algorithm\RL\Rules</Filter>
     </ClInclude>
-    <ClInclude Include="QLearning2.h">
-      <Filter>Header Files\Algorithm\RL</Filter>
+    <ClInclude Include="ActorRule.h">
+      <Filter>Header Files\Algorithm\RL\Rules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

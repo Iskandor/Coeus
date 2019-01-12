@@ -25,6 +25,7 @@ namespace Coeus {
 
 	protected:
 		double _alpha;
+		NetworkGradient* _network_gradient;
 		ILearningRateModule* _learning_rate_module;
 		map<string, Tensor> _update;
 		

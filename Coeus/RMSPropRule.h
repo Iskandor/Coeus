@@ -5,7 +5,7 @@ namespace Coeus {
 	class __declspec(dllexport) RMSPropRule : public IUpdateRule
 	{
 	public:
-		RMSPropRule(NetworkGradient* p_network_gradient, double p_alpha, double p_decay, double p_epsilon);
+		RMSPropRule(NetworkGradient* p_network_gradient, double p_alpha, double p_decay = 0.9, double p_epsilon = 1e-8);
 		~RMSPropRule();
 
 		void calc_update(map<string, Tensor>* p_gradient) override;

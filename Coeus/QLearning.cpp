@@ -1,38 +1,53 @@
 #include "QLearning.h"
+#include "NetworkGradient.h"
+#include "GeneralTDRule.h"
+#include "RuleFactory.h"
 
 using namespace Coeus;
 
-QLearning::QLearning(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, const double p_gamma, const double p_alpha)
+QLearning::QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, const double p_alpha, const double p_gamma, const double p_lambda):
+	_gamma(p_gamma)
 {
 	_network = p_network;
-	_gradient_algorithm = p_gradient_algorithm;
-	_alpha = p_alpha;
-	_gamma = p_gamma;
-
-	_target = Tensor::Zero({ _network->get_output()->size() });
+	_network_gradient = new NetworkGradient(p_network);
+	_update_rule = new GeneralTDRule(_network_gradient, RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha), p_alpha, p_gamma, p_lambda);
 }
+
 
 QLearning::~QLearning()
 {
+	delete _network_gradient;
+	delete _update_rule;
 }
 
-double QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const double p_reward) {
+double QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const double p_reward) const
+{
 	const double maxQs1a = calc_max_qa(p_state1);
 
 	_network->activate(p_state0);
-	_target.override(_network->get_output());
-	_target[p_action0] = _target[p_action0] + _alpha * (p_reward + _gamma * maxQs1a - _target[p_action0]);
+	const double Qs0a = _network->get_output()->at(p_action0);
 
-	const double error = _gradient_algorithm->train(p_state0, &_target);
+	const double delta = p_reward + _gamma * maxQs1a - Qs0a;
 
-	return error;
+	Tensor mask = Tensor::Zero({ _network->get_output()->size() });
+	mask[p_action0] = 1;
+
+	_network_gradient->calc_gradient(&mask);
+	_update_rule->calc_update(_network_gradient->get_gradient(), delta);
+	_network->update(_update_rule->get_update());
+
+	return delta;
 }
 
-double QLearning::calc_max_qa(Tensor* p_state) const {
+void QLearning::reset_traces() const
+{
+	_update_rule->reset_traces();
+}
+
+double QLearning::calc_max_qa(Tensor* p_state) const
+{
 	_network->activate(p_state);
 	const int maxQa = _network->get_output()->max_value_index();
 
 	return _network->get_output()->at(maxQa);
 }
-
-

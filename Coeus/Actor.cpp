@@ -1,28 +1,31 @@
 #include "Actor.h"
+#include "RuleFactory.h"
 
 using namespace Coeus;
 
-Actor::Actor(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, const double p_gamma, const double p_beta) {
+Actor::Actor(NeuralNetwork* p_network, const GRADIENT_RULE p_grad_rule, const double p_alpha) {
 	_network = p_network;
-	_gradient_algorithm = p_gradient_algorithm;
-	_beta = p_beta;
-	_gamma = p_gamma;
+	_network_gradient = new NetworkGradient(p_network);
+	_update_rule = new ActorRule(_network_gradient, RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha), p_alpha);
 
-	_target = Tensor::Zero({ _network->get_output()->size() });
 }
 
 Actor::~Actor()
 {
+	delete _network_gradient;
+	delete _update_rule;
+
 }
 
-double Actor::train(Tensor* p_state0, const int p_action, const double p_value0, const double p_value1, const double p_reward) {
-	double error = 0;
-
+double Actor::train(Tensor* p_state0, const int p_action, const double p_td_error) const
+{
 	_network->activate(p_state0);
-	_target.override(_network->get_output());
-	_target[p_action] = _target[p_action] + _beta * (p_reward + _gamma * p_value1 - p_value0);
+	Tensor mask = Tensor::Zero({ _network->get_output()->size() });
+	mask[p_action] = 1;
 
-	error = _gradient_algorithm->train(p_state0, &_target);
+	_network_gradient->calc_gradient(&mask);
+	_update_rule->calc_update(_network_gradient->get_gradient(), p_td_error, _network->get_output());
+	_network->update(_update_rule->get_update());
 
-	return error;
+	return p_td_error;
 }

@@ -5,7 +5,7 @@ namespace Coeus {
 	class __declspec(dllexport) AdadeltaRule : public IUpdateRule
 	{
 	public:
-		AdadeltaRule(NetworkGradient* p_network_gradient, double p_alpha, double p_decay, double p_epsilon);
+		AdadeltaRule(NetworkGradient* p_network_gradient, double p_alpha, double p_decay = 0.9, double p_epsilon = 1e-8);
 		~AdadeltaRule();
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 

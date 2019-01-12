@@ -37,12 +37,12 @@ int main()
 		static_partitioner()
 	);
 	*/
-	for(int i = 0; i < 10; i++)
+
+	for(int i = 0; i < 1; i++)
 	{
 		MazeExample example;
-		example.example_q();
+		example.example_sarsa();
 	}
-	//example.example_q();
 
 	/*
 	IrisTest iris;

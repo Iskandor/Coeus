@@ -5,7 +5,7 @@ namespace Coeus {
 	class __declspec(dllexport) AdaMaxRule : public IUpdateRule
 	{
 	public:
-		AdaMaxRule(NetworkGradient* p_network_gradient, double p_alpha, double p_beta1, double p_beta2, double p_epsilon);
+		AdaMaxRule(NetworkGradient* p_network_gradient, double p_alpha, double p_beta1 = 0.9, double p_beta2 = 0.999, double p_epsilon = 1e-8);
 		~AdaMaxRule();
 
 		void calc_update(map<string, Tensor>* p_gradient) override;

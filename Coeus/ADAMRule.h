@@ -5,7 +5,7 @@ namespace Coeus {
 	class __declspec(dllexport) ADAMRule : public IUpdateRule
 	{
 	public:
-		ADAMRule(NetworkGradient* p_network_gradient, double p_alpha, double p_beta1, double p_beta2, double p_epsilon);
+		ADAMRule(NetworkGradient* p_network_gradient, double p_alpha, double p_beta1 = 0.9, double p_beta2 = 0.999, double p_epsilon = 1e-8);
 		~ADAMRule();
 
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;

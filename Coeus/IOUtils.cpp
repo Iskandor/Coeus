@@ -23,7 +23,7 @@ void IOUtils::save_network(NeuralNetwork& p_network, const string& p_filename)
 {
 	json data;
 
-	data["header"] = "Coeus " + VERSION;
+	data["header"] = strcat("Coeus ", VERSION);
 	data["network"] = p_network.get_json();
 
 	ofstream file;

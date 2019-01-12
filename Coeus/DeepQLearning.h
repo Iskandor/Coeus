@@ -1,6 +1,7 @@
 #pragma once
 #include "QLearning.h"
 #include "ReplayBuffer.h"
+#include "BaseGradientAlgorithm.h"
 
 namespace Coeus
 {

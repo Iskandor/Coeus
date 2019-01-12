@@ -5,7 +5,7 @@ namespace Coeus {
 	class __declspec(dllexport) AdagradRule : public IUpdateRule
 	{
 	public:
-		AdagradRule(NetworkGradient* p_network_gradient, double p_alpha, double p_epsilon);
+		AdagradRule(NetworkGradient* p_network_gradient, double p_alpha, double p_epsilon = 1e-8);
 		~AdagradRule();
 
 		void calc_update(map<string, Tensor>* p_gradient) override;

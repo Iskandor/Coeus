@@ -11,7 +11,7 @@ using namespace FLAB;
 MazeTask::MazeTask() {
     int topology[] = {0, 0, 0, 0,
                       0, 0, 0, 0,
-                      0, 0, 0, 0,
+                      2, 0, 0, 0,
                       0, 0, 0, 0};
 
     maze = new Maze(topology, 4, 4, 15);

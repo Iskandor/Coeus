@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="ActivationFunctions.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="ActorRule.cpp" />
     <ClCompile Include="Adadelta.cpp" />
     <ClCompile Include="AdadeltaRule.cpp" />
     <ClCompile Include="Adagrad.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="CoreLayer.cpp" />
     <ClCompile Include="CoreLayerGradient.cpp" />
+    <ClCompile Include="CountModule.cpp" />
     <ClCompile Include="CrossEntropyCost.cpp" />
     <ClCompile Include="DDPG.cpp" />
     <ClCompile Include="DeepQLearning.cpp" />
@@ -202,6 +204,7 @@
     <ClCompile Include="IBatchModule.cpp" />
     <ClCompile Include="ICM.cpp" />
     <ClCompile Include="ICostFunction.cpp" />
+    <ClCompile Include="ICuriosityModule.cpp" />
     <ClCompile Include="IDGen.cpp" />
     <ClCompile Include="IGradientComponent.cpp" />
     <ClCompile Include="ILearningRateModule.cpp" />
@@ -210,8 +213,9 @@
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
-    <ClCompile Include="QLearning2.cpp" />
-    <ClCompile Include="QLearningRule.cpp" />
+    <ClCompile Include="QLearning.cpp" />
+    <ClCompile Include="GeneralTDRule.cpp" />
+    <ClCompile Include="RuleFactory.cpp" />
     <ClCompile Include="WarmStartup.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="LISSOM.cpp" />
@@ -239,7 +243,6 @@
     <ClCompile Include="RMSPropRule.cpp" />
     <ClCompile Include="SimpleCellGroup.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
-    <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="QuadraticCost.cpp" />
     <ClCompile Include="RecurrentLayer.cpp" />
     <ClCompile Include="RecurrentLayerGradient.cpp" />
@@ -261,6 +264,7 @@
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="ActorRule.h" />
     <ClInclude Include="Adadelta.h" />
     <ClInclude Include="AdadeltaRule.h" />
     <ClInclude Include="Adagrad.h" />
@@ -286,6 +290,7 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="CoreLayer.h" />
     <ClInclude Include="CoreLayerGradient.h" />
+    <ClInclude Include="CountModule.h" />
     <ClInclude Include="CrossEntropyCost.h" />
     <ClInclude Include="DDPG.h" />
     <ClInclude Include="DeepQLearning.h" />
@@ -300,6 +305,7 @@
     <ClInclude Include="IBatchModule.h" />
     <ClInclude Include="ICM.h" />
     <ClInclude Include="ICostFunction.h" />
+    <ClInclude Include="ICuriosityModule.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IGradientComponent.h" />
     <ClInclude Include="ILearningRateModule.h" />
@@ -308,8 +314,9 @@
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="KLDivergence.h" />
-    <ClInclude Include="QLearning2.h" />
-    <ClInclude Include="QLearningRule.h" />
+    <ClInclude Include="QLearning.h" />
+    <ClInclude Include="GeneralTDRule.h" />
+    <ClInclude Include="RuleFactory.h" />
     <ClInclude Include="WarmStartup.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="LISSOM.h" />
@@ -337,7 +344,6 @@
     <ClInclude Include="RMSPropRule.h" />
     <ClInclude Include="SimpleCellGroup.h" />
     <ClInclude Include="NeuralNetwork.h" />
-    <ClInclude Include="QLearning.h" />
     <ClInclude Include="QuadraticCost.h" />
     <ClInclude Include="RecurrentLayer.h" />
     <ClInclude Include="RecurrentLayerGradient.h" />

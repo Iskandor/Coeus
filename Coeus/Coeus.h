@@ -1,8 +1,8 @@
 #pragma once
 #pragma warning( disable : 4251)
-#include <string>
 
-static const string VERSION = "0.0.1";
+static const char VERSION[] = "0.0.1";
+static const int BUILD = 1;
 
 enum ACTIVATION {
 	LINEAR,
@@ -14,4 +14,16 @@ enum ACTIVATION {
 	RELU,
 	EXPONENTIAL,
 	GAUSS
+};
+
+enum GRADIENT_RULE
+{
+	ADADELTA_RULE,
+	ADAGRAD_RULE,
+	ADAMAX_RULE,
+	ADAM_RULE,
+	AMSGRAD_RULE,
+	BACKPROP_RULE,
+	NADAM_RULE,
+	RMSPROP_RULE
 };

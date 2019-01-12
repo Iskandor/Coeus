@@ -1,24 +1,21 @@
 #pragma once
 #include "NeuralNetwork.h"
-#include "BaseGradientAlgorithm.h"
+#include "ActorRule.h"
 
 namespace Coeus {
 
-	class __declspec(dllexport) Actor
+class __declspec(dllexport) Actor
 {
 public:
-	Actor(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, double p_gamma, double p_beta = 1);
+	Actor(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, double p_alpha);
 	~Actor();
 
-	double train(Tensor* p_state0, int p_action, double p_value0, double p_value1, double p_reward);
+	double train(Tensor* p_state0, int p_action, double p_td_error) const;
 
 protected:
 	NeuralNetwork* _network;
-	BaseGradientAlgorithm* _gradient_algorithm;
-	double _beta;
-	double _gamma;
-
-	Tensor _target;
+	NetworkGradient* _network_gradient;
+	ActorRule* _update_rule;
 };
 
 }
