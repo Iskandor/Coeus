@@ -13,12 +13,12 @@ namespace Coeus {
 		virtual ~IBatchModule();
 
 		virtual double run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) = 0;
-		map<string, Tensor>* get_update() { return &_update_batch; }
+		map<string, Tensor>* get_gradient() { return &_gradient; }
 		int get_batch_size() const { return _batch_size; }
 
 	protected:
 		int					_batch_size;
-		map<string, Tensor> _update_batch;
+		map<string, Tensor> _gradient;
 
 	};
 }

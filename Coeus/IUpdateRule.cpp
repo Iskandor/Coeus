@@ -23,13 +23,6 @@ void IUpdateRule::calc_update(map<string, Tensor>* p_gradient)
 	}
 }
 
-void IUpdateRule::merge(IUpdateRule** p_rule, int p_size)
-{
-}
-
-void IUpdateRule::override(IUpdateRule* p_rule)
-{
-}
 
 void IUpdateRule::init_learning_rate_module(ILearningRateModule* p_learning_rate_module)
 {
