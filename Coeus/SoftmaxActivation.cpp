@@ -29,7 +29,7 @@ Tensor SoftmaxActivation::activate(Tensor& p_input) {
 	return Tensor({ p_input.size() }, arr);
 }
 
-Tensor SoftmaxActivation::deriv(Tensor& p_input) {
+Tensor SoftmaxActivation::derivative(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 
 	const Tensor activation = activate(p_input);
@@ -41,4 +41,9 @@ Tensor SoftmaxActivation::deriv(Tensor& p_input) {
 	}
 
 	return Tensor({ p_input.size(), p_input.size() }, arr);
+}
+
+double SoftmaxActivation::activate(double p_value)
+{
+	return 0;
 }

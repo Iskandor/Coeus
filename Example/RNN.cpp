@@ -100,7 +100,7 @@ void RNN::run_add_problem()
 
 	//ADAM algorithm(&network);
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 1e-3);
+	algorithm.init(new QuadraticCost(), 1e-2);
 	//algorithm.init(new QuadraticCost(), 0.0);
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 0.01, 0.9, true);
@@ -116,7 +116,7 @@ void RNN::run_add_problem()
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<AddProblemSequence>* test = dataset.data();
 
-		const double error = algorithm.train(&data.first, &data.second, 16);
+		const double error = algorithm.train(&data.first, &data.second, 32);
 		//double error = 0;
 		correct = 0;
 
