@@ -21,7 +21,7 @@ Tensor ExponentialActivation::activate(Tensor& p_input) {
 	return Tensor({ p_input.size() }, arr);
 }
 
-Tensor ExponentialActivation::deriv(Tensor& p_input) {
+Tensor ExponentialActivation::derivative(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 	memset(arr, 0, sizeof(double) * p_input.size() * p_input.size());
 

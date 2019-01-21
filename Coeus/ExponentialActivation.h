@@ -9,7 +9,7 @@ namespace Coeus
 		explicit ExponentialActivation(int p_k = 1);
 		~ExponentialActivation();
 		Tensor activate(Tensor& p_input) override;
-		Tensor deriv(Tensor& p_input) override;
+		Tensor derivative(Tensor& p_input) override;
 
 		json get_json() override;
 

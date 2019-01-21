@@ -406,15 +406,15 @@ void MazeExample::example_deep_q() {
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 1e-3);
-	DeepQLearning agent(&network, &optimizer, 0.9, 64, 8);
+	optimizer.init(new QuadraticCost(), 1e-4);
+	DeepQLearning agent(&network, &optimizer, 0.9, 256, 32);
 
 	vector<double> sensors;
 	Tensor state0, state1;
 	int action;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 2000;
+	int epochs = 5000;
 
 	int wins = 0, loses = 0;
 

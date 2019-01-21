@@ -22,7 +22,7 @@ Tensor SigmoidActivation::activate(Tensor& p_input) {
 	return Tensor({ p_input.size() }, arr);
 }
 
-Tensor SigmoidActivation::deriv(Tensor& p_input) {
+Tensor SigmoidActivation::derivative(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 	memset(arr, 0, sizeof(double) * p_input.size() * p_input.size());
 
@@ -33,4 +33,9 @@ Tensor SigmoidActivation::deriv(Tensor& p_input) {
 	}
 
 	return Tensor({ p_input.size(), p_input.size() }, arr);
+}
+
+double SigmoidActivation::activate(const double p_value)
+{
+	return 1 / (1 + exp(-p_value));
 }

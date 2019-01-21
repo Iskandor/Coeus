@@ -20,41 +20,6 @@ IUpdateRule* NadamRule::clone(NetworkGradient* p_network_gradient)
 	return new NadamRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
 }
 
-void NadamRule::merge(IUpdateRule** p_rule, const int p_size)
-{
-
-	for(int i = 0; i < p_size; i++)
-	{
-		auto rule = dynamic_cast<NadamRule*>(p_rule[i]);
-
-		map<string, Tensor>* g = rule->_network_gradient->get_gradient();
-
-		for (auto key = _update.begin(); key != _update.end(); ++key)
-		{
-			Tensor* m = &_m[key->first];
-			Tensor* v = &_v[key->first];
-			
-			for (int i = 0; i < g->at(key->first).size(); i++) {
-				(*m)[i] = _beta1 * (*m)[i] + (1 - _beta1) * g->at(key->first)[i];
-				(*v)[i] = _beta2 * (*v)[i] + (1 - _beta2) * pow(g->at(key->first)[i], 2);
-			}
-		}
-	}
-
-	for(auto key = _update.begin(); key != _update.end(); ++key)
-	{		
-		Tensor* m = &_m[key->first];
-		Tensor* v = &_v[key->first];
-		Tensor* m_mean = &_m_mean[key->first];
-		Tensor* v_mean = &_v_mean[key->first];
-
-		for (int i = 0; i < _update[key->first].size(); i++) {
-			(*m_mean)[i] = (*m)[i] / (1 - _beta1);
-			(*v_mean)[i] = (*v)[i] / (1 - _beta2);
-		}
-	}
-}
-
 void NadamRule::reset()
 {
 	for (auto key = _update.begin(); key != _update.end(); ++key)
@@ -63,18 +28,6 @@ void NadamRule::reset()
 		_v[key->first].fill(0);
 		_m_mean[key->first].fill(0);
 		_v_mean[key->first].fill(0);
-	}
-}
-
-void NadamRule::override(IUpdateRule* p_rule)
-{
-	NadamRule* rule = static_cast<NadamRule*>(p_rule);
-	for (auto key = _update.begin(); key != _update.end(); ++key)
-	{
-		_m[key->first] = rule->_m[key->first];
-		_v[key->first] = rule->_v[key->first];
-		_m_mean[key->first] = rule->_m_mean[key->first];
-		_v_mean[key->first] = rule->_v_mean[key->first];
 	}
 }
 
