@@ -213,9 +213,6 @@
     <ClCompile Include="LISSOM_params.cpp">
       <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
-    <ClCompile Include="BaseGradientAlgorithm.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
     <ClCompile Include="RMSProp.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
@@ -411,6 +408,9 @@
     <ClCompile Include="QLearningRule.cpp">
       <Filter>Source Files\Algorithm\RL\Rules</Filter>
     </ClCompile>
+    <ClCompile Include="GradientAlgorithm.cpp">
+      <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -520,9 +520,6 @@
     </ClInclude>
     <ClInclude Include="LISSOM_params.h">
       <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseGradientAlgorithm.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
     <ClInclude Include="RMSProp.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
@@ -721,6 +718,9 @@
     </ClInclude>
     <ClInclude Include="QLearningRule.h">
       <Filter>Header Files\Algorithm\RL\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientAlgorithm.h">
+      <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

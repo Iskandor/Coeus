@@ -182,7 +182,7 @@
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BaseCellGroup.cpp" />
-    <ClCompile Include="BaseGradientAlgorithm.cpp" />
+    <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="Base_SOM_learning.cpp" />
     <ClCompile Include="Base_SOM_params.cpp" />
@@ -285,7 +285,7 @@
     <ClInclude Include="BackProph.h" />
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BaseCellGroup.h" />
-    <ClInclude Include="BaseGradientAlgorithm.h" />
+    <ClInclude Include="GradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />
     <ClInclude Include="Base_SOM_learning.h" />

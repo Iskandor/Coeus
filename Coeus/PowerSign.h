@@ -1,8 +1,8 @@
 #pragma once
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus {
-	class __declspec(dllexport) PowerSign : public BaseGradientAlgorithm
+	class __declspec(dllexport) PowerSign : public GradientAlgorithm
 	{
 	public:
 		PowerSign(NeuralNetwork* p_network);

@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-ICM::ICM(NeuralNetwork* p_forward_model, BaseGradientAlgorithm* p_forward_alogrithm) {
+ICM::ICM(NeuralNetwork* p_forward_model, GradientAlgorithm* p_forward_alogrithm) {
 	_forward_model = p_forward_model;
 	_forward_alogrithm = p_forward_alogrithm;
 	_forward_reward = 0;

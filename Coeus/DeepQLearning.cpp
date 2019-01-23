@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-DeepQLearning::DeepQLearning(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm, const double p_gamma, const int p_size, const int p_sample)
+DeepQLearning::DeepQLearning(NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm, const double p_gamma, const int p_size, const int p_sample)
 {
 	_network = p_network;
 	_gradient_algorithm = p_gradient_algorithm;

@@ -9,15 +9,14 @@
 
 namespace Coeus {
 
-	class __declspec(dllexport) BaseGradientAlgorithm
+	class __declspec(dllexport) GradientAlgorithm
 	{
 	public:
-		BaseGradientAlgorithm(NeuralNetwork* p_network);
-		virtual ~BaseGradientAlgorithm();
+		GradientAlgorithm(NeuralNetwork* p_network);
+		virtual ~GradientAlgorithm();
 
-		double train(Tensor* p_input, Tensor* p_target) const;
-		double train(vector<Tensor*>* p_input, Tensor* p_target) const;
-		double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch);
+		virtual double train(Tensor* p_input, Tensor* p_target);
+		virtual double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch);
 
 		void add_learning_rate_module(ILearningRateModule* p_learning_rate_module) const;
 	protected:

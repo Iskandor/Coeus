@@ -1,11 +1,11 @@
 #pragma once
 #include "NeuralNetwork.h"
 #include "ICostFunction.h"
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus {
 
-	class __declspec(dllexport) RMSProp: public BaseGradientAlgorithm
+	class __declspec(dllexport) RMSProp: public GradientAlgorithm
 	{
 	public:
 		explicit RMSProp(NeuralNetwork* p_network);

@@ -1,12 +1,14 @@
 #pragma once
 #include "NeuralNetwork.h"
 #include "GeneralTDRule.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus
 {
 	class __declspec(dllexport) QLearning
 	{
 	public:
+		QLearning(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, double p_gamma, double p_alpha = 1);
 		QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, double p_alpha, double p_gamma, double p_lambda = 0);
 		virtual ~QLearning();
 
@@ -19,6 +21,8 @@ namespace Coeus
 		NeuralNetwork* _network;
 		NetworkGradient* _network_gradient;
 		GeneralTDRule* _update_rule;
+		GradientAlgorithm* _optimizer;
+		double _alpha;
 		double _gamma;
 	};
 }

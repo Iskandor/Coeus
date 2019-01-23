@@ -1,8 +1,8 @@
 #pragma once
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus {
-	class __declspec(dllexport) Nadam : public BaseGradientAlgorithm
+	class __declspec(dllexport) Nadam : public GradientAlgorithm
 	{
 	public:
 		explicit Nadam(NeuralNetwork* p_network);

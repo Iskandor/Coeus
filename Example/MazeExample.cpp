@@ -16,6 +16,7 @@
 #include "Encoder.h"
 #include "ADAM.h"
 #include "CountModule.h"
+#include "Nadam.h"
 
 using namespace Coeus;
 
@@ -35,7 +36,7 @@ void MazeExample::example_q() {
 	NeuralNetwork network;
 
 	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden0", 256, RELU));
+	network.add_layer(new CoreLayer("hidden0", 128, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
 	network.add_connection("input", "hidden0", Connection::UNIFORM, 1e-1);
@@ -44,19 +45,19 @@ void MazeExample::example_q() {
 
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.1);
-	//ADAM optimizer(&network);
+	ADAM optimizer(&network);
 	//RMSProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), 1e-3);
+	optimizer.init(new QuadraticCost(), 1e-3);
 	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
-	CountModule curiosity(maze->mazeX() * maze->mazeY());
-	QLearning agent(&network, ADAM_RULE, 1e-4, 0.9, 0.5);
-
+	//CountModule curiosity(maze->mazeX() * maze->mazeY());
+	//QLearning agent(&network, ADAM_RULE, 1e-4, 0.9);
+	QLearning agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;
 	Tensor state0, state1;
 	double reward = 0;
 	double epsilon = 1;
-	const int epochs = 10000;
+	const int epochs = 3000;
 
 	int wins = 0, loses = 0;
 
@@ -302,14 +303,14 @@ void MazeExample::example_actor_critic() {
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new InputLayer("input", 16));
-	network_critic.add_layer(new CoreLayer("hidden0", 128, RELU));
+	network_critic.add_layer(new CoreLayer("hidden0", 256, RELU));
 	network_critic.add_layer(new CoreLayer("output", 1, LINEAR));
 	// feed-forward connections
 	network_critic.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
 	network_critic.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_critic.init();
 
-	TD critic(&network_critic, ADAM_RULE, 1e-3, 0.9);
+	TD critic(&network_critic, NADAM_RULE, 2e-4, 0.9);
 
 	NeuralNetwork network_actor;
 
@@ -321,7 +322,10 @@ void MazeExample::example_actor_critic() {
 	network_actor.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_actor.init();
 
-	Actor actor(&network_actor, ADAM_RULE, 1e-4);
+	//Actor actor(&network_actor, ADAM_RULE, 1e-4);
+	Nadam optimizer(&network_actor);
+	optimizer.init(new QuadraticCost(), 1e-4);
+	Actor actor(&network_actor, &optimizer, 0.1);
 
 	vector<double> sensors;
 	Tensor state0, state1;
@@ -329,7 +333,7 @@ void MazeExample::example_actor_critic() {
 	int value0, value1;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 20000;
+	int epochs = 30000;
 	double td_error = 0;
 
 	int wins = 0, loses = 0;

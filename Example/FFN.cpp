@@ -2,7 +2,7 @@
 #include "NeuralNetwork.h"
 #include "InputLayer.h"
 #include "CoreLayer.h"
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 #include "QuadraticCost.h"
 #include "RMSProp.h"
 #include "LSTMLayer.h"
@@ -61,8 +61,8 @@ void FFN::run() {
 	//BackProp model(&_network);
 	//RMSProp model(&_network);
 	//AdaMax model(&_network);
-	//ADAM model(&_network);
-	Nadam model(&_network);
+	ADAM model(&_network);
+	//Nadam model(&_network);
 	//AMSGrad model(&_network);
 	//PowerSign model(&_network);
 

@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-BPTT::BPTT(NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm)
+BPTT::BPTT(NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm)
 {
 	_network = p_network;
 	_gradient_algorithm = p_gradient_algorithm;

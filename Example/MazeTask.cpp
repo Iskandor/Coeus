@@ -11,7 +11,7 @@ using namespace FLAB;
 MazeTask::MazeTask() {
     int topology[] = {0, 0, 0, 0,
                       0, 0, 0, 0,
-                      2, 0, 0, 0,
+                      0, 0, 0, 0,
                       0, 0, 0, 0};
 
     maze = new Maze(topology, 4, 4, 15);
@@ -36,7 +36,7 @@ MazeTask::~MazeTask() {
 }
 
 bool MazeTask::isFinished() const {
-    return (isWinner() || maze->kill() || maze->moves() > 100);
+    return (isWinner() || maze->kill() || maze->moves() > 1000);
 }
 
 bool MazeTask::isWinner() const

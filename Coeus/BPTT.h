@@ -1,20 +1,20 @@
 #pragma once
 #include "NeuralNetwork.h"
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus {
 
 	class __declspec(dllexport) BPTT
 	{
 	public:
-		BPTT (NeuralNetwork* p_network, BaseGradientAlgorithm* p_gradient_algorithm);
+		BPTT (NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm);
 		~BPTT();
 
 		double train(vector<Tensor*>* p_input, Tensor* p_target) const;
 
 	private:
 		NeuralNetwork* _network;
-		BaseGradientAlgorithm* _gradient_algorithm;
+		GradientAlgorithm* _gradient_algorithm;
 	};
 }
 

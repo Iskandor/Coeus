@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-DoubleQLearning::DoubleQLearning(NeuralNetwork* p_network_a, BaseGradientAlgorithm* p_gradient_algorithm_a, NeuralNetwork* p_network_b, BaseGradientAlgorithm* p_gradient_algorithm_b, const double p_gamma) {
+DoubleQLearning::DoubleQLearning(NeuralNetwork* p_network_a, GradientAlgorithm* p_gradient_algorithm_a, NeuralNetwork* p_network_b, GradientAlgorithm* p_gradient_algorithm_b, const double p_gamma) {
 	_network_a = p_network_a;
 	_network_b = p_network_b;
 	_gradient_algorithm_a = p_gradient_algorithm_a;

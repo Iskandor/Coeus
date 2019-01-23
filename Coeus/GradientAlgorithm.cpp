@@ -1,11 +1,11 @@
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 #include "SingleBatchModule.h"
 #include <chrono>
 #include "OpenMPBatchModule.h"
 
 using namespace Coeus;
 
-BaseGradientAlgorithm::BaseGradientAlgorithm(NeuralNetwork* p_network)
+GradientAlgorithm::GradientAlgorithm(NeuralNetwork* p_network)
 {
 	_network = p_network;
 	_network_gradient = new NetworkGradient(p_network);
@@ -15,7 +15,7 @@ BaseGradientAlgorithm::BaseGradientAlgorithm(NeuralNetwork* p_network)
 }
 
 
-BaseGradientAlgorithm::~BaseGradientAlgorithm()
+GradientAlgorithm::~GradientAlgorithm()
 {
 	delete _update_rule;
 	delete _cost_function;
@@ -23,7 +23,7 @@ BaseGradientAlgorithm::~BaseGradientAlgorithm()
 	delete _batch_module;
 }
 
-double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) const
+double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 {
 	double error = 0;
 
@@ -65,20 +65,7 @@ double BaseGradientAlgorithm::train(Tensor* p_input, Tensor* p_target) const
 	return error;
 }
 
-double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, Tensor* p_target) const
-{
-	/*
-	_network->activate(p_input);
-	const double error = train(p_target);
-
-	//_network_gradient->check_gradient(p_input, p_target);
-
-	return error;
-	*/
-	return 0;
-}
-
-double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
+double GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
 	double error = 0;
 
 	int nbatch = p_input->size() / p_batch;
@@ -121,12 +108,12 @@ double BaseGradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p
 	return error;
 }
 
-void BaseGradientAlgorithm::add_learning_rate_module(ILearningRateModule* p_learning_rate_module) const
+void GradientAlgorithm::add_learning_rate_module(ILearningRateModule* p_learning_rate_module) const
 {
 	_update_rule->init_learning_rate_module(p_learning_rate_module);
 }
 
-void BaseGradientAlgorithm::init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule)
+void GradientAlgorithm::init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule)
 {
 	_cost_function = p_cost_function;
 	_update_rule = p_update_rule;

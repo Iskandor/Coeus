@@ -1,8 +1,8 @@
 #pragma once
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus {
-	class __declspec(dllexport) AdaMax : public BaseGradientAlgorithm
+	class __declspec(dllexport) AdaMax : public GradientAlgorithm
 	{
 	public:
 		explicit AdaMax(NeuralNetwork* p_network);

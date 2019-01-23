@@ -12,13 +12,14 @@ namespace Coeus {
 		void calc_update(map<string, Tensor>* p_gradient) override;
 		void reset() override;
 
+		void set_step(int p_t);
+
 	private:
 		void update_momentum(const string& p_id, Tensor &p_gradient);
 
+		int _t;
 		double _beta1;
-		double _pow_beta1;
 		double _beta2;
-		double _pow_beta2;
 		double _epsilon;
 
 		map<string, Tensor> _m;

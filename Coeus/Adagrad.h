@@ -1,9 +1,9 @@
 #pragma once
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus {
 
-	class __declspec(dllexport) Adagrad : public BaseGradientAlgorithm
+	class __declspec(dllexport) Adagrad : public GradientAlgorithm
 	{
 	public:
 		explicit Adagrad(NeuralNetwork* p_network);

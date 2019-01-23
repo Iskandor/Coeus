@@ -3,8 +3,8 @@
 using namespace Coeus;
 
 
-DDPG::DDPG(	NeuralNetwork* p_network_critic, BaseGradientAlgorithm* p_gradient_algorithm_critic, const double p_gamma, 
-			NeuralNetwork* p_network_actor, BaseGradientAlgorithm* p_gradient_algorithm_actor,
+DDPG::DDPG(	NeuralNetwork* p_network_critic, GradientAlgorithm* p_gradient_algorithm_critic, const double p_gamma, 
+			NeuralNetwork* p_network_actor, GradientAlgorithm* p_gradient_algorithm_actor,
            	const int p_buffer_size, const int p_sample_size):
 	_network_actor(p_network_actor), _network_critic(p_network_critic),	_gradient_algorithm_actor(p_gradient_algorithm_actor), _gradient_algorithm_critic(p_gradient_algorithm_critic),
 	_gamma(p_gamma), _sample_size(p_sample_size) {

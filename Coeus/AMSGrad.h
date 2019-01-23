@@ -1,9 +1,9 @@
 #pragma once
-#include "BaseGradientAlgorithm.h"
+#include "GradientAlgorithm.h"
 
 namespace Coeus
 {
-	class __declspec(dllexport) AMSGrad : public BaseGradientAlgorithm
+	class __declspec(dllexport) AMSGrad : public GradientAlgorithm
 	{
 	public:
 		explicit AMSGrad(NeuralNetwork* p_network);
