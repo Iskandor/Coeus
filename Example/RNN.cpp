@@ -151,7 +151,7 @@ void RNN::run_pack()
 
 	cout << "Loading dataset..." << endl;
 	PackDataset dataset;
-	dataset.load_data("./data/pack_data_red.csv");
+	dataset.load_data("./data/pack_data2.csv");
 
 	//NeuralNetwork network(IOUtils::load_network("predictor.net"));
 	NeuralNetwork network;

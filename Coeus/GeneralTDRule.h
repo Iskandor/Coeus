@@ -14,9 +14,11 @@ namespace Coeus
 		void reset() override;
 		void reset_traces();
 
-	private:		
+	private:
+		void calc_update(map<string, Tensor>* p_gradient) override;
 		void update_traces(map<string, Tensor>* p_gradient);
 		double _gamma;
+		double _delta;
 		double _lambda;
 
 		map<string, Tensor> _e_traces;

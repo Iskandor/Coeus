@@ -17,7 +17,6 @@ public:
 	void override(BaseLayer* p_source) override;
 	void reset() override {}
 	void init(vector<BaseLayer*>& p_input_layers) override {}
-	void calc_partial_derivs() override;
 	json get_json() const override;
 
 private:

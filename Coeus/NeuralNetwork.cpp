@@ -342,14 +342,6 @@ void NeuralNetwork::create_directed_graph()
 	}
 }
 
-void NeuralNetwork::calc_partial_derivs()
-{
-	for (auto it = _layers.begin(); it != _layers.end(); ++it)
-	{
-		it->second->calc_partial_derivs();
-	}
-}
-
 void NeuralNetwork::create_param_map(NeuralNetwork* p_network) {
 	_param_map.clear();
 
@@ -396,30 +388,4 @@ json NeuralNetwork::get_json() const
 	return data;
 }
 
-void NeuralNetwork::calc_partial_derivs(Tensor* p_input)
-{
-	// single input
-	if (p_input->rank() == 1)
-	{
-		_layers[_input_layer[0]]->activate(p_input);
 
-		activate();
-		calc_partial_derivs();
-	}
-
-	// sequence
-	if (p_input->rank() == 2)
-	{
-		Tensor input = Tensor::Zero({ p_input->shape(1) });
-
-		reset();
-		for (int i = 0; i < p_input->shape(0); i++)
-		{
-			p_input->get_row(input, i);
-			_layers[_input_layer[0]]->activate(&input);
-
-			activate();
-			calc_partial_derivs();
-		}
-	}
-}

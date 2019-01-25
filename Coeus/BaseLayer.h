@@ -31,8 +31,7 @@ public:
 	virtual void integrate(Tensor* p_input, Tensor* p_weights) = 0;
 	virtual void activate(Tensor* p_input = nullptr) = 0;
 	virtual void override(BaseLayer* p_source) = 0;
-	virtual void reset() = 0;
-	virtual void calc_partial_derivs() {}
+	virtual void reset() = 0;	
 
 	TYPE	get_type() const { return _type; }
 	string	get_id() const { return _id; }

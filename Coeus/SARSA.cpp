@@ -18,12 +18,12 @@ SARSA::~SARSA()
 }
 
 
-double SARSA::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const int p_action1, const double p_reward) const
+double SARSA::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const int p_action1, const double p_reward, const bool p_final) const
 {
 	_network->activate(p_state0);
 	const double Qs0a0 = _network->get_output()->at(p_action0);
 	_network->activate(p_state1);
-	const double Qs1a1 = _network->get_output()->at(p_action1);
+	const double Qs1a1 = p_final ? 0 : _network->get_output()->at(p_action1);
 
 	const double delta = p_reward + _gamma * Qs1a1 - Qs0a0;
 

@@ -100,14 +100,7 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 		add_param(_in_forget_gate);
 	}
 
-	_partial_deriv[_in_input_gate->get_id()] = Tensor::Zero({ _cec->get_dim(), aux_dim });
-	_partial_deriv[_in_forget_gate->get_id()] = Tensor::Zero({ _cec->get_dim(), aux_dim });
-	_partial_deriv[_input_group->get_id() + " " + _cec->get_id()] = Tensor::Zero({ _cec->get_dim(), dim });
-	_partial_deriv[_ct_cec->get_id()] = Tensor::Zero({ _cec->get_dim(), _cec->get_dim() });
 
-	_partial_deriv[_cec->get_id()] = Tensor::Zero({ _cec->get_dim() });
-	_partial_deriv[_input_gate->get_id()] = Tensor::Zero({ _cec->get_dim() });
-	_partial_deriv[_forget_gate->get_id()] = Tensor::Zero({ _cec->get_dim() });
 }
 
 void LSTMLayer::integrate(Tensor* p_input, Tensor* p_weights)
@@ -144,6 +137,7 @@ void LSTMLayer::override(BaseLayer* p_source)
 
 void LSTMLayer::reset()
 {
+	/*
 	_partial_deriv[_in_input_gate->get_id()].fill(0);
 	_partial_deriv[_in_forget_gate->get_id()].fill(0);
 	_partial_deriv[_input_group->get_id() + " " + _cec->get_id()].fill(0);
@@ -152,71 +146,10 @@ void LSTMLayer::reset()
 	_partial_deriv[_input_gate->get_id()].fill(0);
 	_partial_deriv[_forget_gate->get_id()].fill(0);
 	_partial_deriv[_cec->get_id()].fill(0);
+	*/
 
 	_cec->reset();
 	_context->get_output()->fill(0);
-}
-
-void LSTMLayer::calc_partial_derivs()
-{
-	const Tensor g = _cec->get_g();
-	const Tensor h = _cec->get_h();
-	const Tensor dg = _cec->get_dg();
-
-	double d0;
-	double d1;
-
-	Tensor* pd_in_input_gate = &_partial_deriv[_in_input_gate->get_id()];
-	Tensor* pd_in_forget_gate = &_partial_deriv[_in_forget_gate->get_id()];
-	Tensor* pd_in_cec = &_partial_deriv[_input_group->get_id() + " " + _cec->get_id()];
-	Tensor* pd_ct_cec = &_partial_deriv[_ct_cec->get_id()];
-
-	Tensor* pd_input_gate = &_partial_deriv[_input_gate->get_id()];
-	Tensor* pd_forget_gate = &_partial_deriv[_forget_gate->get_id()];
-	Tensor* pd_cec = &_partial_deriv[_cec->get_id()];
-
-	Tensor input_gate_doutput = _input_gate->get_deriv_output();
-	Tensor forget_gate_doutput = _forget_gate->get_deriv_output();
-
-	for (int j = 0; j < _cec->get_dim(); j++)
-	{
-		for (int m = 0; m < _aux_input->get_dim(); m++)
-		{
-			d0 = pd_in_input_gate->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = g[j] * input_gate_doutput.at(j, j) * _aux_input->get_output()->at(m);
-			pd_in_input_gate->set(j, m, d0 + d1);
-
-			d0 = pd_in_forget_gate->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = h[j] * forget_gate_doutput.at(j, j) * _aux_input->get_output()->at(m);
-			pd_in_forget_gate->set(j, m, d0 + d1);
-		}
-
-		for (int m = 0; m < _input_group->get_dim(); m++)
-		{
-			d0 = pd_in_cec->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = dg[j] * _input_gate->get_output()->at(j) * _input_group->get_output()->at(m);
-			pd_in_cec->set(j, m, d0 + d1);
-		}
-
-		for (int m = 0; m < _context->get_dim(); m++)
-		{
-			d0 = pd_ct_cec->at(j, m) * _forget_gate->get_output()->at(j);
-			d1 = dg[j] * _input_gate->get_output()->at(j) * _context->get_output()->at(m);
-			pd_ct_cec->set(j, m, d0 + d1);
-		}
-
-		d0 = (*pd_input_gate)[j] * _forget_gate->get_output()->at(j);
-		d1 = g[j] * input_gate_doutput.at(j, j);
-		(*pd_input_gate)[j] = d0 + d1;
-
-		d0 = (*pd_forget_gate)[j] * _forget_gate->get_output()->at(j);
-		d1 = g[j] * forget_gate_doutput.at(j, j);
-		(*pd_forget_gate)[j] = d0 + d1;
-
-		d0 = (*pd_cec)[j] * _forget_gate->get_output()->at(j);
-		d1 = dg[j] * _input_gate->get_output()->at(j);
-		(*pd_cec)[j] = d0 + d1;
-	}
 }
 
 json LSTMLayer::get_json() const

@@ -61,10 +61,6 @@ void RecurrentLayer::reset()
 	_context_group->get_output()->fill(0);
 }
 
-void RecurrentLayer::calc_partial_derivs()
-{
-}
-
 RecurrentLayer::RecurrentLayer(RecurrentLayer* p_source) : BaseLayer(p_source)
 {
 	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_group));

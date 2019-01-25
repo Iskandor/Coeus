@@ -1,7 +1,7 @@
 #pragma once
 #pragma warning( disable : 4251)
 
-static const char VERSION[] = "0.0.1";
+static const char VERSION[] = "Coeus 0.0.1";
 static const int BUILD = 1;
 
 enum ACTIVATION {

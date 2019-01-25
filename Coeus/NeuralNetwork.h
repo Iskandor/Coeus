@@ -37,14 +37,11 @@ public:
 
 	json get_json() const;
 
-	void calc_partial_derivs(Tensor* p_input);
-
 protected:	
 	void activate();	
 	void create_directed_graph();
 
-private:
-	void calc_partial_derivs();
+private:	
 	void create_param_map(NeuralNetwork* p_network);
 	void add_connection(Connection* p_connection);
 	

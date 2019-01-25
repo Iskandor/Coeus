@@ -25,6 +25,8 @@ namespace Coeus {
 		void init_learning_rate_module(ILearningRateModule* p_learning_rate_module);
 
 	protected:
+		
+
 		double _alpha;
 		NetworkGradient* _network_gradient;
 		ILearningRateModule* _learning_rate_module;

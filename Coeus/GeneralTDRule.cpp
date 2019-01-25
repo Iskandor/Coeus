@@ -19,28 +19,37 @@ GeneralTDRule::~GeneralTDRule()
 	delete _rule;
 }
 
-
 void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta)
+{
+	_delta = p_delta;
+	calc_update(p_gradient);
+}
+
+
+void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient)
 {
 	IUpdateRule::calc_update(p_gradient);
 
-	_rule->calc_update(p_gradient);
+	//_rule->calc_update(p_gradient);
 
 	if (_lambda > 0)
 	{
-		update_traces(_rule->get_update());
+		update_traces(p_gradient);
 	}
 
-	for (auto it = _rule->get_update()->begin(); it != _rule->get_update()->end(); ++it) {
+	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
 		if (_lambda > 0)
 		{
-			_update[it->first] = -p_delta * _e_traces[it->first];
+			_update[it->first] = -_delta * _e_traces[it->first];
 		}
 		else
 		{
-			_update[it->first] = -p_delta * it->second;
+			_update[it->first] = -_delta * it->second;
 		}
 	}
+
+	_rule->calc_update(&_update);
+	_update = *_rule->get_update();
 }
 
 IUpdateRule* GeneralTDRule::clone(NetworkGradient* p_network_gradient)

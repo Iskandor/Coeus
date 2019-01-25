@@ -44,11 +44,6 @@ void CoreLayer::override(BaseLayer * p_source)
 	_group->get_bias()->override(source->_group->get_bias());
 }
 
-void CoreLayer::calc_partial_derivs()
-{
-
-}
-
 json CoreLayer::get_json() const
 {
 	json data = BaseLayer::get_json();

@@ -24,7 +24,7 @@ double SingleBatchModule::run_batch(const int p_b, const int p_batch, vector<Ten
 
 	for (int i = 0; i < p_batch; i++) {
 		const int index = p_b * p_batch + i;
-		_network->calc_partial_derivs(p_input->at(index));
+		_network_gradient->calc_partial_derivs(p_input->at(index));
 		Tensor dloss = _cost_function->cost_deriv(_network->get_output(), p_target->at(index));
 		error += _cost_function->cost(_network->get_output(), p_target->at(index));
 		_network_gradient->calc_gradient(&dloss);

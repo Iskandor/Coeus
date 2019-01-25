@@ -39,7 +39,7 @@ double PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input,
 {
 	double error = 0;
 	
-	//auto start = chrono::high_resolution_clock::now();
+	auto start = chrono::high_resolution_clock::now();
 
 	for (auto& it : _gradient)
 	{
@@ -48,13 +48,19 @@ double PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input,
 
 	parallel_for(0, p_batch, [&](const int i) {
 		const int index = p_b * p_batch + i;
-		_clone_network[i]->calc_partial_derivs(p_input->at(index));
+		_network_gradient[i]->calc_partial_derivs(p_input->at(index));
 		Tensor dloss = _cost_function->cost_deriv(_clone_network[i]->get_output(), p_target->at(index));
 		_error[i] = _cost_function->cost(_clone_network[i]->get_output(), p_target->at(i));
 		_network_gradient[i]->calc_gradient(&dloss);		
 	},
 	static_partitioner()
 	);
+
+	auto end = chrono::high_resolution_clock::now();
+
+	//cout << "Gradient" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+
+	start = chrono::high_resolution_clock::now();
 
 	for(int i = 0; i < _batch_size; i++)
 	{
@@ -65,9 +71,9 @@ double PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input,
 		error += _error[i];
 	}
 
-	//auto end = chrono::high_resolution_clock::now();
+	end = chrono::high_resolution_clock::now();
 
-	//cout << "Batch" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	//cout << "Accumulate" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 
 	return error;
 }

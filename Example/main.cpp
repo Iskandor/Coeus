@@ -20,26 +20,59 @@ int main()
 	//FFN model;
 	//model.run();
 
-	//RNN model;
+	RNN model;
 	//model.run_pack();
 	//model.test_pack();
-	//model.run_add_problem();
-
+	model.run_add_problem();
 	/*
-	parallel_for(0, 10, [&](const int i) {
-			MazeExample example;
-			example.example_q();
-		},
-		static_partitioner()
-	);
-	*/
+	Logger::instance().init("maze.log");
 
-	for(int i = 0; i < 1; i++)
+	for(int i = 8; i < 9; i++)
 	{
-		MazeExample example;
-		example.example_q();
+		for(int a = -1; a > -6; a--)
+		{
+			for (int l = 3; l < 4; l++)
+			{
+				const int hidden = pow(2, i);
+				const double alpha = pow(10, a);
+				const double lambda = l * 0.2 - 0.1;
+				int correct = 0;
+
+				for (int e = 0; e < 10; e++)
+				{
+					MazeExample example;
+					correct += example.example_q(hidden, alpha, lambda, false);
+				}
+
+				cout << hidden << ", " << alpha << ", " << lambda << ", " << correct << "/10" << endl;
+				Logger::instance().log(to_string(hidden) + ", " + to_string(alpha) + ", " + to_string(lambda) + ", " + to_string(correct) + "/10");
+
+			}
+
+			const int hidden = pow(2, i);
+			const double alpha = pow(10, a);
+			int correct = 0;
+			int c[10];
+
+			parallel_for(0, 10, [&](const int t) {
+				MazeExample example;
+				c[t] = example.example_q(hidden, alpha, 0, false);
+				},
+				static_partitioner()
+			);
+
+			for (auto ci : c)
+			{
+				correct += ci;
+			}
+
+			cout << hidden << ", " << alpha << ", " << correct << "/10" << endl;
+			Logger::instance().log(to_string(hidden) + ", " + to_string(alpha) + ", " + to_string(correct) + "/10");
+		}
 	}
-	
+
+	Logger::instance().close();
+	*/
 	/*
 	IrisTest iris;
 
