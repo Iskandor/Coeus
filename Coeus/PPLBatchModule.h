@@ -14,11 +14,10 @@ namespace Coeus {
 		PPLBatchModule(NeuralNetwork* p_network, ICostFunction* p_cost_function, int p_batch);
 		~PPLBatchModule();
 
-		double run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
+		void run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
 
 	private:
 		
-		double*				_error;
 		ICostFunction*		_cost_function;
 		NeuralNetwork*		_network;
 		NeuralNetwork**		_clone_network;

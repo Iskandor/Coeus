@@ -10,7 +10,7 @@ namespace Coeus {
 		SingleBatchModule(NeuralNetwork* p_network, NetworkGradient* p_network_gradient, ICostFunction* p_cost_function, int p_batch);
 		~SingleBatchModule();
 
-		double run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
+		void run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
 
 	private:
 		NeuralNetwork*		_network;

@@ -34,10 +34,8 @@ OpenMPBatchModule::~OpenMPBatchModule()
 	delete _error;
 }
 
-double OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target)
+void OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target)
 {
-	double error = 0;
-
 	auto start = chrono::high_resolution_clock::now();
 
 	for (auto it = _gradient.begin(); it != _gradient.end(); ++it) {
@@ -48,7 +46,6 @@ double OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_inp
 	for (int i = 0; i < p_batch; i++) {
 		const int index = p_b * p_batch + i;
 		_network_gradient[i]->calc_partial_derivs(p_input->at(index));
-		_error[i] = _cost_function->cost(_clone_network[i]->get_output(), p_target->at(i));
 		Tensor dloss = _cost_function->cost_deriv(_clone_network[i]->get_output(), p_target->at(index));
 		_network_gradient[i]->calc_gradient(&dloss);
 	}
@@ -58,12 +55,9 @@ double OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_inp
 		for (auto it = _network_gradient[i]->get_gradient()->begin(); it != _network_gradient[i]->get_gradient()->end(); ++it) {
 			_gradient[it->first] += it->second;
 		}
-		error += _error[i];
 	}
 
 	auto end = chrono::high_resolution_clock::now();
 
 	//cout << "Batch" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
-
-	return error;
 }

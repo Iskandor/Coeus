@@ -11,7 +11,7 @@ namespace Coeus
 		OpenMPBatchModule(NeuralNetwork* p_network, ICostFunction* p_cost_function, int p_batch);
 		~OpenMPBatchModule();
 
-		double run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
+		void run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
 
 	private:
 
