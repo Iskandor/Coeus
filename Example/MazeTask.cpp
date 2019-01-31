@@ -36,7 +36,7 @@ MazeTask::~MazeTask() {
 }
 
 bool MazeTask::isFinished() const {
-    return (isWinner() || maze->kill() || maze->moves() > 1000);
+    return (isWinner() || maze->kill() || maze->moves() > 100);
 }
 
 bool MazeTask::isWinner() const

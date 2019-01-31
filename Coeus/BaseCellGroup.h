@@ -52,7 +52,7 @@ namespace Coeus {
 		IActivationFunction*	_f;
 		Tensor					_output;
 		Tensor					_deriv_input;
-		bool					_bias_flag{};
+		bool					_bias_flag;
 		Tensor*					_bias;
 
 	};

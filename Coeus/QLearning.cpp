@@ -51,8 +51,7 @@ double QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1,
 	if (_optimizer != nullptr)
 	{
 		Tensor target = *_network->get_output();
-
-		target[p_action0] = target[p_action0] + _alpha * delta;
+		target[p_action0] += _alpha * delta;
 
 		_optimizer->train(p_state0, &target);
 	}

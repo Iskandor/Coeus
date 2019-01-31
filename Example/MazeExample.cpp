@@ -39,8 +39,8 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 	network.add_layer(new CoreLayer("hidden0", p_hidden, RELU));
 	network.add_layer(new CoreLayer("output", 4, LINEAR));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::UNIFORM, 1e-1);
-	network.add_connection("hidden0", "output", Connection::UNIFORM, 1e-1);
+	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.01);
+	network.add_connection("hidden0", "output", Connection::UNIFORM, 0.01);
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -57,7 +57,7 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 	Tensor state0, state1;
 	double reward = 0;
 	double epsilon = 1;
-	const int epochs = 10000;
+	int epochs = 0;
 
 	int wins = 0, loses = 0;
 
@@ -67,8 +67,10 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 
 	//test(&network);
 
-	for (int e = 0; e < epochs; e++) {
-		if (p_verbose) cout << "Epoch " << e << endl;
+	//for (int e = 0; e < epochs; e++) {
+	while(wins < 20 && loses < 10) {
+		epochs++;
+		//if (p_verbose) cout << "Epoch " << e << endl;
 
 		task.getEnvironment()->reset();
 
@@ -86,8 +88,13 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 			//curiosity.update(&state1);
 			reward = task.getReward(); // +curiosity.get_reward(&state1);
 
-			//cout << maze->toString() << endl;
-			//cout << reward << endl;
+			/*
+			cout << maze->toString() << endl;
+			cout << state0 << endl;
+			cout << action0 << endl;
+			cout << state1 << endl;
+			cout << reward << endl;
+			*/
 
 			agent.train(&state0, action0, &state1, reward);
 			state0.override(&state1);
@@ -95,10 +102,15 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 
 		if (task.isWinner()) {
 			wins++;
+			if (epsilon > 0) epsilon *= 0.999;
 		}
 		else {
-			loses++;
+			wins = 0;
+			if (epsilon < 1e-1)	loses++;
 		}
+
+		cout << epsilon << endl;
+		cout << wins << " " << task.getEnvironment()->moves() << " " << reward << endl;
 
 		//agent.reset_traces();
 		if (p_verbose)
@@ -113,14 +125,16 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 
 
 		//exploration->update((double)e / epochs);
-
+		/*
 		if (epsilon > 0.1) {
 			epsilon -= (1.0 / epochs);
 		}
-
+		*/
 	}
 
-	return test(&network, p_verbose);
+	cout << epochs << endl;
+
+	return test(&network, true);
 }
 
 void MazeExample::example_double_q() {
@@ -666,7 +680,8 @@ int MazeExample::choose_action(Tensor* p_input, const double epsilon) {
 		action = RandomGenerator::getInstance().random(0, 3);
 	}
 	else {
-		for (int i = 1; i < p_input->size(); i++) {
+		/*
+		for (int i = 0; i < p_input->size(); i++) {
 			if ((*p_input)[i] != (*p_input)[i])
 			{
 				assert(0);
@@ -675,6 +690,8 @@ int MazeExample::choose_action(Tensor* p_input, const double epsilon) {
 				action = i;
 			}
 		}
+		*/
+		action = p_input->max_value_index();
 	}
 
 	return action;
