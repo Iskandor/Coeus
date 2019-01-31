@@ -111,6 +111,8 @@ public:
 	static double ew_abs(double p_x);
 	static double sgn(double p_x);
 
+	static double dist(Tensor* p_tensor1, Tensor* p_tensor2);
+
 	static int control;
 
 

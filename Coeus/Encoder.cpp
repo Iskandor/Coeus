@@ -49,3 +49,12 @@ void Encoder::pop_code(Tensor& p_result, const double p_value, const double p_lo
 		p_result[i] = Metrics::gaussian_distance((p_value - p_lower_limit) * c, 0.4, i);
 	}
 }
+
+void Encoder::grey_code(Tensor& p_result, Tensor& p_bin)
+{
+	p_result[0] = p_bin[0];
+
+	for (int i = 1; i < p_bin.size(); i++) {
+		p_result[i] = xor_c(p_bin[i - 1], p_bin[i]);
+	}
+}

@@ -17,6 +17,7 @@
 #include <chrono>
 #include "Logger.h"
 #include "PowerSign.h"
+#include "CrossEntropyCost.h"
 
 
 RNN::RNN()
@@ -218,6 +219,78 @@ void RNN::run_pack()
 	IOUtils::save_network(network, "predictor.net");
 }
 
+void RNN::run_pack2() const
+{
+	Logger::instance().init("log.log");
+	Logger::instance().log("Start");
+	cout << "Loading config..." << endl;
+	json config = load_config("config.json");
+	cout << config << endl;
+
+	cout << "Loading dataset..." << endl;
+	PackDataset dataset;
+	dataset.load_data("./data/pack_data2.csv", true);
+
+	//NeuralNetwork network(IOUtils::load_network("predictor.net"));
+	NeuralNetwork network;
+	network.add_layer(new InputLayer("input", 224));
+	network.add_layer(new LSTMLayer("hidden", config["hidden"].get<int>(), TANH));
+	network.add_layer(new CoreLayer("output", 6, SOFTMAX));
+
+	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
+
+	network.init();
+
+	Nadam algorithm(&network);
+	algorithm.init(new CrossEntropyCost(), config["alpha"].get<double>());
+
+	int epoch = 0;
+	double error = 0;
+	int correct = 0;
+	const int size = dataset.data()->size();
+	const int bound = size * 0.99;
+
+	cout << "Training..." << endl;
+
+	while (correct < bound) {
+		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
+		vector<PackDataSequence>* test = dataset.data();
+
+		auto start = chrono::high_resolution_clock::now();
+		error = algorithm.train(&data.first, &data.second, config["batch"].get<int>());
+		auto end = chrono::high_resolution_clock::now();
+
+		Logger::instance().log(to_string(error));
+
+		if (epoch % config["evaluate"].get<int>() == 0)
+		{
+			correct = 0;
+
+			for (auto sequence : *test)
+			{
+				network.activate(&sequence.input);
+
+				const double dist = Tensor::dist(network.get_output(), &sequence.target);
+				if (dist < 0.01 * sequence.target.size())
+				{
+					correct++;
+				}
+			}
+			cout << correct << " / " << size << endl;
+		}
+
+		cout << error << endl;
+		cout << "Time: " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+		epoch++;
+	}
+
+	Logger::instance().log("Finish");
+	Logger::instance().close();
+
+	IOUtils::save_network(network, "predictor.net");
+}
+
 void RNN::test_add_problem(NeuralNetwork& p_network) const
 {
 	AddProblemDataset testset;
@@ -245,19 +318,20 @@ void RNN::test_pack() const
 {
 	cout << "Loading dataset..." << endl;
 	PackDataset dataset;
-	dataset.load_data("./data/pack_data.csv");
+	dataset.load_data("./data/pack_data2.csv");
 
 	cout << "Loading network..." << endl;
-	NeuralNetwork network(IOUtils::load_network("predictor.net"));
+	NeuralNetwork network(IOUtils::load_network("predictor_pd2.net"));
 
 	cout << "Testing..." << endl;
 	vector<PackDataSequence>* test = dataset.data();
 
 	const int size = dataset.data()->size();
+	int incorrect50 = 0;
 	int correct30 = 0;
 	int correct1 = 0;
 	double error = 0;
-	QuadraticCost c;
+	CrossEntropyCost c;
 
 	for (auto sequence : *test)
 	{
@@ -272,13 +346,18 @@ void RNN::test_pack() const
 		{
 			correct30++;
 		}
+		else
+		if (abs(network.get_output()->at(0) - sequence.target[0]) > 0.5)
+		{
+			incorrect50++;
+		}
 
 		error += c.cost(network.get_output(), &sequence.target);
 
 		//cout << *network.get_output() << " - " << sequence.target[0] << endl;
 	}
 
-	cout << correct1 << " / " << correct1 + correct30 << " / " << size << endl;
+	cout << correct1 << " / " << correct1 + correct30 << " / " << incorrect50 << " / "  << size << endl;
 	cout << error << endl;
 }
 

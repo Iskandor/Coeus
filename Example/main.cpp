@@ -21,7 +21,7 @@ int main()
 	//model.run();
 
 	RNN model;
-	//model.run_pack();
+	//model.run_pack2();
 	//model.test_pack();
 	model.run_add_problem();
 	/*
@@ -80,6 +80,9 @@ int main()
 	iris.run(2000);
 	iris.test();
 	*/
+
+	//MazeExample example;
+	//cout << example.example_q(256, 1e-4, 0, false);
 
 	/*
 	const string timestamp = to_string(time(nullptr));

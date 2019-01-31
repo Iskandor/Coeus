@@ -46,7 +46,7 @@ public:
 	~PackDataset();
 
 	
-	void load_data(const string& p_filename);
+	void load_data(const string& p_filename, bool p_prob = false, bool p_test = false);
 	vector<PackDataSequence>* permute();
 	vector<PackDataSequence>* data() { return &_data; }
 	pair<vector<Tensor*>, vector<Tensor*>> to_vector();
@@ -55,7 +55,9 @@ public:
 
 private:
 	void parse_line(string& p_line);
-	void create_sequence(vector<PackDataRow>& p_row);
+	void create_sequence(vector<PackDataRow>& p_sequence);
+	void create_sequence_prob(vector<PackDataRow>& p_sequence);
+	void create_sequence_test(vector<PackDataRow>& p_sequence);
 	bool has_target(vector<PackDataRow>& p_row) const;
 
 	template<typename T>

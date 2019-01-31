@@ -522,6 +522,18 @@ double Tensor::sgn(const double p_x) {
 	return res;
 }
 
+double Tensor::dist(Tensor* p_tensor1, Tensor* p_tensor2)
+{
+	double result = 0;
+
+	for(int i = 0; i < p_tensor1->_size; i++)
+	{
+		result += std::pow(p_tensor1->_arr[i] - p_tensor2->_arr[i], 2);
+	}
+
+	return std::sqrt(result);
+}
+
 void Tensor::free_arr() const {
 	Free(_arr);
 	//free(_arr);
