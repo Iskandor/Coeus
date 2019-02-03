@@ -13,9 +13,9 @@ ActorRule::~ActorRule()
 	delete _rule;
 }
 
-void ActorRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta, Tensor* p_policy)
+void ActorRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta, Tensor* p_policy, double p_alpha)
 {
-	IUpdateRule::calc_update(p_gradient);
+	IUpdateRule::calc_update(p_gradient, p_alpha);
 
 	_rule->calc_update(p_gradient);
 	map<string, Tensor> gsa = *_rule->get_update();

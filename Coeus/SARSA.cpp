@@ -31,7 +31,7 @@ double SARSA::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, con
 	mask[p_action0] = 1;
 
 	_network_gradient->calc_gradient(&mask);
-	_update_rule->calc_update(_network_gradient->get_gradient(), delta);
+	_update_rule->calc_update(_network_gradient->get_gradient(), delta, 0);
 	_network->update(_update_rule->get_update());
 
 	return delta;

@@ -19,16 +19,16 @@ GeneralTDRule::~GeneralTDRule()
 	delete _rule;
 }
 
-void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta)
+void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta, const double p_alpha)
 {
 	_delta = p_delta;
-	calc_update(p_gradient);
+	calc_update(p_gradient, p_alpha);
 }
 
 
-void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient)
+void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const double p_alpha)
 {
-	IUpdateRule::calc_update(p_gradient);
+	IUpdateRule::calc_update(p_gradient, p_alpha);
 
 	//_rule->calc_update(p_gradient);
 

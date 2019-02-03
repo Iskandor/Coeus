@@ -8,7 +8,7 @@ namespace Coeus {
 		PowerSignRule(NetworkGradient* p_network_gradient, double p_alpha);
 		~PowerSignRule();
 
-		void calc_update(map<string, Tensor>* p_gradient) override;
+		void calc_update(map<string, Tensor>* p_gradient, double p_alpha = 0) override;
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 		void reset() override;
 

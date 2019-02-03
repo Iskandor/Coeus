@@ -9,7 +9,7 @@ namespace Coeus {
 		~AdadeltaRule();
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 
-		void calc_update(map<string, Tensor>* p_gradient) override;
+		void calc_update(map<string, Tensor>* p_gradient, double p_alpha = 0) override;
 		void reset() override;
 
 	private:

@@ -19,11 +19,11 @@ IUpdateRule* ADAMRule::clone(NetworkGradient* p_network_gradient)
 	return new ADAMRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
 }
 
-void ADAMRule::update_momentum(const string& p_id, Tensor& p_gradient) {
-}
-
-void ADAMRule::calc_update(map<string, Tensor>* p_gradient) {
-	IUpdateRule::calc_update(p_gradient);
+void ADAMRule::calc_update(map<string, Tensor>* p_gradient, double p_alpha) {
+	if (p_alpha > 0)
+	{
+		_alpha = p_alpha;
+	}
 
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
 		//update_momentum(it->first, it->second);

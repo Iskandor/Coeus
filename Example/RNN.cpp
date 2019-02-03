@@ -102,7 +102,7 @@ void RNN::run_add_problem()
 	//ADAM algorithm(&network);
 	Nadam algorithm(&network);
 	algorithm.init(new QuadraticCost(), 1e-2);
-	//algorithm.init(new QuadraticCost(), 0.0);
+	algorithm.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 50, 1));
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 0.01, 0.9, true);
 	//PowerSign algorithm(&network);

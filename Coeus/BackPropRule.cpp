@@ -23,9 +23,9 @@ void BackPropRule::reset()
 	}
 }
 
-void BackPropRule::calc_update(map<string, Tensor>* p_gradient)
+void BackPropRule::calc_update(map<string, Tensor>* p_gradient, const double p_alpha)
 {
-	IUpdateRule::calc_update(p_gradient);
+	IUpdateRule::calc_update(p_gradient, p_alpha);
 
 	Tensor prev_update;
 

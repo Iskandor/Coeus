@@ -9,7 +9,7 @@ namespace Coeus
 		ActorRule(NetworkGradient* p_network_gradient, IUpdateRule* p_rule, double p_alpha);
 		~ActorRule();
 
-		void calc_update(map<string, Tensor>* p_gradient, double p_delta, Tensor* p_policy);
+		void calc_update(map<string, Tensor>* p_gradient, double p_delta, Tensor* p_policy, double p_alpha = 0);
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 		void reset() override;
 	private:

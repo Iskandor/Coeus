@@ -9,13 +9,13 @@ namespace Coeus
 		GeneralTDRule(NetworkGradient* p_network_gradient, IUpdateRule* p_rule, double p_alpha, double p_gamma, double p_lambda);
 		~GeneralTDRule();
 
-		void calc_update(map<string, Tensor>* p_gradient, double p_delta);
+		void calc_update(map<string, Tensor>* p_gradient, double p_delta, double p_alpha);
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 		void reset() override;
 		void reset_traces();
 
 	private:
-		void calc_update(map<string, Tensor>* p_gradient) override;
+		void calc_update(map<string, Tensor>* p_gradient, double p_alpha) override;
 		void update_traces(map<string, Tensor>* p_gradient);
 		double _gamma;
 		double _delta;

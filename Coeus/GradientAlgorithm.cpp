@@ -11,7 +11,8 @@ GradientAlgorithm::GradientAlgorithm(NeuralNetwork* p_network)
 	_network_gradient = new NetworkGradient(p_network);
 	_cost_function = nullptr;	
 	_update_rule = nullptr;
-	_batch_module = nullptr;	
+	_batch_module = nullptr;
+	_learning_rate_module = nullptr;
 }
 
 
@@ -21,11 +22,17 @@ GradientAlgorithm::~GradientAlgorithm()
 	delete _cost_function;
 	delete _network_gradient;
 	delete _batch_module;
+	delete _learning_rate_module;
 }
 
 double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 {
 	double error = 0;
+	double alpha = 0;
+	
+	if (_learning_rate_module != nullptr) {
+		alpha = _learning_rate_module->get_alpha();
+	}
 
 	if (p_target->rank() == 1)
 	{
@@ -34,7 +41,7 @@ double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 
 		_network_gradient->calc_gradient(&dloss);
 		error = _cost_function->cost(_network->get_output(), p_target);	
-		_update_rule->calc_update(_network_gradient->get_gradient());
+		_update_rule->calc_update(_network_gradient->get_gradient(), alpha);
 		_network->update(_update_rule->get_update());
 	}
 
@@ -55,7 +62,7 @@ double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 
 			_network_gradient->calc_gradient(&dloss);
 			error += _cost_function->cost(_network->get_output(), p_target);
-			_update_rule->calc_update(_network_gradient->get_gradient());
+			_update_rule->calc_update(_network_gradient->get_gradient(), alpha);
 			_network->update(_update_rule->get_update());
 		}
 	}
@@ -68,6 +75,11 @@ double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 double GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
 
 	double error = 0;
+	double alpha = 0;
+
+	if (_learning_rate_module != nullptr) {
+		alpha = _learning_rate_module->get_alpha();
+	}
 
 	for(unsigned int i = 0; i < p_input->size(); i++)
 	{
@@ -106,7 +118,7 @@ double GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_tar
 
 		_batch_module->run_batch(b, p_batch, p_input, p_target);
 
-		_update_rule->calc_update(_batch_module->get_gradient());
+		_update_rule->calc_update(_batch_module->get_gradient(), alpha);
 		_network->update(_update_rule->get_update());
 		
 		//cout << b << "/" << nbatch << "  ";
@@ -116,9 +128,9 @@ double GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_tar
 	return error;
 }
 
-void GradientAlgorithm::add_learning_rate_module(ILearningRateModule* p_learning_rate_module) const
+void GradientAlgorithm::add_learning_rate_module(ILearningRateModule* p_learning_rate_module)
 {
-	_update_rule->init_learning_rate_module(p_learning_rate_module);
+	_learning_rate_module = p_learning_rate_module;
 }
 
 void GradientAlgorithm::init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule)

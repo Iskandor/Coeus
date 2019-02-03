@@ -27,7 +27,7 @@ double TD::train(Tensor* p_state0, Tensor* p_state1, const double p_reward) cons
 	const double delta = p_reward + _gamma * Vs1 - Vs0;
 
 	_network_gradient->calc_gradient();
-	_update_rule->calc_update(_network_gradient->get_gradient(), delta);
+	_update_rule->calc_update(_network_gradient->get_gradient(), delta, 0);
 	_network->update(_update_rule->get_update());
 
 	return delta;

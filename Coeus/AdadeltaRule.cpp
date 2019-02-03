@@ -34,8 +34,8 @@ void AdadeltaRule::update_cache_delta(const string& p_id, Tensor& p_gradient) {
 	}
 }
 
-void AdadeltaRule::calc_update(map<string, Tensor>* p_gradient) {
-	IUpdateRule::calc_update(p_gradient);
+void AdadeltaRule::calc_update(map<string, Tensor>* p_gradient, const double p_alpha) {
+	IUpdateRule::calc_update(p_gradient, p_alpha);
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
 		update_cache(it->first, it->second);
 
