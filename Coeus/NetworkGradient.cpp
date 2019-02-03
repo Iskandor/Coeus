@@ -132,6 +132,15 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target, ICostFun
 	}
 }
 
+void NetworkGradient::reset()
+{
+	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
+		if (_gradient_component[(*it)->get_id()] != nullptr) {
+			_gradient_component[(*it)->get_id()]->reset();
+		}
+	}
+}
+
 map<string, Tensor> NetworkGradient::get_empty_params() const
 {
 	map<string, Tensor> result;
@@ -188,7 +197,7 @@ void NetworkGradient::calc_partial_derivs(Tensor* p_input)
 	{
 		Tensor input = Tensor::Zero({ p_input->shape(1) });
 
-		_network->reset();
+		reset();
 		for (int i = 0; i < p_input->shape(0); i++)
 		{
 			p_input->get_row(input, i);

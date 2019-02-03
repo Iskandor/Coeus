@@ -103,6 +103,12 @@
     <Filter Include="Header Files\Algorithm\RL\Rules">
       <UniqueIdentifier>{072be60b-4087-422e-a35c-da5c11e6d567}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Algorithm\Modules\LRM">
+      <UniqueIdentifier>{b0d7efab-4296-4270-af61-ea23e797b286}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\Modules\LRM">
+      <UniqueIdentifier>{ed34bbc0-1519-4509-9205-117426ab8dae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -369,12 +375,6 @@
     <ClCompile Include="NadamRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="WarmStartup.cpp">
-      <Filter>Source Files\Algorithm\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="AnnealingScheduler.cpp">
-      <Filter>Source Files\Algorithm\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="ILearningRateModule.cpp">
       <Filter>Source Files\Algorithm\Modules</Filter>
     </ClCompile>
@@ -410,6 +410,15 @@
     </ClCompile>
     <ClCompile Include="GradientAlgorithm.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
+    </ClCompile>
+    <ClCompile Include="AnnealingScheduler.cpp">
+      <Filter>Source Files\Algorithm\Modules\LRM</Filter>
+    </ClCompile>
+    <ClCompile Include="WarmStartup.cpp">
+      <Filter>Source Files\Algorithm\Modules\LRM</Filter>
+    </ClCompile>
+    <ClCompile Include="ExponentialDecay.cpp">
+      <Filter>Source Files\Algorithm\Modules\LRM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -680,13 +689,7 @@
     <ClInclude Include="NadamRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
     </ClInclude>
-    <ClInclude Include="WarmStartup.h">
-      <Filter>Header Files\Algorithm\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="ILearningRateModule.h">
-      <Filter>Header Files\Algorithm\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="AnnealingScheduler.h">
       <Filter>Header Files\Algorithm\Modules</Filter>
     </ClInclude>
     <ClInclude Include="QLearning.h">
@@ -721,6 +724,15 @@
     </ClInclude>
     <ClInclude Include="GradientAlgorithm.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
+    </ClInclude>
+    <ClInclude Include="AnnealingScheduler.h">
+      <Filter>Header Files\Algorithm\Modules\LRM</Filter>
+    </ClInclude>
+    <ClInclude Include="WarmStartup.h">
+      <Filter>Header Files\Algorithm\Modules\LRM</Filter>
+    </ClInclude>
+    <ClInclude Include="ExponentialDecay.h">
+      <Filter>Header Files\Algorithm\Modules\LRM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

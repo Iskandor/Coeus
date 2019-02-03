@@ -171,3 +171,18 @@ void LSTMLayerGradient::calc_partial_deriv()
 		(*pd_cec)[j] = d0 + d1;
 	}
 }
+
+void LSTMLayerGradient::reset()
+{
+	LSTMLayer* l = get_layer<LSTMLayer>();
+	_partial_deriv[l->_in_input_gate->get_id()].fill(0);
+	_partial_deriv[l->_in_forget_gate->get_id()].fill(0);
+	_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()].fill(0);
+	_partial_deriv[l->_ct_cec->get_id()].fill(0);
+
+	_partial_deriv[l->_input_gate->get_id()].fill(0);
+	_partial_deriv[l->_forget_gate->get_id()].fill(0);
+	_partial_deriv[l->_cec->get_id()].fill(0);
+
+	l->reset();
+}

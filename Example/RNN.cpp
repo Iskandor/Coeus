@@ -18,6 +18,7 @@
 #include "Logger.h"
 #include "PowerSign.h"
 #include "CrossEntropyCost.h"
+#include "ExponentialDecay.h"
 
 
 RNN::RNN()
@@ -102,9 +103,12 @@ void RNN::run_add_problem()
 	//ADAM algorithm(&network);
 	Nadam algorithm(&network);
 	algorithm.init(new QuadraticCost(), 1e-2);
-	algorithm.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 50, 1));
+	
+	
 	//BackProp algorithm(&network);
-	//algorithm.init(new QuadraticCost(), 0.01, 0.9, true);
+	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
+	//algorithm.add_learning_rate_module(new WarmStartup(1e-2, 1e-1, 1, 2));
+	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-1, 1e-3));
 	//PowerSign algorithm(&network);
 	//algorithm.init(new QuadraticCost());
 

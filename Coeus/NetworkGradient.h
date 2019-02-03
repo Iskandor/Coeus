@@ -19,6 +19,7 @@ public:
 	void check_gradient(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss);
 
 private:
+	void reset();
 	void calc_partial_derivs();
 	IGradientComponent* create_component(BaseLayer* p_layer) const;
 	double check_estimate(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss) const;

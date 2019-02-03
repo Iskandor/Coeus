@@ -20,6 +20,7 @@ namespace Coeus {
 		virtual void calc_deriv() = 0;
 		virtual void calc_delta(Tensor* p_weights, Tensor* p_delta) = 0;
 		virtual void calc_gradient(map<string, Tensor> &p_gradient);
+		virtual void reset();
 
 		Tensor* get_output_deriv() { return &_deriv[_layer->_output_group->get_id()]; }
 		Tensor* get_input_delta() { return &_delta[_layer->_input_group->get_id()]; }

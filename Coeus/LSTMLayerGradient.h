@@ -15,6 +15,7 @@ namespace Coeus
 		void calc_delta(Tensor* p_weights, Tensor* p_delta) override;
 		void calc_gradient(map<string, Tensor> &p_gradient) override;
 		void calc_partial_deriv() override;
+		void reset() override;
 
 	private:
 		map<string, Tensor> _partial_deriv;
