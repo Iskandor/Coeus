@@ -24,6 +24,6 @@ void RecurrentLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta) {
 void RecurrentLayerGradient::calc_gradient(map<string, Tensor> &p_gradient) {
 }
 
-void RecurrentLayerGradient::calc_partial_deriv()
+void RecurrentLayerGradient::calc_deriv_estimate()
 {
 }

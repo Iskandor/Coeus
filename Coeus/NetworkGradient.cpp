@@ -181,7 +181,7 @@ double NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target, ICostF
 	return p_loss->cost(_network->get_output(), p_target);
 }
 
-void NetworkGradient::calc_partial_derivs(Tensor* p_input)
+void NetworkGradient::activate(Tensor* p_input)
 {
 	// single input
 	if (p_input->rank() == 1)
@@ -189,7 +189,7 @@ void NetworkGradient::calc_partial_derivs(Tensor* p_input)
 		_network->_layers[_network->_input_layer[0]]->activate(p_input);
 
 		_network->activate();
-		calc_partial_derivs();
+		calc_deriv_estimate();
 	}
 
 	// sequence
@@ -204,16 +204,16 @@ void NetworkGradient::calc_partial_derivs(Tensor* p_input)
 			_network->_layers[_network->_input_layer[0]]->activate(&input);
 
 			_network->activate();
-			calc_partial_derivs();
+			calc_deriv_estimate();
 		}
 	}
 }
 
-void NetworkGradient::calc_partial_derivs()
+void NetworkGradient::calc_deriv_estimate()
 {
 	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
 		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->calc_partial_deriv();
+			_gradient_component[(*it)->get_id()]->calc_deriv_estimate();
 		}
 	}
 }

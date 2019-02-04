@@ -108,7 +108,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 	p_gradient[l->_output_gate->get_id()] = _delta[l->_output_gate->get_id()];
 }
 
-void LSTMLayerGradient::calc_partial_deriv()
+void LSTMLayerGradient::calc_deriv_estimate()
 {
 	LSTMLayer* l = get_layer<LSTMLayer>();
 
@@ -128,8 +128,13 @@ void LSTMLayerGradient::calc_partial_deriv()
 	Tensor* pd_forget_gate = &_deriv[l->_forget_gate->get_id()];
 	Tensor* pd_cec = &_deriv[l->_cec->get_id()];
 
+	calc_deriv_group(l->_output_gate);
+	calc_deriv_group(l->_input_gate);
+	calc_deriv_group(l->_forget_gate);
+
 	Tensor input_gate_doutput = l->_input_gate->get_deriv_output();
 	Tensor forget_gate_doutput = l->_forget_gate->get_deriv_output();
+
 
 	for (int j = 0; j < l->_cec->get_dim(); j++)
 	{

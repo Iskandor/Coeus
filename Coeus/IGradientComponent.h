@@ -16,7 +16,7 @@ namespace Coeus {
 
 		void set_delta(Tensor* p_delta);
 		virtual void init() = 0;
-		virtual void calc_partial_deriv() = 0;
+		virtual void calc_deriv_estimate() = 0;
 		virtual void calc_deriv() = 0;
 		virtual void calc_delta(Tensor* p_weights, Tensor* p_delta) = 0;
 		virtual void calc_gradient(map<string, Tensor> &p_gradient);

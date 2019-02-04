@@ -36,7 +36,7 @@ double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 
 	if (p_target->rank() == 1)
 	{
-		_network_gradient->calc_partial_derivs(p_input);
+		_network_gradient->activate(p_input);
 		Tensor dloss = _cost_function->cost_deriv(_network->get_output(), p_target);
 
 		_network_gradient->calc_gradient(&dloss);
@@ -57,7 +57,7 @@ double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 			p_input->get_row(input, i);
 			p_target->get_row(target, i);
 
-			_network_gradient->calc_partial_derivs(&input);
+			_network_gradient->activate(&input);
 			Tensor dloss = _cost_function->cost_deriv(_network->get_output(), &target);
 
 			_network_gradient->calc_gradient(&dloss);

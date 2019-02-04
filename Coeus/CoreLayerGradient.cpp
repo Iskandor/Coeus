@@ -39,6 +39,6 @@ void CoreLayerGradient::calc_gradient(map<string, Tensor> &p_gradient) {
 	p_gradient[g->get_id()] = _delta[g->get_id()];
 }
 
-void CoreLayerGradient::calc_partial_deriv()
+void CoreLayerGradient::calc_deriv_estimate()
 {
 }
