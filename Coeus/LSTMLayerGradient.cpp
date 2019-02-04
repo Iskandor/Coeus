@@ -33,8 +33,8 @@ void LSTMLayerGradient::calc_deriv()
 	LSTMLayer* l = get_layer<LSTMLayer>();
 
 	calc_deriv_group(l->_output_gate);
-	calc_deriv_group(l->_input_gate);
-	calc_deriv_group(l->_forget_gate);
+	//calc_deriv_group(l->_input_gate);
+	//calc_deriv_group(l->_forget_gate);
 }
 
 void LSTMLayerGradient::calc_delta(Tensor* p_weights, Tensor* p_delta)
@@ -55,7 +55,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 {
 	LSTMLayer* l = get_layer<LSTMLayer>();
 
-	p_gradient[l->_in_output_gate->get_id()] = _delta[l->_output_gate->get_id()] * *l->_aux_input->get_output();
+	p_gradient[l->_in_output_gate->get_id()] = _delta[l->_output_gate->get_id()].outer_prod(*l->_aux_input->get_output());
 
 	Tensor* dwf = &p_gradient[l->_in_forget_gate->get_id()];
 	Tensor* dwi = &p_gradient[l->_in_input_gate->get_id()];
@@ -136,11 +136,11 @@ void LSTMLayerGradient::calc_deriv_estimate()
 		for (int m = 0; m < l->_aux_input->get_dim(); m++)
 		{
 			d0 = pd_in_input_gate->at(j, m) * l->_forget_gate->get_output()->at(j);
-			d1 = g[j] * input_gate_doutput.at(j, j) * l->_aux_input->get_output()->at(m);
+			d1 = g[j] * input_gate_doutput.at(j) * l->_aux_input->get_output()->at(m);
 			pd_in_input_gate->set(j, m, d0 + d1);
 
 			d0 = pd_in_forget_gate->at(j, m) * l->_forget_gate->get_output()->at(j);
-			d1 = h[j] * forget_gate_doutput.at(j, j) * l->_aux_input->get_output()->at(m);
+			d1 = h[j] * forget_gate_doutput.at(j) * l->_aux_input->get_output()->at(m);
 			pd_in_forget_gate->set(j, m, d0 + d1);
 		}
 
@@ -159,11 +159,11 @@ void LSTMLayerGradient::calc_deriv_estimate()
 		}
 
 		d0 = (*pd_input_gate)[j] * l->_forget_gate->get_output()->at(j);
-		d1 = g[j] * input_gate_doutput.at(j, j);
+		d1 = g[j] * input_gate_doutput.at(j);
 		(*pd_input_gate)[j] = d0 + d1;
 
 		d0 = (*pd_forget_gate)[j] * l->_forget_gate->get_output()->at(j);
-		d1 = g[j] * forget_gate_doutput.at(j, j);
+		d1 = g[j] * forget_gate_doutput.at(j);
 		(*pd_forget_gate)[j] = d0 + d1;
 
 		d0 = (*pd_cec)[j] * l->_forget_gate->get_output()->at(j);

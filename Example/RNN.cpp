@@ -100,9 +100,9 @@ void RNN::run_add_problem()
 
 	network.init();
 
-	ADAM algorithm(&network);
-	//Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 1e-3);
+	//ADAM algorithm(&network);
+	Nadam algorithm(&network);
+	algorithm.init(new QuadraticCost(), 1e-2);
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-2, 1e-3));
 	
 	//BackProp algorithm(&network);

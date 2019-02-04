@@ -158,16 +158,17 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 	int* shape = nullptr;
 	
 	if (this->_rank == 1 && p_tensor._rank == 1) {
-		arr = alloc_arr(_size * p_tensor._size);
-		rank = 2;
-		shape = alloc_shape(rank);
-		shape[0] = _size;
-		shape[1] = p_tensor._size;
+		if (_size != p_tensor.size())
+		{
+			assert(("Size not equal", 0));
+		}
 
-		for (int i = 0; i < this->_size; i++) {
-			for (int j = 0; j < p_tensor._size; j++) {
-				arr[i * p_tensor._size + j] = _arr[i] * p_tensor._arr[j];
-			}
+		arr = alloc_arr(_size);
+		rank = 1;
+		shape = copy_shape(_rank, _shape);
+
+		for (int i = 0; i < _size; i++) {
+			arr[i] = _arr[i] * p_tensor._arr[i];
 		}
 	}
 
@@ -382,6 +383,34 @@ Tensor Tensor::dot(const Tensor& p_tensor) const {
 	}
 
 	return Tensor(_rank, shape, arr);
+}
+
+Tensor Tensor::outer_prod(const Tensor& p_tensor) const
+{
+	double* arr = nullptr;
+	int rank = 0;
+	int* shape = nullptr;
+
+	if (_rank != p_tensor._rank)
+	{
+		assert(("Rank not equal", 0));
+	}
+
+	if (this->_rank == 1 && p_tensor._rank == 1) {
+		arr = alloc_arr(_size * p_tensor._size);
+		rank = 2;
+		shape = alloc_shape(rank);
+		shape[0] = _size;
+		shape[1] = p_tensor._size;
+
+		for (int i = 0; i < this->_size; i++) {
+			for (int j = 0; j < p_tensor._size; j++) {
+				arr[i * p_tensor._size + j] = _arr[i] * p_tensor._arr[j];
+			}
+		}
+	}
+
+	return Tensor(rank, shape, arr);
 }
 
 Tensor Tensor::apply(Tensor& p_source, double(*f)(double))

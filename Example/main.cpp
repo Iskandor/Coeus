@@ -21,8 +21,9 @@ int main()
 	//model.run();
 
 	RNN model;
-	//model.run_pack2();
+	//model.run_pack();
 	//model.test_pack();
+	//model.test_pack_cm();
 	model.run_add_problem();
 	/*
 	Logger::instance().init("maze.log");

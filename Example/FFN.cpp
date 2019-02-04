@@ -155,7 +155,7 @@ void FFN::run_iris() {
 	RMSProp model(&_network);
 	//Nadam model(&_network);
 	model.init(new CrossEntropyCost(), 0.001);
-	model.add_learning_rate_module(new WarmStartup(1e-4, 1e-2, 10, 2));
+	//model.add_learning_rate_module(new WarmStartup(1e-4, 1e-2, 10, 2));
 
 	for (int t = 0; t < epochs; t++) {
 		data = _dataset.permute();
