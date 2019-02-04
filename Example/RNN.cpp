@@ -156,7 +156,7 @@ void RNN::run_pack()
 
 	cout << "Loading dataset..." << endl;
 	PackDataset dataset;
-	dataset.load_data("./data/pack_data2.csv");
+	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv");
 
 	//NeuralNetwork network(IOUtils::load_network("predictor.net"));
 	NeuralNetwork network;
@@ -177,13 +177,17 @@ void RNN::run_pack()
 	//algorithm.init(new QuadraticCost(), config["alpha"].get<double>());
 
 	int epoch = 0;
-	int correct = 0;
-	const int size = dataset.data()->size();
-	const int bound = size * 0.99;
+
+	int tp = 0;
+	int fp = 0;
+	int tn = 0;
+	int fn = 0;
+	double precision = 0;
+	const double bound = 0.99;
 
 	cout << "Training..." << endl;
 
-	while (correct < bound) {
+	while (precision < bound) {
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<PackDataSequence>* test = dataset.data();
 
@@ -194,23 +198,28 @@ void RNN::run_pack()
 		//double error = 0;
 		if (epoch % config["evaluate"].get<int>() == 0)
 		{
-			correct = 0;
+			tp = 0;
+			fp = 0;
+			tn = 0;
+			fn = 0;
 
 			for (auto sequence : *test)
 			{
-				//error += algorithm.train(&sequence.input, &sequence.target);
-
 				network.activate(&sequence.input);
+				const int prediction = network.get_output()->at(0) > 0.5 ? 1 : 0;
 
-				if (abs(network.get_output()->at(0) - sequence.target[0]) < 0.01)
-				{
-					correct++;
-				}
+				if (sequence.target[0] == 1 && prediction == 1) tp++;
+				if (sequence.target[0] == 1 && prediction == 0) fn++;
+				if (sequence.target[0] == 0 && prediction == 1) fp++;
+				if (sequence.target[0] == 0 && prediction == 0) tn++;
 			}
-			cout << correct << " / " << size << endl;
+
+			precision = (fp + tp) == 0 ? 0 : (double)tp / (fp + tp);
+
+			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << precision << endl;
 		}
 
-		Logger::instance().log(to_string(error) + " " + to_string(correct) + " " + to_string(size));
+		Logger::instance().log(to_string(error) + " " + to_string(precision));
 
 		cout << error << endl;
 		cout << "Time: " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
@@ -251,13 +260,17 @@ void RNN::run_pack2() const
 
 	int epoch = 0;
 	double error = 0;
-	int correct = 0;
-	const int size = dataset.data()->size();
-	const int bound = size * 0.99;
+
+	int tp = 0;
+	int fp = 0;
+	int tn = 0;
+	int fn = 0;
+	double precision = 0;
+	const double bound = 0.99;
 
 	cout << "Training..." << endl;
 
-	while (correct < bound) {
+	while (precision < bound) {
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<PackDataSequence>* test = dataset.data();
 
@@ -269,19 +282,25 @@ void RNN::run_pack2() const
 
 		if (epoch % config["evaluate"].get<int>() == 0)
 		{
-			correct = 0;
+			tp = 0;
+			fp = 0;
+			tn = 0;
+			fn = 0;
 
 			for (auto sequence : *test)
 			{
 				network.activate(&sequence.input);
+				const int prediction = network.get_output()->at(0) > 0.5 ? 1 : 0;
 
-				const double dist = Tensor::dist(network.get_output(), &sequence.target);
-				if (dist < 0.01 * sequence.target.size())
-				{
-					correct++;
-				}
+				if (sequence.target[0] == 1 && prediction == 1) tp++;
+				if (sequence.target[0] == 1 && prediction == 0) fn++;
+				if (sequence.target[0] == 0 && prediction == 1) fp++;
+				if (sequence.target[0] == 0 && prediction == 0) tn++;
 			}
-			cout << correct << " / " << size << endl;
+
+			precision = (double)tp / (fp + tp);
+
+			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;
 		}
 
 		cout << error << endl;
@@ -322,7 +341,7 @@ void RNN::test_pack() const
 {
 	cout << "Loading dataset..." << endl;
 	PackDataset dataset;
-	dataset.load_data("./data/pack_data2.csv");
+	dataset.load_data("./data/pack_data2_test.csv", false, true);
 
 	cout << "Loading network..." << endl;
 	NeuralNetwork network(IOUtils::load_network("predictor_pd2.net"));
@@ -363,6 +382,37 @@ void RNN::test_pack() const
 
 	cout << correct1 << " / " << correct1 + correct30 << " / " << incorrect50 << " / "  << size << endl;
 	cout << error << endl;
+}
+
+void RNN::test_pack_cm() const
+{
+	cout << "Loading dataset..." << endl;
+	PackDataset dataset;
+	dataset.load_data("./data/pack_data2_test.csv", false, true);
+
+	cout << "Loading network..." << endl;
+	NeuralNetwork network(IOUtils::load_network("predictor_pd2.net"));
+
+	cout << "Testing..." << endl;
+	vector<PackDataSequence>* test = dataset.data();
+
+	int tp = 0;
+	int fp = 0;
+	int tn = 0;
+	int fn = 0;
+
+	for (auto sequence : *test)
+	{
+		network.activate(&sequence.input);
+		const int prediction = network.get_output()->at(0) > 0.5 ? 1 : 0;
+
+		if (sequence.target[0] == 1 && prediction == 1) tp++;
+		if (sequence.target[0] == 1 && prediction == 0) fn++;
+		if (sequence.target[0] == 0 && prediction == 1) fp++;
+		if (sequence.target[0] == 0 && prediction == 0) tn++;
+	}
+
+	cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;
 }
 
 json RNN::load_config(const string& p_filename) const
