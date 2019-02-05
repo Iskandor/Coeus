@@ -22,14 +22,13 @@ Tensor ExponentialActivation::activate(Tensor& p_input) {
 }
 
 Tensor ExponentialActivation::derivative(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
-	memset(arr, 0, sizeof(double) * p_input.size() * p_input.size());
+	double* arr = Tensor::alloc_arr(p_input.size());
 
 	for (int i = 0; i < p_input.size(); i++) {
-		arr[i*p_input.size() + i] = -exp(-_k * p_input[i]);
+		arr[i] = -exp(-_k * p_input[i]);
 	}
 
-	return Tensor({ p_input.size(), p_input.size() }, arr);
+	return Tensor({ p_input.size() }, arr);
 
 }
 

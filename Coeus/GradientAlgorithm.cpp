@@ -98,15 +98,15 @@ double GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_tar
 	if (_batch_module == nullptr)
 	{
 		//_batch_module = new SingleBatchModule(_network, _network_gradient, _cost_function, p_batch);
-		_batch_module = new PPLBatchModule(_network, _cost_function, p_batch);
-		//_batch_module = new OpenMPBatchModule(_network, _cost_function, p_batch);
+		//_batch_module = new PPLBatchModule(_network, _cost_function, p_batch);
+		_batch_module = new OpenMPBatchModule(_network, _cost_function, p_batch);
 	}
 	else if (_batch_module->get_batch_size() < p_batch)
 	{
 		delete _batch_module;
 		//_batch_module = new SingleBatchModule(_network, _network_gradient, _cost_function, p_batch);
-		_batch_module = new PPLBatchModule(_network, _cost_function, p_batch);
-		//_batch_module = new OpenMPBatchModule(_network, _cost_function, p_batch);
+		//_batch_module = new PPLBatchModule(_network, _cost_function, p_batch);
+		_batch_module = new OpenMPBatchModule(_network, _cost_function, p_batch);
 	}
 
 	for (int b = 0; b < nbatch; b++)

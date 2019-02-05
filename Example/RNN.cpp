@@ -92,7 +92,7 @@ void RNN::run_add_problem()
 
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 2));
-	network.add_layer(new LSTMLayer("hidden", 4, TANH));
+	network.add_layer(new LSTMLayer("hidden", 8, TANH));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
@@ -102,12 +102,12 @@ void RNN::run_add_problem()
 
 	//ADAM algorithm(&network);
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 6e-3);
+	algorithm.init(new QuadraticCost(), 1e-2);
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-2, 1e-3));
 	
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
-	//algorithm.add_learning_rate_module(new WarmStartup(1e-2, 1e-1, 1, 2));
+	//algorithm.add_learning_rate_module(new WarmStartup(4e-3, 8e-3, 50, 1));
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-1, 1e-3));
 	//PowerSign algorithm(&network);
 	//algorithm.init(new QuadraticCost());
