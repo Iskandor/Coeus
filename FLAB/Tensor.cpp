@@ -404,10 +404,15 @@ Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 		shape[0] = _size;
 		shape[1] = p_tensor._size;
 
+		double *xpos = &_arr[0];		
+		double *zpos = &arr[0];
+
 		for (int i = 0; i < this->_size; i++) {
+			double *ypos = &p_tensor._arr[0];
 			for (int j = 0; j < p_tensor._size; j++) {
-				arr[i * p_tensor._size + j] = _arr[i] * p_tensor._arr[j];
+				(*zpos++) = (*xpos) * (*ypos++);
 			}
+			xpos++;
 		}
 	}
 
