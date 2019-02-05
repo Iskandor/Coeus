@@ -18,14 +18,14 @@ void LSTMLayerGradient::init()
 
 	_state_error = Tensor::Zero({ l->_cec->get_dim() });
 
-	_deriv[l->_in_input_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
-	_deriv[l->_in_forget_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
-	_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_cec->get_dim() });
-	_deriv[l->_ct_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_cec->get_dim() });
+	_partial_deriv[l->_in_input_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
+	_partial_deriv[l->_in_forget_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
+	_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_cec->get_dim() });
+	_partial_deriv[l->_ct_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_cec->get_dim() });
 
-	_deriv[l->_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim() });
-	_deriv[l->_input_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim() });
-	_deriv[l->_forget_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim() });
+	_partial_deriv[l->_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim() });
+	_partial_deriv[l->_input_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim() });
+	_partial_deriv[l->_forget_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim() });
 }
 
 void LSTMLayerGradient::calc_deriv()
@@ -60,8 +60,8 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 	Tensor* dwf = &p_gradient[l->_in_forget_gate->get_id()];
 	Tensor* dwi = &p_gradient[l->_in_input_gate->get_id()];
 
-	Tensor* pd_in_forget_gate = &_deriv[l->_in_forget_gate->get_id()];
-	Tensor* pd_in_input_gate = &_deriv[l->_in_input_gate->get_id()];
+	Tensor* pd_in_forget_gate = &_partial_deriv[l->_in_forget_gate->get_id()];
+	Tensor* pd_in_input_gate = &_partial_deriv[l->_in_input_gate->get_id()];
 
 	for (int j = 0; j < l->_cec->get_dim(); j++)
 	{
@@ -72,7 +72,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 		}
 	}
 	
-	Tensor* pd_in_cec = &_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
+	Tensor* pd_in_cec = &_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
 
 	vector<BaseLayer*> input_layers = _network->get_input_layers(_layer->get_id());
 
@@ -92,7 +92,7 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 	}
 
 	Tensor* dwcc = &p_gradient[l->_ct_cec->get_id()];
-	Tensor* pd_ct_cec = &_deriv[l->_ct_cec->get_id()];
+	Tensor* pd_ct_cec = &_partial_deriv[l->_ct_cec->get_id()];
 
 	for (int j = 0; j < l->_ct_cec->get_out_dim(); j++)
 	{
@@ -102,9 +102,9 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 		}
 	}
 
-	p_gradient[l->_cec->get_id()] = _deriv[l->_cec->get_id()];
-	p_gradient[l->_input_gate->get_id()] = _state_error.dot(_deriv[l->_input_gate->get_id()]);
-	p_gradient[l->_forget_gate->get_id()] = _state_error.dot(_deriv[l->_forget_gate->get_id()]);
+	p_gradient[l->_cec->get_id()] = _partial_deriv[l->_cec->get_id()];
+	p_gradient[l->_input_gate->get_id()] = _state_error.dot(_partial_deriv[l->_input_gate->get_id()]);
+	p_gradient[l->_forget_gate->get_id()] = _state_error.dot(_partial_deriv[l->_forget_gate->get_id()]);
 	p_gradient[l->_output_gate->get_id()] = _delta[l->_output_gate->get_id()];
 }
 
@@ -119,14 +119,14 @@ void LSTMLayerGradient::calc_deriv_estimate()
 	double d0;
 	double d1;
 
-	Tensor* pd_in_input_gate = &_deriv[l->_in_input_gate->get_id()];
-	Tensor* pd_in_forget_gate = &_deriv[l->_in_forget_gate->get_id()];
-	Tensor* pd_in_cec = &_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
-	Tensor* pd_ct_cec = &_deriv[l->_ct_cec->get_id()];
+	Tensor* pd_in_input_gate = &_partial_deriv[l->_in_input_gate->get_id()];
+	Tensor* pd_in_forget_gate = &_partial_deriv[l->_in_forget_gate->get_id()];
+	Tensor* pd_in_cec = &_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
+	Tensor* pd_ct_cec = &_partial_deriv[l->_ct_cec->get_id()];
 
-	Tensor* pd_input_gate = &_deriv[l->_input_gate->get_id()];
-	Tensor* pd_forget_gate = &_deriv[l->_forget_gate->get_id()];
-	Tensor* pd_cec = &_deriv[l->_cec->get_id()];
+	Tensor* pd_input_gate = &_partial_deriv[l->_input_gate->get_id()];
+	Tensor* pd_forget_gate = &_partial_deriv[l->_forget_gate->get_id()];
+	Tensor* pd_cec = &_partial_deriv[l->_cec->get_id()];
 
 	Tensor input_gate_doutput = l->_input_gate->get_deriv_output();
 	Tensor forget_gate_doutput = l->_forget_gate->get_deriv_output();
@@ -175,14 +175,14 @@ void LSTMLayerGradient::calc_deriv_estimate()
 void LSTMLayerGradient::reset()
 {
 	LSTMLayer* l = get_layer<LSTMLayer>();
-	_deriv[l->_in_input_gate->get_id()].fill(0);
-	_deriv[l->_in_forget_gate->get_id()].fill(0);
-	_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()].fill(0);
-	_deriv[l->_ct_cec->get_id()].fill(0);
+	_partial_deriv[l->_in_input_gate->get_id()].fill(0);
+	_partial_deriv[l->_in_forget_gate->get_id()].fill(0);
+	_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()].fill(0);
+	_partial_deriv[l->_ct_cec->get_id()].fill(0);
 
-	_deriv[l->_input_gate->get_id()].fill(0);
-	_deriv[l->_forget_gate->get_id()].fill(0);
-	_deriv[l->_cec->get_id()].fill(0);
+	_partial_deriv[l->_input_gate->get_id()].fill(0);
+	_partial_deriv[l->_forget_gate->get_id()].fill(0);
+	_partial_deriv[l->_cec->get_id()].fill(0);
 
 	l->reset();
 }

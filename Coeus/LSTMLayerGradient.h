@@ -18,6 +18,7 @@ namespace Coeus
 		void reset() override;
 
 	private:
+		map<string, Tensor> _partial_deriv;
 		Tensor _state_error;
 	};
 }
