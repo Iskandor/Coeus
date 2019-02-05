@@ -70,6 +70,7 @@ public:
 	Tensor pow(double p_y) const;
 	Tensor sqrt() const;
 	Tensor dot(const Tensor& p_tensor) const;
+	Tensor outer_prod(const Tensor& p_tensor) const;
 
 
 	static Tensor apply(Tensor& p_source, double(*f)(double));

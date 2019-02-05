@@ -32,7 +32,7 @@ void CoreLayerGradient::calc_gradient(map<string, Tensor> &p_gradient) {
 		Connection* c = _network->get_connection((*it)->get_id(), _layer->get_id());
 		if (c->is_trainable())
 		{
-			p_gradient[c->get_id()] = *_network->get_layer((*it)->get_id())->get_output() * _delta[get_layer<CoreLayer>()->_input_group->get_id()];
+			p_gradient[c->get_id()] = _network->get_layer((*it)->get_id())->get_output()->outer_prod(_delta[get_layer<CoreLayer>()->_input_group->get_id()]);
 		}
 	}
 
