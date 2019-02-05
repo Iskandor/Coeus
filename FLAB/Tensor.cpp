@@ -123,8 +123,16 @@ Tensor Tensor::operator+(const double p_const) const {
 }
 
 Tensor& Tensor::operator+=(const Tensor& p_tensor) {
+	if (_size != p_tensor.size() || _rank != p_tensor._rank)
+	{
+		assert(("Size or rank not equal", 0));
+	}
+
+	double *xpos = &p_tensor._arr[0];
+	double *ypos = &_arr[0];
+
 	for (int i = 0; i < _size; i++) {
-		_arr[i] += p_tensor._arr[i];
+		(*ypos++) += (*xpos++);
 	}
 
 	return *this;
@@ -145,8 +153,16 @@ Tensor Tensor::operator-(const Tensor& p_tensor) const {
 }
 
 Tensor& Tensor::operator-=(const Tensor& p_tensor) {
+	if (_size != p_tensor.size() || _rank != p_tensor._rank)
+	{
+		assert(("Size or rank not equal", 0));
+	}
+
+	double *xpos = &p_tensor._arr[0];
+	double *ypos = &_arr[0];
+
 	for (int i = 0; i < _size; i++) {
-		_arr[i] -= p_tensor._arr[i];
+		(*ypos++) -= (*xpos++);
 	}
 
 	return *this;
@@ -163,27 +179,16 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 			assert(("Size not equal", 0));
 		}
 
-		arr = alloc_arr(_size);
+		arr = dot(this, &p_tensor);
 		rank = 1;
 		shape = copy_shape(_rank, _shape);
-
-		for (int i = 0; i < _size; i++) {
-			arr[i] = _arr[i] * p_tensor._arr[i];
-		}
 	}
 
 	if (this->_rank == 2 && p_tensor._rank == 1 && this->shape(1) == p_tensor.shape(0)) {
-		arr = alloc_arr(_shape[0]);
+		arr = mat_vec(this, &p_tensor);
 		rank = 1;
 		shape = alloc_shape(rank);
 		shape[0] = _shape[0];
-
-		for (int i = 0; i < _shape[0]; i++) {
-			arr[i] = 0;
-			for (int j = 0; j < _shape[1]; j++) {
-				arr[i] += _arr[i * _shape[1] + j] * p_tensor._arr[j];
-			}
-		}
 	}
 
 	if (this->_rank == 1 && p_tensor._rank == 2)
@@ -370,17 +375,13 @@ Tensor Tensor::sqrt() const {
 }
 
 Tensor Tensor::dot(const Tensor& p_tensor) const {
-	double* arr = alloc_arr(_size);
-	int* shape = copy_shape(_rank, _shape);
-
 	if (_size != p_tensor.size() || _rank != p_tensor._rank)
 	{
 		assert(("Size or rank not equal", 0));
 	}
 
-	for (int i = 0; i < _size; i++) {
-		arr[i] = _arr[i] * p_tensor._arr[i];
-	}
+	double* arr = dot(this, &p_tensor);
+	int* shape = copy_shape(_rank, _shape);
 
 	return Tensor(_rank, shape, arr);
 }
@@ -561,6 +562,89 @@ double Tensor::dist(Tensor* p_tensor1, Tensor* p_tensor2)
 	}
 
 	return std::sqrt(result);
+}
+
+double* Tensor::dot(const Tensor* p_x, const Tensor* p_y)
+{
+	double* arr = alloc_arr(p_x->_size);
+
+	double *xpos = &p_x->_arr[0];
+	double *ypos = &p_y->_arr[0];
+	double *zpos = &arr[0];
+
+	for (int i = 0; i < p_x->_size; i++) {
+		(*zpos++) = (*ypos++) * (*xpos++);
+	}
+
+	return arr;
+}
+
+double* Tensor::mat_vec(const Tensor *p_A, const Tensor *p_x)
+{
+	const int rows = p_A->_shape[0];
+	const int cols = p_A->_shape[1];
+	const int r = rows / 4;
+
+	double *arr = alloc_arr(rows);
+
+	double *Apos1 = &p_A->_arr[0];
+	double *Apos2 = &p_A->_arr[cols * 1];
+	double *Apos3 = &p_A->_arr[cols * 2];
+	double *Apos4 = &p_A->_arr[cols * 3];
+	double *ypos = &arr[0];
+
+	if (rows > 3)
+	{
+		for (int i = 0; i < r; i++)
+		{
+			double ytemp1 = 0;
+			double ytemp2 = 0;
+			double ytemp3 = 0;
+			double ytemp4 = 0;
+
+			double *xpos = &p_x->_arr[0];
+
+			for (int j = 0; j < cols; j++)
+			{
+				ytemp1 += (*Apos1++) * (*xpos);
+				ytemp2 += (*Apos2++) * (*xpos);
+				ytemp3 += (*Apos3++) * (*xpos);
+				ytemp4 += (*Apos4++) * (*xpos);
+
+				xpos++;
+			}
+
+			*ypos = ytemp1;
+			ypos++;
+			*ypos = ytemp2;
+			ypos++;
+			*ypos = ytemp3;
+			ypos++;
+			*ypos = ytemp4;
+			ypos++;
+
+			// skip next row
+			Apos1 += 3 * cols;
+			Apos2 += 3 * cols;
+			Apos3 += 3 * cols;
+			Apos4 += 3 * cols;
+		}
+	}
+
+	if (rows % 4 != 0)
+	{
+		double *Apos = &p_A->_arr[r * 4 * cols];
+
+		for (int i = r * 4; i < rows; i++) {
+			arr[i] = 0;
+			double *xpos = &p_x->_arr[0];
+			for (int j = 0; j < cols; j++) {
+				arr[i] += (*Apos++) * (*xpos++);
+			}
+		}
+	}
+
+	return arr;
 }
 
 void Tensor::free_arr() const {

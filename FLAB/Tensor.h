@@ -131,6 +131,9 @@ public:
 	}
 
 private:
+	static double* dot(const Tensor *p_x, const Tensor *p_y); 
+	static double* mat_vec(const Tensor *p_A, const Tensor *p_x);
+
 	void free_arr() const;
 	void free_shape() const;
 	
