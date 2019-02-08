@@ -92,7 +92,7 @@ void RNN::run_add_problem()
 
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 2));
-	network.add_layer(new LSTMLayer("hidden", 8, TANH));
+	network.add_layer(new LSTMLayer("hidden", 4, TANH));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
@@ -101,12 +101,12 @@ void RNN::run_add_problem()
 	network.init();
 
 	//ADAM algorithm(&network);
-	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 1e-2);
+	//Nadam algorithm(&network);
+	//algorithm.init(new QuadraticCost(), 1e-2);
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-2, 1e-3));
 	
-	//BackProp algorithm(&network);
-	//algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
+	BackProp algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
 	//algorithm.add_learning_rate_module(new WarmStartup(4e-3, 8e-3, 50, 1));
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-1, 1e-3));
 	//PowerSign algorithm(&network);
@@ -159,6 +159,7 @@ void RNN::run_pack()
 	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv");
 
 	//NeuralNetwork network(IOUtils::load_network("predictor.net"));
+	
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 230));
 	network.add_layer(new LSTMLayer("hidden", config["hidden"].get<int>(), TANH));
@@ -183,11 +184,14 @@ void RNN::run_pack()
 	int tn = 0;
 	int fn = 0;
 	double precision = 0;
+	double accuracy = 0;
+	double fn_ratio = 1;
 	const double bound = 0.99;
+	const int size = dataset.data()->size();
 
 	cout << "Training..." << endl;
 
-	while (precision < bound) {
+	while (precision < bound || accuracy < bound || fn_ratio > (1 - bound)) {
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<PackDataSequence>* test = dataset.data();
 
@@ -215,11 +219,13 @@ void RNN::run_pack()
 			}
 
 			precision = (fp + tp) == 0 ? 0 : (double)tp / (fp + tp);
+			accuracy = (double)(tp + tn) / size;
+			fn_ratio = (fn + tp) == 0 ? 1 : (double)fn / (fn + tp);
 
-			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << precision << endl;
+			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << precision << " , " << accuracy << " , " << fn_ratio << endl;
 		}
 
-		Logger::instance().log(to_string(error) + " " + to_string(precision));
+		Logger::instance().log(to_string(error) + " " + to_string(precision) + " " + to_string(accuracy) + " " + to_string(fn_ratio));
 
 		cout << error << endl;
 		cout << "Time: " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
@@ -260,17 +266,19 @@ void RNN::run_pack2() const
 
 	int epoch = 0;
 	double error = 0;
+	const int size = dataset.data()->size();
 
 	int tp = 0;
 	int fp = 0;
 	int tn = 0;
 	int fn = 0;
 	double precision = 0;
+	double accuracy = 0;
 	const double bound = 0.99;
 
 	cout << "Training..." << endl;
 
-	while (precision < bound) {
+	while (precision < bound && accuracy < bound) {
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<PackDataSequence>* test = dataset.data();
 
@@ -299,6 +307,7 @@ void RNN::run_pack2() const
 			}
 
 			precision = (double)tp / (fp + tp);
+			accuracy = (double)(tp + fn) / size;
 
 			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;
 		}
@@ -388,10 +397,10 @@ void RNN::test_pack_cm() const
 {
 	cout << "Loading dataset..." << endl;
 	PackDataset dataset;
-	dataset.load_data("./data/pack_data2_test.csv", false, true);
+	dataset.load_data("./data/pack_data_test.csv", false, true);
 
 	cout << "Loading network..." << endl;
-	NeuralNetwork network(IOUtils::load_network("predictor_pd2.net"));
+	NeuralNetwork network(IOUtils::load_network("predictor.net"));
 
 	cout << "Testing..." << endl;
 	vector<PackDataSequence>* test = dataset.data();
