@@ -14,9 +14,11 @@ SigmoidActivation::~SigmoidActivation()
 
 Tensor SigmoidActivation::activate(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size());
+	double* y = &arr[0];
+	double* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
-		arr[i] = 1 / (1 + exp(-p_input[i]));
+		(*y++) = 1 / (1 + exp(-(*x++)));
 	}
 
 	return Tensor({ p_input.size() }, arr);
@@ -24,11 +26,14 @@ Tensor SigmoidActivation::activate(Tensor& p_input) {
 
 Tensor SigmoidActivation::derivative(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size());
-
 	const Tensor activation = activate(p_input);
+	double* y = &arr[0];
+	double* x = &activation.arr()[0];
+
 
 	for (int i = 0; i < p_input.size(); i++) {
-		arr[i] = activation[i] * (1 - activation[i]);
+		(*y++) = *x * (1 - *x);
+		x++;
 	}
 
 	return Tensor({ p_input.size() }, arr);

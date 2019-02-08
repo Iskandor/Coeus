@@ -14,9 +14,11 @@ GaussianActivation::~GaussianActivation()
 
 Tensor GaussianActivation::activate(Tensor& p_input) {
 	double* arr = Tensor::alloc_arr(p_input.size());
+	double* y = &arr[0];
+	double* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
-		arr[i] = 1.0 / sqrt(2 * PI * pow(_sigma, 2)) * exp(-(pow(p_input[i], 2) / 2 * pow(_sigma, 2)));
+		*y++ = 1.0 / sqrt(2 * PI * pow(_sigma, 2)) * exp(-(pow(*x++, 2) / 2 * pow(_sigma, 2)));
 	}
 
 	return Tensor({ p_input.size() }, arr);
