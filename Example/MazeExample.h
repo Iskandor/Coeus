@@ -14,7 +14,7 @@ public:
 
 	int example_q(int p_hidden, double p_alpha, double p_lambda = 0, bool p_verbose = true);
 	void example_double_q();
-	void example_sarsa(bool p_verbose = true);
+	int example_sarsa(int p_hidden, double p_alpha, double p_lambda = 0, bool p_verbose = true);
 	void example_actor_critic();
 	void example_deep_q();
 	void example_icm();

@@ -110,7 +110,7 @@ string Maze::toString() {
 
     for(int i = 0; i < _mazeY; i++) {
         for(int j = 0; j < _mazeX; j++) {
-            index = i * _mazeY + j;
+            index = i * _mazeX + j;
             if (_actor == index) {
                 s += "@";
             }
