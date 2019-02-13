@@ -26,7 +26,7 @@ Tensor GaussianActivation::activate(Tensor& p_input) {
 
 Tensor GaussianActivation::derivative(Tensor& p_input) {
 	assert(0);
-	return Tensor::Zero({ p_input.size() }).diag();
+	return Tensor::Zero({ p_input.size() });
 }
 
 json GaussianActivation::get_json()

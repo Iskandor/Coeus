@@ -2,44 +2,54 @@
 #include "RandomGenerator.h"
 #include <ppl.h>
 #include <cassert>
+#include <iostream>
 
 using namespace FLAB;
 using namespace Concurrency;
 
-Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0) {
+Tensor::Tensor(): _arr(nullptr), _arr_cm(nullptr), _rank(0), _shape(nullptr), _size(0) {
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, const INIT p_init, const double p_value) {
 	init_shape(p_shape);
 	_arr = alloc_arr(_size);
+	_arr_cm = nullptr;
 	fill(p_init, p_value);
+	init_arr(_arr);
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, double* p_data) {
 	init_shape(p_shape);
-	_arr = p_data;
+	_arr_cm = nullptr;
+	init_arr(p_data);
 }
 
 Tensor::Tensor(const int p_rank, int* p_shape, double* p_data) {
 	init_shape(p_rank, p_shape, false);
-	_arr = p_data;
+	_arr_cm = nullptr;
+	init_arr(p_data);
 }
 
 Tensor::Tensor(const int p_rank, int* p_shape, const INIT p_init, const double p_value) {
 	init_shape(p_rank, p_shape, true);
 	_arr = alloc_arr(_size);
+	_arr_cm = nullptr;
 	fill(p_init, p_value);
+	init_arr(_arr);
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<double> p_inputs) {
 	init_shape(p_shape);
 	_arr = alloc_arr(_size);
+	_arr_cm = nullptr;
 
 	int i = 0;
 	for(auto v = p_inputs.begin(); v != p_inputs.end(); v++) {
 		_arr[i] = *v;
 		i++;
 	}
+
+	init_arr(_arr);
 }
 
 Tensor::Tensor(const Tensor& p_copy) {
@@ -47,9 +57,11 @@ Tensor::Tensor(const Tensor& p_copy) {
 	_shape = alloc_shape(_rank);
 	_size = p_copy._size;
 	_arr = alloc_arr(_size);
+	_arr_cm = alloc_arr(_size);
 
 	memcpy(_shape, p_copy._shape, sizeof(int) * _rank);
 	memcpy(_arr, p_copy._arr, sizeof(double) * static_cast<size_t>(_size));
+	memcpy(_arr_cm, p_copy._arr_cm, sizeof(double) * static_cast<size_t>(_size));
 }
 
 Tensor::~Tensor() {
@@ -57,6 +69,8 @@ Tensor::~Tensor() {
 	_shape = nullptr;
 	if (_arr != nullptr) free_arr();
 	_arr = nullptr;
+	if (_arr_cm != nullptr) free_arr();
+	_arr_cm = nullptr;
 	_rank = -1;
 }
 
@@ -104,10 +118,16 @@ void Tensor::operator=(const Tensor& p_copy) {
 
 		_size = p_copy._size;
 		_arr = alloc_arr(_size);
+
+		if (_arr_cm != nullptr)
+		{
+			Free(_arr_cm);
+		}
 	}
 
 	memcpy(_shape, p_copy._shape, sizeof(int) * _rank);
 	memcpy(_arr, p_copy._arr, sizeof(double) * _size);
+	memcpy(_arr_cm, p_copy._arr_cm, sizeof(double) * _size);
 }
 
 Tensor Tensor::operator+(const Tensor& p_tensor) const {
@@ -134,6 +154,11 @@ Tensor& Tensor::operator+=(const Tensor& p_tensor) {
 	for (int i = 0; i < _size; i++) {
 		(*ypos++) += (*xpos++);
 	}
+
+	double da = 1;
+	int incx = 1, incy = 1;
+
+	daxpy_(&_size, &da, p_tensor._arr, &incx, _arr_cm, &incy);
 
 	return *this;
 }
@@ -165,54 +190,18 @@ Tensor& Tensor::operator-=(const Tensor& p_tensor) {
 		(*ypos++) -= (*xpos++);
 	}
 
+	double da = -1;
+	int incx = 1, incy = 1;
+
+	daxpy_(&_size, &da, p_tensor._arr, &incx, _arr_cm, &incy);
+
 	return *this;
 }
 
 Tensor Tensor::operator*(const Tensor& p_tensor) const {
-	double* arr = nullptr;
-	int rank = 0;
-	int* shape = nullptr;
-	
-	if (this->_rank == 1 && p_tensor._rank == 1) {
-		if (_size != p_tensor.size())
-		{
-			assert(("Size not equal", 0));
-		}
+	Tensor temp(*this);
 
-		arr = dot(this, &p_tensor);
-		rank = 1;
-		shape = copy_shape(_rank, _shape);
-	}
-
-	if (this->_rank == 2 && p_tensor._rank == 1 && this->shape(1) == p_tensor.shape(0)) {
-		arr = mat_vec(this, &p_tensor);
-		rank = 1;
-		shape = alloc_shape(rank);
-		shape[0] = _shape[0];
-	}
-
-	if (this->_rank == 1 && p_tensor._rank == 2)
-	{
-		assert(0);
-	}
-
-	if (this->_rank == 2 && p_tensor._rank == 2) { // preverit spravnu funkcnost
-		arr = alloc_arr(_shape[0] * p_tensor._shape[1]);
-		rank = 2;
-		shape = alloc_shape(rank);
-		shape[0] = _shape[0];
-		shape[1] = p_tensor._shape[1];
-
-		for (int i = 0; i < _shape[0]; i++) {
-			for (int j = 0; j < p_tensor._shape[1]; j++) {
-				for (int k = 0; k < _shape[1]; k++) {
-					arr[i * _shape[1] + j] += _arr[i * _shape[1] + k] * p_tensor._arr[k * p_tensor._shape[1] + j];
-				}
-			}
-		}
-	}
-
-	return Tensor(rank, shape, arr);
+	return temp *= p_tensor;
 }
 
 Tensor Tensor::operator*(const double p_const) const {
@@ -221,10 +210,98 @@ Tensor Tensor::operator*(const double p_const) const {
 	return temp *= p_const;
 }
 
+Tensor& Tensor::operator*=(const Tensor& p_tensor)
+{
+	if (_rank == 1 && p_tensor._rank == 1) {
+		if (_size != p_tensor.size())
+		{
+			assert(("Size not equal", 0));
+		}
+
+		_arr = ew_prod(this, &p_tensor);
+	}
+
+	if (this->_rank == 2 && p_tensor._rank == 1 && this->shape(1) == p_tensor.shape(0)) {	
+		char T = 'N';
+		int rows = _shape[0];
+		int cols = _shape[1];
+		double da = 1, dy = 0;
+		int incx = 1, incy = 1;
+
+		double* arr_cm = alloc_arr(rows);
+		
+		dgemv_(&T, &rows, &cols, &da, _arr_cm, &rows, p_tensor._arr, &incx, &dy, arr_cm, &incy);
+
+		Free(_arr_cm);
+		_arr_cm = arr_cm;
+
+		double* arr = mat_vec(this, &p_tensor);
+		free_arr();
+		_arr = arr;
+		free_shape();
+		_rank = 1;
+		_shape = alloc_shape(_rank);
+		_shape[0] = rows;
+		_size = rows;
+	}
+
+	if (this->_rank == 1 && p_tensor._rank == 2)
+	{
+		assert(("Undefined operation", 0));
+	}
+
+	if (this->_rank == 2 && p_tensor._rank == 2) { // preverit spravnu funkcnost
+		int rows = _shape[0];
+		int rows2 = p_tensor._shape[0];
+		int cols = _shape[1];
+		int cols2 = p_tensor._shape[1];
+
+		_rank = 2;
+		int* shape = alloc_shape(_rank);
+		shape[0] = rows;
+		shape[1] = cols2;
+		double* arr = alloc_arr(shape[0] * shape[1]);
+
+		for (int i = 0; i < shape[0]; i++) {
+			for (int j = 0; j < shape[1]; j++) {
+				arr[i * shape[1] + j] = 0;
+				for (int k = 0; k < cols; k++) {
+					arr[i * shape[1] + j] += _arr[i * cols + k] * p_tensor._arr[k * cols2 + j];
+				}
+			}
+		}
+
+		free_shape();
+		_shape = shape;
+
+		free_arr();
+		_arr = arr;
+
+		double* arr_cm = alloc_arr(shape[0] * shape[1]);
+
+		char TA = 'N';
+		char TB = 'N';
+		double da = 1;
+		double dc = 0;
+
+		dgemm_(&TA, &TB, &rows, &cols2, &cols, &da, _arr_cm, &rows, p_tensor._arr_cm, &rows2, &dc, arr_cm, &rows);
+
+		Free(_arr_cm);
+		_arr_cm = arr_cm;
+	}
+
+	return *this;
+}
+
 Tensor& Tensor::operator*=(const double p_const) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] *= p_const;
 	}
+
+	double da = p_const;
+	int incx = 1;
+
+	dscal_(&_size, &da, _arr_cm, &incx);
 
 	return *this;
 }
@@ -250,6 +327,11 @@ Tensor& Tensor::operator/=(const double p_const) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] /= p_const;
 	}
+
+	double da = 1 / p_const;
+	int incx = 1;
+
+	dscal_(&_size, &da, _arr_cm, &incx);
 
 	return *this;
 }
@@ -312,8 +394,11 @@ void Tensor::set_column(Tensor& p_tensor, const int p_column) const
 
 Tensor Tensor::T() const {
 	double* arr = alloc_arr(_size);
+	double* arr_cm = alloc_arr(_size);
 
 	int* shape = copy_shape(_rank, _shape);
+
+	
 
 	if (_rank == 1) {
 		for (int i = 0; i < _shape[0]; i++) {
@@ -332,24 +417,22 @@ Tensor Tensor::T() const {
 		}
 	}
 
-	return Tensor(_rank, shape, arr);
-}
+	Tensor t(_rank, shape, arr);
 
-Tensor Tensor::diag() const {
-	const int rank = 2;
-	int* shape = alloc_shape(rank);
-	double* arr = alloc_arr(_size *_size);
+	if (_rank == 2) {
+		shape[0] = _shape[1];
+		shape[1] = _shape[0];
 
-	shape[0] = _shape[0];
-	shape[1] = _shape[0];
-
-	for(int i = 0; i < _size; i++) {
-		for (int j = 0; j < _size; j++) {
-			arr[i * _size + j] = i == j ? _arr[i] : 0;
+		for (int i = 0; i < _shape[0]; i++) {
+			for (int j = 0; j < _shape[1]; j++) {
+				arr_cm[i * _shape[1] + j] = _arr_cm[j * _shape[0] + i];
+			}
 		}
 	}
 
-	return Tensor(rank, shape, arr);
+	t._arr_cm = arr_cm;
+
+	return Tensor(t);
 }
 
 Tensor Tensor::pow(const double p_y) const {
@@ -380,7 +463,7 @@ Tensor Tensor::dot(const Tensor& p_tensor) const {
 		assert(("Size or rank not equal", 0));
 	}
 
-	double* arr = dot(this, &p_tensor);
+	double* arr = ew_prod(this, &p_tensor);
 	int* shape = copy_shape(_rank, _shape);
 
 	return Tensor(_rank, shape, arr);
@@ -388,35 +471,32 @@ Tensor Tensor::dot(const Tensor& p_tensor) const {
 
 Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 {
-	double* arr = nullptr;
-	int rank = 0;
-	int* shape = nullptr;
-
-	if (_rank != p_tensor._rank)
+	if (_rank != 1 || p_tensor._rank != 1)
 	{
-		assert(("Rank not equal", 0));
+		assert(("Rank not equal or not equal to 1", 0));
 	}
 
-	if (this->_rank == 1 && p_tensor._rank == 1) {
-		arr = alloc_arr(_size * p_tensor._size);
-		rank = 2;
-		shape = alloc_shape(rank);
-		shape[0] = _size;
-		shape[1] = p_tensor._size;
+	Tensor t({ _size, p_tensor._size }, ZERO);
 
-		double *xpos = &_arr[0];		
-		double *zpos = &arr[0];
+	double *xpos = &_arr[0];		
+	double *zpos = &t._arr[0];
 
-		for (int i = 0; i < this->_size; i++) {
-			double *ypos = &p_tensor._arr[0];
-			for (int j = 0; j < p_tensor._size; j++) {
-				(*zpos++) = (*xpos) * (*ypos++);
-			}
-			xpos++;
+	for (int i = 0; i < this->_size; i++) {
+		double *ypos = &p_tensor._arr[0];
+		for (int j = 0; j < p_tensor._size; j++) {
+			(*zpos++) = (*xpos) * (*ypos++);
 		}
+		xpos++;
 	}
 
-	return Tensor(rank, shape, arr);
+	int rows = _size;
+	int cols = p_tensor._size;
+	double da = 1;
+	int incx = 1, incy = 1;
+
+	dger_(&rows, &cols, &da, _arr_cm, &incx, p_tensor._arr_cm, &incy, t._arr_cm, &rows);
+
+	return Tensor(t);
 }
 
 Tensor Tensor::apply(Tensor& p_source, double(*f)(double))
@@ -569,7 +649,76 @@ double Tensor::dist(Tensor* p_tensor1, Tensor* p_tensor2)
 	return std::sqrt(result);
 }
 
-double* Tensor::dot(const Tensor* p_x, const Tensor* p_y)
+void Tensor::print(ostream& output) const
+{
+	if (this->rank() == 1)
+	{
+		print_vector(output, *this, true);
+	}
+	if (this->rank() == 2)
+	{
+		print_matrix(output, *this, true);
+	}
+}
+
+void Tensor::print_vector(ostream &output, const Tensor& p_tensor, bool p_cm)
+{
+	for (int i = 0; i < p_tensor._size; i++) {
+		if (i == p_tensor._size - 1) {
+			if (p_cm)
+			{
+				output << p_tensor._arr_cm[i];
+			}
+			else
+			{
+				output << p_tensor._arr[i];
+			}
+			
+		}
+		else {
+			if (p_cm)
+			{
+				output << p_tensor._arr_cm[i] << ",";
+			}
+			else
+			{
+				output << p_tensor._arr[i] << ",";
+			}
+		}
+	}
+}
+
+void Tensor::print_matrix(ostream &output, const Tensor& p_tensor, bool p_cm)
+{
+	for (int i = 0; i < p_tensor._shape[0]; i++) {
+		for(int j = 0; j < p_tensor._shape[1]; j++)
+		{
+			if (j == p_tensor._shape[1] - 1) {
+				if (p_cm)
+				{
+					output << p_tensor._arr_cm[j * p_tensor._shape[0] + i];
+				}
+				else
+				{
+					output << p_tensor._arr[i * p_tensor._shape[1] + j];
+				}
+			}
+			else {
+				if (p_cm)
+				{
+					output << p_tensor._arr_cm[j * p_tensor._shape[0] + i] << ",";
+				}
+				else
+				{
+					output << p_tensor._arr[i * p_tensor._shape[1] + j] << ",";
+				}
+			}
+		}
+		output << endl;
+	}
+}
+
+double* Tensor::ew_prod(const Tensor* p_x, const Tensor* p_y)
 {
 	double* arr = alloc_arr(p_x->_size);
 
@@ -692,6 +841,30 @@ void Tensor::init_shape(initializer_list<int> p_shape) {
 		_shape[i] = *s;
 		_size *= _shape[i];
 		i++;
+	}
+}
+
+void Tensor::init_arr(double* p_arr)
+{
+	_arr = p_arr;
+	if (_arr_cm != nullptr) {
+		Free(_arr_cm);
+		_arr_cm = nullptr;
+	}
+	_arr_cm = alloc_arr(_size);
+	if (_rank == 1)
+	{
+		memcpy(_arr_cm, p_arr, sizeof(double) * _size);
+	}
+	if (_rank == 2)
+	{
+		for (int i = 0; i < _shape[0]; i++)
+		{
+			for (int j = 0; j < _shape[1]; j++)
+			{
+				_arr_cm[j * _shape[0] + i] = p_arr[i * _shape[1] + j];
+			}
+		}
 	}
 }
 

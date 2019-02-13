@@ -17,6 +17,21 @@ using namespace MNS;
 
 int main()
 {
+	//Tensor v0({ 5 }, Tensor::RANDOM);
+	//Tensor v1({ 4 }, Tensor::VALUE, 2);
+
+	Tensor A({ 2,3 }, Tensor::RANDOM);
+	Tensor B({ 3,2 }, Tensor::RANDOM);
+
+	Tensor m = A.T();
+
+	cout << A << endl;
+
+	cout << m << endl;
+	cout << endl;
+	m.print(cout);
+	cout << endl;
+
 	//FFN model;
 	//model.run();
 
@@ -26,6 +41,7 @@ int main()
 	//model.test_pack_cm();
 	//model.run_add_problem();
 
+	/*
 	MazeExample example;
 	//example.example_q(24, 4e-4, 0, false);
 
@@ -37,7 +53,7 @@ int main()
 		c += example.example_q(48, 1e-4, 0, false);
 	}
 	cout << c << " / 10" << endl;
-
+	*/
 	/*
 	Logger::instance().init("maze.log");
 

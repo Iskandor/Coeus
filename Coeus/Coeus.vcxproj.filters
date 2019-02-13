@@ -109,6 +109,12 @@
     <Filter Include="Header Files\Algorithm\Modules\LRM">
       <UniqueIdentifier>{ed34bbc0-1519-4509-9205-117426ab8dae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\FLAB">
+      <UniqueIdentifier>{bbfd5969-6c1a-4b3a-a1f3-4e65811f8420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FLAB">
+      <UniqueIdentifier>{cdc19d8d-a6f5-480c-a1b2-d7f67986be98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -419,6 +425,12 @@
     </ClCompile>
     <ClCompile Include="ExponentialDecay.cpp">
       <Filter>Source Files\Algorithm\Modules\LRM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FLAB\RandomGenerator.cpp">
+      <Filter>Source Files\FLAB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FLAB\Tensor.cpp">
+      <Filter>Source Files\FLAB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -733,6 +745,15 @@
     </ClInclude>
     <ClInclude Include="ExponentialDecay.h">
       <Filter>Header Files\Algorithm\Modules\LRM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FLAB\FLAB.h">
+      <Filter>Header Files\FLAB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FLAB\RandomGenerator.h">
+      <Filter>Header Files\FLAB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FLAB\Tensor.h">
+      <Filter>Header Files\FLAB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
