@@ -105,8 +105,6 @@ public:
 	void set(int p_z, int p_y, int p_x, double p_val) const;
 	void inc(int p_x, double p_val) const;
 	void inc(int p_x, int p_y, double p_val) const;
-	void dec(int p_x, double p_val) const;
-	void dec(int p_x, int p_y, double p_val) const;
 
 	static double* alloc_arr(int p_size);
 	static int* alloc_shape(int p_size);

@@ -164,8 +164,9 @@ Tensor& Tensor::operator+=(const Tensor& p_tensor) {
 }
 
 Tensor& Tensor::operator+=(const double p_const) {
+	double* xpos = &_arr[0];
 	for (int i = 0; i < _size; i++) {
-		_arr[i] += p_const;
+		(*xpos++) += p_const;
 	}
 
 	return *this;
@@ -250,7 +251,7 @@ Tensor& Tensor::operator*=(const Tensor& p_tensor)
 		assert(("Undefined operation", 0));
 	}
 
-	if (this->_rank == 2 && p_tensor._rank == 2) { // preverit spravnu funkcnost
+	if (this->_rank == 2 && p_tensor._rank == 2) {
 		int rows = _shape[0];
 		int rows2 = p_tensor._shape[0];
 		int cols = _shape[1];
@@ -261,6 +262,7 @@ Tensor& Tensor::operator*=(const Tensor& p_tensor)
 		shape[0] = rows;
 		shape[1] = cols2;
 		double* arr = alloc_arr(shape[0] * shape[1]);
+		_size = shape[0] * shape[1];
 
 		for (int i = 0; i < shape[0]; i++) {
 			for (int j = 0; j < shape[1]; j++) {
@@ -316,14 +318,19 @@ Tensor Tensor::operator/(const Tensor& p_tensor) const {
 	double* arr = alloc_arr(_size);
 	int* shape = copy_shape(_rank, _shape);
 
+	double *xpos = &_arr[0];
+	double *ypos = &p_tensor._arr[0];
+	double *zpos = &arr[0];
+
 	for (int i = 0; i < _size; i++) {
-		arr[i] = _arr[i] / p_tensor._arr[i];
+		(*zpos++) = (*xpos++) / (*ypos++);
 	}
 
 	return Tensor(_rank, shape, arr);
 }
 
 Tensor& Tensor::operator/=(const double p_const) {
+
 	for (int i = 0; i < _size; i++) {
 		_arr[i] /= p_const;
 	}
@@ -342,53 +349,73 @@ double& Tensor::operator[](const int p_index) const {
 
 void Tensor::get_row(Tensor& p_tensor, const int p_row) const
 {
-	if (p_tensor.size() != _shape[1])
+	if (_rank != 2 || p_tensor.size() != _shape[1])
 	{
 		assert(0);
 	}
 
 	for(int i = 0; i < _shape[1]; i++)
 	{
-		p_tensor[i] = _arr[p_row * _shape[1] + i];
+		p_tensor._arr[i] = _arr[p_row * _shape[1] + i];
+	}
+
+	for (int i = 0; i < _shape[1]; i++)
+	{
+		p_tensor._arr_cm[i] = _arr_cm[i * _shape[0] + p_row];
 	}
 }
 
 void Tensor::set_row(Tensor& p_tensor, const int p_row) const
 {
-	if (p_tensor.size() != _shape[1])
+	if (_rank != 2 || p_tensor.size() != _shape[1])
 	{
 		assert(0);
 	}
 
 	for (int i = 0; i < _shape[1]; i++)
 	{
-		_arr[p_row * _shape[1] + i] = p_tensor[i];
+		_arr[p_row * _shape[1] + i] = p_tensor._arr[i];
+	}
+
+	for (int i = 0; i < _shape[1]; i++)
+	{
+		_arr_cm[i * _shape[0] + p_row] = p_tensor._arr_cm[i];
 	}
 }
 
 void Tensor::get_column(Tensor& p_tensor, const int p_column) const
 {
-	if (p_tensor.size() != _shape[0])
+	if (_rank != 2 || p_tensor.size() != _shape[0])
 	{
 		assert(0);
 	}
 
 	for (int i = 0; i < _shape[0]; i++)
 	{
-		p_tensor[i] = _arr[i * _shape[1] + p_column];
+		p_tensor._arr[i] = _arr[i * _shape[1] + p_column];
+	}
+
+	for (int i = 0; i < _shape[0]; i++)
+	{
+		p_tensor._arr_cm[i] = _arr_cm[p_column * _shape[0] + i];
 	}
 }
 
 void Tensor::set_column(Tensor& p_tensor, const int p_column) const
 {
-	if (p_tensor.size() != _shape[0])
+	if (_rank != 2 || p_tensor.size() != _shape[0])
 	{
 		assert(0);
 	}
 
 	for (int i = 0; i < _shape[0]; i++)
 	{
-		_arr[i * _shape[1] + p_column] = p_tensor[i];
+		_arr[i * _shape[1] + p_column] = p_tensor._arr[i];
+	}
+
+	for (int i = 0; i < _shape[0]; i++)
+	{
+		_arr_cm[p_column * _shape[0] + i] = p_tensor._arr_cm[i];
 	}
 }
 
@@ -570,7 +597,7 @@ double Tensor::at(const int p_x) const {
 }
 
 double Tensor::at(const int p_y, const int p_x) const {
-	return _arr[p_y * _shape[1] + p_x];
+	return _arr_cm[p_x * _shape[0] + p_y];
 }
 
 double Tensor::at(const int p_z, const int p_y, const int p_x) const {
@@ -582,7 +609,7 @@ void Tensor::set(const int p_x, const double p_val) const {
 }
 
 void Tensor::set(const int p_y, const int p_x, const double p_val) const {
-	_arr[p_y * _shape[1] + p_x] = p_val;
+	_arr_cm[p_x * _shape[0] + p_y] = p_val;
 }
 
 void Tensor::set(const int p_z, const int p_y, const int p_x, const double p_val) const {
@@ -594,15 +621,7 @@ void Tensor::inc(const int p_x, const double p_val) const {
 }
 
 void Tensor::inc(const int p_x, const int p_y, const double p_val) const {
-	_arr[p_y * _shape[1] + p_x] += p_val;
-}
-
-void Tensor::dec(const int p_x, const double p_val) const {
-	_arr[p_x] -= p_val;
-}
-
-void Tensor::dec(const int p_x, const int p_y, const double p_val) const {
-	_arr[p_y * _shape[1] + p_x] -= p_val;
+	_arr_cm[p_x * _shape[0] + p_y] += p_val;
 }
 
 double* Tensor::alloc_arr(const int p_size) {

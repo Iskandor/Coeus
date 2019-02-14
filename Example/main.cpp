@@ -17,20 +17,33 @@ using namespace MNS;
 
 int main()
 {
-	//Tensor v0({ 5 }, Tensor::RANDOM);
-	//Tensor v1({ 4 }, Tensor::VALUE, 2);
+	double val[] = { 1, 0, 1, 1, 1, 2, 0, 2, 2, 2, 3, 3, 3, 3, 3 };
+	double *arr = Tensor::alloc_arr(15);
 
-	Tensor A({ 2,3 }, Tensor::RANDOM);
-	Tensor B({ 3,2 }, Tensor::RANDOM);
+	for(int i = 0; i < 15; i++)
+	{
+		arr[i] = val[i];
+	}
 
-	Tensor m = A.T();
+	Tensor v0({ 5 }, Tensor::VALUE, 1);
+	Tensor v1({ 5 }, Tensor::VALUE, 2);
+	Tensor v2({ 5 }, Tensor::VALUE, 3);
 
-	cout << A << endl;
+	Tensor r({ 5 }, Tensor::ZERO);
+	Tensor c({ 3 }, Tensor::ZERO);
 
-	cout << m << endl;
+	Tensor A({ 2,5 }, Tensor::RANDOM);
+	Tensor B({ 3,5 }, arr);
+	
+	Tensor m = (A * B.T());
+
+	B.print(cout);
 	cout << endl;
-	m.print(cout);
+	B.inc(1, 2, 55);
 	cout << endl;
+	B.print(cout);
+	cout << endl;
+
 
 	//FFN model;
 	//model.run();
