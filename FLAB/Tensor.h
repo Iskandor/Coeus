@@ -151,6 +151,7 @@ private:
 	void fill(INIT p_init, double p_value) const;
 	
 	double *_arr;
+	double *_arr_cm;
 	int _rank{};
 	int *_shape{};
 	int _size{};

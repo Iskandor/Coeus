@@ -17,6 +17,7 @@ using namespace MNS;
 
 int main()
 {
+	/*
 	double val[] = { 1, 0, 1, 1, 1, 2, 0, 2, 2, 2, 3, 3, 3, 3, 3 };
 	double *arr = Tensor::alloc_arr(15);
 
@@ -37,19 +38,20 @@ int main()
 	
 	Tensor m = (A * B.T());
 
-	B.print(cout);
+	cout << m << endl;
 	cout << endl;
-	B.inc(1, 2, 55);
+	cout << A * v0;
 	cout << endl;
-	B.print(cout);
+	cout << v0 + v1 << endl;
 	cout << endl;
+	*/
 
 
 	//FFN model;
 	//model.run();
 
-	//RNN model;
-	//model.run_pack();
+	RNN model;
+	model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
 	//model.run_add_problem();

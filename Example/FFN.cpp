@@ -29,7 +29,7 @@ FFN::~FFN()
 
 void FFN::run() {
 	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new CoreLayer("hidden", 8, SIGMOID));
+	_network.add_layer(new CoreLayer("hidden", 4, SIGMOID));
 	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
 	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
