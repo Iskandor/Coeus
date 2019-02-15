@@ -25,7 +25,7 @@ namespace Coeus {
 		NeuralNetwork*		_network;
 		ICostFunction*		_cost_function;
 		IUpdateRule*		_update_rule;
-		NetworkGradient*	_network_gradient;		
+		NetworkGradient*	_network_gradient;
 
 	private:
 		IBatchModule*			_batch_module;

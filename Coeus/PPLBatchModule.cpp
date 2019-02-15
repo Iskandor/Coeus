@@ -55,9 +55,11 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 
 	auto end = chrono::high_resolution_clock::now();
 
-	//cout << "Gradient" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	cout << "Gradient" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 
 	start = chrono::high_resolution_clock::now();
+
+	//parallel_reduce(begin(words), end(words), wstring())
 
 	for(int i = 0; i < _batch_size; i++)
 	{
@@ -69,5 +71,37 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 
 	end = chrono::high_resolution_clock::now();
 
-	//cout << "Accumulate" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	cout << "Accumulate" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+}
+
+float PPLBatchModule::get_error(vector<Tensor*>* p_input, vector<Tensor*>* p_target)
+{
+	float error = 0;
+	int nbatch = p_input->size() / _batch_size;
+	if (p_input->size() % _batch_size > 0) nbatch++;
+
+	critical_section mutex;
+
+	for (int b = 0; b < nbatch; b++)
+	{
+		if (b * _batch_size + _batch_size > p_input->size())
+		{
+			_batch_size = p_input->size() - b * _batch_size;
+		}
+
+		parallel_for(0, _batch_size, [&](const int i) {
+			const int index = b * _batch_size + i;
+			_clone_network[i]->activate(p_input->at(index));
+			const float e = _cost_function->cost(_clone_network[i]->get_output(), p_target->at(index));
+			
+			mutex.lock();
+			error += e;
+			mutex.unlock();
+
+		},
+		static_partitioner()
+		);
+	}
+
+	return error;
 }

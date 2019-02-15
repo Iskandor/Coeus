@@ -189,6 +189,7 @@ void RNN::run_pack()
 	const float bound = 0.99;
 	const int size = dataset.data()->size();
 
+	cout << size << " sequences" << endl;
 	cout << "Training..." << endl;
 
 	while (precision < bound || accuracy < bound || fn_ratio > (1 - bound)) {

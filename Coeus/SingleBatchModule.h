@@ -11,6 +11,7 @@ namespace Coeus {
 		~SingleBatchModule();
 
 		void run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
+		float get_error(vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
 
 	private:
 		NeuralNetwork*		_network;

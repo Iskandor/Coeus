@@ -15,13 +15,13 @@ namespace Coeus {
 		~PPLBatchModule();
 
 		void run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
+		float get_error(vector<Tensor*>* p_input, vector<Tensor*>* p_target) override;
 
 	private:
 		
-		ICostFunction*		_cost_function;
-		NeuralNetwork*		_network;
-		NeuralNetwork**		_clone_network;
-		NetworkGradient**	_network_gradient;
-		
+		ICostFunction*			_cost_function;
+		NeuralNetwork*			_network;
+		NeuralNetwork**			_clone_network;
+		NetworkGradient**		_network_gradient;
 	};
 }

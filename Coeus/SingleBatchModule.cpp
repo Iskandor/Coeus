@@ -32,3 +32,15 @@ void SingleBatchModule::run_batch(const int p_b, const int p_batch, vector<Tenso
 		}
 	}
 }
+
+float SingleBatchModule::get_error(vector<Tensor*>* p_input, vector<Tensor*>* p_target)
+{
+	float error = 0;
+	for (unsigned int i = 0; i < p_input->size(); i++)
+	{
+		_network->activate((*p_input)[i]);
+		error += _cost_function->cost(_network->get_output(), (*p_target)[i]);
+	}
+
+	return error;
+}

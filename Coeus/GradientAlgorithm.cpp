@@ -74,19 +74,11 @@ float GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 
 float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
 
-	float error = 0;
 	float alpha = 0;
 
 	if (_learning_rate_module != nullptr) {
 		alpha = _learning_rate_module->get_alpha();
 	}
-
-	for(unsigned int i = 0; i < p_input->size(); i++)
-	{
-		_network->activate((*p_input)[i]);
-		error += _cost_function->cost(_network->get_output(), (*p_target)[i]);
-	}
-
 
 	int nbatch = p_input->size() / p_batch;
 
@@ -108,6 +100,8 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_targ
 		_batch_module = new PPLBatchModule(_network, _cost_function, p_batch);
 		//_batch_module = new OpenMPBatchModule(_network, _cost_function, p_batch);
 	}
+
+	const float error = _batch_module->get_error(p_input, p_target);
 
 	for (int b = 0; b < nbatch; b++)
 	{

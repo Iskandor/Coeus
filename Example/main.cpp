@@ -21,10 +21,10 @@ int main()
 	//model.run();
 
 	RNN model;
-	//model.run_pack();
+	model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
-	model.run_add_problem();
+	//model.run_add_problem();
 
 	/*
 	MazeExample example;
