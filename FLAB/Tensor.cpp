@@ -203,10 +203,16 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 		shape[0] = _shape[0];
 		shape[1] = p_tensor._shape[1];
 
-		for (int i = 0; i < _shape[0]; i++) {
-			for (int j = 0; j < p_tensor._shape[1]; j++) {
-				for (int k = 0; k < _shape[1]; k++) {
-					arr[i * _shape[1] + j] += _arr[i * _shape[1] + k] * p_tensor._arr[k * p_tensor._shape[1] + j];
+		int rows = _shape[0];
+		int rows2 = p_tensor._shape[0];
+		int cols = _shape[1];
+		int cols2 = p_tensor._shape[1];
+
+		for (int i = 0; i < shape[0]; i++) {
+			for (int j = 0; j < shape[1]; j++) {
+				arr[i * shape[1] + j] = 0;
+				for (int k = 0; k < cols; k++) {
+					arr[i * shape[1] + j] += _arr[i * cols + k] * p_tensor._arr[k * cols2 + j];
 				}
 			}
 		}
@@ -392,29 +398,79 @@ Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 	int rank = 0;
 	int* shape = nullptr;
 
-	if (_rank != p_tensor._rank)
+	if (this->_rank != 1 || p_tensor._rank != 1)
 	{
 		assert(("Rank not equal", 0));
 	}
 
-	if (this->_rank == 1 && p_tensor._rank == 1) {
-		arr = alloc_arr(_size * p_tensor._size);
-		rank = 2;
-		shape = alloc_shape(rank);
-		shape[0] = _size;
-		shape[1] = p_tensor._size;
+	const int rows = _size;
+	const int cols = p_tensor._size;
 
-		double *xpos = &_arr[0];		
-		double *zpos = &arr[0];
+	arr = alloc_arr(rows * cols);
+	rank = 2;
+	shape = alloc_shape(rank);
+	shape[0] = rows;
+	shape[1] = cols;
 
-		for (int i = 0; i < this->_size; i++) {
+	int r = rows / 4;
+
+	if (r > 0)
+	{
+		double *xpos0 = &_arr[0];
+		double *xpos1 = &_arr[1];
+		double *xpos2 = &_arr[2];
+		double *xpos3 = &_arr[3];
+
+		double *zpos0 = &arr[0];
+		double *zpos1 = &arr[cols];
+		double *zpos2 = &arr[cols * 2];
+		double *zpos3 = &arr[cols * 3];
+
+		for (int i = 0; i < r; i++) {
 			double *ypos = &p_tensor._arr[0];
-			for (int j = 0; j < p_tensor._size; j++) {
+			for (int j = 0; j < cols; j++) {
+				(*zpos0++) = (*xpos0) * (*ypos);
+				(*zpos1++) = (*xpos1) * (*ypos);
+				(*zpos2++) = (*xpos2) * (*ypos);
+				(*zpos3++) = (*xpos3) * (*ypos);
+				ypos++;
+			}
+			xpos0 += 4;
+			xpos1 += 4;
+			xpos2 += 4;
+			xpos3 += 4;
+
+			zpos0 += 3 * cols;
+			zpos1 += 3 * cols;
+			zpos2 += 3 * cols;
+			zpos3 += 3 * cols;
+		}
+
+		double *xpos = &_arr[r*4];
+		double *zpos = &arr[r*4*cols];
+
+		for (int i = r*4; i < rows; i++) {
+			double *ypos = &p_tensor._arr[0];
+			for (int j = 0; j < cols; j++) {
 				(*zpos++) = (*xpos) * (*ypos++);
 			}
 			xpos++;
 		}
 	}
+	else
+	{
+		double *xpos = &_arr[0];
+		double *zpos = &arr[0];
+
+		for (int i = 0; i < rows; i++) {
+			double *ypos = &p_tensor._arr[0];
+			for (int j = 0; j < cols; j++) {
+				(*zpos++) = (*xpos) * (*ypos++);
+			}
+			xpos++;
+		}
+	}
+
 
 	return Tensor(rank, shape, arr);
 }
