@@ -12,7 +12,7 @@ namespace Coeus {
 		ICostFunction();
 		virtual ~ICostFunction();
 
-		virtual double cost(Tensor* p_prediction, Tensor* p_target) = 0;
+		virtual float cost(Tensor* p_prediction, Tensor* p_target) = 0;
 		virtual Tensor cost_deriv(Tensor* p_prediction, Tensor* p_target) = 0;
 	};
 

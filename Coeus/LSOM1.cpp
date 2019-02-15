@@ -29,7 +29,7 @@ void LSOM1::activate(Tensor * p_input)
 	Tensor* lateral_w = _lateral->get_weights();
 
 	for (int i = 0; i < _dim_x * _dim_y; i++) {
-		double w = 0;
+		float w = 0;
 		for (int n = 0; n < _dim_x * _dim_y; n++) {
 				w += _auxoutput.at(n) * lateral_w->at(i, n);				
 		}

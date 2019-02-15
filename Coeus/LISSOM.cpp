@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-LISSOM::LISSOM(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const ACTIVATION p_activation, double p_gamma_e, double p_gamma_i) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
+LISSOM::LISSOM(const string p_id, const int p_input_dim, const int p_dim_x, const int p_dim_y, const ACTIVATION p_activation, float p_gamma_e, float p_gamma_i) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation)
 {
 	_lateral_e = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice", Connection::UNIFORM, true, 0.01);
 	_lateral_i = new Connection(p_dim_x * p_dim_y, p_dim_x * p_dim_y, "lattice", "lattice", Connection::UNIFORM, true, 0.01);

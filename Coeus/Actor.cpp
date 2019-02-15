@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-Actor::Actor(NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm, const double p_beta)
+Actor::Actor(NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm, const float p_beta)
 {
 	_network = p_network;
 	_network_gradient = nullptr;
@@ -12,7 +12,7 @@ Actor::Actor(NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm, 
 	_beta = p_beta;
 }
 
-Actor::Actor(NeuralNetwork* p_network, const GRADIENT_RULE p_grad_rule, const double p_alpha) {
+Actor::Actor(NeuralNetwork* p_network, const GRADIENT_RULE p_grad_rule, const float p_alpha) {
 	_network = p_network;
 	_network_gradient = new NetworkGradient(p_network);
 	_gradient_algorithm = nullptr;
@@ -27,7 +27,7 @@ Actor::~Actor()
 
 }
 
-double Actor::train(Tensor* p_state0, const int p_action, const double p_td_error) const
+float Actor::train(Tensor* p_state0, const int p_action, const float p_td_error) const
 {
 	_network->activate(p_state0);
 

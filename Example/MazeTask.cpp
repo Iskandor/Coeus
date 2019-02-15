@@ -42,8 +42,8 @@ bool MazeTask::isWinner() const
 	return maze->actor() == maze->goal();
 }
 
-double MazeTask::getReward() const {
-    double reward = defautPenalty;
+float MazeTask::getReward() const {
+    float reward = defautPenalty;
 
     if (isWinner()) reward = finalReward;
     if (maze->bang()) reward = bangPenalty;

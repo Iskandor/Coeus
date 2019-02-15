@@ -10,17 +10,17 @@ namespace Coeus
 		explicit LSOM_params(LSOM* p_lsom);
 		~LSOM_params();
 
-		void init_training(double p_alpha, double p_beta, double p_epochs);
+		void init_training(float p_alpha, float p_beta, float p_epochs);
 		void param_decay() override;
 
-		double alpha() const { return _alpha; }
-		double beta() const { return _beta; }
+		float alpha() const { return _alpha; }
+		float beta() const { return _beta; }
 
 	private:
-		double _alpha0;
-		double _alpha;
-		double _beta0;
-		double _beta;
+		float _alpha0;
+		float _alpha;
+		float _beta0;
+		float _beta;
 	};
 }
 

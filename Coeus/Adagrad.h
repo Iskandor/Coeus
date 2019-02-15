@@ -9,7 +9,7 @@ namespace Coeus {
 		explicit Adagrad(NeuralNetwork* p_network);
 		~Adagrad();
 
-		void init(ICostFunction* p_cost_function, double p_alpha, double p_epsilon = 1e-8);
+		void init(ICostFunction* p_cost_function, float p_alpha, float p_epsilon = 1e-8);
 	};
 
 }

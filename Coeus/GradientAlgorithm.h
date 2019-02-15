@@ -15,8 +15,8 @@ namespace Coeus {
 		GradientAlgorithm(NeuralNetwork* p_network);
 		virtual ~GradientAlgorithm();
 
-		virtual double train(Tensor* p_input, Tensor* p_target);
-		virtual double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch);
+		virtual float train(Tensor* p_input, Tensor* p_target);
+		virtual float train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch);
 
 		void add_learning_rate_module(ILearningRateModule* p_learning_rate_module);
 	protected:

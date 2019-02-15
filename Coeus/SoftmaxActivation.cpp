@@ -13,8 +13,8 @@ SoftmaxActivation::~SoftmaxActivation()
 }
 
 Tensor SoftmaxActivation::activate(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
-	double esum = 0;
+	float* arr = Tensor::alloc_arr(p_input.size());
+	float esum = 0;
 	const int max = p_input.max_value_index();
 
 	for (int i = 0; i < p_input.size(); i++) {
@@ -30,7 +30,7 @@ Tensor SoftmaxActivation::activate(Tensor& p_input) {
 }
 
 Tensor SoftmaxActivation::derivative(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
+	float* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 
 	const Tensor activation = activate(p_input);
 
@@ -43,7 +43,7 @@ Tensor SoftmaxActivation::derivative(Tensor& p_input) {
 	return Tensor({ p_input.size(), p_input.size() }, arr);
 }
 
-double SoftmaxActivation::activate(double p_value)
+float SoftmaxActivation::activate(float p_value)
 {
 	return 0;
 }

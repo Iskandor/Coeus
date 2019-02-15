@@ -35,7 +35,7 @@ private:
 	void prepareInputSTS(Tensor* p_output, Tensor* p_input, SOM* p_pfg) const;
 	void prepareInputPFG(Tensor* p_output, MSOM* p_f5, MSOM* p_sts) const;
 
-	static void save_results(string p_filename, int p_dim_x, int p_dim_y, double* p_data, int p_category);
+	static void save_results(string p_filename, int p_dim_x, int p_dim_y, float* p_data, int p_category);
 
 	static const int _sizeF5input = 16;
 	static const int _sizeSTSinput = 40;

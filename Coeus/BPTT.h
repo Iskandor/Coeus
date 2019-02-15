@@ -10,7 +10,7 @@ namespace Coeus {
 		BPTT (NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm);
 		~BPTT();
 
-		double train(vector<Tensor*>* p_input, Tensor* p_target) const;
+		float train(vector<Tensor*>* p_input, Tensor* p_target) const;
 
 	private:
 		NeuralNetwork* _network;

@@ -3,6 +3,7 @@
 #include "LSOM_learning.h"
 #include "SOM_learning.h"
 #include <fstream>
+#include "FLAB.h"
 
 
 IrisTest::IrisTest() {
@@ -43,14 +44,14 @@ void IrisTest::run(const int p_epochs) {
 		}
 
 		const auto end = chrono::system_clock::now();
-		chrono::duration<double> elapsed_seconds = end - start;
+		chrono::duration<float> elapsed_seconds = end - start;
 		if (t % 10 == 0) {
 			cout << "Epoch " << t << endl;
 			cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 			cout << " LSOM qError: " << analyzer.q_error() << " WD: " << analyzer.winner_diff(_lsom->get_lattice()->get_dim()) << endl;
 
 			for (int i = 0; i < _lsom->get_lattice()->get_dim(); i++) {
-				double sum = 0;
+				float sum = 0;
 				for (int j = 0; j < _lsom->get_lattice()->get_dim(); j++) {
 					sum += _lsom->get_lateral()->get_weights()->at(i, j);
 				}
@@ -71,7 +72,7 @@ void IrisTest::run(const int p_epochs) {
 	cout << endl;
 	*/
 	for (int i = 0; i < _lsom->get_lattice()->get_dim(); i++) {
-		double sum = 0;
+		float sum = 0;
 		for (int j = 0; j < _lsom->get_lattice()->get_dim(); j++) {
 			sum += _lsom->get_lateral()->get_weights()->at(i, j);
 		}
@@ -80,7 +81,7 @@ void IrisTest::run(const int p_epochs) {
 }
 
 void IrisTest::test() {
-	double* activity = new double[_lsom->dim_x() * _lsom->dim_y() * IrisDataset::CATEGORIES]{ 0 };
+	float* activity = new float[_lsom->dim_x() * _lsom->dim_y() * IrisDataset::CATEGORIES]{ 0 };
 
 	vector<IrisDatasetItem>* data = _dataset.permute();
 
@@ -88,7 +89,7 @@ void IrisTest::test() {
 		//cout << data->at(i).target << endl;
 		_lsom->activate(data->at(i).data);
 		for (int n = 0; n < _lsom->get_lattice()->get_dim(); n++) {
-			activity[n * IrisDataset::CATEGORIES + (*_dataset.get_target_map())[data->at(i).target]] += max(0.0, _lsom->get_output()->at(n));
+			activity[n * IrisDataset::CATEGORIES + (*_dataset.get_target_map())[data->at(i).target]] += FLAB::max(0.0, _lsom->get_output()->at(n));
 		}
 	}
 
@@ -97,7 +98,7 @@ void IrisTest::test() {
 	delete[] activity;
 }
 
-void IrisTest::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, 	const int p_category) const {
+void IrisTest::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, float* p_data, 	const int p_category) const {
 	ofstream file(p_filename);
 
 	if (file.is_open()) {

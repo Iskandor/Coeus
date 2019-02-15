@@ -254,7 +254,7 @@ BaseLayer* NeuralNetwork::get_layer(const string& p_layer) {
 	return _layers[p_layer];
 }
 
-Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const double p_limit, const bool p_trainable) {
+Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const float p_limit, const bool p_trainable) {
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 

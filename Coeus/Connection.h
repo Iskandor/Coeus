@@ -17,7 +17,7 @@ public:
     };
 
 	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, bool p_trainable = true);
-	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable = true, double p_limit = 0);
+	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable = true, float p_limit = 0);
 	enum NORM
 	{
 		L1_NORM = 1,
@@ -44,8 +44,8 @@ public:
 	json get_json() const;
 
 private:
-	void init(INIT p_init, bool p_trainable, double p_limit);
-    void uniform(double p_limit);
+	void init(INIT p_init, bool p_trainable, float p_limit);
+    void uniform(float p_limit);
     void identity();
 
     string _id;

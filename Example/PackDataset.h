@@ -22,7 +22,7 @@ struct PackDataRow
 	string profiles_gender;
 	string profiles_country;
 	int level;
-	double netto;
+	float netto;
 	int order;
 	int login_count;
 	int target;
@@ -61,9 +61,9 @@ private:
 	bool has_target(vector<PackDataRow>& p_row) const;
 
 	template<typename T>
-	void add_bin_data(T* p_value, vector<double> &p_data) const;
+	void add_bin_data(T* p_value, vector<float> &p_data) const;
 	template<typename T>
-	void add_data(T* p_value, int p_size, vector<double> &p_data) const;
+	void add_data(T* p_value, int p_size, vector<float> &p_data) const;
 	
 	template<typename T>
 	int* to_binary(T p_value, int p_size = 0) const;
@@ -81,7 +81,7 @@ private:
 };
 
 template <typename T>
-void PackDataset::add_bin_data(T* p_value, vector<double>& p_data) const
+void PackDataset::add_bin_data(T* p_value, vector<float>& p_data) const
 {
 	for (int i = 0; i < sizeof(T) * 8; i++)
 	{
@@ -90,7 +90,7 @@ void PackDataset::add_bin_data(T* p_value, vector<double>& p_data) const
 }
 
 template <typename T>
-void PackDataset::add_data(T* p_value, int p_size, vector<double>& p_data) const
+void PackDataset::add_data(T* p_value, int p_size, vector<float>& p_data) const
 {
 	for (int i = 0; i < p_size; i++)
 	{

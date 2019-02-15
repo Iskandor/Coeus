@@ -30,7 +30,7 @@ MazeExample::~MazeExample()
 {
 }
 
-int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const bool p_verbose) {
+int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const bool p_verbose) {
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
@@ -41,9 +41,9 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU));
 	network.add_layer(new CoreLayer("output", 4, TANH));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.1);
-	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, 0.1);
-	network.add_connection("hidden1", "output", Connection::UNIFORM, 0.1);
+	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.1f);
+	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, 0.1f);
+	network.add_connection("hidden1", "output", Connection::UNIFORM, 0.1f);
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -54,12 +54,12 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
 	//CountModule curiosity(maze->mazeX() * maze->mazeY());
 	//QLearning agent(&network, ADAM_RULE, p_alpha, 0.9, p_lambda);
-	QLearning agent(&network, &optimizer, 0.9);
+	QLearning agent(&network, &optimizer, 0.9f);
 
-	vector<double> sensors;
+	vector<float> sensors;
 	Tensor state0, state1;
-	double reward = 0;
-	double epsilon = 1;
+	float reward = 0;
+	float epsilon = 1;
 	int epochs = 0;
 
 	int wins = 0, loses = 0;
@@ -105,7 +105,7 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 
 		if (task.isWinner()) {
 			wins++;
-			if (epsilon > 0) epsilon *= 0.999;
+			if (epsilon > 0) epsilon *= 0.999f;
 		}
 		else {
 			wins = 0;
@@ -127,7 +127,7 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
-		//exploration->update((double)e / epochs);
+		//exploration->update((float)e / epochs);
 		/*
 		if (epsilon > 0.1) {
 			epsilon -= (1.0 / epochs);
@@ -140,7 +140,7 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 	return test(&network, true);
 }
 
-void MazeExample::example_double_q() {
+void MazeExample::example_float_q() {
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
@@ -155,7 +155,7 @@ void MazeExample::example_double_q() {
 	network_a.init();
 
 	RMSProp optimizer1(&network_a);
-	optimizer1.init(new QuadraticCost(), 0.003);
+	optimizer1.init(new QuadraticCost(), 0.003f);
 
 	NeuralNetwork network_b;
 
@@ -168,16 +168,16 @@ void MazeExample::example_double_q() {
 	network_b.init();
 
 	RMSProp optimizer2(&network_b);
-	optimizer2.init(new QuadraticCost(), 0.003);
+	optimizer2.init(new QuadraticCost(), 0.003f);
 
-	DoubleQLearning critic(&network_a, &optimizer1, &network_b, &optimizer2, 0.9);
+	DoubleQLearning critic(&network_a, &optimizer1, &network_b, &optimizer2, 0.9f);
 
-	vector<double> sensors;
+	vector<float> sensors;
 	Tensor state0, state1;
 	Tensor output;
 	int action0;
-	double reward = 0;
-	double epsilon = 1;
+	float reward = 0;
+	float epsilon = 1;
 	int epochs = 5000;
 
 	int wins = 0, loses = 0;
@@ -225,15 +225,15 @@ void MazeExample::example_double_q() {
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
-		//exploration->update((double)e / epochs);
+		//exploration->update((float)e / epochs);
 
 		if (epsilon > 0.1) {
-			epsilon -= (1.0 / epochs);
+			epsilon -= (1.0f / epochs);
 		}
 	}
 }
 
-int MazeExample::example_sarsa(int p_hidden, double p_alpha, double p_lambda, const bool p_verbose) {
+int MazeExample::example_sarsa(int p_hidden, float p_alpha, float p_lambda, const bool p_verbose) {
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
@@ -257,12 +257,12 @@ int MazeExample::example_sarsa(int p_hidden, double p_alpha, double p_lambda, co
 	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
 	//CountModule curiosity(maze->mazeX() * maze->mazeY());
 	//QLearning agent(&network, ADAM_RULE, p_alpha, 0.9, p_lambda);
-	SARSA agent(&network, &optimizer, 0.9);
+	SARSA agent(&network, &optimizer, 0.9f);
 
-	vector<double> sensors;
+	vector<float> sensors;
 	Tensor state0, state1;
-	double reward = 0;
-	double epsilon = 1;
+	float reward = 0;
+	float epsilon = 1;
 	int epochs = 0;
 
 	int wins = 0, loses = 0;
@@ -295,7 +295,7 @@ int MazeExample::example_sarsa(int p_hidden, double p_alpha, double p_lambda, co
 
 		if (task.isWinner()) {
 			wins++;
-			if (epsilon > 0) epsilon *= 0.999;
+			if (epsilon > 0) epsilon *= 0.999f;
 		}
 		else {
 			wins = 0;
@@ -317,7 +317,7 @@ int MazeExample::example_sarsa(int p_hidden, double p_alpha, double p_lambda, co
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
-		//exploration->update((double)e / epochs);
+		//exploration->update((float)e / epochs);
 		/*
 		if (epsilon > 0.1) {
 		epsilon -= (1.0 / epochs);
@@ -344,7 +344,7 @@ void MazeExample::example_actor_critic() {
 	network_critic.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
 	network_critic.init();
 
-	TD critic(&network_critic, NADAM_RULE, 2e-4, 0.9);
+	TD critic(&network_critic, NADAM_RULE, 2e-4f, 0.9f);
 
 	NeuralNetwork network_actor;
 
@@ -358,17 +358,17 @@ void MazeExample::example_actor_critic() {
 
 	//Actor actor(&network_actor, ADAM_RULE, 1e-4);
 	Nadam optimizer(&network_actor);
-	optimizer.init(new QuadraticCost(), 1e-4);
-	Actor actor(&network_actor, &optimizer, 0.1);
+	optimizer.init(new QuadraticCost(), 1e-4f);
+	Actor actor(&network_actor, &optimizer, 0.1f);
 
-	vector<double> sensors;
+	vector<float> sensors;
 	Tensor state0, state1;
 	int action0;
-	double value0, value1;
-	double reward = 0;
-	double epsilon = 1;
+	float value0, value1;
+	float reward = 0;
+	float epsilon = 1;
 	int epochs = 30000;
-	double td_error = 0;
+	float td_error = 0;
 
 	int wins = 0, loses = 0;
 
@@ -398,7 +398,7 @@ void MazeExample::example_actor_critic() {
 			value1 = network_critic.get_output()->at(0);
 			reward = task.getReward();
 			critic.train(&state0, &state1, reward);
-			td_error = reward + 0.9 * value1 - value0;
+			td_error = reward + 0.9f * value1 - value0;
 			actor.train(&state0, action0, td_error);
 		}
 
@@ -417,10 +417,10 @@ void MazeExample::example_actor_critic() {
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
-		//exploration->update((double)e / epochs);
+		//exploration->update((float)e / epochs);
 
 		if (epsilon > 0.1) {
-			epsilon -= (1.0 / epochs);
+			epsilon -= (1.0f / epochs);
 		}
 	}
 
@@ -444,14 +444,14 @@ void MazeExample::example_deep_q() {
 	//BackProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 1e-4);
-	DeepQLearning agent(&network, &optimizer, 0.9, 256, 32);
+	optimizer.init(new QuadraticCost(), 1e-4f);
+	DeepQLearning agent(&network, &optimizer, 0.9f, 256, 32);
 
-	vector<double> sensors;
+	vector<float> sensors;
 	Tensor state0, state1;
 	int action;
-	double reward = 0;
-	double epsilon = 1;
+	float reward = 0;
+	float epsilon = 1;
 	int epochs = 5000;
 
 	int wins = 0, loses = 0;
@@ -496,10 +496,10 @@ void MazeExample::example_deep_q() {
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
-		//exploration->update((double)e / epochs);
+		//exploration->update((float)e / epochs);
 
 		if (epsilon > 0.1) {
-			epsilon -= (1.0 / epochs);
+			epsilon -= (1.0f / epochs);
 		}
 	}
 
@@ -521,7 +521,7 @@ void MazeExample::example_icm() {
 
 	//RMSProp optimizer(&network);
 	//optimizer.init(new QuadraticCost(), 0.001);
-	QLearning agent(&network, RMSPROP_RULE, 0.001, 0.9);
+	QLearning agent(&network, RMSPROP_RULE, 0.001f, 0.9f);
 
 
 	NeuralNetwork network_fm;
@@ -533,15 +533,15 @@ void MazeExample::example_icm() {
 	network_fm.init();
 
 	RMSProp optimizer_fm(&network_fm);
-	optimizer_fm.init(new QuadraticCost(), 0.001);
+	optimizer_fm.init(new QuadraticCost(), 0.001f);
 
 	ICM icm(&network_fm, &optimizer_fm);
 
-	vector<double> sensors;
+	vector<float> sensors;
 	Tensor action = Tensor::Zero({ 4 });
 	Tensor state0, state1;
-	double reward = 0;
-	double epsilon = 0.1;
+	float reward = 0;
+	float epsilon = 0.1f;
 	int epochs = 2000;
 
 	int wins = 0, loses = 0;
@@ -554,7 +554,7 @@ void MazeExample::example_icm() {
 		cout << "Epoch " << e << endl;
 
 		task.getEnvironment()->reset();
-		double int_error = 0;
+		float int_error = 0;
 
 		while (!task.isFinished()) {
 			//cout << maze->toString() << endl;
@@ -591,10 +591,10 @@ void MazeExample::example_icm() {
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
-		//exploration->update((double)e / epochs);
+		//exploration->update((float)e / epochs);
 
 		if (epsilon > 0.1) {
-			epsilon -= (1.0 / epochs);
+			epsilon -= (1.0f / epochs);
 		}
 	}
 }
@@ -605,12 +605,12 @@ int MazeExample::test(NeuralNetwork* p_network, const bool p_verbose) const
 	Maze* maze = task.getEnvironment();
 	task.getEnvironment()->reset();
 
-	vector<double> sensors;
+	vector<float> sensors;
 	Tensor action = Tensor::Zero({ 4 });
 	Tensor state;
 
 	int step = 0;
-	double epsilon = 0;
+	float epsilon = 0;
 
 	//cout << "--- TEST ---" << endl;
 
@@ -633,9 +633,9 @@ int MazeExample::test(NeuralNetwork* p_network, const bool p_verbose) const
 
 		Tensor s = Tensor::Zero({ static_cast<int>(maze->getSensors().size()) });
 
-		for (int i = 0; i < maze->mazeY(); i++)
+		for (unsigned int i = 0; i < maze->mazeY(); i++)
 		{
-			for (int j = 0; j < maze->mazeX(); j++)
+			for (unsigned int j = 0; j < maze->mazeX(); j++)
 			{
 				const int a = i * maze->mazeX() + j;
 				Encoder::one_hot(s, a);
@@ -676,7 +676,7 @@ int MazeExample::test(NeuralNetwork* p_network, const bool p_verbose) const
 	return result;
 }
 
-Tensor MazeExample::encode_state(vector<double>* p_sensors) {
+Tensor MazeExample::encode_state(vector<float>* p_sensors) {
 	const Tensor res({ static_cast<int>(p_sensors->size()) }, Tensor::ZERO);
 
 	for (unsigned int i = 0; i < p_sensors->size(); i++) {
@@ -686,9 +686,9 @@ Tensor MazeExample::encode_state(vector<double>* p_sensors) {
 	return Tensor(res);
 }
 
-int MazeExample::choose_action(Tensor* p_input, const double epsilon) {
+int MazeExample::choose_action(Tensor* p_input, const float epsilon) {
 	int action = 0;
-	const double random = RandomGenerator::getInstance().random();
+	const float random = RandomGenerator::getInstance().random();
 
 	//cout << *p_input << endl;
 
@@ -713,7 +713,7 @@ int MazeExample::choose_action(Tensor* p_input, const double epsilon) {
 	return action;
 }
 
-void MazeExample::binary_encoding(const double p_value, Tensor* p_vector) {
+void MazeExample::binary_encoding(const float p_value, Tensor* p_vector) {
 	p_vector->fill(0);
-	(*p_vector)[p_value] = 1;
+	(*p_vector)[p_value] = 1.f;
 }

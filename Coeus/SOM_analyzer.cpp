@@ -28,7 +28,7 @@ void Coeus::SOM_analyzer::create_umatrix(SOM * p_som)
 	_umatrix = new Tensor({ p_som->dim_x(), p_som->dim_y() }, Tensor::ZERO);
 
 	int pos, pos_x, pos_y;
-	double s;
+	float s;
 	int n;
 
 	for (int i = 0; i < p_som->dim_x() * p_som->dim_y(); i++) {
@@ -77,8 +77,8 @@ void SOM_analyzer::merge(vector<SOM_analyzer*> &p_analyzers) {
 	}
 }
 
-double SOM_analyzer::winner_diff(const int p_size) const {
-	return static_cast<double>(_winner_set.size()) / static_cast<double>(p_size);
+float SOM_analyzer::winner_diff(const int p_size) const {
+	return static_cast<float>(_winner_set.size()) / static_cast<float>(p_size);
 }
 
 void SOM_analyzer::save_umatrix(string p_filename)

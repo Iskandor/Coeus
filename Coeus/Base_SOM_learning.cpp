@@ -31,8 +31,8 @@ Base_SOM_learning::~Base_SOM_learning()
 {
 }
 
-double Base_SOM_learning::calc_neighborhood(const double p_d, const NEIGHBORHOOD_TYPE p_type) const {
-	double result = 0;
+float Base_SOM_learning::calc_neighborhood(const float p_d, const NEIGHBORHOOD_TYPE p_type) const {
+	float result = 0;
 
 	switch (p_type) {
 		case EUCLIDEAN:

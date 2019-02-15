@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-QLearningRule::QLearningRule(NetworkGradient* p_network_gradient, const double p_alpha, const double p_gamma, const double p_lambda) : IUpdateRule(p_network_gradient, p_alpha),
+QLearningRule::QLearningRule(NetworkGradient* p_network_gradient, const float p_alpha, const float p_gamma, const float p_lambda) : IUpdateRule(p_network_gradient, p_alpha),
 	_gamma(p_gamma),
 	_lambda(p_lambda)
 {
@@ -18,7 +18,7 @@ QLearningRule::QLearningRule(NetworkGradient* p_network_gradient, const double p
 QLearningRule::~QLearningRule()
 = default;
 
-void QLearningRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta)
+void QLearningRule::calc_update(map<string, Tensor>* p_gradient, const float p_delta)
 {
 	IUpdateRule::calc_update(p_gradient);
 

@@ -20,12 +20,12 @@ public:
     void operator=(RandomGenerator const&)  = delete;
     ~RandomGenerator();
 
-    double normalRandom(double p_mean = 0, double p_sigma = 1);
+    float normalRandom(float p_mean = 0, float p_sigma = 1);
     int random(int p_lower, int p_upper);
-    double random(double p_lower = 0, double p_upper = 1);
+    float random(float p_lower = 0, float p_upper = 1);
     vector<int> choice(vector<int>* p_array, int p_num = 1);
 	vector<int> choice(int p_size, int p_sample);
-    int choice(double* p_prob, int p_size);
+    int choice(float* p_prob, int p_size);
 
 private:
     RandomGenerator();

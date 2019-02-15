@@ -11,17 +11,17 @@ namespace Coeus
 		explicit MSOM_params(MSOM* p_som);
 		~MSOM_params();
 
-		void init_training(double p_gamma1, double p_gamma2, double p_epochs);
+		void init_training(float p_gamma1, float p_gamma2, float p_epochs);
 		void param_decay() override;
 
-		double gamma1() const { return _gamma1; }
-		double gamma2() const { return _gamma2; }
+		float gamma1() const { return _gamma1; }
+		float gamma2() const { return _gamma2; }
 
 	private:
-		double _gamma1_0;
-		double _gamma1;
-		double _gamma2_0;
-		double _gamma2;
+		float _gamma1_0;
+		float _gamma1;
+		float _gamma2_0;
+		float _gamma2;
 	};
 
 }

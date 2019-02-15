@@ -39,11 +39,11 @@ void MSOM_learning::train(Tensor* p_input) {
 
 	_som_analyzer->update(_msom, winner);
 
-	const double gamma1 = static_cast<MSOM_params*>(_params)->gamma1();
-	const double gamma2 = static_cast<MSOM_params*>(_params)->gamma2();
+	const float gamma1 = static_cast<MSOM_params*>(_params)->gamma1();
+	const float gamma2 = static_cast<MSOM_params*>(_params)->gamma2();
 
 	for (int i = 0; i < dim_lattice; i++) {
-		const double theta = calc_neighborhood(_dist_matrix.at(winner, i), GAUSSIAN);
+		const float theta = calc_neighborhood(_dist_matrix.at(winner, i), GAUSSIAN);
 		for (int j = 0; j < dim_input; j++) {
 			_delta_w.set(i, j, theta * gamma1 * (in->at(j) - wi->at(i, j)));
 			_delta_c.set(i, j, theta * gamma2 * (ct->at(j) - ci->at(i, j)));

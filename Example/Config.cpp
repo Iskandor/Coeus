@@ -50,7 +50,7 @@ SOM_config Config::parse_som_config(json p_data)
 
 	config.dim_x = p_data["dim_x"].get<int>();
 	config.dim_y = p_data["dim_y"].get<int>();
-	config.alpha = p_data["alpha"].get<double>();
+	config.alpha = p_data["alpha"].get<float>();
 
 	return config;
 }
@@ -61,10 +61,10 @@ MSOM_config Config::parse_msom_config(json p_data)
 
 	config.dim_x = p_data["dim_x"].get<int>();
 	config.dim_y = p_data["dim_y"].get<int>();
-	config.alpha = p_data["alpha"].get<double>();
-	config.beta = p_data["beta"].get<double>();
-	config.gamma1 = p_data["gamma1"].get<double>();
-	config.gamma2 = p_data["gamma2"].get<double>();
+	config.alpha = p_data["alpha"].get<float>();
+	config.beta = p_data["beta"].get<float>();
+	config.gamma1 = p_data["gamma1"].get<float>();
+	config.gamma2 = p_data["gamma2"].get<float>();
 
 	return config;
 }

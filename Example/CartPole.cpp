@@ -9,7 +9,7 @@
 
 using namespace FLAB;
 
-double *derivs(double t, int n, double sensors[], double params[]) {
+float *derivs(float t, int n, float sensors[], float params[]) {
     /*
      * This function is needed for the Runge-Kutta integration approximation method. It calculates the
     derivatives of the state variables given in x. for each variable in x, it returns the first order
@@ -28,25 +28,25 @@ double *derivs(double t, int n, double sensors[], double params[]) {
     return (u, u_, v, v_)
      */
 
-    double *result = new double[n];
-    double F = params[0] * 10;
-    double mp = params[1];
-    double mc = params[2];
-    double l = params[3];
-    double g = params[4];
+    float *result = new float[n];
+    float F = params[0] * 10;
+    float mp = params[1];
+    float mc = params[2];
+    float l = params[3];
+    float g = params[4];
 
-    double s = sensors[0];
-    double ds = sensors[1];
-    double theta = sensors[2];
-    double dtheta = sensors[3];
+    float s = sensors[0];
+    float ds = sensors[1];
+    float theta = sensors[2];
+    float dtheta = sensors[3];
 
-    double sin_theta = (double)sin(theta);
-    double cos_theta = (double)cos(theta);
+    float sin_theta = (float)sin(theta);
+    float cos_theta = (float)cos(theta);
 
-    double u = dtheta;
-    double du = (g * sin_theta * (mc + mp) - (F + mp * l * pow(dtheta, 2) * sin_theta) * cos_theta) / (4 / 3 * l * (mc + mp) - mp * l * pow(cos_theta, 2));
-    double v = ds;
-    double dv = (F - mp * l * (du * cos_theta - (pow(dtheta, 2) * sin_theta))) / (mc + mp);
+    float u = dtheta;
+    float du = (g * sin_theta * (mc + mp) - (F + mp * l * pow(dtheta, 2) * sin_theta) * cos_theta) / (4 / 3 * l * (mc + mp) - mp * l * pow(cos_theta, 2));
+    float v = ds;
+    float dv = (F - mp * l * (du * cos_theta - (pow(dtheta, 2) * sin_theta))) / (mc + mp);
 
     result[0] = v;
     result[1] = dv;
@@ -56,7 +56,7 @@ double *derivs(double t, int n, double sensors[], double params[]) {
     return result;
 }
 
-CartPole::CartPole(bool p_randomInit, double p_poleLength) : Environment() {
+CartPole::CartPole(bool p_randomInit, float p_poleLength) : Environment() {
     _randomInit = p_randomInit;
     _indim = 1;
     _outdim = 4;
@@ -67,26 +67,26 @@ CartPole::CartPole(bool p_randomInit, double p_poleLength) : Environment() {
     _params[2] = MC;
     _params[3] = L;
     _params[4] = G;
-    _sensors = vector<double>(4);
+    _sensors = vector<float>(4);
 }
 
 CartPole::~CartPole() {
 
 }
 
-vector<double> CartPole::getSensors() {
-    return vector<double>(_sensors);
+vector<float> CartPole::getSensors() {
+    return vector<float>(_sensors);
 }
 
-void CartPole::performAction(double p_action) {
+void CartPole::performAction(float p_action) {
     _action = p_action;
     step();
 }
 
 void CartPole::reset() {
     if (_randomInit) {
-        _angle = RandomGenerator::getInstance().random(-0.2, 0.2);
-        _pos = RandomGenerator::getInstance().random(-0.5, 0.5);
+        _angle = RandomGenerator::getInstance().random(-0.2f, 0.2f);
+        _pos = RandomGenerator::getInstance().random(-0.5f, 0.5f);
     }
     else {
         _angle = -0.2;
@@ -118,8 +118,8 @@ void CartPole::step() {
     _params[0] = _action;
     //cout << toString() << endl;
     //cout << _action << endl;
-    //double* new_state = RK4::rk4vec(0, _outdim, _sensors.data(), _params, DT, derivs);
-    //_sensors = vector<double>(new_state, new_state + _outdim);
+    //float* new_state = RK4::rk4vec(0, _outdim, _sensors.data(), _params, DT, derivs);
+    //_sensors = vector<float>(new_state, new_state + _outdim);
     step2();
     _pos = _sensors[0];
     _angle = _sensors[2];
@@ -127,19 +127,19 @@ void CartPole::step() {
 }
 
 void CartPole::step2() {
-    double F = _action * 1;
+    float F = _action * 1;
 
-    double s = _sensors[0];
-    double ds = _sensors[1];
-    double theta = _sensors[2];
-    double dtheta = _sensors[3];
+    float s = _sensors[0];
+    float ds = _sensors[1];
+    float theta = _sensors[2];
+    float dtheta = _sensors[3];
 
-    double sin_theta = (double)sin(theta);
-    double cos_theta = (double)cos(theta);
+    float sin_theta = (float)sin(theta);
+    float cos_theta = (float)cos(theta);
 
-    double temp = (F + MP * L * dtheta * dtheta * sin_theta) / (MP + MC);
-    double thetaAcc = (G * sin_theta - cos_theta * temp) / (L * (4.0 / 3.0 - MP * cos_theta * cos_theta / (MP + MC)));
-    double sAcc = temp - MP * L * thetaAcc * cos_theta / (MP + MC);
+    float temp = (F + MP * L * dtheta * dtheta * sin_theta) / (MP + MC);
+    float thetaAcc = (G * sin_theta - cos_theta * temp) / (L * (4.0 / 3.0 - MP * cos_theta * cos_theta / (MP + MC)));
+    float sAcc = temp - MP * L * thetaAcc * cos_theta / (MP + MC);
 
     s += DT * ds;
     ds += DT * sAcc;

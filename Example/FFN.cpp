@@ -37,19 +37,19 @@ void FFN::run() {
 	_network.init();
 
 
-	double data_i[8]{ 0,0,0,1,1,0,1,1 };
-	double data_t[4]{ 0,1,1,0 };
+	float data_i[8]{ 0,0,0,1,1,0,1,1 };
+	float data_t[4]{ 0,1,1,0 };
 
 	vector<Tensor*> input;
 	vector<Tensor*> target;
 
 	for (int i = 0; i < 4; i++) {
-		double *d = Tensor::alloc_arr(2);
+		float *d = Tensor::alloc_arr(2);
 
 		d[0] = data_i[i * 2];
 		d[1] = data_i[i * 2 + 1];
 
-		double *t = Tensor::alloc_arr(1);
+		float *t = Tensor::alloc_arr(1);
 		t[0] = data_t[i];
 
 		input.push_back(new Tensor({ 2 }, d));
@@ -68,13 +68,13 @@ void FFN::run() {
 
 	//model.init(new QuadraticCost(), 0.1, 0.9, true);
 	//model.init(new QuadraticCost(), 8e-2);
-	model.init(new QuadraticCost(), 1e-1);
+	model.init(new QuadraticCost(), 1e-1f);
 
 	const auto start = chrono::system_clock::now();
 
 	for(int t = 0; t < 200; t++) {
-		//const double error = model.train(&input, &target);
-		double error = 0;
+		//const float error = model.train(&input, &target);
+		float error = 0;
 
 		error += model.train(&input, &target, 4);
 
@@ -91,7 +91,7 @@ void FFN::run() {
 	cout << endl;
 
 	const auto end = chrono::system_clock::now();
-	chrono::duration<double> elapsed_seconds = end - start;
+	chrono::duration<float> elapsed_seconds = end - start;
 	cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
 	for (int i = 0; i < 4; i++) {
@@ -154,12 +154,12 @@ void FFN::run_iris() {
 	//ADAM model(&_network);
 	RMSProp model(&_network);
 	//Nadam model(&_network);
-	model.init(new CrossEntropyCost(), 0.001);
+	model.init(new CrossEntropyCost(), 0.001f);
 	//model.add_learning_rate_module(new WarmStartup(1e-4, 1e-2, 10, 2));
 
 	for (int t = 0; t < epochs; t++) {
 		data = _dataset.permute();
-		double error = 0;
+		float error = 0;
 
 		for (int i = 0; i < data->size(); i++) {
 			error += model.train(data->at(i).data, &target[(*_dataset.get_target_map())[data->at(i).target]]);						

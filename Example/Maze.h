@@ -17,8 +17,8 @@ public:
     Maze(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal);
     ~Maze();
 
-    vector<double> getSensors() override;
-    void performAction(double p_action) override;
+    vector<float> getSensors() override;
+    void performAction(float p_action) override;
     void reset() override;
 
     string toString();

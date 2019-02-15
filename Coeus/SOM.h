@@ -22,15 +22,15 @@ namespace Coeus
 		SimpleCellGroup* get_lattice() const { return _lattice_group; }
 		Connection*  get_afferent() const { return _afferent; }
 
-		virtual double calc_distance(int p_index);
-		virtual double calc_distance(int p_neuron1, int p_neuron2);
+		virtual float calc_distance(int p_index);
+		virtual float calc_distance(int p_neuron1, int p_neuron2);
 
 		int dim_x() const { return _dim_x; }
 		int dim_y() const { return _dim_y; }
 
 		int get_winner() const { return _winner; }
 		void set_input_mask(int* p_mask) { _input_mask = p_mask; }
-		void set_conscience(double p_val);
+		void set_conscience(float p_val);
 		void init_conscience() const;
 		void update_conscience(Tensor* p_input);
 
@@ -55,8 +55,8 @@ namespace Coeus
 		Tensor	_p;
 		Tensor	_bias;
 		int*	_input_mask;
-		double	_conscience;
-		const double B = 1e-4;
+		float	_conscience;
+		const float B = 1e-4f;
 	};
 }
 

@@ -25,10 +25,10 @@ GradientAlgorithm::~GradientAlgorithm()
 	delete _learning_rate_module;
 }
 
-double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
+float GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 {
-	double error = 0;
-	double alpha = 0;
+	float error = 0;
+	float alpha = 0;
 	
 	if (_learning_rate_module != nullptr) {
 		alpha = _learning_rate_module->get_alpha();
@@ -72,10 +72,10 @@ double GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 	return error;
 }
 
-double GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
+float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) {
 
-	double error = 0;
-	double alpha = 0;
+	float error = 0;
+	float alpha = 0;
 
 	if (_learning_rate_module != nullptr) {
 		alpha = _learning_rate_module->get_alpha();

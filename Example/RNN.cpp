@@ -42,19 +42,19 @@ void RNN::run()
 
 	network.init();
 
-	double data_i[4][2]{ {0,0},{0,1},{1,0},{1,1} };
-	double data_t[4]{ 0,1,1,0 };
+	float data_i[4][2]{ {0,0},{0,1},{1,0},{1,1} };
+	float data_t[4]{ 0,1,1,0 };
 
 	Tensor input[4];
 	Tensor target[4];
 
 	for (int i = 0; i < 4; i++) {
-		double *d = Tensor::alloc_arr(2);
+		float *d = Tensor::alloc_arr(2);
 		d[0] = data_i[i][0];
 		d[1] = data_i[i][1];
 		input[i] = Tensor({ 2 }, d);
 
-		double *t = Tensor::alloc_arr(1);
+		float *t = Tensor::alloc_arr(1);
 		t[0] = data_t[i];
 		target[i] = Tensor({ 1 }, t);
 	}
@@ -70,7 +70,7 @@ void RNN::run()
 	model.init(new QuadraticCost(), 0.05);
 
 	for (int t = 0; t < 2000; t++) {
-		double error = 0;
+		float error = 0;
 		for (int i = 0; i < 4; i++) {
 			error += model.train(&input[i], &target[i]);
 		}
@@ -121,8 +121,8 @@ void RNN::run_add_problem()
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<AddProblemSequence>* test = dataset.data();
 
-		const double error = algorithm.train(&data.first, &data.second, 32);
-		//double error = 0;
+		const float error = algorithm.train(&data.first, &data.second, 32);
+		//float error = 0;
 		correct = 0;
 
 		for (auto sequence : *test)
@@ -171,11 +171,11 @@ void RNN::run_pack()
 	network.init();
 
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), config["alpha"].get<double>());
+	algorithm.init(new QuadraticCost(), config["alpha"].get<float>());
 	//BackProp algorithm(&network);
-	//algorithm.init(new QuadraticCost(), config["alpha"].get<double>(), 0.9, true);
+	//algorithm.init(new QuadraticCost(), config["alpha"].get<float>(), 0.9, true);
 	//PowerSign algorithm(&network);
-	//algorithm.init(new QuadraticCost(), config["alpha"].get<double>());
+	//algorithm.init(new QuadraticCost(), config["alpha"].get<float>());
 
 	int epoch = 0;
 
@@ -183,10 +183,10 @@ void RNN::run_pack()
 	int fp = 0;
 	int tn = 0;
 	int fn = 0;
-	double precision = 0;
-	double accuracy = 0;
-	double fn_ratio = 1;
-	const double bound = 0.99;
+	float precision = 0;
+	float accuracy = 0;
+	float fn_ratio = 1;
+	const float bound = 0.99;
 	const int size = dataset.data()->size();
 
 	cout << "Training..." << endl;
@@ -196,10 +196,10 @@ void RNN::run_pack()
 		vector<PackDataSequence>* test = dataset.data();
 
 		auto start = chrono::high_resolution_clock::now();
-		const double error = algorithm.train(&data.first, &data.second, config["batch"].get<int>());
+		const float error = algorithm.train(&data.first, &data.second, config["batch"].get<int>());
 		auto end = chrono::high_resolution_clock::now();
 
-		//double error = 0;
+		//float error = 0;
 		if (epoch % config["evaluate"].get<int>() == 0)
 		{
 			tp = 0;
@@ -218,9 +218,9 @@ void RNN::run_pack()
 				if (sequence.target[0] == 0 && prediction == 0) tn++;
 			}
 
-			precision = (fp + tp) == 0 ? 0 : (double)tp / (fp + tp);
-			accuracy = (double)(tp + tn) / size;
-			fn_ratio = (fn + tp) == 0 ? 1 : (double)fn / (fn + tp);
+			precision = (fp + tp) == 0 ? 0 : (float)tp / (fp + tp);
+			accuracy = (float)(tp + tn) / size;
+			fn_ratio = (fn + tp) == 0 ? 1 : (float)fn / (fn + tp);
 
 			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << precision << " , " << accuracy << " , " << fn_ratio << endl;
 		}
@@ -228,7 +228,7 @@ void RNN::run_pack()
 		Logger::instance().log(to_string(error) + " " + to_string(precision) + " " + to_string(accuracy) + " " + to_string(fn_ratio));
 
 		cout << error << endl;
-		cout << "Time: " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+		cout << "Time: " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 		epoch++;
 	}
 
@@ -262,19 +262,19 @@ void RNN::run_pack2() const
 	network.init();
 
 	Nadam algorithm(&network);
-	algorithm.init(new CrossEntropyCost(), config["alpha"].get<double>());
+	algorithm.init(new CrossEntropyCost(), config["alpha"].get<float>());
 
 	int epoch = 0;
-	double error = 0;
+	float error = 0;
 	const int size = dataset.data()->size();
 
 	int tp = 0;
 	int fp = 0;
 	int tn = 0;
 	int fn = 0;
-	double precision = 0;
-	double accuracy = 0;
-	const double bound = 0.99;
+	float precision = 0;
+	float accuracy = 0;
+	const float bound = 0.99;
 
 	cout << "Training..." << endl;
 
@@ -306,14 +306,14 @@ void RNN::run_pack2() const
 				if (sequence.target[0] == 0 && prediction == 0) tn++;
 			}
 
-			precision = (double)tp / (fp + tp);
-			accuracy = (double)(tp + fn) / size;
+			precision = (float)tp / (fp + tp);
+			accuracy = (float)(tp + fn) / size;
 
 			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;
 		}
 
 		cout << error << endl;
-		cout << "Time: " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+		cout << "Time: " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 		epoch++;
 	}
 
@@ -362,7 +362,7 @@ void RNN::test_pack() const
 	int incorrect50 = 0;
 	int correct30 = 0;
 	int correct1 = 0;
-	double error = 0;
+	float error = 0;
 	CrossEntropyCost c;
 
 	for (auto sequence : *test)

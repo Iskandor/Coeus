@@ -3,7 +3,7 @@
 using namespace Coeus;
 
 
-DDPG::DDPG(	NeuralNetwork* p_network_critic, GradientAlgorithm* p_gradient_algorithm_critic, const double p_gamma, 
+DDPG::DDPG(	NeuralNetwork* p_network_critic, GradientAlgorithm* p_gradient_algorithm_critic, const float p_gamma, 
 			NeuralNetwork* p_network_actor, GradientAlgorithm* p_gradient_algorithm_actor,
            	const int p_buffer_size, const int p_sample_size):
 	_network_actor(p_network_actor), _network_critic(p_network_critic),	_gradient_algorithm_actor(p_gradient_algorithm_actor), _gradient_algorithm_critic(p_gradient_algorithm_critic),
@@ -19,10 +19,10 @@ DDPG::~DDPG()
 {
 }
 
-double DDPG::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const double p_reward) {
+float DDPG::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward) {
 	_buffer->add_item(p_state0, p_action0, p_state1, p_reward, false);
 
-	double error = 0;
+	float error = 0;
 
 	if (_buffer->get_size() >= _sample_size) {
 		vector<ReplayBuffer::Item*>* sample = _buffer->get_sample(_sample_size);
@@ -31,7 +31,7 @@ double DDPG::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, cons
 		_target.clear();
 
 		for (int i = 0; i < sample->size(); i++) {
-			const double maxQs1a = calc_max_qa(&sample->at(i)->s1);
+			const float maxQs1a = calc_max_qa(&sample->at(i)->s1);
 
 			_network_critic->activate(&sample->at(i)->s0);
 			_input.push_back(&sample->at(i)->s0);
@@ -45,7 +45,7 @@ double DDPG::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, cons
 	return error;
 }
 
-double DDPG::calc_max_qa(Tensor* p_state) const {
+float DDPG::calc_max_qa(Tensor* p_state) const {
 	_network_critic_target->activate(p_state);
 	_network_actor_target->activate(p_state);
 

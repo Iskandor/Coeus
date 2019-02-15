@@ -14,7 +14,7 @@ ReplayBuffer::~ReplayBuffer()
 	}
 }
 
-void ReplayBuffer::add_item(Tensor* p_s0, const double p_a, Tensor* p_s1, const double p_r, const bool p_final) {
+void ReplayBuffer::add_item(Tensor* p_s0, const float p_a, Tensor* p_s1, const float p_r, const bool p_final) {
 	if (_buffer.size() > _size) {
 		delete _buffer[0];
 		_buffer.erase(_buffer.begin());

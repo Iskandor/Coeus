@@ -18,7 +18,7 @@ Tensor LinearActivation::derivative(Tensor& p_input) {
 	return Tensor::Ones({ p_input.size() });
 }
 
-double LinearActivation::activate(const double p_value)
+float LinearActivation::activate(const float p_value)
 {
 	return p_value;
 }

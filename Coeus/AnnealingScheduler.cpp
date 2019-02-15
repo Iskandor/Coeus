@@ -13,10 +13,10 @@ AnnealingScheduler::AnnealingScheduler(const int p_model_size):
 AnnealingScheduler::~AnnealingScheduler()
 = default;
 
-double AnnealingScheduler::get_alpha()
+float AnnealingScheduler::get_alpha()
 {
 	_step++;
-	const double alpha = 1.0f / sqrt(_model_size) * std::min<double>(1 / sqrt(_step), _step * _warmup);
+	const float alpha = 1.0f / sqrt(_model_size) * std::min<float>(1 / sqrt(_step), _step * _warmup);
 
 	//std::cout << alpha << std::endl;
 

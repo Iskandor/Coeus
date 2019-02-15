@@ -10,7 +10,7 @@ namespace Coeus
 		RuleFactory();
 		~RuleFactory();
 
-		static IUpdateRule* create_rule(GRADIENT_RULE p_rule, NetworkGradient* p_network_gradient, double p_alpha);
+		static IUpdateRule* create_rule(GRADIENT_RULE p_rule, NetworkGradient* p_network_gradient, float p_alpha);
 	};
 }
 

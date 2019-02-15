@@ -15,7 +15,7 @@ namespace Coeus
 
 	private:
 
-		double*				_error;
+		float*				_error;
 		ICostFunction*		_cost_function;
 		NeuralNetwork*		_network;
 		NeuralNetwork**		_clone_network;

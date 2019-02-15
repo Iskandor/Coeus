@@ -4,7 +4,7 @@
 
 using namespace Coeus;
 
-MSOM::MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, ACTIVATION p_activation, double p_alpha, double p_beta) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation) {
+MSOM::MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, ACTIVATION p_activation, float p_alpha, float p_beta) : SOM(p_id, p_input_dim, p_dim_x, p_dim_y, p_activation) {
 	_context_group = new SimpleCellGroup(p_input_dim, LINEAR, false);
 	_context_lattice = new Connection(_context_group->get_dim(), _lattice_group->get_dim(), _context_group->get_id(), _lattice_group->get_id(), Connection::UNIFORM, true, 0.01);
 	_alpha = p_alpha;
@@ -14,8 +14,8 @@ MSOM::MSOM(string p_id, int p_input_dim, int p_dim_x, int p_dim_y, ACTIVATION p_
 
 MSOM::MSOM(nlohmann::json p_data) : SOM(p_data) {
 	_type = TYPE::MSOM;
-	_alpha = p_data["alpha"].get<double>();
-	_beta = p_data["beta"].get<double>();
+	_alpha = p_data["alpha"].get<float>();
+	_beta = p_data["beta"].get<float>();
 
 	_context_group = new SimpleCellGroup(p_data["groups"]["context"]);
 	_context_lattice = new Connection(p_data["connections"]["context_lattice"]);
@@ -34,7 +34,7 @@ void MSOM::activate(Tensor* p_input) {
 	update_context();
 }
 
-double MSOM::calc_distance(const int p_index) {
+float MSOM::calc_distance(const int p_index) {
 	const int dim = _input_group->get_dim();
 
 	Tensor* xi = _afferent->get_weights();
@@ -42,8 +42,8 @@ double MSOM::calc_distance(const int p_index) {
 	Tensor* xt = _input_group->get_output();
 	Tensor* ct = _context_group->get_output();
 
-	double dx = 0;
-	double dc = 0;
+	float dx = 0;
+	float dc = 0;
 
 	for (int i = 0; i < dim; i++) {
 		if (_input_mask == nullptr || _input_mask[i] == 1) {
@@ -55,15 +55,15 @@ double MSOM::calc_distance(const int p_index) {
 	return (1 - _alpha) * dx + _alpha * dc;
 }
 
-double MSOM::calc_distance(const int p_neuron1, const int p_neuron2)
+float MSOM::calc_distance(const int p_neuron1, const int p_neuron2)
 {
 	const int dim = _input_group->get_dim();
 
 	Tensor* xi = _afferent->get_weights();
 	Tensor* ci = _context_lattice->get_weights();
 
-	double dx = 0;
-	double dc = 0;
+	float dx = 0;
+	float dc = 0;
 
 	for (int i = 0; i < dim; i++) {
 		if (_input_mask == nullptr || _input_mask[i] == 1) {

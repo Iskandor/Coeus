@@ -5,7 +5,7 @@
 
 using namespace Coeus;
 
-QLearning::QLearning(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, double p_gamma, double p_alpha):
+QLearning::QLearning(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, float p_gamma, float p_alpha):
 	_alpha(p_alpha), _gamma(p_gamma)
 {
 	_network = p_network;
@@ -15,7 +15,7 @@ QLearning::QLearning(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, d
 
 }
 
-QLearning::QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, const double p_alpha, const double p_gamma, const double p_lambda):
+QLearning::QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, const float p_alpha, const float p_gamma, const float p_lambda):
 	_alpha(0), _gamma(p_gamma)
 {
 	_network = p_network;
@@ -31,13 +31,13 @@ QLearning::~QLearning()
 	delete _update_rule;
 }
 
-double QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const double p_reward) const
+float QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward) const
 {
-	const double maxQs1a = calc_max_qa(p_state1);
+	const float maxQs1a = calc_max_qa(p_state1);
 
 	_network->activate(p_state0);
-	const double Qs0a = _network->get_output()->at(p_action0);
-	const double delta = p_reward + _gamma * maxQs1a - Qs0a;
+	const float Qs0a = _network->get_output()->at(p_action0);
+	const float delta = p_reward + _gamma * maxQs1a - Qs0a;
 
 	if (_update_rule != nullptr)
 	{
@@ -64,7 +64,7 @@ void QLearning::reset_traces() const
 	_update_rule->reset_traces();
 }
 
-double QLearning::calc_max_qa(Tensor* p_state) const
+float QLearning::calc_max_qa(Tensor* p_state) const
 {
 	_network->activate(p_state);
 	const int maxQa = _network->get_output()->max_value_index();

@@ -109,6 +109,9 @@
     <Filter Include="Header Files\Algorithm\Modules\LRM">
       <UniqueIdentifier>{ed34bbc0-1519-4509-9205-117426ab8dae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Algorithm\Modules\Batch">
+      <UniqueIdentifier>{8dd5fa7b-bc76-4493-9a3a-44a6d890e46d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -638,15 +641,6 @@
     <ClInclude Include="ParamModel.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="PPLBatchModule.h">
-      <Filter>Header Files\Algorithm\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="IBatchModule.h">
-      <Filter>Header Files\Algorithm\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="SingleBatchModule.h">
-      <Filter>Header Files\Algorithm\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="AdadeltaRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
     </ClInclude>
@@ -689,9 +683,6 @@
     <ClInclude Include="NadamRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
     </ClInclude>
-    <ClInclude Include="ILearningRateModule.h">
-      <Filter>Header Files\Algorithm\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="QLearning.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
@@ -716,9 +707,6 @@
     <ClInclude Include="PowerSign.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
-    <ClInclude Include="OpenMPBatchModule.h">
-      <Filter>Header Files\Algorithm\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="QLearningRule.h">
       <Filter>Header Files\Algorithm\RL\Rules</Filter>
     </ClInclude>
@@ -732,6 +720,21 @@
       <Filter>Header Files\Algorithm\Modules\LRM</Filter>
     </ClInclude>
     <ClInclude Include="ExponentialDecay.h">
+      <Filter>Header Files\Algorithm\Modules\LRM</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenMPBatchModule.h">
+      <Filter>Header Files\Algorithm\Modules\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="PPLBatchModule.h">
+      <Filter>Header Files\Algorithm\Modules\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleBatchModule.h">
+      <Filter>Header Files\Algorithm\Modules\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="IBatchModule.h">
+      <Filter>Header Files\Algorithm\Modules\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="ILearningRateModule.h">
       <Filter>Header Files\Algorithm\Modules\LRM</Filter>
     </ClInclude>
   </ItemGroup>

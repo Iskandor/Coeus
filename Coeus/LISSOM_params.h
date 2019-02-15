@@ -10,16 +10,16 @@ namespace Coeus
 		explicit LISSOM_params(LISSOM* p_lissom);
 		~LISSOM_params();
 
-		void init_training(double p_alpha_a, double p_alpha_e, double p_alpha_i);
+		void init_training(float p_alpha_a, float p_alpha_e, float p_alpha_i);
 
-		double alpha_a() const { return _alpha_a; }
-		double alpha_e() const { return _alpha_e; }
-		double alpha_i() const { return _alpha_i; }
+		float alpha_a() const { return _alpha_a; }
+		float alpha_e() const { return _alpha_e; }
+		float alpha_i() const { return _alpha_i; }
 
 	private:
-		double _alpha_a;
-		double _alpha_e;
-		double _alpha_i;
+		float _alpha_a;
+		float _alpha_e;
+		float _alpha_i;
 	};
 }
 

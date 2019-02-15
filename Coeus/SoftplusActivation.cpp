@@ -13,9 +13,9 @@ SoftplusActivation::~SoftplusActivation()
 }
 
 Tensor SoftplusActivation::activate(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
-	double* y = &arr[0];
-	double* x = &p_input.arr()[0];
+	float* arr = Tensor::alloc_arr(p_input.size());
+	float* y = &arr[0];
+	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
 		(*y++) = log(1 + exp((*x++)));
@@ -25,9 +25,9 @@ Tensor SoftplusActivation::activate(Tensor& p_input) {
 }
 
 Tensor SoftplusActivation::derivative(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
-	double* y = &arr[0];
-	double* x = &p_input.arr()[0];
+	float* arr = Tensor::alloc_arr(p_input.size());
+	float* y = &arr[0];
+	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
 		(*y++) = 1 / (1 + exp(-(*x++)));
@@ -36,7 +36,7 @@ Tensor SoftplusActivation::derivative(Tensor& p_input) {
 	return Tensor({ p_input.size() }, arr);
 }
 
-double SoftplusActivation::activate(const double p_value)
+float SoftplusActivation::activate(const float p_value)
 {
 	return log(1 + exp(p_value));
 }

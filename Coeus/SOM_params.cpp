@@ -11,7 +11,7 @@ SOM_params::~SOM_params()
 {
 }
 
-void SOM_params::init_training(const double p_alpha, const double p_epochs) {
+void SOM_params::init_training(const float p_alpha, const float p_epochs) {
 	init(p_epochs);
 	_alpha0 = p_alpha;
 	_alpha = _alpha0 * exp(-_iteration / _epochs);

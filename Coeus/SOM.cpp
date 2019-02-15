@@ -65,9 +65,9 @@ void SOM::activate(Tensor* p_input) {
 	_lattice_group->set_output(&_dist);
 }
 
-double SOM::calc_distance(const int p_index) {
+float SOM::calc_distance(const int p_index) {
 	const int dim = _input_group->get_dim();
-	double s = 0;
+	float s = 0;
 
 	for (int i = 0; i < dim; i++) {
 		if (_input_mask == nullptr || _input_mask[i] == 1) {
@@ -78,10 +78,10 @@ double SOM::calc_distance(const int p_index) {
 	return sqrt(s);
 }
 
-double SOM::calc_distance(const int p_neuron1, const int p_neuron2)
+float SOM::calc_distance(const int p_neuron1, const int p_neuron2)
 {
 	const int dim = _input_group->get_dim();
-	double s = 0;
+	float s = 0;
 
 	for (int i = 0; i < dim; i++) {
 		s += pow(_afferent->get_weights()->at(p_neuron1, i) - _afferent->get_weights()->at(p_neuron2, i), 2);
@@ -90,7 +90,7 @@ double SOM::calc_distance(const int p_neuron1, const int p_neuron2)
 	return sqrt(s);
 }
 
-void SOM::set_conscience(const double p_val) {
+void SOM::set_conscience(const float p_val) {
 	_conscience = p_val;
 }
 
@@ -124,12 +124,12 @@ void SOM::update_conscience(Tensor* p_input) {
 	find_winner(p_input, false);
 
 	for(int i = 0; i < _dim_y * _dim_x; i++) {
-		const double p_new = _p.at(i) + B * (i == _winner ? 1 : 0 - _p.at(i));
+		const float p_new = _p.at(i) + B * (i == _winner ? 1 : 0 - _p.at(i));
 		_p.set(i, p_new);
 	}
 
 	for (int i = 0; i < _dim_y * _dim_x; i++) {
-		const double bias_new =  _conscience * (1/(_dim_y * _dim_x) - _p.at(i));
+		const float bias_new =  _conscience * (1/(_dim_y * _dim_x) - _p.at(i));
 		_bias.set(i, bias_new);
 	}
 }
@@ -153,13 +153,13 @@ int SOM::find_winner(Tensor* p_input) {
 }
 
 void SOM::find_winner(Tensor* p_input, const bool p_conscience) {
-	double winner_dist = INFINITY;
+	float winner_dist = INFINITY;
 	_winner = 0;
 
 	_input_group->set_output(p_input);
 
 	for (int i = 0; i < _lattice_group->get_dim(); i++) {
-		double neuron_dist = calc_distance(i);
+		float neuron_dist = calc_distance(i);
 
 		if (p_conscience) {
 			neuron_dist -= _bias.at(i);

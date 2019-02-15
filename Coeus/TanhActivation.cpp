@@ -13,9 +13,9 @@ TanhActivation::~TanhActivation()
 }
 
 Tensor TanhActivation::activate(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
-	double* y = &arr[0];
-	double* x = &p_input.arr()[0];
+	float* arr = Tensor::alloc_arr(p_input.size());
+	float* y = &arr[0];
+	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
 		(*y++) = tanh((*x++));
@@ -25,10 +25,10 @@ Tensor TanhActivation::activate(Tensor& p_input) {
 }
 
 Tensor TanhActivation::derivative(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
+	float* arr = Tensor::alloc_arr(p_input.size());
 	const Tensor activation = activate(p_input);
-	double* y = &arr[0];
-	double* x = &activation.arr()[0];
+	float* y = &arr[0];
+	float* x = &activation.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
 		(*y++) = 1 - pow((*x++), 2);
@@ -37,7 +37,7 @@ Tensor TanhActivation::derivative(Tensor& p_input) {
 	return Tensor({ p_input.size() }, arr);
 }
 
-double TanhActivation::activate(const double p_value)
+float TanhActivation::activate(const float p_value)
 {
 	return tanh(p_value);
 }

@@ -17,7 +17,7 @@ RuleFactory::RuleFactory()
 RuleFactory::~RuleFactory()
 = default;
 
-IUpdateRule* RuleFactory::create_rule(GRADIENT_RULE p_rule, NetworkGradient* p_network_gradient, double p_alpha)
+IUpdateRule* RuleFactory::create_rule(GRADIENT_RULE p_rule, NetworkGradient* p_network_gradient, float p_alpha)
 {
 	IUpdateRule* result = nullptr;
 

@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-SARSA::SARSA(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, double p_gamma, double p_alpha):
+SARSA::SARSA(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, float p_gamma, float p_alpha):
 	_alpha(p_alpha), _gamma(p_gamma)
 {
 	_network = p_network;
@@ -13,7 +13,7 @@ SARSA::SARSA(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, double p_
 }
 
 
-SARSA::SARSA(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, double p_alpha, double p_gamma, double p_lambda):
+SARSA::SARSA(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda):
 	_gamma(p_gamma)
 {
 	_network = p_network;
@@ -28,14 +28,14 @@ SARSA::~SARSA()
 }
 
 
-double SARSA::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const int p_action1, const double p_reward, const bool p_final) const
+float SARSA::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const int p_action1, const float p_reward, const bool p_final) const
 {
 	_network->activate(p_state0);
-	const double Qs0a0 = _network->get_output()->at(p_action0);
+	const float Qs0a0 = _network->get_output()->at(p_action0);
 	_network->activate(p_state1);
-	const double Qs1a1 = p_final ? 0 : _network->get_output()->at(p_action1);
+	const float Qs1a1 = p_final ? 0 : _network->get_output()->at(p_action1);
 
-	const double delta = p_reward + _gamma * Qs1a1 - Qs0a0;
+	const float delta = p_reward + _gamma * Qs1a1 - Qs0a0;
 
 	if (_update_rule != nullptr)
 	{

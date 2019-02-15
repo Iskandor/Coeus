@@ -76,7 +76,7 @@ int Maze::moveInDir(int p_x, int p_y) const
     return pos;
 }
 
-void Maze::performAction(double p_action) {
+void Maze::performAction(float p_action) {
     //cout << _actions[p_action].Id() << endl;
     int newPos = moveInDir(_actions[(int)p_action].X(), _actions[(int)p_action].Y());
 	_a++;
@@ -95,12 +95,12 @@ void Maze::performAction(double p_action) {
     }
 }
 
-vector<double> Maze::getSensors() {
-    vector<double> res(_mazeTable.size(), 0);
+vector<float> Maze::getSensors() {
+    vector<float> res(_mazeTable.size(), 0);
 
     res[_actor] = 1;
 
-    return vector<double>(res);
+    return vector<float>(res);
 }
 
 string Maze::toString() {

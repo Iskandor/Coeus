@@ -9,7 +9,7 @@ namespace Coeus {
 		explicit Adadelta(NeuralNetwork* p_network);
 		~Adadelta();
 
-		void init(ICostFunction* p_cost_function, double p_alpha = 1, double p_decay = 0.9, double p_epsilon = 1e-8);
+		void init(ICostFunction* p_cost_function, float p_alpha = 1, float p_decay = 0.9, float p_epsilon = 1e-8);
 	};
 }
 

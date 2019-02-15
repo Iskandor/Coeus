@@ -11,24 +11,24 @@
 
 using namespace std;
 
-double* derivs(double t, int n, double sensors[], double params[]);
+float* derivs(float t, int n, float sensors[], float params[]);
 
 class CartPole : public Environment {
 public:
-    CartPole(bool p_randomInit = false, double p_poleLength = 0.5);
+    CartPole(bool p_randomInit = false, float p_poleLength = 0.5);
     ~CartPole();
 
-    vector<double> getSensors();
-    void performAction(double p_action);
+    vector<float> getSensors();
+    void performAction(float p_action);
     void reset();
 
     string toString();
 
-    inline double getPoleAngle() {
+    inline float getPoleAngle() {
         return _angle;
     }
 
-    inline double getCartPosition() {
+    inline float getCartPosition() {
         return _pos;
     }
 
@@ -39,20 +39,20 @@ private:
     void    step2();
 
 private:
-    double L;
-    const double G = 9.81;
-    const double MP = 0.1;
-    const double MC = 1.0;
-    const double DT = 0.02;
+    float L;
+    const float G = 9.81;
+    const float MP = 0.1;
+    const float MC = 1.0;
+    const float DT = 0.02;
 
     bool _randomInit;
 
-    double _params[5];
-    double _action;
-    double _angle;
-    double _pos;
-    double _t;
-    vector<double> _sensors;
+    float _params[5];
+    float _action;
+    float _angle;
+    float _pos;
+    float _t;
+    vector<float> _sensors;
 };
 
 

@@ -44,8 +44,8 @@ void LSOM_learning::train(Tensor * p_input)
 	Tensor* li = _lsom->get_lateral()->get_weights();
 	Tensor* bi = _lsom->get_lattice()->get_bias();
 
-	const double alpha = dynamic_cast<LSOM_params*>(_params)->alpha();
-	const double beta = dynamic_cast<LSOM_params*>(_params)->beta();
+	const float alpha = dynamic_cast<LSOM_params*>(_params)->alpha();
+	const float beta = dynamic_cast<LSOM_params*>(_params)->beta();
 
 	_som_analyzer->update(_lsom, winner);
 	_winners.insert(winner);
@@ -80,7 +80,7 @@ void LSOM_learning::train(Tensor * p_input)
 		}
 
 		for (int j = 0; j < dim_lattice; j++) {
-			double cov = 0;
+			float cov = 0;
 
 			for (int t = 0; t < _past; t++) {
 				cov += (_hist[_s].at(t, i) - _mean[i]) * (_hist[_s].at(t, j) - _mean[j]);
@@ -88,7 +88,7 @@ void LSOM_learning::train(Tensor * p_input)
 
 			cov /= _past;
 
-			const double ro = cov / (sqrt(_deviation[i]) * sqrt(_deviation[j]));
+			const float ro = cov / (sqrt(_deviation[i]) * sqrt(_deviation[j]));
 
 			//cout << winner << " " << j << " " << ro << endl;
 
@@ -96,8 +96,8 @@ void LSOM_learning::train(Tensor * p_input)
 				int s = 0;
 			}
 
-			const double l = _dist_matrix.at(i, j) == 0 ? 0 : 1 / _dist_matrix.at(i, j);
-			const double val = beta * ro * l * abs(oi->at(i) * oi->at(j));
+			const float l = _dist_matrix.at(i, j) == 0 ? 0 : 1 / _dist_matrix.at(i, j);
+			const float val = beta * ro * l * abs(oi->at(i) * oi->at(j));
 			_delta_lw.set(i, j, val);
 
 			if (_delta_lw.at(j,i) != _delta_lw.at(j, i)) {
@@ -105,7 +105,7 @@ void LSOM_learning::train(Tensor * p_input)
 			}
 		}
 
-		double v = oi->at(i) - _avg[i];
+		float v = oi->at(i) - _avg[i];
 
 		_delta_b[i] = alpha * -v * abs(oi->at(i));
 

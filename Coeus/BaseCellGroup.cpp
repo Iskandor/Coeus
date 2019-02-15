@@ -51,7 +51,7 @@ BaseCellGroup::BaseCellGroup(nlohmann::json p_data):
 
 	if (_bias_flag)
 	{
-		double* data = Tensor::alloc_arr(_dim);
+		float* data = Tensor::alloc_arr(_dim);
 
 		stringstream ss(p_data["bias"].get<string>());
 
@@ -108,8 +108,8 @@ json BaseCellGroup::get_json() const
 		stringstream ss;
 
 		for (int i = 0; i < _bias->size(); i++) {
-			double b = (*_bias)[i];
-			ss.write(reinterpret_cast<char*>(&b), sizeof(double));
+			float b = (*_bias)[i];
+			ss.write(reinterpret_cast<char*>(&b), sizeof(float));
 		}
 
 		data["bias"] = ss.str();

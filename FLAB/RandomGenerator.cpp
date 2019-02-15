@@ -23,13 +23,13 @@ int RandomGenerator::random(int p_lower, int p_upper) {
   return distribution(_mt);
 }
 
-double RandomGenerator::random(double p_lower, double p_upper) {
-  uniform_real_distribution<double> distribution(p_lower, p_upper);
+float RandomGenerator::random(float p_lower, float p_upper) {
+  uniform_real_distribution<float> distribution(p_lower, p_upper);
   return distribution(_mt);
 }
 
-double RandomGenerator::normalRandom(double p_mean, double p_sigma) {
-  normal_distribution<double> distribution(p_mean, p_sigma);
+float RandomGenerator::normalRandom(float p_mean, float p_sigma) {
+  normal_distribution<float> distribution(p_mean, p_sigma);
   return distribution(_mt);
 }
 
@@ -56,7 +56,7 @@ vector<int> RandomGenerator::choice(const int p_size, const int p_sample) {
 }
 
 
-int RandomGenerator::choice(double *p_prob, int p_size) {
+int RandomGenerator::choice(float *p_prob, int p_size) {
 
     vector<int> candidates;
 

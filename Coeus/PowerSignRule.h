@@ -5,10 +5,10 @@ namespace Coeus {
 	class __declspec(dllexport) PowerSignRule : public IUpdateRule
 	{
 	public:
-		PowerSignRule(NetworkGradient* p_network_gradient, double p_alpha);
+		PowerSignRule(NetworkGradient* p_network_gradient, float p_alpha);
 		~PowerSignRule();
 
-		void calc_update(map<string, Tensor>* p_gradient, double p_alpha = 0) override;
+		void calc_update(map<string, Tensor>* p_gradient, float p_alpha = 0) override;
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 		void reset() override;
 

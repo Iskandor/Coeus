@@ -5,7 +5,7 @@
 
 using namespace Coeus;
 
-GaussianActivation::GaussianActivation(const double p_sigma): IActivationFunction(GAUSS), _sigma(p_sigma) {
+GaussianActivation::GaussianActivation(const float p_sigma): IActivationFunction(GAUSS), _sigma(p_sigma) {
 }
 
 GaussianActivation::~GaussianActivation()
@@ -13,9 +13,9 @@ GaussianActivation::~GaussianActivation()
 }
 
 Tensor GaussianActivation::activate(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
-	double* y = &arr[0];
-	double* x = &p_input.arr()[0];
+	float* arr = Tensor::alloc_arr(p_input.size());
+	float* y = &arr[0];
+	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
 		*y++ = 1.0 / sqrt(2 * PI * pow(_sigma, 2)) * exp(-(pow(*x++, 2) / 2 * pow(_sigma, 2)));

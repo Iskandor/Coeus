@@ -13,7 +13,7 @@ namespace Coeus {
 		explicit IActivationFunction(ACTIVATION p_type);
 		virtual ~IActivationFunction();
 
-		inline virtual double activate(double p_value) = 0;
+		inline virtual float activate(float p_value) = 0;
 		virtual Tensor activate(Tensor& p_input) = 0;
 		virtual Tensor derivative(Tensor& p_input) = 0;
 		virtual json get_json();

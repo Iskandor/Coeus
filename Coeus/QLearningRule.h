@@ -7,18 +7,18 @@ namespace Coeus
 	class __declspec(dllexport) QLearningRule : public IUpdateRule
 	{
 	public:
-		QLearningRule(NetworkGradient* p_network_gradient, double p_alpha, double p_gamma, double p_lambda);
+		QLearningRule(NetworkGradient* p_network_gradient, float p_alpha, float p_gamma, float p_lambda);
 		~QLearningRule();
 
-		void calc_update(map<string, Tensor>* p_gradient, double p_delta);
+		void calc_update(map<string, Tensor>* p_gradient, float p_delta);
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
 		void reset() override;
 		void reset_traces();
 
 	private:		
 		void update_traces(map<string, Tensor>* p_gradient);
-		double _gamma;
-		double _lambda;
+		float _gamma;
+		float _lambda;
 
 		map<string, Tensor> _e_traces;
 

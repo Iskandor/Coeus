@@ -116,8 +116,8 @@ void LSTMLayerGradient::calc_deriv_estimate()
 	const Tensor h = l->_cec->get_h();
 	const Tensor dg = l->_cec->get_dg();
 
-	double d0;
-	double d1;
+	float d0;
+	float d1;
 
 	Tensor* pd_in_input_gate = &_partial_deriv[l->_in_input_gate->get_id()];
 	Tensor* pd_in_forget_gate = &_partial_deriv[l->_in_forget_gate->get_id()];

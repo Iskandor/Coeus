@@ -11,7 +11,7 @@ namespace Coeus {
 		explicit RMSProp(NeuralNetwork* p_network);
 		~RMSProp();
 
-		void init(ICostFunction* p_cost_function, double p_alpha, double p_decay = 0.9, double p_epsilon = 1e-8);
+		void init(ICostFunction* p_cost_function, float p_alpha, float p_decay = 0.9, float p_epsilon = 1e-8);
 	};
 }
 

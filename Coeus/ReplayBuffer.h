@@ -12,12 +12,12 @@ namespace Coeus {
 			struct Item
 			{
 				Tensor s0;
-				double a;
+				float a;
 				Tensor s1;
-				double r;
+				float r;
 				bool final;
 
-				Item(Tensor* p_s0, const double p_a, Tensor* p_s1, const double p_r, const bool p_final) {
+				Item(Tensor* p_s0, const float p_a, Tensor* p_s1, const float p_r, const bool p_final) {
 					s0 = Tensor(*p_s0);
 					a = p_a;
 					s1 = Tensor(*p_s1);
@@ -29,9 +29,9 @@ namespace Coeus {
 			explicit ReplayBuffer(int p_size);
 			~ReplayBuffer();
 
-			void add_item(Tensor* p_s0, double p_a, Tensor* p_s1, double p_r, bool p_final);
+			void add_item(Tensor* p_s0, float p_a, Tensor* p_s1, float p_r, bool p_final);
 			vector<Item*>* get_sample(int p_size);
-			int get_size() const { return _buffer.size(); }
+			size_t get_size() const { return _buffer.size(); }
 
 		private:
 			vector<Item*>	_buffer;

@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-ActorRule::ActorRule(NetworkGradient* p_network_gradient, IUpdateRule* p_rule, const double p_alpha) : IUpdateRule(p_network_gradient, p_alpha), 
+ActorRule::ActorRule(NetworkGradient* p_network_gradient, IUpdateRule* p_rule, const float p_alpha) : IUpdateRule(p_network_gradient, p_alpha), 
 	_rule(p_rule)
 {
 }
@@ -13,7 +13,7 @@ ActorRule::~ActorRule()
 	delete _rule;
 }
 
-void ActorRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta, Tensor* p_policy, double p_alpha)
+void ActorRule::calc_update(map<string, Tensor>* p_gradient, const float p_delta, Tensor* p_policy, float p_alpha)
 {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 

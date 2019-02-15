@@ -19,7 +19,7 @@ public:
 
     bool isFinished();
     bool failed();
-    double getReward();
+    float getReward();
 
     CartPole *getEnvironment() {
         return _cartPole;
@@ -30,10 +30,10 @@ public:
     }
 
 private:
-    const double defautPenalty = -1;
-    const double bangPenalty = -1;
-    const double killPenalty = -10;
-    const double finalReward = 10;
+    const float defautPenalty = -1;
+    const float bangPenalty = -1;
+    const float killPenalty = -10;
+    const float finalReward = 10;
 
     CartPole *_cartPole;
 

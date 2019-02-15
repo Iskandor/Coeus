@@ -17,9 +17,9 @@ CountModule::~CountModule()
 	delete _lookup_table;
 }
 
-double CountModule::get_reward(Tensor* p_state) const
+float CountModule::get_reward(Tensor* p_state) const
 {
-	const double reward = 1 / sqrt(_lookup_table[p_state->max_value_index()]);
+	const float reward = 1 / sqrt(_lookup_table[p_state->max_value_index()]);
 	return reward;
 }
 

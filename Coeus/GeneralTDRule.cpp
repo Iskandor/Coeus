@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-GeneralTDRule::GeneralTDRule(NetworkGradient* p_network_gradient, IUpdateRule* p_rule, const double p_alpha, const double p_gamma, const double p_lambda) : IUpdateRule(p_network_gradient, p_alpha),
+GeneralTDRule::GeneralTDRule(NetworkGradient* p_network_gradient, IUpdateRule* p_rule, const float p_alpha, const float p_gamma, const float p_lambda) : IUpdateRule(p_network_gradient, p_alpha),
 	_gamma(p_gamma),
 	_lambda(p_lambda),
 	_rule(p_rule)
@@ -19,14 +19,14 @@ GeneralTDRule::~GeneralTDRule()
 	delete _rule;
 }
 
-void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const double p_delta, const double p_alpha)
+void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const float p_delta, const float p_alpha)
 {
 	_delta = p_delta;
 	calc_update(p_gradient, p_alpha);
 }
 
 
-void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const double p_alpha)
+void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const float p_alpha)
 {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 

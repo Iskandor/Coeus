@@ -9,29 +9,29 @@ using namespace Concurrency;
 Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0) {
 }
 
-Tensor::Tensor(const initializer_list<int> p_shape, const INIT p_init, const double p_value) {
+Tensor::Tensor(const initializer_list<int> p_shape, const INIT p_init, const float p_value) {
 	init_shape(p_shape);
 	_arr = alloc_arr(_size);
 	fill(p_init, p_value);
 }
 
-Tensor::Tensor(const initializer_list<int> p_shape, double* p_data) {
+Tensor::Tensor(const initializer_list<int> p_shape, float* p_data) {
 	init_shape(p_shape);
 	_arr = p_data;
 }
 
-Tensor::Tensor(const int p_rank, int* p_shape, double* p_data) {
+Tensor::Tensor(const int p_rank, int* p_shape, float* p_data) {
 	init_shape(p_rank, p_shape, false);
 	_arr = p_data;
 }
 
-Tensor::Tensor(const int p_rank, int* p_shape, const INIT p_init, const double p_value) {
+Tensor::Tensor(const int p_rank, int* p_shape, const INIT p_init, const float p_value) {
 	init_shape(p_rank, p_shape, true);
 	_arr = alloc_arr(_size);
 	fill(p_init, p_value);
 }
 
-Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<double> p_inputs) {
+Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<float> p_inputs) {
 	init_shape(p_shape);
 	_arr = alloc_arr(_size);
 
@@ -49,7 +49,7 @@ Tensor::Tensor(const Tensor& p_copy) {
 	_arr = alloc_arr(_size);
 
 	memcpy(_shape, p_copy._shape, sizeof(int) * _rank);
-	memcpy(_arr, p_copy._arr, sizeof(double) * static_cast<size_t>(_size));
+	memcpy(_arr, p_copy._arr, sizeof(float) * static_cast<size_t>(_size));
 }
 
 Tensor::~Tensor() {
@@ -61,7 +61,7 @@ Tensor::~Tensor() {
 }
 
 Tensor Tensor::operator-() const {
-	double* arr = alloc_arr(_size);
+	float* arr = alloc_arr(_size);
 	int* shape = copy_shape(_rank, _shape);
 
 	for (int i = 0; i < _size; i++) {
@@ -79,11 +79,11 @@ Tensor Tensor::Ones(const initializer_list<int> p_shape) {
 	return Tensor(p_shape, ONES);
 }
 
-Tensor Tensor::Value(const initializer_list<int> p_shape, const double p_value) {
+Tensor Tensor::Value(const initializer_list<int> p_shape, const float p_value) {
 	return Tensor(p_shape, VALUE, p_value);
 }
 
-Tensor Tensor::Random(const initializer_list<int> p_shape, const double p_limit) {
+Tensor Tensor::Random(const initializer_list<int> p_shape, const float p_limit) {
 	return Tensor(p_shape, RANDOM, p_limit);
 }
 
@@ -107,7 +107,7 @@ void Tensor::operator=(const Tensor& p_copy) {
 	}
 
 	memcpy(_shape, p_copy._shape, sizeof(int) * _rank);
-	memcpy(_arr, p_copy._arr, sizeof(double) * _size);
+	memcpy(_arr, p_copy._arr, sizeof(float) * _size);
 }
 
 Tensor Tensor::operator+(const Tensor& p_tensor) const {
@@ -116,7 +116,7 @@ Tensor Tensor::operator+(const Tensor& p_tensor) const {
 	return temp += p_tensor;
 }
 
-Tensor Tensor::operator+(const double p_const) const {
+Tensor Tensor::operator+(const float p_const) const {
 	Tensor temp(*this);
 
 	return temp += p_const;
@@ -128,8 +128,8 @@ Tensor& Tensor::operator+=(const Tensor& p_tensor) {
 		assert(("Size or rank not equal", 0));
 	}
 
-	double *xpos = &p_tensor._arr[0];
-	double *ypos = &_arr[0];
+	float *xpos = &p_tensor._arr[0];
+	float *ypos = &_arr[0];
 
 	for (int i = 0; i < _size; i++) {
 		(*ypos++) += (*xpos++);
@@ -138,7 +138,7 @@ Tensor& Tensor::operator+=(const Tensor& p_tensor) {
 	return *this;
 }
 
-Tensor& Tensor::operator+=(const double p_const) {
+Tensor& Tensor::operator+=(const float p_const) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] += p_const;
 	}
@@ -158,8 +158,8 @@ Tensor& Tensor::operator-=(const Tensor& p_tensor) {
 		assert(("Size or rank not equal", 0));
 	}
 
-	double *xpos = &p_tensor._arr[0];
-	double *ypos = &_arr[0];
+	float *xpos = &p_tensor._arr[0];
+	float *ypos = &_arr[0];
 
 	for (int i = 0; i < _size; i++) {
 		(*ypos++) -= (*xpos++);
@@ -169,7 +169,7 @@ Tensor& Tensor::operator-=(const Tensor& p_tensor) {
 }
 
 Tensor Tensor::operator*(const Tensor& p_tensor) const {
-	double* arr = nullptr;
+	float* arr = nullptr;
 	int rank = 0;
 	int* shape = nullptr;
 	
@@ -221,13 +221,13 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 	return Tensor(rank, shape, arr);
 }
 
-Tensor Tensor::operator*(const double p_const) const {
+Tensor Tensor::operator*(const float p_const) const {
 	Tensor temp(*this);
 
 	return temp *= p_const;
 }
 
-Tensor& Tensor::operator*=(const double p_const) {
+Tensor& Tensor::operator*=(const float p_const) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] *= p_const;
 	}
@@ -235,14 +235,14 @@ Tensor& Tensor::operator*=(const double p_const) {
 	return *this;
 }
 
-Tensor Tensor::operator/(const double p_const) const {
+Tensor Tensor::operator/(const float p_const) const {
 	Tensor temp(*this);
 
 	return temp /= p_const;
 }
 
 Tensor Tensor::operator/(const Tensor& p_tensor) const {
-	double* arr = alloc_arr(_size);
+	float* arr = alloc_arr(_size);
 	int* shape = copy_shape(_rank, _shape);
 
 	for (int i = 0; i < _size; i++) {
@@ -252,7 +252,7 @@ Tensor Tensor::operator/(const Tensor& p_tensor) const {
 	return Tensor(_rank, shape, arr);
 }
 
-Tensor& Tensor::operator/=(const double p_const) {
+Tensor& Tensor::operator/=(const float p_const) {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] /= p_const;
 	}
@@ -260,7 +260,7 @@ Tensor& Tensor::operator/=(const double p_const) {
 	return *this;
 }
 
-double& Tensor::operator[](const int p_index) const {
+float& Tensor::operator[](const int p_index) const {
 	return _arr[p_index];
 }
 
@@ -317,7 +317,7 @@ void Tensor::set_column(Tensor& p_tensor, const int p_column) const
 }
 
 Tensor Tensor::T() const {
-	double* arr = alloc_arr(_size);
+	float* arr = alloc_arr(_size);
 
 	int* shape = copy_shape(_rank, _shape);
 
@@ -344,7 +344,7 @@ Tensor Tensor::T() const {
 Tensor Tensor::diag() const {
 	const int rank = 2;
 	int* shape = alloc_shape(rank);
-	double* arr = alloc_arr(_size *_size);
+	float* arr = alloc_arr(_size *_size);
 
 	shape[0] = _shape[0];
 	shape[1] = _shape[0];
@@ -358,8 +358,8 @@ Tensor Tensor::diag() const {
 	return Tensor(rank, shape, arr);
 }
 
-Tensor Tensor::pow(const double p_y) const {
-	double* arr = alloc_arr(_size);
+Tensor Tensor::pow(const float p_y) const {
+	float* arr = alloc_arr(_size);
 	int* shape = copy_shape(_rank, _shape);
 
 	for (int i = 0; i < _size; i++) {
@@ -370,7 +370,7 @@ Tensor Tensor::pow(const double p_y) const {
 }
 
 Tensor Tensor::sqrt() const {
-	double* arr = alloc_arr(_size);
+	float* arr = alloc_arr(_size);
 	int* shape = copy_shape(_rank, _shape);
 
 	for (int i = 0; i < _size; i++) {
@@ -386,7 +386,7 @@ Tensor Tensor::dot(const Tensor& p_tensor) const {
 		assert(("Size or rank not equal", 0));
 	}
 
-	double* arr = dot(this, &p_tensor);
+	float* arr = dot(this, &p_tensor);
 	int* shape = copy_shape(_rank, _shape);
 
 	return Tensor(_rank, shape, arr);
@@ -394,7 +394,7 @@ Tensor Tensor::dot(const Tensor& p_tensor) const {
 
 Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 {
-	double* arr = nullptr;
+	float* arr = nullptr;
 	int rank = 0;
 	int* shape = nullptr;
 
@@ -416,18 +416,18 @@ Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 
 	if (r > 0)
 	{
-		double *xpos0 = &_arr[0];
-		double *xpos1 = &_arr[1];
-		double *xpos2 = &_arr[2];
-		double *xpos3 = &_arr[3];
+		float *xpos0 = &_arr[0];
+		float *xpos1 = &_arr[1];
+		float *xpos2 = &_arr[2];
+		float *xpos3 = &_arr[3];
 
-		double *zpos0 = &arr[0];
-		double *zpos1 = &arr[cols];
-		double *zpos2 = &arr[cols * 2];
-		double *zpos3 = &arr[cols * 3];
+		float *zpos0 = &arr[0];
+		float *zpos1 = &arr[cols];
+		float *zpos2 = &arr[cols * 2];
+		float *zpos3 = &arr[cols * 3];
 
 		for (int i = 0; i < r; i++) {
-			double *ypos = &p_tensor._arr[0];
+			float *ypos = &p_tensor._arr[0];
 			for (int j = 0; j < cols; j++) {
 				(*zpos0++) = (*xpos0) * (*ypos);
 				(*zpos1++) = (*xpos1) * (*ypos);
@@ -446,11 +446,11 @@ Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 			zpos3 += 3 * cols;
 		}
 
-		double *xpos = &_arr[r*4];
-		double *zpos = &arr[r*4*cols];
+		float *xpos = &_arr[r*4];
+		float *zpos = &arr[r*4*cols];
 
 		for (int i = r*4; i < rows; i++) {
-			double *ypos = &p_tensor._arr[0];
+			float *ypos = &p_tensor._arr[0];
 			for (int j = 0; j < cols; j++) {
 				(*zpos++) = (*xpos) * (*ypos++);
 			}
@@ -459,11 +459,11 @@ Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 	}
 	else
 	{
-		double *xpos = &_arr[0];
-		double *zpos = &arr[0];
+		float *xpos = &_arr[0];
+		float *zpos = &arr[0];
 
 		for (int i = 0; i < rows; i++) {
-			double *ypos = &p_tensor._arr[0];
+			float *ypos = &p_tensor._arr[0];
 			for (int j = 0; j < cols; j++) {
 				(*zpos++) = (*xpos) * (*ypos++);
 			}
@@ -475,9 +475,9 @@ Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 	return Tensor(rank, shape, arr);
 }
 
-Tensor Tensor::apply(Tensor& p_source, double(*f)(double))
+Tensor Tensor::apply(Tensor& p_source, float(*f)(float))
 {
-	double* arr = alloc_arr(p_source._size);
+	float* arr = alloc_arr(p_source._size);
 	int* shape = copy_shape(p_source._rank, p_source._shape);
 
 	for (int i = 0; i < p_source._size; i++) {
@@ -487,8 +487,8 @@ Tensor Tensor::apply(Tensor& p_source, double(*f)(double))
 	return Tensor(p_source._rank, shape, arr);
 }
 
-Tensor Tensor::apply(Tensor& p_source1, Tensor& p_source2, double(*f)(double, double)) {
-	double* arr = alloc_arr(p_source1._size);
+Tensor Tensor::apply(Tensor& p_source1, Tensor& p_source2, float(*f)(float, float)) {
+	float* arr = alloc_arr(p_source1._size);
 	int* shape = copy_shape(p_source1._rank, p_source1._shape);
 
 	for (int i = 0; i < p_source1._size; i++) {
@@ -509,10 +509,10 @@ int Tensor::max_value_index() const {
 }
 
 void Tensor::override(Tensor* p_tensor) const {
-	memcpy(_arr, p_tensor->_arr, sizeof(double) * static_cast<size_t>(_size));
+	memcpy(_arr, p_tensor->_arr, sizeof(float) * static_cast<size_t>(_size));
 }
 
-void Tensor::override(const double* p_data) const
+void Tensor::override(const float* p_data) const
 {
 	for (int i = 0; i < _size; i++) {
 		_arr[i] = p_data[i];
@@ -522,16 +522,16 @@ void Tensor::override(const double* p_data) const
 void Tensor::override(const int* p_data) const
 {
 	for (int i = 0; i < _size; i++) {
-		_arr[i] = p_data[i];
+		_arr[i] = static_cast<float>(p_data[i]);
 	}
 }
 
-void Tensor::fill(const double p_value) const {
+void Tensor::fill(const float p_value) const {
 	fill(VALUE, p_value);
 }
 
-double Tensor::sum() const {
-	double s = 0;
+float Tensor::sum() const {
+	float s = 0;
 
 	for (int i = 0; i < _size; i++) {
 		s += _arr[i];
@@ -541,50 +541,50 @@ double Tensor::sum() const {
 }
 
 
-double Tensor::at(const int p_x) const {
+float Tensor::at(const int p_x) const {
 	return _arr[p_x];
 }
 
-double Tensor::at(const int p_y, const int p_x) const {
+float Tensor::at(const int p_y, const int p_x) const {
 	return _arr[p_y * _shape[1] + p_x];
 }
 
-double Tensor::at(const int p_z, const int p_y, const int p_x) const {
+float Tensor::at(const int p_z, const int p_y, const int p_x) const {
 	return _arr[p_z * _shape[2] * _shape[1] + p_y * _shape[1] + p_x];
 }
 
-void Tensor::set(const int p_x, const double p_val) const {
+void Tensor::set(const int p_x, const float p_val) const {
 	_arr[p_x] = p_val;
 }
 
-void Tensor::set(const int p_y, const int p_x, const double p_val) const {
+void Tensor::set(const int p_y, const int p_x, const float p_val) const {
 	_arr[p_y * _shape[1] + p_x] = p_val;
 }
 
-void Tensor::set(const int p_z, const int p_y, const int p_x, const double p_val) const {
+void Tensor::set(const int p_z, const int p_y, const int p_x, const float p_val) const {
 	_arr[p_z * _shape[2] * _shape[1] + p_y * _shape[1] + p_x] = p_val;
 }
 
-void Tensor::inc(const int p_x, const double p_val) const {
+void Tensor::inc(const int p_x, const float p_val) const {
 	_arr[p_x] += p_val;
 }
 
-void Tensor::inc(const int p_x, const int p_y, const double p_val) const {
+void Tensor::inc(const int p_x, const int p_y, const float p_val) const {
 	_arr[p_y * _shape[1] + p_x] += p_val;
 }
 
-void Tensor::dec(const int p_x, const double p_val) const {
+void Tensor::dec(const int p_x, const float p_val) const {
 	_arr[p_x] -= p_val;
 }
 
-void Tensor::dec(const int p_x, const int p_y, const double p_val) const {
+void Tensor::dec(const int p_x, const int p_y, const float p_val) const {
 	_arr[p_y * _shape[1] + p_x] -= p_val;
 }
 
-double* Tensor::alloc_arr(const int p_size) {
-	double* res = static_cast<double*>(Alloc(p_size * sizeof(double)));
+float* Tensor::alloc_arr(const int p_size) {
+	float* res = static_cast<float*>(Alloc(p_size * sizeof(float)));
 	return res;
-	//return static_cast<double*>(malloc(p_size * sizeof(double)));
+	//return static_cast<float*>(malloc(p_size * sizeof(float)));
 }
 
 int* Tensor::alloc_shape(const int p_size) {
@@ -592,20 +592,20 @@ int* Tensor::alloc_shape(const int p_size) {
 	//return static_cast<int*>(malloc(p_size * sizeof(int)));
 }
 
-double Tensor::ew_dot(const double p_x, const double p_y) {
+float Tensor::ew_dot(const float p_x, const float p_y) {
 	return p_x * p_y;
 }
 
-double Tensor::ew_div(const double p_x, const double p_y) {
+float Tensor::ew_div(const float p_x, const float p_y) {
 	return p_x / p_y;
 }
 
-double Tensor::ew_abs(const double p_x) {
+float Tensor::ew_abs(const float p_x) {
 	return abs(p_x);
 }
 
-double Tensor::sgn(const double p_x) {
-	double res = 0;
+float Tensor::sgn(const float p_x) {
+	float res = 0;
 
 	if (p_x > 0) res = 1;
 	if (p_x < 0) res = -1;
@@ -613,9 +613,9 @@ double Tensor::sgn(const double p_x) {
 	return res;
 }
 
-double Tensor::dist(Tensor* p_tensor1, Tensor* p_tensor2)
+float Tensor::dist(Tensor* p_tensor1, Tensor* p_tensor2)
 {
-	double result = 0;
+	float result = 0;
 
 	for(int i = 0; i < p_tensor1->_size; i++)
 	{
@@ -625,13 +625,13 @@ double Tensor::dist(Tensor* p_tensor1, Tensor* p_tensor2)
 	return std::sqrt(result);
 }
 
-double* Tensor::dot(const Tensor* p_x, const Tensor* p_y)
+float* Tensor::dot(const Tensor* p_x, const Tensor* p_y)
 {
-	double* arr = alloc_arr(p_x->_size);
+	float* arr = alloc_arr(p_x->_size);
 
-	double *xpos = &p_x->_arr[0];
-	double *ypos = &p_y->_arr[0];
-	double *zpos = &arr[0];
+	float *xpos = &p_x->_arr[0];
+	float *ypos = &p_y->_arr[0];
+	float *zpos = &arr[0];
 
 	for (int i = 0; i < p_x->_size; i++) {
 		(*zpos++) = (*ypos++) * (*xpos++);
@@ -640,30 +640,30 @@ double* Tensor::dot(const Tensor* p_x, const Tensor* p_y)
 	return arr;
 }
 
-double* Tensor::mat_vec(const Tensor *p_A, const Tensor *p_x)
+float* Tensor::mat_vec(const Tensor *p_A, const Tensor *p_x)
 {
 	const int rows = p_A->_shape[0];
 	const int cols = p_A->_shape[1];
 	const int r = rows / 4;
 
-	double *arr = alloc_arr(rows);
+	float *arr = alloc_arr(rows);
 
-	double *Apos1 = &p_A->_arr[0];
-	double *Apos2 = &p_A->_arr[cols * 1];
-	double *Apos3 = &p_A->_arr[cols * 2];
-	double *Apos4 = &p_A->_arr[cols * 3];
-	double *ypos = &arr[0];
+	float *Apos1 = &p_A->_arr[0];
+	float *Apos2 = &p_A->_arr[cols * 1];
+	float *Apos3 = &p_A->_arr[cols * 2];
+	float *Apos4 = &p_A->_arr[cols * 3];
+	float *ypos = &arr[0];
 
 	if (rows > 3)
 	{
 		for (int i = 0; i < r; i++)
 		{
-			double ytemp1 = 0;
-			double ytemp2 = 0;
-			double ytemp3 = 0;
-			double ytemp4 = 0;
+			float ytemp1 = 0;
+			float ytemp2 = 0;
+			float ytemp3 = 0;
+			float ytemp4 = 0;
 
-			double *xpos = &p_x->_arr[0];
+			float *xpos = &p_x->_arr[0];
 
 			for (int j = 0; j < cols; j++)
 			{
@@ -694,11 +694,11 @@ double* Tensor::mat_vec(const Tensor *p_A, const Tensor *p_x)
 
 	if (rows % 4 != 0)
 	{
-		double *Apos = &p_A->_arr[r * 4 * cols];
+		float *Apos = &p_A->_arr[r * 4 * cols];
 
 		for (int i = r * 4; i < rows; i++) {
 			arr[i] = 0;
-			double *xpos = &p_x->_arr[0];
+			float *xpos = &p_x->_arr[0];
 			for (int j = 0; j < cols; j++) {
 				arr[i] += (*Apos++) * (*xpos++);
 			}
@@ -751,7 +751,7 @@ void Tensor::init_shape(initializer_list<int> p_shape) {
 	}
 }
 
-void Tensor::fill(const INIT p_init, const double p_value) const {
+void Tensor::fill(const INIT p_init, const float p_value) const {
 	switch (p_init) {
 		case ZERO:
 			for (int i = 0; i < _size; i++) _arr[i] = 0;
@@ -774,7 +774,7 @@ void Tensor::fill(const INIT p_init, const double p_value) const {
 }
 
 Tensor Tensor::concat(Tensor& p_tensor1, Tensor& p_tensor2) {
-	double *res = alloc_arr(p_tensor1._size + p_tensor2._size);
+	float *res = alloc_arr(p_tensor1._size + p_tensor2._size);
 
 	int index = 0;
 
@@ -813,7 +813,7 @@ Tensor Tensor::concat(vector<Tensor>& p_vector)
 		size += v.size();
 	}
 
-	double *res = alloc_arr(size);
+	float *res = alloc_arr(size);
 
 	int i = 0;
 

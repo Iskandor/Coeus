@@ -16,7 +16,7 @@ public:
 	void test();
 
 private:
-	void save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) const;
+	void save_results(const string p_filename, const int p_dim_x, const int p_dim_y, float* p_data, const int p_category) const;
 
 	LSOM*		_lsom;
 	IrisDataset _dataset;

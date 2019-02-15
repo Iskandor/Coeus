@@ -9,10 +9,10 @@ namespace Coeus {
 		AnnealingScheduler(int p_model_size);
 		~AnnealingScheduler();
 
-		double get_alpha();
+		float get_alpha();
 
 	private:
-		const double _warmup = pow(400, -1.5);
+		const float _warmup = pow(400.f, -1.5f);
 		int _model_size;
 		int _step;
 		

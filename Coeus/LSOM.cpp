@@ -60,7 +60,7 @@ void LSOM::activate(Tensor * p_input)
 
 	for(int s = 0; s < 1; s++) {
 		for (int i = 0; i < _dim_x * _dim_y; i++) {
-			double w = 0;
+			float w = 0;
 			for (int n = 0; n < _dim_x * _dim_y; n++) {
 				w += _dist.at(n) * lateral_w->at(i, n);
 			}

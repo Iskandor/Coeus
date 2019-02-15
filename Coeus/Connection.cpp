@@ -14,7 +14,7 @@ Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_
 	_weights = nullptr;
 }
 
-Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable, double p_limit)
+Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable, float p_limit)
 {
     _id = p_out_id + "_" + p_in_id;
 	_in_dim = p_in_dim;
@@ -34,7 +34,7 @@ Connection::Connection(json p_data) {
 	_out_dim = p_data["out_dim"].get<int>();
 	_trainable = p_data["trainable"].get<bool>();
 
-	double* data = Tensor::alloc_arr(_out_dim * _in_dim);
+	float* data = Tensor::alloc_arr(_out_dim * _in_dim);
 
 	stringstream ss(p_data["weights"].get<string>());
 
@@ -67,7 +67,7 @@ Connection* Connection::clone() const
 Connection::~Connection()
 = default;
 
-void Connection::init(const INIT p_init, const bool p_trainable, const double p_limit) {
+void Connection::init(const INIT p_init, const bool p_trainable, const float p_limit) {
     switch(p_init) {
 		case NONE:			
 			_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ZERO);
@@ -76,7 +76,7 @@ void Connection::init(const INIT p_init, const bool p_trainable, const double p_
             uniform(p_limit);
             break;
         case LECUN_UNIFORM:
-            uniform(static_cast<double>(pow(_in_dim, -.5)));
+            uniform(static_cast<float>(pow(_in_dim, -.5)));
             break;
         case GLOROT_UNIFORM:
             uniform(2.0f / (_in_dim + _out_dim));
@@ -107,8 +107,8 @@ json Connection::get_json() const
 	stringstream ss;
 
 	for (int i = 0; i < _weights->size(); i++) {
-		double w = (*_weights)[i];
-		ss.write((char*)&w, sizeof(double));
+		float w = (*_weights)[i];
+		ss.write((char*)&w, sizeof(float));
 	}
 
 	result["weights"] = ss.str();
@@ -116,7 +116,7 @@ json Connection::get_json() const
 	return result;
 }
 
-void Connection::uniform(const double p_limit) {
+void Connection::uniform(const float p_limit) {
 	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit);
 }
 

@@ -20,12 +20,13 @@ int main()
 	//FFN model;
 	//model.run();
 
-	//RNN model;
+	RNN model;
 	//model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
-	//model.run_add_problem();
+	model.run_add_problem();
 
+	/*
 	MazeExample example;
 	//example.example_q(24, 4e-4, 0, false);
 
@@ -37,6 +38,7 @@ int main()
 		c += example.example_q(48, 1e-4, 0, false);
 	}
 	cout << c << " / 10" << endl;
+	*/
 
 	/*
 	Logger::instance().init("maze.log");
@@ -48,8 +50,8 @@ int main()
 			for (int l = 3; l < 4; l++)
 			{
 				const int hidden = pow(2, i);
-				const double alpha = pow(10, a);
-				const double lambda = l * 0.2 - 0.1;
+				const float alpha = pow(10, a);
+				const float lambda = l * 0.2 - 0.1;
 				int correct = 0;
 
 				for (int e = 0; e < 10; e++)
@@ -64,7 +66,7 @@ int main()
 			}
 
 			const int hidden = pow(2, i);
-			const double alpha = pow(10, a);
+			const float alpha = pow(10, a);
 			int correct = 0;
 			int c[10];
 

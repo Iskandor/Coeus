@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-DeepQLearning::DeepQLearning(NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm, const double p_gamma, const int p_size, const int p_sample)
+DeepQLearning::DeepQLearning(NeuralNetwork* p_network, GradientAlgorithm* p_gradient_algorithm, const float p_gamma, const int p_size, const int p_sample)
 {
 	_network = p_network;
 	_gradient_algorithm = p_gradient_algorithm;
@@ -25,16 +25,16 @@ DeepQLearning::~DeepQLearning()
 	delete _replay_buffer;
 }
 
-double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const double p_reward, const bool p_final) const {
+float DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, const bool p_final) const {
 	_replay_buffer->add_item(p_state0, p_action0, p_state1, p_reward, p_final);
 
-	double error = 0;
+	float error = 0;
 
 	if (_replay_buffer->get_size() >= _sample_size) {
 		vector<ReplayBuffer::Item*>* sample = _replay_buffer->get_sample(_sample_size);
 
 		for (int i = 0; i < sample->size(); i++) {
-			const double maxQs1a = calc_max_qa(&sample->at(i)->s1);
+			const float maxQs1a = calc_max_qa(&sample->at(i)->s1);
 
 			_network->activate(&sample->at(i)->s0);
 			_input->at(i)->override(&sample->at(i)->s0);
@@ -53,7 +53,7 @@ double DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_sta
 	return error;
 }
 
-double DeepQLearning::calc_max_qa(Tensor* p_state) const {
+float DeepQLearning::calc_max_qa(Tensor* p_state) const {
 	_network->activate(p_state);
 	const int maxQa = _network->get_output()->max_value_index();
 

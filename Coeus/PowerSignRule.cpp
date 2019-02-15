@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-PowerSignRule::PowerSignRule(NetworkGradient* p_network_gradient, const double p_alpha) : IUpdateRule(p_network_gradient, p_alpha)
+PowerSignRule::PowerSignRule(NetworkGradient* p_network_gradient, const float p_alpha) : IUpdateRule(p_network_gradient, p_alpha)
 {
 	_m = p_network_gradient->get_empty_params();
 }
@@ -11,9 +11,9 @@ PowerSignRule::PowerSignRule(NetworkGradient* p_network_gradient, const double p
 PowerSignRule::~PowerSignRule()
 = default;
 
-void PowerSignRule::calc_update(map<string, Tensor>* p_gradient, const double p_alpha)
+void PowerSignRule::calc_update(map<string, Tensor>* p_gradient, const float p_alpha)
 {
-	const double beta1 = 0.9;
+	const float beta1 = 0.9;
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {

@@ -20,7 +20,7 @@ CartPoleTask::~CartPoleTask() {
 }
 
 void CartPoleTask::run() {
-    double action;
+    float action;
 
     for(int e = 0; e < 1000; e++) {
         cout << e << endl;
@@ -52,8 +52,8 @@ bool CartPoleTask::isFinished() {
     return res;
 }
 
-double CartPoleTask::getReward() {
-    double reward = 0;
+float CartPoleTask::getReward() {
+    float reward = 0;
 
     _t++;
     if (_cartPole->getPoleAngle() < 0.05 && fabs(_cartPole->getCartPosition()) < 0.05) {

@@ -1,5 +1,5 @@
 #include "ReluActivation.h"
-#include <algorithm>
+#include "FLAB.h"
 
 using namespace Coeus;
 
@@ -12,21 +12,21 @@ ReluActivation::~ReluActivation()
 }
 
 Tensor ReluActivation::activate(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
-	double* y = &arr[0];
-	double* x = &p_input.arr()[0];
+	float* arr = Tensor::alloc_arr(p_input.size());
+	float* y = &arr[0];
+	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
-		(*y++) = std::max(0., *x++);
+		(*y++) =  FLAB::max(0, *x++);
 	}
 
 	return Tensor({ p_input.size() }, arr);
 }
 
 Tensor ReluActivation::derivative(Tensor& p_input) {
-	double* arr = Tensor::alloc_arr(p_input.size());
-	double* y = &arr[0];
-	double* x = &p_input.arr()[0];
+	float* arr = Tensor::alloc_arr(p_input.size());
+	float* y = &arr[0];
+	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
 		*y++ = *x++ > 0 ? 1 : 0;
@@ -35,7 +35,7 @@ Tensor ReluActivation::derivative(Tensor& p_input) {
 	return Tensor({ p_input.size() }, arr);
 }
 
-double ReluActivation::activate(const double p_value)
+float ReluActivation::activate(const float p_value)
 {
-	return std::max(0., p_value);
+	return FLAB::max(0, p_value);
 }

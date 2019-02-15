@@ -9,10 +9,10 @@ namespace Coeus {
 		explicit ADAM(NeuralNetwork* p_network);
 		~ADAM();
 
-		void init(ICostFunction* p_cost_function, double p_alpha, double p_beta1 = 0.9, double p_beta2 = 0.999, double p_epsilon = 1e-8);
+		void init(ICostFunction* p_cost_function, float p_alpha, float p_beta1 = 0.9, float p_beta2 = 0.999, float p_epsilon = 1e-8);
 
-		double train(Tensor* p_input, Tensor* p_target) override;
-		double train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) override;
+		float train(Tensor* p_input, Tensor* p_target) override;
+		float train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, int p_batch) override;
 
 	private:
 		int _t;

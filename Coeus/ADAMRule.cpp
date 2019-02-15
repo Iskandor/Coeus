@@ -2,7 +2,7 @@
 
 using namespace  Coeus;
 
-ADAMRule::ADAMRule(NetworkGradient* p_network_gradient, double p_alpha, double p_beta1, double p_beta2, double p_epsilon) : IUpdateRule(p_network_gradient, p_alpha), 
+ADAMRule::ADAMRule(NetworkGradient* p_network_gradient, float p_alpha, float p_beta1, float p_beta2, float p_epsilon) : IUpdateRule(p_network_gradient, p_alpha), 
 	_beta1(p_beta1), _beta2(p_beta2), _epsilon(p_epsilon)
 {
 	_m = p_network_gradient->get_empty_params();
@@ -19,7 +19,7 @@ IUpdateRule* ADAMRule::clone(NetworkGradient* p_network_gradient)
 	return new ADAMRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
 }
 
-void ADAMRule::calc_update(map<string, Tensor>* p_gradient, double p_alpha) {
+void ADAMRule::calc_update(map<string, Tensor>* p_gradient, float p_alpha) {
 	if (p_alpha > 0)
 	{
 		_alpha = p_alpha;

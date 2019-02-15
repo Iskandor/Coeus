@@ -10,16 +10,16 @@ namespace Coeus {
 
 		virtual void param_decay();
 
-		double sigma() const { return _sigma; }
+		float sigma() const { return _sigma; }
 
 	protected:
-		void init(double p_epochs);
+		void init(float p_epochs);
 
-		double _sigma0;
-		double _sigma;
-		double _lambda;
-		double _iteration;
-		double _epochs;
+		float _sigma0;
+		float _sigma;
+		float _lambda;
+		float _iteration;
+		float _epochs;
 
 	};
 }

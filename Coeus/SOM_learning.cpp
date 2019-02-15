@@ -28,8 +28,8 @@ void SOM_learning::train(Tensor* p_input) {
 	Tensor* wi = _som->get_afferent()->get_weights();
 	Tensor* in = _som->get_input_group<SimpleCellGroup>()->get_output();
 
-	double theta = 0;
-	const double alpha = static_cast<SOM_params*>(_params)->alpha();
+	float theta = 0;
+	const float alpha = static_cast<SOM_params*>(_params)->alpha();
 
 	_som_analyzer->update(_som, winner);
 

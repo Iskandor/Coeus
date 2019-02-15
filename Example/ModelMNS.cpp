@@ -120,7 +120,7 @@ void ModelMNS::run_seq(int p_epochs) {
 		}
 
 		const auto end = chrono::system_clock::now();
-		chrono::duration<double> elapsed_seconds = end - start;
+		chrono::duration<float> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 		cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff(_F5->get_lattice()->get_dim()) << endl;
 		cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff(_STS->get_lattice()->get_dim()) << endl;
@@ -218,7 +218,7 @@ void ModelMNS::run(const int p_epochs) {
 		}
 
 		const auto end = chrono::system_clock::now();
-		chrono::duration<double> elapsed_seconds = end - start;
+		chrono::duration<float> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 		cout << " PMC qError: " << F5_analyzer.q_error() << " WD: " << F5_analyzer.winner_diff(_F5->get_lattice()->get_dim()) << endl;
 		cout << "STSp qError: " << STS_analyzer.q_error() << " WD: " << STS_analyzer.winner_diff(_STS->get_lattice()->get_dim()) << endl;
@@ -248,7 +248,7 @@ void ModelMNS::load(const string p_timestamp) {
 	//_STS = static_cast<MSOM*>(IOUtils::load_network(p_timestamp + "_STS.json"));
 }
 
-void ModelMNS::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) {
+void ModelMNS::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, float* p_data, const int p_category) {
 	ofstream file(p_filename);
 
 	if (file.is_open()) {
@@ -287,10 +287,10 @@ void ModelMNS::testDistance() {
 	cout << Config::instance().sts_config.dim_x << "," << Config::instance().sts_config.dim_y << endl;
 
 	vector<Sequence*>* trainData = _data.permute();
-	double* winRateF5_Motor = new double[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS]{ 0 };
-	double* winRateF5_Visual = new double[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS]{ 0 };
-	double* winRateSTS_Visual = new double[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS]{ 0 };
-	double* winRateSTS_Motor = new double[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS]{ 0 };
+	float* winRateF5_Motor = new float[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS]{ 0 };
+	float* winRateF5_Visual = new float[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS]{ 0 };
+	float* winRateSTS_Visual = new float[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS]{ 0 };
+	float* winRateSTS_Motor = new float[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS]{ 0 };
 
 
 	for (int i = 0; i < trainData->size(); i++) {
@@ -336,10 +336,10 @@ void ModelMNS::testFinalWinners() {
 
 	vector<Sequence*>* trainData = _data.permute();
 
-	double* winRateF5_Motor = new double[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS];
-	double* winRateF5_Visual = new double[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS];
-	double* winRateSTS_Visual = new double[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS];
-	double* winRateSTS_Motor = new double[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS];
+	float* winRateF5_Motor = new float[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS];
+	float* winRateF5_Visual = new float[Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS];
+	float* winRateSTS_Visual = new float[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS];
+	float* winRateSTS_Motor = new float[Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS];
 
 	for (int i = 0; i < trainData->size(); i++) {
 		for (int p = 0; p < PERSPS; p++) {

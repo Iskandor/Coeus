@@ -12,7 +12,7 @@ MSOM_params::~MSOM_params()
 {
 }
 
-void MSOM_params::init_training(const double p_gamma1, const double p_gamma2, const double p_epochs) {
+void MSOM_params::init_training(const float p_gamma1, const float p_gamma2, const float p_epochs) {
 	init(p_epochs);
 	_gamma1_0 = p_gamma1;
 	_gamma2_0 = p_gamma2;

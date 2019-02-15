@@ -35,14 +35,14 @@ void Encoder::one_hot(Tensor& p_result, const int p_value)
 	p_result[p_value] = 1;
 }
 
-void Encoder::pop_code(Tensor& p_result, const double p_value, const double p_lower_limit, const double p_upper_limit)
+void Encoder::pop_code(Tensor& p_result, const float p_value, const float p_lower_limit, const float p_upper_limit)
 {
 	if (p_lower_limit > p_value || p_upper_limit < p_value)
 	{
 		assert(("Encoder: pop code value out of range", 0));
 	}
 
-	const double c = (p_result.size() - 1) / (p_upper_limit - p_lower_limit);
+	const float c = (p_result.size() - 1) / (p_upper_limit - p_lower_limit);
 
 	for(int i = 0; i < p_result.size(); i++)
 	{

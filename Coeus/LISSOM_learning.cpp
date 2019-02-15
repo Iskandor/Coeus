@@ -22,9 +22,9 @@ void LISSOM_learning::train(Tensor* p_input) {
 	Tensor* le = _lissom->get_latteral_e()->get_weights();
 	Tensor* li = _lissom->get_latteral_i()->get_weights();
 
-	const double alpha_a = static_cast<LISSOM_params*>(_params)->alpha_a();
-	const double alpha_e = static_cast<LISSOM_params*>(_params)->alpha_e();
-	const double alpha_i = static_cast<LISSOM_params*>(_params)->alpha_i();
+	const float alpha_a = static_cast<LISSOM_params*>(_params)->alpha_a();
+	const float alpha_e = static_cast<LISSOM_params*>(_params)->alpha_e();
+	const float alpha_i = static_cast<LISSOM_params*>(_params)->alpha_i();
 
 	for (int i = 0; i < dim_lattice; i++) {
 		for (int j = 0; j < dim_input; j++) {

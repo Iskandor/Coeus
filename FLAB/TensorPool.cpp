@@ -7,16 +7,16 @@ TensorPool& TensorPool::instance() {
 	return instance;
 }
 
-double* TensorPool::get_dbl(const unsigned int p_size) {
-	double* result = nullptr;
+float* TensorPool::get_dbl(const unsigned int p_size) {
+	float* result = nullptr;
 
 	if(_pool_dbl.find(p_size) == _pool_dbl.end()) {
-		_pool_dbl[p_size] = new stack<double*>();
-		result = static_cast<double*>(calloc(static_cast<size_t>(p_size), sizeof(double)));
+		_pool_dbl[p_size] = new stack<float*>();
+		result = static_cast<float*>(calloc(static_cast<size_t>(p_size), sizeof(float)));
 	}
 	else {
 		if (_pool_dbl[p_size]->empty()) {
-			result = static_cast<double*>(calloc(static_cast<size_t>(p_size), sizeof(double)));
+			result = static_cast<float*>(calloc(static_cast<size_t>(p_size), sizeof(float)));
 		}
 		else {
 			result = _pool_dbl[p_size]->top();
@@ -51,7 +51,7 @@ int* TensorPool::get_int(const unsigned int p_size) {
 	return result;
 }
 
-void TensorPool::release(double* p_buffer, const unsigned p_size) {
+void TensorPool::release(float* p_buffer, const unsigned p_size) {
 	_pool_dbl[p_size]->push(p_buffer);
 	_counter--;
 }

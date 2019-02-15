@@ -13,17 +13,17 @@ struct SOM_config {
 	int dim_x;
 	int dim_y;
 
-	double alpha;
+	float alpha;
 };
 
 struct MSOM_config {
 	int dim_x;
 	int dim_y;
 
-	double alpha;
-	double beta;
-	double gamma1;
-	double gamma2;
+	float alpha;
+	float beta;
+	float gamma1;
+	float gamma2;
 };
 
 class Config

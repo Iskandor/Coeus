@@ -7,6 +7,6 @@ namespace Coeus
 		ILearningRateModule();
 		virtual ~ILearningRateModule();
 
-		virtual double get_alpha() = 0;
+		virtual float get_alpha() = 0;
 	};
 }

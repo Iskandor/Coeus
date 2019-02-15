@@ -8,7 +8,7 @@ namespace Coeus {
 		PowerSign(NeuralNetwork* p_network);
 		~PowerSign();
 
-		void init(ICostFunction* p_cost_function, double p_alpha = exp(1));
+		void init(ICostFunction* p_cost_function, float p_alpha = exp(1));
 	};
 }
 

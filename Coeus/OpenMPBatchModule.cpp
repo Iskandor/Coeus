@@ -10,7 +10,7 @@ OpenMPBatchModule::OpenMPBatchModule(NeuralNetwork* p_network, ICostFunction* p_
 {
 	_clone_network = new NeuralNetwork*[p_batch];
 	_network_gradient = new NetworkGradient*[p_batch];
-	_error = new double[p_batch];
+	_error = new float[p_batch];
 
 	for (int i = 0; i < p_batch; i++)
 	{
@@ -59,5 +59,5 @@ void OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input
 
 	auto end = chrono::high_resolution_clock::now();
 
-	//cout << "Batch" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	//cout << "Batch" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 }

@@ -12,7 +12,7 @@ LSOM1_params::~LSOM1_params()
 {
 }
 
-void LSOM1_params::init_training(const double p_alpha, const double p_beta, const double p_epochs) {
+void LSOM1_params::init_training(const float p_alpha, const float p_beta, const float p_epochs) {
 	init(p_epochs);
 	_alpha0 = p_alpha;
 	_beta0 = p_beta;

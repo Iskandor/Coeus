@@ -31,9 +31,9 @@ void LSOM1_learning::train(Tensor * p_input)
 	Tensor* wi = _lsom->get_afferent()->get_weights();
 	Tensor* li = _lsom->get_lateral()->get_weights();
 
-	double theta = 0;
-	const double alpha = static_cast<LSOM1_params*>(_params)->alpha();
-	const double beta = static_cast<LSOM1_params*>(_params)->beta();
+	float theta = 0;
+	const float alpha = static_cast<LSOM1_params*>(_params)->alpha();
+	const float beta = static_cast<LSOM1_params*>(_params)->beta();
 
 	_som_analyzer->update(_lsom, winner);
 	_winners.insert(winner);
@@ -48,11 +48,11 @@ void LSOM1_learning::train(Tensor * p_input)
 		}
 
 		for (int j = 0; j < dim_lattice; j++) {
-			const double lambda = -_dist_matrix.at(i, j) + pow(_friendship.at(i), 4);
-			//const double lambda = Metrics::binary_distance(_dist_matrix.at(i, j), _friendship.at(i));
-			//const double lambda = Metrics::gaussian_distance(_dist_matrix.at(i, j), _friendship.at(i)) - 0.25;
+			const float lambda = -_dist_matrix.at(i, j) + pow(_friendship.at(i), 4);
+			//const float lambda = Metrics::binary_distance(_dist_matrix.at(i, j), _friendship.at(i));
+			//const float lambda = Metrics::gaussian_distance(_dist_matrix.at(i, j), _friendship.at(i)) - 0.25;
 			
-			const double val = lambda * beta * (oi->at(j) * oi->at(i) - pow(oi->at(i), 2) * abs(li->at(i, j)));
+			const float val = lambda * beta * (oi->at(j) * oi->at(i) - pow(oi->at(i), 2) * abs(li->at(i, j)));
 			_delta_lw.set(i, j, val);
 			norm.inc(i, abs(li->at(i, j) + val));
 		}

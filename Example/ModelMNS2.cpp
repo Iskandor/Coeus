@@ -215,13 +215,13 @@ void ModelMNS2::run(const int p_epochs) {
 		STS_analyzer.merge(STS_thread_analyzer);
 
 		const auto end = chrono::system_clock::now();
-		chrono::duration<double> elapsed_seconds = end - start;
+		chrono::duration<float> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
-		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
-		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
+		float qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
+		float qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
+		float wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
+		float wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
 
 		cout << " F5 qError: " << qerrF5 << " WD: " << wdF5 << endl;
 		cout << "STS qError: " << qerrSTS << " WD: " << wdSTS << endl;
@@ -309,15 +309,15 @@ void ModelMNS2::run(const int p_epochs) {
 		PFG_analyzer.merge(PFG_thread_analyzer);
 
 		const auto end = chrono::system_clock::now();
-		chrono::duration<double> elapsed_seconds = end - start;
+		chrono::duration<float> elapsed_seconds = end - start;
 		cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-		double qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
-		double qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
-		double qerrPFG = PFG_analyzer.q_error(_PFG->get_input_group<SimpleCellGroup>()->get_dim());
-		double wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
-		double wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
-		double wdPFG = PFG_analyzer.winner_diff(_PFG->get_lattice()->get_dim());
+		float qerrF5 = F5_analyzer.q_error(_F5->get_input_group<SimpleCellGroup>()->get_dim());
+		float qerrSTS = STS_analyzer.q_error(_STS->get_input_group<SimpleCellGroup>()->get_dim());
+		float qerrPFG = PFG_analyzer.q_error(_PFG->get_input_group<SimpleCellGroup>()->get_dim());
+		float wdF5 = F5_analyzer.winner_diff(_F5->get_lattice()->get_dim());
+		float wdSTS = STS_analyzer.winner_diff(_STS->get_lattice()->get_dim());
+		float wdPFG = PFG_analyzer.winner_diff(_PFG->get_lattice()->get_dim());
 
 		cout << " F5 qError: " << qerrF5 << " WD: " << wdF5 << endl;
 		cout << "STS qError: " << qerrSTS << " WD: " << wdSTS << endl;
@@ -382,7 +382,7 @@ void ModelMNS2::prepareInputF5(Tensor* p_output, Tensor *p_input, SOM* p_pfg) co
 	Tensor::concat(p_output, p_input, p_pfg->get_output());
 }
 
-void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, double* p_data, const int p_category) {
+void ModelMNS2::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, float* p_data, const int p_category) {
 	ofstream file(p_filename);
 
 	if (file.is_open()) {
@@ -408,12 +408,12 @@ void ModelMNS2::testDistance() {
 
 	vector<Sequence*>* trainData = _data.permute();
 
-	double* winRateF5_Motor = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(double)));
-	double* winRateF5_Visual = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(double)));
-	double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
-	double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
-	double* winRatePFG_Motor = static_cast<double*>(calloc(Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y * GRASPS, sizeof(double)));
-	double* winRatePFG_Visual = static_cast<double*>(calloc(Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y * PERSPS, sizeof(double)));
+	float* winRateF5_Motor = static_cast<float*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(float)));
+	float* winRateF5_Visual = static_cast<float*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(float)));
+	float* winRateSTS_Motor = static_cast<float*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(float)));
+	float* winRateSTS_Visual = static_cast<float*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(float)));
+	float* winRatePFG_Motor = static_cast<float*>(calloc(Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y * GRASPS, sizeof(float)));
+	float* winRatePFG_Visual = static_cast<float*>(calloc(Config::instance().pf_config.dim_x * Config::instance().pf_config.dim_y * PERSPS, sizeof(float)));
 
 	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
 	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
@@ -487,10 +487,10 @@ void ModelMNS2::testFinalWinners() {
 
 	vector<Sequence*>* trainData = _data.permute();
 
-	double* winRateF5_Motor = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(double)));
-	double* winRateF5_Visual = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(double)));
-	double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
-	double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
+	float* winRateF5_Motor = static_cast<float*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(float)));
+	float* winRateF5_Visual = static_cast<float*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(float)));
+	float* winRateSTS_Visual = static_cast<float*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(float)));
+	float* winRateSTS_Motor = static_cast<float*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(float)));
 
 	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
 	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });
@@ -541,10 +541,10 @@ void ModelMNS2::testMirror(int p_persp) {
 
 	vector<Sequence*>* trainData = _data.permute();
 
-	double* winRateF5_Motor = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(double)));
-	double* winRateF5_Visual = static_cast<double*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(double)));
-	double* winRateSTS_Visual = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(double)));
-	double* winRateSTS_Motor = static_cast<double*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(double)));
+	float* winRateF5_Motor = static_cast<float*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * GRASPS, sizeof(float)));
+	float* winRateF5_Visual = static_cast<float*>(calloc(Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y * PERSPS, sizeof(float)));
+	float* winRateSTS_Visual = static_cast<float*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * PERSPS, sizeof(float)));
+	float* winRateSTS_Motor = static_cast<float*>(calloc(Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y * GRASPS, sizeof(float)));
 
 	Tensor f5_input = Tensor::Zero({ _sizeF5input + Config::instance().sts_config.dim_x * Config::instance().sts_config.dim_y });
 	Tensor sts_input = Tensor::Zero({ _sizeSTSinput + Config::instance().f5_config.dim_x * Config::instance().f5_config.dim_y });

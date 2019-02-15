@@ -2,7 +2,7 @@
 
 using namespace Coeus;
 
-AdadeltaRule::AdadeltaRule(NetworkGradient* p_network_gradient, const double p_alpha, const double p_decay, const double p_epsilon): IUpdateRule(p_network_gradient, p_alpha), 
+AdadeltaRule::AdadeltaRule(NetworkGradient* p_network_gradient, const float p_alpha, const float p_decay, const float p_epsilon): IUpdateRule(p_network_gradient, p_alpha), 
 	_decay(p_decay), _epsilon(p_epsilon)
 {
 	_cache = p_network_gradient->get_empty_params();
@@ -34,7 +34,7 @@ void AdadeltaRule::update_cache_delta(const string& p_id, Tensor& p_gradient) {
 	}
 }
 
-void AdadeltaRule::calc_update(map<string, Tensor>* p_gradient, const double p_alpha) {
+void AdadeltaRule::calc_update(map<string, Tensor>* p_gradient, const float p_alpha) {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
 		update_cache(it->first, it->second);
