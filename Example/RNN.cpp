@@ -106,7 +106,7 @@ void RNN::run_add_problem()
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-2, 1e-3));
 	
 	BackProp algorithm(&network);
-	algorithm.init(new QuadraticCost(), 0.1, 0.9, true);
+	algorithm.init(new QuadraticCost(), 0.02, 0.9, true);
 	//algorithm.add_learning_rate_module(new WarmStartup(4e-3, 8e-3, 50, 1));
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-1, 1e-3));
 	//PowerSign algorithm(&network);

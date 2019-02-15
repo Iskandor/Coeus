@@ -20,11 +20,24 @@ int main()
 	//FFN model;
 	//model.run();
 
-	RNN model;
-	model.run_pack();
+	//RNN model;
+	//model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
 	//model.run_add_problem();
+
+	MazeExample example;
+	//example.example_q(24, 4e-4, 0, false);
+
+	int c = 0;
+
+	for(int i = 0; i < 10; i++)
+	{
+		//c += example.example_sarsa(24, 3e-4, 0, false);
+		c += example.example_q(48, 1e-4, 0, false);
+	}
+	cout << c << " / 10" << endl;
+
 	/*
 	Logger::instance().init("maze.log");
 
@@ -81,10 +94,6 @@ int main()
 	iris.run(2000);
 	iris.test();
 	*/
-
-	//MazeExample example;
-	//cout << example.example_q(256, 1e-4, 0, false);
-
 	/*
 	const string timestamp = to_string(time(nullptr));
 

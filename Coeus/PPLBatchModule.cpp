@@ -55,7 +55,7 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 
 	auto end = chrono::high_resolution_clock::now();
 
-	//cout << "Gradient" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	cout << "Gradient" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 
 	start = chrono::high_resolution_clock::now();
 
@@ -69,5 +69,5 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 
 	end = chrono::high_resolution_clock::now();
 
-	//cout << "Accumulate" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	cout << "Accumulate" << p_b << ": " << (end - start).count() * ((double)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 }

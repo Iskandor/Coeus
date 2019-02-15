@@ -17,6 +17,7 @@
 #include "ADAM.h"
 #include "CountModule.h"
 #include "Nadam.h"
+#include "BackProph.h"
 
 using namespace Coeus;
 
@@ -35,16 +36,18 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 16));
+	network.add_layer(new InputLayer("input", 6));
 	network.add_layer(new CoreLayer("hidden0", p_hidden, RELU));
-	network.add_layer(new CoreLayer("output", 4, LINEAR));
+	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU));
+	network.add_layer(new CoreLayer("output", 4, TANH));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.01);
-	network.add_connection("hidden0", "output", Connection::UNIFORM, 0.01);
+	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.1);
+	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, 0.1);
+	network.add_connection("hidden1", "output", Connection::UNIFORM, 0.1);
 	network.init();
 
 	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), 0.1);
+	//optimizer.init(new QuadraticCost(), p_alpha, 0.9, true);
 	ADAM optimizer(&network);
 	//RMSProp optimizer(&network);
 	optimizer.init(new QuadraticCost(), p_alpha);
@@ -60,7 +63,7 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 	int epochs = 0;
 
 	int wins = 0, loses = 0;
-
+	
 	//FILE* pFile = fopen("application.log", "w");
 	//Output2FILE::Stream() = pFile;
 	//FILELog::ReportingLevel() = FILELog::FromString("DEBUG1");
@@ -68,7 +71,7 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 	//test(&network);
 
 	//for (int e = 0; e < epochs; e++) {
-	while(wins < 20 && loses < 10) {
+	while(wins < 100 && loses < 10) {
 		epochs++;
 		//if (p_verbose) cout << "Epoch " << e << endl;
 
@@ -109,8 +112,8 @@ int MazeExample::example_q(int p_hidden, double p_alpha, double p_lambda,  const
 			if (epsilon < 1e-1)	loses++;
 		}
 
-		cout << epsilon << endl;
-		cout << wins << " " << task.getEnvironment()->moves() << " " << reward << endl;
+		//cout << epsilon << endl;
+		//cout << wins << " " << task.getEnvironment()->moves() << " " << reward << endl;
 
 		//agent.reset_traces();
 		if (p_verbose)
@@ -230,69 +233,77 @@ void MazeExample::example_double_q() {
 	}
 }
 
-void MazeExample::example_sarsa(bool p_verbose) {
+int MazeExample::example_sarsa(int p_hidden, double p_alpha, double p_lambda, const bool p_verbose) {
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden", 256, RELU));
-	network.add_layer(new CoreLayer("output", 4, LINEAR));
+	network.add_layer(new InputLayer("input", 6));
+	network.add_layer(new CoreLayer("hidden0", p_hidden, RELU));
+	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU));
+	network.add_layer(new CoreLayer("output", 4, TANH));
 	// feed-forward connections
-	network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
-	network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
+	network.add_connection("input", "hidden0", Connection::GLOROT_UNIFORM);
+	network.add_connection("hidden0", "hidden1", Connection::GLOROT_UNIFORM);
+	network.add_connection("hidden1", "output", Connection::GLOROT_UNIFORM);
 	network.init();
 
-	SARSA agent(&network, NADAM_RULE, 1e-3, 0.9);
+	//BackProp optimizer(&network);
+	//optimizer.init(new QuadraticCost(), p_alpha, 0.9, true);
+	ADAM optimizer(&network);
+	//RMSProp optimizer(&network);
+	optimizer.init(new QuadraticCost(), p_alpha);
+	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
+	//CountModule curiosity(maze->mazeX() * maze->mazeY());
+	//QLearning agent(&network, ADAM_RULE, p_alpha, 0.9, p_lambda);
+	SARSA agent(&network, &optimizer, 0.9);
 
 	vector<double> sensors;
 	Tensor state0, state1;
 	double reward = 0;
 	double epsilon = 1;
-	int epochs = 10000;
+	int epochs = 0;
 
 	int wins = 0, loses = 0;
-
-	//FILE* pFile = fopen("application.log", "w");
-	//Output2FILE::Stream() = pFile;
-	//FILELog::ReportingLevel() = FILELog::FromString("DEBUG1");
-
-	for (int e = 0; e < epochs; e++) {
-		if (p_verbose) cout << "Epoch " << e << endl;
+	
+	while (wins < 100 && loses < 10) {
+		epochs++;
+		//if (p_verbose) cout << "Epoch " << e << endl;
 
 		task.getEnvironment()->reset();
 
 		sensors = maze->getSensors();
 		state0 = encode_state(&sensors);
 		network.activate(&state0);
-		//action = exploration->chooseAction(network.getOutput());
 		int action0 = choose_action(network.get_output(), epsilon);
 
 		while (!task.isFinished()) {
 			//cout << maze->toString() << endl;
-
 			maze->performAction(action0);
-
 			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
 			reward = task.getReward();
 
+			state1 = encode_state(&sensors);
 			network.activate(&state1);
 			const int action1 = choose_action(network.get_output(), epsilon);
-
+			
 			agent.train(&state0, action0, &state1, action1, reward, task.isFinished());
-
 			state0.override(&state1);
 			action0 = action1;
 		}
 
-		if (reward > 0) {
+		if (task.isWinner()) {
 			wins++;
+			if (epsilon > 0) epsilon *= 0.999;
 		}
 		else {
-			loses++;
+			wins = 0;
+			if (epsilon < 1e-1)	loses++;
 		}
+
+		//cout << epsilon << endl;
+		//cout << wins << " " << task.getEnvironment()->moves() << " " << reward << endl;
 
 		//agent.reset_traces();
 		if (p_verbose)
@@ -302,16 +313,21 @@ void MazeExample::example_sarsa(bool p_verbose) {
 			cout << wins << " / " << loses << endl;
 		}
 
-		//cout << maze->toString() << endl;		
+		//cout << maze->toString() << endl;
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
-		//exploration->update((double)e / epochs);
 
+
+		//exploration->update((double)e / epochs);
+		/*
 		if (epsilon > 0.1) {
-			epsilon -= (1.0 / epochs);
+		epsilon -= (1.0 / epochs);
 		}
+		*/
 	}
 
-	//test(&network);
+	cout << epochs << endl;
+
+	return test(&network, true);
 }
 
 void MazeExample::example_actor_critic() {
