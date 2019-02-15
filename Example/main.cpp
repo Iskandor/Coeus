@@ -17,46 +17,15 @@ using namespace MNS;
 
 int main()
 {
-	/*
-	double val[] = { 1, 0, 1, 1, 1, 2, 0, 2, 2, 2, 3, 3, 3, 3, 3 };
-	double *arr = Tensor::alloc_arr(15);
-
-	for(int i = 0; i < 15; i++)
-	{
-		arr[i] = val[i];
-	}
-
-	Tensor v0({ 5 }, Tensor::VALUE, 1);
-	Tensor v1({ 5 }, Tensor::VALUE, 2);
-	Tensor v2({ 5 }, Tensor::VALUE, 3);
-
-	Tensor r({ 5 }, Tensor::ZERO);
-	Tensor c({ 3 }, Tensor::ZERO);
-
-	Tensor A({ 2,5 }, Tensor::RANDOM);
-	Tensor B({ 3,5 }, arr);
-	
-	Tensor m = (A * B.T());
-
-	cout << m << endl;
-	cout << endl;
-	cout << A * v0;
-	cout << endl;
-	cout << v0 + v1 << endl;
-	cout << endl;
-	*/
-
-
 	//FFN model;
 	//model.run();
 
-	RNN model;
-	model.run_pack();
+	//RNN model;
+	//model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
 	//model.run_add_problem();
 
-	/*
 	MazeExample example;
 	//example.example_q(24, 4e-4, 0, false);
 
@@ -68,7 +37,7 @@ int main()
 		c += example.example_q(48, 1e-4, 0, false);
 	}
 	cout << c << " / 10" << endl;
-	*/
+
 	/*
 	Logger::instance().init("maze.log");
 
