@@ -123,10 +123,9 @@ Tensor Tensor::operator+(const float p_const) const {
 }
 
 Tensor& Tensor::operator+=(const Tensor& p_tensor) {
-	if (_size != p_tensor.size() || _rank != p_tensor._rank)
-	{
-		assert(("Size or rank not equal", 0));
-	}
+
+	check_size_eq(p_tensor._size);
+	check_rank(p_tensor._rank);
 
 	float *xpos = &p_tensor._arr[0];
 	float *ypos = &_arr[0];
@@ -153,10 +152,9 @@ Tensor Tensor::operator-(const Tensor& p_tensor) const {
 }
 
 Tensor& Tensor::operator-=(const Tensor& p_tensor) {
-	if (_size != p_tensor.size() || _rank != p_tensor._rank)
-	{
-		assert(("Size or rank not equal", 0));
-	}
+
+	check_size_eq(p_tensor._size);
+	check_rank(p_tensor._rank);
 
 	float *xpos = &p_tensor._arr[0];
 	float *ypos = &_arr[0];
@@ -174,10 +172,7 @@ Tensor Tensor::operator*(const Tensor& p_tensor) const {
 	int* shape = nullptr;
 	
 	if (this->_rank == 1 && p_tensor._rank == 1) {
-		if (_size != p_tensor.size())
-		{
-			assert(("Size not equal", 0));
-		}
+		check_size_eq(p_tensor._size);
 
 		arr = dot(this, &p_tensor);
 		rank = 1;
@@ -381,10 +376,9 @@ Tensor Tensor::sqrt() const {
 }
 
 Tensor Tensor::dot(const Tensor& p_tensor) const {
-	if (_size != p_tensor.size() || _rank != p_tensor._rank)
-	{
-		assert(("Size or rank not equal", 0));
-	}
+
+	check_size_eq(p_tensor._size);
+	check_rank(p_tensor._rank);
 
 	float* arr = dot(this, &p_tensor);
 	int* shape = copy_shape(_rank, _shape);
@@ -398,10 +392,8 @@ Tensor Tensor::outer_prod(const Tensor& p_tensor) const
 	int rank = 0;
 	int* shape = nullptr;
 
-	if (this->_rank != 1 || p_tensor._rank != 1)
-	{
-		assert(("Rank not equal", 0));
-	}
+	check_rank(1);
+	check_rank(p_tensor._rank);
 
 	const int rows = _size;
 	const int cols = p_tensor._size;
@@ -542,11 +534,16 @@ float Tensor::sum() const {
 
 
 float Tensor::at(const int p_x) const {
+	check_size_gt(p_x);
 	return _arr[p_x];
 }
 
 float Tensor::at(const int p_y, const int p_x) const {
-	return _arr[p_y * _shape[1] + p_x];
+	const int index = p_y * _shape[1] + p_x;
+
+	check_size_gt(index);
+
+	return _arr[index];
 }
 
 float Tensor::at(const int p_z, const int p_y, const int p_x) const {
@@ -554,11 +551,17 @@ float Tensor::at(const int p_z, const int p_y, const int p_x) const {
 }
 
 void Tensor::set(const int p_x, const float p_val) const {
+	check_size_gt(p_x);
+
 	_arr[p_x] = p_val;
 }
 
 void Tensor::set(const int p_y, const int p_x, const float p_val) const {
-	_arr[p_y * _shape[1] + p_x] = p_val;
+	const int index = p_y * _shape[1] + p_x;
+
+	check_size_gt(index);
+
+	_arr[index] = p_val;
 }
 
 void Tensor::set(const int p_z, const int p_y, const int p_x, const float p_val) const {
@@ -771,6 +774,36 @@ void Tensor::fill(const INIT p_init, const float p_value) const {
 			for (int i = 0; i < _size; i++) _arr[i] = RandomGenerator::getInstance().random(-p_value, p_value);
 			break;
 	}
+}
+
+void Tensor::check_size_gt(const int p_size) const
+{
+#ifdef _DEBUG
+	if (p_size >= _size)
+	{
+		assert(("Size limit", 0));
+	}
+#endif
+}
+
+void Tensor::check_size_eq(const int p_size) const
+{
+#ifdef _DEBUG
+	if (p_size != _size)
+	{
+		assert(("Invalid size", 0));
+	}
+#endif
+}
+
+void Tensor::check_rank(const int p_rank) const
+{
+#ifdef _DEBUG
+	if (p_rank != _rank)
+	{
+		assert(("Invalid rank", 0));
+	}
+#endif
 }
 
 Tensor Tensor::concat(Tensor& p_tensor1, Tensor& p_tensor2) {

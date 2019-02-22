@@ -141,6 +141,10 @@ private:
 	void init_shape(int p_rank, int* p_shape, bool p_copy_shape);
 	void init_shape(initializer_list<int> p_shape);
 	void fill(INIT p_init, float p_value) const;
+
+	void check_size_gt(int p_size) const;
+	void check_size_eq(int p_size) const;
+	void check_rank(int p_rank) const;
 	
 	float *_arr;
 	int _rank{};
