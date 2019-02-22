@@ -20,7 +20,7 @@ void LSTMLayerGradient::init()
 
 	_partial_deriv[l->_in_input_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
 	_partial_deriv[l->_in_forget_gate->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_aux_input->get_dim() });
-	_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_cec->get_dim() });
+	_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_input_group->get_dim() });
 	_partial_deriv[l->_ct_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim(), l->_cec->get_dim() });
 
 	_partial_deriv[l->_cec->get_id()] = Tensor::Zero({ l->_cec->get_dim() });
