@@ -57,22 +57,24 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 
 	p_gradient[l->_in_output_gate->get_id()] = _delta[l->_output_gate->get_id()].outer_prod(*l->_aux_input->get_output());
 
-	Tensor* dwf = &p_gradient[l->_in_forget_gate->get_id()];
-	Tensor* dwi = &p_gradient[l->_in_input_gate->get_id()];
+	float* dwf = &p_gradient[l->_in_forget_gate->get_id()].arr()[0];
+	float* dwi = &p_gradient[l->_in_input_gate->get_id()].arr()[0];
 
-	Tensor* pd_in_forget_gate = &_partial_deriv[l->_in_forget_gate->get_id()];
-	Tensor* pd_in_input_gate = &_partial_deriv[l->_in_input_gate->get_id()];
+	float* pd_in_forget_gate = &_partial_deriv[l->_in_forget_gate->get_id()].arr()[0];
+	float* pd_in_input_gate = &_partial_deriv[l->_in_input_gate->get_id()].arr()[0];
+	float* state_error = &_state_error.arr()[0];
 
 	for (int j = 0; j < l->_cec->get_dim(); j++)
 	{
 		for (int m = 0; m < l->_aux_input->get_dim(); m++)
 		{
-			dwf->set(j, m, _state_error[j] * pd_in_forget_gate->at(j, m));
-			dwi->set(j, m, _state_error[j] * pd_in_input_gate->at(j, m));
+			*dwf++ = *state_error * *pd_in_forget_gate++;
+			*dwi++ = *state_error * *pd_in_input_gate++;
 		}
+		state_error++;
 	}
 	
-	Tensor* pd_in_cec = &_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
+	float* pd_in_cec = &_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()].arr()[0];
 
 	vector<BaseLayer*> input_layers = _network->get_input_layers(_layer->get_id());
 
@@ -80,26 +82,31 @@ void LSTMLayerGradient::calc_gradient(map<string, Tensor>& p_gradient)
 		Connection* c = _network->get_connection((*it)->get_id(), _layer->get_id());
 		if (c->is_trainable())
 		{
-			Tensor* dwc = &p_gradient[c->get_id()];
+			float* dwc = &p_gradient[c->get_id()].arr()[0];
+			state_error = &_state_error.arr()[0];
+
 			for (int j = 0; j < c->get_out_dim(); j++)
 			{
 				for (int m = 0; m < c->get_in_dim(); m++)
 				{
-					dwc->set(j, m, _state_error[j] * pd_in_cec->at(j, m));
+					*dwc++ = *state_error * *pd_in_cec++;
 				}
+				state_error++;
 			}
 		}
 	}
 
-	Tensor* dwcc = &p_gradient[l->_ct_cec->get_id()];
-	Tensor* pd_ct_cec = &_partial_deriv[l->_ct_cec->get_id()];
+	float* dwcc = &p_gradient[l->_ct_cec->get_id()].arr()[0];
+	float* pd_ct_cec = &_partial_deriv[l->_ct_cec->get_id()].arr()[0];
+	state_error = &_state_error.arr()[0];
 
 	for (int j = 0; j < l->_ct_cec->get_out_dim(); j++)
 	{
 		for (int m = 0; m < l->_ct_cec->get_in_dim(); m++)
 		{
-			dwcc->set(j, m, _state_error[j] * pd_ct_cec->at(j, m));
+			*dwcc++ = *state_error * *pd_ct_cec++;
 		}
+		state_error++;
 	}
 
 	p_gradient[l->_cec->get_id()] = _partial_deriv[l->_cec->get_id()];
