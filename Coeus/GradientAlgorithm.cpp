@@ -78,6 +78,7 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_targ
 
 	if (_learning_rate_module != nullptr) {
 		alpha = _learning_rate_module->get_alpha();
+		cout << alpha << endl;
 	}
 
 	int nbatch = p_input->size() / p_batch;
