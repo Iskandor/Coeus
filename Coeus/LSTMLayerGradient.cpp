@@ -113,62 +113,81 @@ void LSTMLayerGradient::calc_deriv_estimate()
 	LSTMLayer* l = get_layer<LSTMLayer>();
 
 	const Tensor g = l->_cec->get_g();
+	float* gx = &g.arr()[0];
 	const Tensor h = l->_cec->get_h();
+	float* hx = &h.arr()[0];
 	const Tensor dg = l->_cec->get_dg();
+	float* dgx = &dg.arr()[0];
 
 	float d0;
 	float d1;
 
-	Tensor* pd_in_input_gate = &_partial_deriv[l->_in_input_gate->get_id()];
-	Tensor* pd_in_forget_gate = &_partial_deriv[l->_in_forget_gate->get_id()];
-	Tensor* pd_in_cec = &_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()];
-	Tensor* pd_ct_cec = &_partial_deriv[l->_ct_cec->get_id()];
+	float* pdiigx = &_partial_deriv[l->_in_input_gate->get_id()].arr()[0];
+	float* pdifgx = &_partial_deriv[l->_in_forget_gate->get_id()].arr()[0];
+	float* pdicx = &_partial_deriv[l->_input_group->get_id() + " " + l->_cec->get_id()].arr()[0];
+	float* pdccx = &_partial_deriv[l->_ct_cec->get_id()].arr()[0];
 
-	Tensor* pd_input_gate = &_partial_deriv[l->_input_gate->get_id()];
-	Tensor* pd_forget_gate = &_partial_deriv[l->_forget_gate->get_id()];
-	Tensor* pd_cec = &_partial_deriv[l->_cec->get_id()];
+	float* pdigx = &_partial_deriv[l->_input_gate->get_id()].arr()[0];
+	float* pdfgx = &_partial_deriv[l->_forget_gate->get_id()].arr()[0];
+	float* pdcx = &_partial_deriv[l->_cec->get_id()].arr()[0];
 
 	Tensor input_gate_doutput = l->_input_gate->get_deriv_output();
+	float* digx = &input_gate_doutput.arr()[0];
 	Tensor forget_gate_doutput = l->_forget_gate->get_deriv_output();
+	float* dfgx = &forget_gate_doutput.arr()[0];
+
+	float* fgx = &l->_forget_gate->get_output()->arr()[0];
+	float* igx = &l->_input_gate->get_output()->arr()[0];
 
 	for (int j = 0; j < l->_cec->get_dim(); j++)
 	{
+		float* ax = &l->_aux_input->get_output()->arr()[0];
+		float* ix = &l->_input_group->get_output()->arr()[0];
+		float* cx = &l->_context->get_output()->arr()[0];
+
 		for (int m = 0; m < l->_aux_input->get_dim(); m++)
 		{
-			d0 = pd_in_input_gate->at(j, m) * l->_forget_gate->get_output()->at(j);
-			d1 = g[j] * input_gate_doutput.at(j) * l->_aux_input->get_output()->at(m);
-			pd_in_input_gate->set(j, m, d0 + d1);
+			d0 = *pdiigx * *fgx;
+			d1 = *gx * *digx * *ax;
+			*pdiigx++ = d0 + d1;
 
-			d0 = pd_in_forget_gate->at(j, m) * l->_forget_gate->get_output()->at(j);
-			d1 = h[j] * forget_gate_doutput.at(j) * l->_aux_input->get_output()->at(m);
-			pd_in_forget_gate->set(j, m, d0 + d1);
+			d0 = *pdifgx * *fgx;
+			d1 = *hx * *dfgx * *ax;
+			*pdifgx++ = d0 + d1;
+			ax++;
 		}
 
 		for (int m = 0; m < l->_input_group->get_dim(); m++)
 		{
-			d0 = pd_in_cec->at(j, m) * l->_forget_gate->get_output()->at(j);
-			d1 = dg[j] * l->_input_gate->get_output()->at(j) * l->_input_group->get_output()->at(m);
-			pd_in_cec->set(j, m, d0 + d1);
+			d0 = *pdicx * *fgx;
+			d1 = *dgx * *igx * *ix++;
+			*pdicx++ = d0 + d1;
 		}
 
 		for (int m = 0; m < l->_context->get_dim(); m++)
 		{
-			d0 = pd_ct_cec->at(j, m) * l->_forget_gate->get_output()->at(j);
-			d1 = dg[j] * l->_input_gate->get_output()->at(j) * l->_context->get_output()->at(m);
-			pd_ct_cec->set(j, m, d0 + d1);
+			d0 = *pdccx * *fgx;
+			d1 = *dgx * *igx * *cx++;
+			*pdccx++ = d0 + d1;
 		}
 
-		d0 = (*pd_input_gate)[j] * l->_forget_gate->get_output()->at(j);
-		d1 = g[j] * input_gate_doutput.at(j);
-		(*pd_input_gate)[j] = d0 + d1;
+		d0 = *pdigx * *fgx;
+		d1 = *gx * *digx++;
+		*pdigx++ = d0 + d1;
 
-		d0 = (*pd_forget_gate)[j] * l->_forget_gate->get_output()->at(j);
-		d1 = g[j] * forget_gate_doutput.at(j);
-		(*pd_forget_gate)[j] = d0 + d1;
+		d0 = *pdfgx * *fgx;
+		d1 = *gx * *dfgx++;
+		*pdfgx++ = d0 + d1;
 
-		d0 = (*pd_cec)[j] * l->_forget_gate->get_output()->at(j);
-		d1 = dg[j] * l->_input_gate->get_output()->at(j);
-		(*pd_cec)[j] = d0 + d1;
+		d0 = *pdcx * *fgx;
+		d1 = *dgx * *igx;
+		*pdcx++ = d0 + d1;
+
+		gx++;
+		hx++;
+		dgx++;
+		fgx++;
+		igx++;
 	}
 }
 

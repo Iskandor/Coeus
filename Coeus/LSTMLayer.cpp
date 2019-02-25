@@ -137,17 +137,6 @@ void LSTMLayer::override(BaseLayer* p_source)
 
 void LSTMLayer::reset()
 {
-	/*
-	_partial_deriv[_in_input_gate->get_id()].fill(0);
-	_partial_deriv[_in_forget_gate->get_id()].fill(0);
-	_partial_deriv[_input_group->get_id() + " " + _cec->get_id()].fill(0);
-	_partial_deriv[_ct_cec->get_id()].fill(0);
-
-	_partial_deriv[_input_gate->get_id()].fill(0);
-	_partial_deriv[_forget_gate->get_id()].fill(0);
-	_partial_deriv[_cec->get_id()].fill(0);
-	*/
-
 	_cec->reset();
 	_context->get_output()->fill(0);
 }
