@@ -14,6 +14,7 @@ using namespace std;
 
 struct PackDataRow
 {
+	int player_id;
 	bool bought;
 	int price_category;
 	int region;
@@ -35,6 +36,7 @@ struct PackDataRow
 
 struct PackDataSequence
 {
+	int player_id;
 	Tensor  input;
 	Tensor	target;
 };
@@ -51,14 +53,17 @@ public:
 	vector<PackDataSequence>* data() { return &_data; }
 	pair<vector<Tensor*>, vector<Tensor*>> to_vector();
 
-
+	vector<PackDataSequence> create_sequence_test(int p_player);
 
 private:
 	void parse_line(string& p_line);
 	void create_sequence(vector<PackDataRow>& p_sequence);
 	void create_sequence_prob(vector<PackDataRow>& p_sequence);
 	void create_sequence_test(vector<PackDataRow>& p_sequence);
+	
 	bool has_target(vector<PackDataRow>& p_row) const;
+
+	static bool compare(PackDataSequence x, PackDataSequence y);
 
 	template<typename T>
 	void add_bin_data(T* p_value, vector<float> &p_data) const;
