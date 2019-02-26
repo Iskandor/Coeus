@@ -24,6 +24,7 @@ int main()
 	model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
+	//model.test_pack_alt();
 	//model.run_add_problem();
 
 	/*

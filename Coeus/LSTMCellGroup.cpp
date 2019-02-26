@@ -103,15 +103,19 @@ void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor
 	float *ogx = &p_output_gate->arr()[0];
 	float *fgx = &p_forget_gate->arr()[0];
 
-	//#TODO osetrit pripad pre Softmax!
+	_g_output = _g->activate(_net);
 
-	for(int i = 0; i < _dim; i++)
+	for (int i = 0; i < _dim; i++)
 	{
-		*gox = _g->activate(*nx);
 		*sx = *sx * *fgx++ + *gox++ * *igx++;
-		*hox = _f->activate(*sx);
-		*ox = *hox++ * *ogx++;
 		sx++;
+	}
+
+	_h_output = _f->activate(_state);
+
+	for (int i = 0; i < _dim; i++)
+	{
+		*ox++ = *hox++ * *ogx++;
 		*dix++ = *nx;
 		*nx++ = 0;
 	}

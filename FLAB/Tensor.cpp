@@ -651,14 +651,14 @@ float* Tensor::mat_vec(const Tensor *p_A, const Tensor *p_x)
 
 	float *arr = alloc_arr(rows);
 
-	float *Apos1 = &p_A->_arr[0];
-	float *Apos2 = &p_A->_arr[cols * 1];
-	float *Apos3 = &p_A->_arr[cols * 2];
-	float *Apos4 = &p_A->_arr[cols * 3];
-	float *ypos = &arr[0];
-
 	if (rows > 3)
 	{
+		float *Apos1 = &p_A->_arr[0];
+		float *Apos2 = &p_A->_arr[cols * 1];
+		float *Apos3 = &p_A->_arr[cols * 2];
+		float *Apos4 = &p_A->_arr[cols * 3];
+		float *ypos = &arr[0];
+
 		for (int i = 0; i < r; i++)
 		{
 			float ytemp1 = 0;
@@ -698,13 +698,15 @@ float* Tensor::mat_vec(const Tensor *p_A, const Tensor *p_x)
 	if (rows % 4 != 0)
 	{
 		float *Apos = &p_A->_arr[r * 4 * cols];
+		float *ypos = &arr[r * 4];
 
 		for (int i = r * 4; i < rows; i++) {
-			arr[i] = 0;
+			*ypos = 0;
 			float *xpos = &p_x->_arr[0];
 			for (int j = 0; j < cols; j++) {
-				arr[i] += (*Apos++) * (*xpos++);
+				*ypos += (*Apos++) * (*xpos++);
 			}
+			ypos++;
 		}
 	}
 

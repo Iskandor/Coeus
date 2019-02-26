@@ -47,7 +47,7 @@ SimpleCellGroup::~SimpleCellGroup()
  * @param p_weights matrix of input connection params
  */
 void SimpleCellGroup::integrate(Tensor* p_input, Tensor* p_weights) {
-    _net += (*p_weights) * (*p_input);
+	_net += *p_weights * *p_input;
 }
 
 /**
@@ -59,8 +59,18 @@ void SimpleCellGroup::activate() {
 	}
 
 	_output = _f->activate(_net);
-	_deriv_input = _net;
-	_net.fill(0);
+
+	float *nx = &_net.arr()[0];
+	float *dix = &_deriv_input.arr()[0];
+
+	for (int i = 0; i < _dim; i++)
+	{
+		*dix++ = *nx;
+		*nx++ = 0;
+	}
+
+	//_deriv_input = _net;
+	//_net.fill(0);
 }
 
 json SimpleCellGroup::get_json() const
