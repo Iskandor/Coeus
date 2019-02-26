@@ -101,13 +101,13 @@ void RNN::run_add_problem()
 	network.init();
 
 	//ADAM algorithm(&network);
-	//Nadam algorithm(&network);
-	//algorithm.init(new QuadraticCost(), 9e-5);
+	Nadam algorithm(&network);
+	algorithm.init(new QuadraticCost(), 1e-3);
 	//algorithm.init(new QuadraticCost(), 2e-3);
 	//algorithm.add_learning_rate_module(new ExponentialDecay(2e-3, 1e-3));
 	
-	BackProp algorithm(&network);
-	algorithm.init(new QuadraticCost(), 0.1, 0.8);
+	//BackProp algorithm(&network);
+	//algorithm.init(new QuadraticCost(), 0.1, 0.8);
 	//algorithm.add_learning_rate_module(new WarmStartup(4e-3, 8e-3, 50, 1));
 	//algorithm.add_learning_rate_module(new ExponentialDecay(1e-1, 1e-3));
 	//PowerSign algorithm(&network);
@@ -160,18 +160,20 @@ void RNN::run_pack()
 	cout << "Loading dataset..." << endl;
 	PackDataset dataset;
 	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv");
-	PackDataset validset;
-	validset.load_data("./data/pack_data_red.csv", false, true);
+	//PackDataset validset;
+	//validset.load_data("./data/pack_data_test.csv", false, true);
 
 	//NeuralNetwork network(IOUtils::load_network("predictor.net"));
 	
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 230));
-	network.add_layer(new LSTMLayer("hidden", config["hidden"].get<int>(), TANH));
+	network.add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH));
+	network.add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
+	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden0", "hidden1", Connection::LECUN_UNIFORM);
+	network.add_connection("hidden1", "output", Connection::LECUN_UNIFORM);
 
 	network.init();
 
@@ -199,7 +201,7 @@ void RNN::run_pack()
 
 	while (precision < bound || accuracy < bound || fn_ratio > (1 - bound)) {
 		pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
-		vector<PackDataSequence>* test = validset.data();
+		vector<PackDataSequence>* test = dataset.data();
 
 		auto start = chrono::high_resolution_clock::now();
 		const float error = algorithm.train(&data.first, &data.second, config["batch"].get<int>());
@@ -225,7 +227,7 @@ void RNN::run_pack()
 			}
 
 			precision = (fp + tp) == 0 ? 0 : (float)tp / (fp + tp);
-			accuracy = (float)(tp + tn) / validset.data()->size();
+			accuracy = (float)(tp + tn) / dataset.data()->size();
 			fn_ratio = (fn + tp) == 0 ? 1 : (float)fn / (fn + tp);
 
 			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << precision << " , " << accuracy << " , " << fn_ratio << endl;

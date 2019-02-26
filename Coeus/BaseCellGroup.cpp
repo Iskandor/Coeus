@@ -22,7 +22,7 @@ BaseCellGroup::BaseCellGroup(int p_dim, bool p_bias):
 
 	if (p_bias)
 	{
-		_bias = add_param(_id, new Tensor({ _dim }, Tensor::RANDOM, 1));
+		_bias = add_param(_id, new Tensor({ _dim }, Tensor::RANDOM, 1e-2));
 	}
 }
 
