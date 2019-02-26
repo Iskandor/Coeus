@@ -106,11 +106,6 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_targ
 
 	for (int b = 0; b < nbatch; b++)
 	{
-		if (b * p_batch + p_batch > p_input->size())
-		{
-			p_batch = p_input->size() - b * p_batch;
-		}
-
 		_batch_module->run_batch(b, p_batch, p_input, p_target);
 
 		_update_rule->calc_update(_batch_module->get_gradient(), alpha);

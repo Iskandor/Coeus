@@ -44,7 +44,9 @@ void OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input
 
 	#pragma omp parallel for
 	for (int i = 0; i < p_batch; i++) {
-		const int index = p_b * p_batch + i;
+		size_t index = p_b * p_batch + i;
+		if (index >= p_input->size()) index = i;
+
 		_network_gradient[i]->activate(p_input->at(index));
 		Tensor dloss = _cost_function->cost_deriv(_clone_network[i]->get_output(), p_target->at(index));
 		_network_gradient[i]->calc_gradient(&dloss);

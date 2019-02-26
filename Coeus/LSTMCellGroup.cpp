@@ -119,19 +119,6 @@ void LSTMCellGroup::activate(Tensor* p_input_gate, Tensor* p_output_gate, Tensor
 		*dix++ = *nx;
 		*nx++ = 0;
 	}
-
-	/*
-	for (int i = 0; i < _dim; i++)
-	{
-		_g_output[i] = _g->activate(_net[i]);
-		_state[i] = _state[i] * p_forget_gate->at(i) + _g_output[i] * p_input_gate->at(i);
-		_h_output[i] = _f->activate(_state[i]);
-		_output[i] = _h_output[i] * p_output_gate->at(i);
-	}
-
-	_deriv_input = _net;
-	_net.fill(0);
-	*/
 }
 
 Tensor LSTMCellGroup::get_h() const
