@@ -2,8 +2,8 @@
 
 namespace FLAB {
 
-const float PI = 3.141592653589793238463;
-const float sqrt2PI = 2.50662827463;
+const float PI = 3.141592653589793238463f;
+const float sqrt2PI = 2.50662827463f;
 
 static int kronecker_delta(const int i, const int j) {
 	return i == j ? 1 : 0;

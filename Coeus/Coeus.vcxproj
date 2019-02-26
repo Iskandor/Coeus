@@ -183,6 +183,7 @@
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BaseCellGroup.cpp" />
     <ClCompile Include="ExponentialDecay.cpp" />
+    <ClCompile Include="GradientAccumulator.cpp" />
     <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="Base_SOM_learning.cpp" />
@@ -287,6 +288,7 @@
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BaseCellGroup.h" />
     <ClInclude Include="ExponentialDecay.h" />
+    <ClInclude Include="GradientAccumulator.h" />
     <ClInclude Include="GradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />

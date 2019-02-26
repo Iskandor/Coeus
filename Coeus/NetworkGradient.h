@@ -2,6 +2,7 @@
 
 #include "NeuralNetwork.h"
 #include "ICostFunction.h"
+#include "GradientAccumulator.h"
 
 namespace Coeus {
 
@@ -28,7 +29,6 @@ private:
 
 	map<string, IGradientComponent*> _gradient_component;
 	map<string, Tensor> _gradient;
-
 };
 
 }

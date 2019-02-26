@@ -423,6 +423,9 @@
     <ClCompile Include="ExponentialDecay.cpp">
       <Filter>Source Files\Algorithm\Modules\LRM</Filter>
     </ClCompile>
+    <ClCompile Include="GradientAccumulator.cpp">
+      <Filter>Source Files\Algorithm\Gradient</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Connection.h">
@@ -736,6 +739,9 @@
     </ClInclude>
     <ClInclude Include="ILearningRateModule.h">
       <Filter>Header Files\Algorithm\Modules\LRM</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientAccumulator.h">
+      <Filter>Header Files\Algorithm\Gradient</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

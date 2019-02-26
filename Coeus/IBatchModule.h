@@ -2,6 +2,7 @@
 #include "Tensor.h"
 #include <vector>
 #include <map>
+#include "GradientAccumulator.h"
 
 using namespace FLAB;
 
@@ -18,8 +19,9 @@ namespace Coeus {
 		int get_batch_size() const { return _batch_size; }
 
 	protected:
-		int					_batch_size;
-		map<string, Tensor> _gradient;
+		int					 _batch_size;
+		map<string, Tensor>  _gradient;
+		GradientAccumulator* _gradient_accumulator;
 
 	};
 }

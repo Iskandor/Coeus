@@ -15,6 +15,7 @@ PPLBatchModule::PPLBatchModule(NeuralNetwork* p_network, ICostFunction* p_cost_f
 	{
 		_clone_network[i] = p_network->clone();
 		_network_gradient[i] = new NetworkGradient(_clone_network[i]);
+		_gradient_accumulator_list.emplace_back(_network_gradient[i]->get_gradient());
 	}
 
 	_gradient = _network_gradient[0]->get_empty_params();
@@ -37,17 +38,13 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 {
 	auto start = chrono::high_resolution_clock::now();
 
-	for (auto& it : _gradient)
-	{
-		_gradient[it.first].fill(0);
-	}
+	_gradient_accumulator->clear();
 
 	critical_section mutex;
 
 	parallel_for(0, p_batch, [&](const int i) {
 		size_t index = p_b * p_batch + i;
 		if (index >= p_input->size()) index = i;
-		cout << index << endl;
 
 		_network_gradient[i]->activate(p_input->at(index));
 		Tensor dloss = _cost_function->cost_deriv(_clone_network[i]->get_output(), p_target->at(index));
@@ -56,14 +53,15 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 	static_partitioner()
 	);
 
-	auto end = chrono::high_resolution_clock::now();
+	auto finish = chrono::high_resolution_clock::now();
 
-	//cout << "Gradient" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	//cout << "Gradient" << p_b << ": " << (finish - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 
 	start = chrono::high_resolution_clock::now();
 
-	//parallel_reduce(begin(words), end(words), wstring())
+	parallel_reduce(begin(_gradient_accumulator_list), end(_gradient_accumulator_list), *_gradient_accumulator);
 
+	/*
 	for(int i = 0; i < _batch_size; i++)
 	{
 		for (auto& it : *_network_gradient[i]->get_gradient())
@@ -71,10 +69,11 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 			_gradient[it.first] += it.second;
 		}
 	}
+	*/
 
-	end = chrono::high_resolution_clock::now();
+	finish = chrono::high_resolution_clock::now();
 
-	//cout << "Accumulate" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	//cout << "Accumulate" << p_b << ": " << (finish - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 }
 
 float PPLBatchModule::get_error(vector<Tensor*>* p_input, vector<Tensor*>* p_target)

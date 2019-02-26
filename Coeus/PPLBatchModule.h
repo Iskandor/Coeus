@@ -23,5 +23,6 @@ namespace Coeus {
 		NeuralNetwork*			_network;
 		NeuralNetwork**			_clone_network;
 		NetworkGradient**		_network_gradient;
+		vector<GradientAccumulator>	_gradient_accumulator_list;
 	};
 }
