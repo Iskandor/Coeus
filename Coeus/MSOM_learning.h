@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Tensor.h>
+#include "Tensor.h"
 #include "MSOM.h"
 #include "MSOM_params.h"
 #include "Base_SOM_learning.h"
