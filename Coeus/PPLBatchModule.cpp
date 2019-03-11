@@ -38,8 +38,6 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 {
 	auto start = chrono::high_resolution_clock::now();
 
-	_gradient_accumulator->clear();
-
 	critical_section mutex;
 
 	parallel_for(0, p_batch, [&](const int i) {
@@ -59,6 +57,7 @@ void PPLBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, v
 
 	start = chrono::high_resolution_clock::now();
 
+	_gradient_accumulator->clear();
 	parallel_reduce(begin(_gradient_accumulator_list), end(_gradient_accumulator_list), *_gradient_accumulator);
 
 	/*
