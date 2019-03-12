@@ -37,8 +37,8 @@ void RNN::run()
 	network.add_layer(new LSTMLayer("hidden", 4, SIGMOID));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
-	network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
+	network.add_connection("input", "hidden", Connection::UNIFORM, -0.1, 0.1);
+	network.add_connection("hidden", "output", Connection::UNIFORM, -0.1, 0.1);
 
 	network.init();
 
@@ -95,14 +95,14 @@ void RNN::run_add_problem()
 	network.add_layer(new LSTMLayer("hidden", 4, TANH));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	network.add_connection("input", "hidden", Connection::UNIFORM, 1e-3);
-	network.add_connection("hidden", "output", Connection::UNIFORM, 1e-3);
+	network.add_connection("input", "hidden", Connection::UNIFORM, -1e-3, 1e-3);
+	network.add_connection("hidden", "output", Connection::UNIFORM, -1e-3, 1e-3);
 
 	network.init();
 
 	//ADAM algorithm(&network);
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 1e-2);
+	algorithm.init(new QuadraticCost(), 1e-3);
 	//algorithm.init(new QuadraticCost(), 2e-3);
 	//algorithm.add_learning_rate_module(new ExponentialDecay(2e-3, 1e-3));
 	
