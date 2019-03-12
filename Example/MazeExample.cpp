@@ -688,12 +688,12 @@ Tensor MazeExample::encode_state(vector<float>* p_sensors) {
 
 int MazeExample::choose_action(Tensor* p_input, const float epsilon) {
 	int action = 0;
-	const float random = RandomGenerator::getInstance().random();
+	const float random = RandomGenerator::get_instance().random();
 
 	//cout << *p_input << endl;
 
 	if (random < epsilon) {
-		action = RandomGenerator::getInstance().random(0, 3);
+		action = RandomGenerator::get_instance().random(0, 3);
 	}
 	else {
 		/*

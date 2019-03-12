@@ -13,11 +13,17 @@ public:
         UNIFORM = 1,
         LECUN_UNIFORM = 2,
         GLOROT_UNIFORM = 3,
-        IDENTITY = 4
+        IDENTITY = 4,
+		NORMAL = 5,
+		EXPONENTIAL = 6,
+		HE_UNIFORM = 7,
+		LECUN_NORMAL = 8,
+		GLOROT_NORMAL = 9,
+		HE_NORMAL = 10
     };
 
-	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, bool p_trainable = true);
-	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable = true, float p_limit = 0);
+	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, bool p_trainable = false);
+	Connection(int p_in_dim, int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable = true, float p_arg1 = 0, float p_arg2 = 0);
 	enum NORM
 	{
 		L1_NORM = 1,
@@ -44,8 +50,10 @@ public:
 	json get_json() const;
 
 private:
-	void init(INIT p_init, bool p_trainable, float p_limit);
-    void uniform(float p_limit);
+	void init(INIT p_init, bool p_trainable, float p_arg1, float p_arg2);
+    void uniform(float p_min, float p_max);
+	void normal(float p_mean, float p_dev);
+	void exponential(float p_lambda);
     void identity();
 
     string _id;

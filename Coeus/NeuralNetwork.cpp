@@ -254,17 +254,17 @@ BaseLayer* NeuralNetwork::get_layer(const string& p_layer) {
 	return _layers[p_layer];
 }
 
-Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const float p_limit, const bool p_trainable) {
+Connection* NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer, const Connection::INIT p_init, const float p_arg1, const float p_arg2) {
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
 
-	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->get_id(), out_layer->get_id(), p_init, p_trainable, p_limit);
+	Connection* c = new Connection(in_layer->output_dim(), out_layer->output_dim(), in_layer->get_id(), out_layer->get_id(), p_init, true, p_arg1, p_arg2);
 
 	_connections[c->get_id()] = c;
 
 	_graph[out_layer->get_id()].push_back(in_layer->get_id());
 
-	if (p_trainable) add_param(c);
+	add_param(c);
 
 	return c;
 }

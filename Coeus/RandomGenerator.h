@@ -15,17 +15,18 @@ namespace FLAB {
 
 class __declspec(dllexport) RandomGenerator {
 public:
-    static RandomGenerator& getInstance();
+    static RandomGenerator& get_instance();
     RandomGenerator(RandomGenerator const&) = delete;
     void operator=(RandomGenerator const&)  = delete;
     ~RandomGenerator();
 
-    float normalRandom(float p_mean = 0, float p_sigma = 1);
+	float exp_random(float p_lambda = 1);
+    float normal_random(float p_mean = 0, float p_sigma = 1);
     int random(int p_lower, int p_upper);
     float random(float p_lower = 0, float p_upper = 1);
     vector<int> choice(vector<int>* p_array, int p_num = 1);
 	vector<int> choice(int p_size, int p_sample);
-    int choice(float* p_prob, int p_size);
+    int choice(const float* p_prob, int p_size);
 
 private:
     RandomGenerator();
