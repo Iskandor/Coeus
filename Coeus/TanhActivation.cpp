@@ -26,12 +26,13 @@ Tensor TanhActivation::activate(Tensor& p_input) {
 
 Tensor TanhActivation::derivative(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
-	const Tensor activation = activate(p_input);
+
 	float* y = &arr[0];
-	float* x = &activation.arr()[0];
+	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
-		(*y++) = 1 - pow((*x++), 2);
+		(*y++) = 1 - tanh(*x) * tanh(*x);
+		x++;
 	}
 
 	return Tensor({ p_input.size() }, arr);
