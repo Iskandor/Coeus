@@ -1,10 +1,8 @@
 #pragma once
 #include "BaseLayer.h"
-#include "Connection.h"
-#include "SOM.h"
-#include "MSOM.h"
 #include "json.hpp"
 #include "NeuralNetwork.h"
+#include "IActivationFunction.h"
 
 using namespace nlohmann;
 
@@ -19,7 +17,7 @@ namespace Coeus
 
 		static void save_network(NeuralNetwork& p_network, const string& p_filename);
 		static json load_network(const string& p_filename);
-		static BaseLayer* create_layer(json p_data);
+		static BaseLayer* create_layer(const json& p_data);
 		static IActivationFunction* init_activation_function(json p_data);
 	private:
 		template<typename T>

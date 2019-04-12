@@ -18,7 +18,7 @@ PPLBatchModule::PPLBatchModule(NeuralNetwork* p_network, ICostFunction* p_cost_f
 		_gradient_accumulator_list.emplace_back(_network_gradient[i]->get_gradient());
 	}
 
-	_gradient = _network_gradient[0]->get_empty_params();
+	_gradient = _network->get_empty_params();
 }
 
 

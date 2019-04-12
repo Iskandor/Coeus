@@ -6,8 +6,6 @@
 #include "Maze.h"
 #include "RandomGenerator.h"
 
-using namespace FLAB;
-
 Maze::Maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal) {
     for (int i = 0; i < p_mazeX * p_mazeY; i++) {
         _mazeTable.push_back(p_topology[i]);

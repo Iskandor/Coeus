@@ -23,9 +23,9 @@ float ADAM::train(Tensor* p_input, Tensor* p_target)
 	return GradientAlgorithm::train(p_input, p_target);
 }
 
-float ADAM::train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, const int p_batch)
+float ADAM::train(vector<Tensor*>* p_input, Tensor* p_target)
 {
 	_t++;
 	dynamic_cast<ADAMRule*>(_update_rule)->set_step(_t);
-	return GradientAlgorithm::train(p_input, p_target, p_batch);
+	return GradientAlgorithm::train(p_input, p_target);
 }

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <set>
 #include "Encoder.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -17,7 +18,7 @@ IrisDataset::~IrisDataset()
 {
 }
 
-void IrisDataset::load_data(const string p_filename) {
+void IrisDataset::load_data(const string& p_filename) {
 	string line;
 
 	ifstream file(p_filename);
@@ -26,7 +27,7 @@ void IrisDataset::load_data(const string p_filename) {
 	{
 		while (getline(file, line))
 		{
-			if (line.size() > 0) parse_line(line);
+			if (!line.empty()) parse_line(line);
 		}
 		file.close();
 	}
@@ -47,8 +48,7 @@ void IrisDataset::load_data(const string p_filename) {
 	}
 
 	for (int i = 0; i < _data.size(); i++) {
-		Tensor d = Tensor::apply(*_data[i].data, max, Tensor::ew_div);
-		_data[i].data->override(&d);
+		TensorOperator::instance().vv_ewdiv(_data[i].data->arr(), max.arr(), _data[i].data->arr(), max.size());
 	}
 
 	int id = 0;
@@ -64,15 +64,15 @@ void IrisDataset::encode() {
 	Tensor result({ 32 }, Tensor::ZERO);
 	
 	for (int i = 0; i < _data.size(); i++) {
-		Tensor val({ 0 }, Tensor::ZERO);
+		Tensor* val = new Tensor({ result.size() * SIZE }, Tensor::ZERO);
 
 		for (int j = 0; j < SIZE; j++) {
 			Encoder::pop_code(result, _data[i].data->at(j));
-			val = Tensor::concat(val, result);
+			val->push_back(&result);
 		}
 
 		delete _data[i].data;
-		_data[i].data = new Tensor(val);
+		_data[i].data = val;
 	}
 }
 

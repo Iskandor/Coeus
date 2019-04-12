@@ -8,10 +8,9 @@
 
 #include <random>
 #include <vector>
+#include "Coeus.h"
 
 using namespace std;
-
-namespace FLAB {
 
 class __declspec(dllexport) RandomGenerator {
 public:
@@ -33,7 +32,5 @@ private:
     random_device _rd;
     mt19937 _mt;
 };
-
-}
 
 #endif //NEURONET_RANDOMGENERATOR_H

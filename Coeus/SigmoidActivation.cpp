@@ -1,6 +1,5 @@
 #include "SigmoidActivation.h"
 #include <cmath>
-#include <cstring>
 
 using namespace Coeus;
 
@@ -9,11 +8,12 @@ SigmoidActivation::SigmoidActivation(): IActivationFunction(SIGMOID) {
 
 
 SigmoidActivation::~SigmoidActivation()
-{
-}
+= default;
 
 Tensor SigmoidActivation::activate(Tensor& p_input) {
+
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
 	float* y = &arr[0];
 	float* x = &p_input.arr()[0];
 
@@ -21,11 +21,12 @@ Tensor SigmoidActivation::activate(Tensor& p_input) {
 		(*y++) = 1 / (1 + exp(-(*x++)));
 	}
 
-	return Tensor({ p_input.size() }, arr);
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 Tensor SigmoidActivation::derivative(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
 	const Tensor activation = activate(p_input);
 	float* y = &arr[0];
 	float* x = &activation.arr()[0];
@@ -36,7 +37,7 @@ Tensor SigmoidActivation::derivative(Tensor& p_input) {
 		x++;
 	}
 
-	return Tensor({ p_input.size() }, arr);
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 float SigmoidActivation::activate(const float p_value)

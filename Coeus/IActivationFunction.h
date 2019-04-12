@@ -3,10 +3,10 @@
 #include "Coeus.h"
 #include "json.hpp"
 
-using namespace FLAB;
 using namespace nlohmann;
 
-namespace Coeus {
+namespace Coeus
+{
 	class __declspec(dllexport) IActivationFunction
 	{
 	public:
@@ -17,10 +17,9 @@ namespace Coeus {
 		virtual Tensor activate(Tensor& p_input) = 0;
 		virtual Tensor derivative(Tensor& p_input) = 0;
 		virtual json get_json();
-		ACTIVATION get_type() const { return _type; }		
+		ACTIVATION get_type() const { return _type; }
 
 	protected:
 		ACTIVATION _type;
 	};
 }
-

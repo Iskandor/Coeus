@@ -1,36 +1,41 @@
 #include "RecurrentLayer.h"
-#include "RecurrentLayerGradient.h"
 #include "IDGen.h"
+#include "NeuronOperator.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
-RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation) : BaseLayer(p_id)
+RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, p_in_dim)
 {
-	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, p_activation, true));
-	_input_group = _output_group = _group;
-	_context_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, LINEAR, false));
-
-	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _group->get_dim(), _context_group->get_id(), _group->get_id()));
-
 	_type = RECURRENT;
+
+	_initializer = p_initializer;
+
+	_y = new NeuronOperator(p_dim, p_activation);
+	add_param(_y);	
+
+	_context = nullptr;	
 }
 
-RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(IDGen::instance().next()) {
-	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(*p_copy._group));
-	_input_group = _output_group = _group;
-	_context_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_copy._context_group));
+RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(p_copy._id, p_copy._dim, p_copy._in_dim) {
+	_type = RECURRENT;
+	_y = new NeuronOperator(*p_copy._y);
+	_W = new Param(*p_copy._W);
+	_initializer = p_copy._initializer;
+	_context = nullptr;
+}
 
-	_rec_connection = add_connection(new Connection(_context_group->get_dim(), _group->get_dim(), _context_group->get_id(), _group->get_id()));
-	_rec_connection->override(p_copy._rec_connection);
-
+RecurrentLayer::RecurrentLayer(const json& p_data) : BaseLayer(p_data)
+{
 	_type = RECURRENT;
 }
 
 RecurrentLayer::~RecurrentLayer()
 {
-	delete _group;
-	delete _context_group;
-	delete _rec_connection;
+	delete _y;
+	delete _W;
+	delete _context;
+	delete _initializer;
 }
 
 RecurrentLayer* RecurrentLayer::clone()
@@ -38,36 +43,115 @@ RecurrentLayer* RecurrentLayer::clone()
 	return new RecurrentLayer(this);
 }
 
-void RecurrentLayer::integrate(Tensor* p_input, Tensor* p_weights) {
-	_group->integrate(p_input, p_weights);
+void RecurrentLayer::activate()
+{
+	_context = NeuronOperator::init_auxiliary_parameter(_context, _batch_size, _dim);
+
+	_input->push_back(_context);
+	_input->reset_index();
+
+	_y->integrate(_input, _W->get_data());
+	_y->activate();
+
+	_output = _y->get_output();
+	_context->override(_y->get_output());
 }
 
-void RecurrentLayer::activate(Tensor * p_input)
+void RecurrentLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
-	_context_group->set_output(_group->get_output());
-	_group->integrate(_context_group->get_output(), _rec_connection->get_weights());
-	_group->activate();
+	_in_derivative->reset_index();
+	for (auto it : _input_layer)
+	{
+		_in_derivative->push_back(p_derivative_map[it->get_id()]);
+	}
+
+	Tensor*	 delta_out = p_delta_map[_id];
+	Tensor*	 delta_in = nullptr;
+
+	if (!_input_layer.empty())
+	{
+		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
+
+		if (_batch)
+		{
+			TensorOperator::instance().full_delta_b(_batch_size, delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+		}
+		else
+		{
+			TensorOperator::instance().full_delta_s(delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+		}
+
+		int index = 0;
+
+		for (auto it : _input_layer)
+		{
+			p_delta_map[it->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[it->get_id()], _batch_size, it->get_dim());
+			delta_in->splice(index, p_delta_map[it->get_id()]);
+			index += it->get_dim();
+		}
+
+		delete delta_in;
+	}
 }
+
+void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+{
+	Tensor* dW = &p_gradient_map[_W->get_id()];
+	Tensor* delta = p_delta_map[_id];
+
+	if (_batch)
+	{
+		TensorOperator::instance().m_reduce(p_gradient_map[_y->get_bias()->get_id()].arr(), delta->arr(), delta->shape(0), delta->shape(1));
+		TensorOperator::instance().full_gradient_b(_batch_size, _input->arr(), delta->arr(), dW->arr(), _dim, _in_dim);
+	}
+	else
+	{
+		p_gradient_map[_y->get_bias()->get_id()].override(delta);
+		TensorOperator::instance().full_gradient_s(_input->arr(), delta->arr(), dW->arr(), _dim, _in_dim);
+	}
+}
+
+void RecurrentLayer::calc_derivative(map<string, Tensor*>& p_derivative)
+{
+	Tensor dy = _y->derivative();
+	p_derivative[_id] = NeuronOperator::init_auxiliary_parameter(p_derivative[_id], _batch_size, _dim);
+	p_derivative[_id]->override(&dy);
+}
+
 
 void RecurrentLayer::override(BaseLayer * p_source)
 {
-	RecurrentLayer *source = dynamic_cast<RecurrentLayer*>(p_source);
-	_group->get_bias()->override(source->_group->get_bias());
-	_rec_connection->override(source->_rec_connection);
+	const RecurrentLayer *source = dynamic_cast<RecurrentLayer*>(p_source);
+	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
+	_W->get_data()->override(source->_W->get_data());
 }
 
 void RecurrentLayer::reset()
 {
-	_context_group->get_output()->fill(0);
+	if (_context != nullptr) _context->fill(0);
+}
+
+void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers)
+{
+	BaseLayer::init(p_input_layers);
+
+	_in_dim += _dim;
+
+	_W = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	_initializer->init(_W->get_data());
+	add_param(_W->get_id(), _W->get_data());
+}
+
+json RecurrentLayer::get_json() const
+{
+	json data = BaseLayer::get_json();
+
+	//data["group"] = _group->get_json();
+
+	return data;
 }
 
 RecurrentLayer::RecurrentLayer(RecurrentLayer* p_source) : BaseLayer(p_source)
 {
-	_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_group));
-	_input_group = _output_group = _group;
-	_context_group = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_group));
-
-	_rec_connection = add_connection(p_source->_rec_connection->clone());
-
 	_type = RECURRENT;
 }

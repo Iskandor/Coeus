@@ -13,7 +13,7 @@ ICM::ICM(NeuralNetwork* p_forward_model, GradientAlgorithm* p_forward_alogrithm)
 
 ICM::~ICM()
 {
-	if (_forward_model_input != nullptr) delete _forward_model_input;
+	delete _forward_model_input;
 }
 
 float ICM::train(Tensor* p_state0, Tensor* p_action, Tensor* p_state1) {
@@ -22,7 +22,9 @@ float ICM::train(Tensor* p_state0, Tensor* p_action, Tensor* p_state1) {
 		_forward_model_input = new Tensor({ p_action->size() + p_state0->size() }, Tensor::ZERO);
 	}
 
-	Tensor::concat(_forward_model_input, p_action, p_state0);
+	_forward_model_input->reset_index();
+	_forward_model_input->push_back(p_action);
+	_forward_model_input->push_back(p_state0);
 
 	_forward_model->activate(_forward_model_input);
 	_forward_reward = _L.cost(_forward_model->get_output(), p_state1);

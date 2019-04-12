@@ -1,6 +1,5 @@
 #include "FFN.h"
 #include "NeuralNetwork.h"
-#include "InputLayer.h"
 #include "CoreLayer.h"
 #include "GradientAlgorithm.h"
 #include "QuadraticCost.h"
@@ -28,20 +27,11 @@ FFN::~FFN()
 }
 
 void FFN::run() {
-	_network.add_layer(new InputLayer("input", 2));
-	_network.add_layer(new CoreLayer("hidden", 4, SIGMOID));
-	_network.add_layer(new CoreLayer("output", 1, SIGMOID));
-
-	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
-	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
-	_network.init();
-
-
 	float data_i[8]{ 0,0,0,1,1,0,1,1 };
 	float data_t[4]{ 0,1,1,0 };
 
-	vector<Tensor*> input;
-	vector<Tensor*> target;
+	vector<Tensor*> o_input;
+	vector<Tensor*> o_target;
 
 	for (int i = 0; i < 4; i++) {
 		float *d = Tensor::alloc_arr(2);
@@ -52,83 +42,63 @@ void FFN::run() {
 		float *t = Tensor::alloc_arr(1);
 		t[0] = data_t[i];
 
-		input.push_back(new Tensor({ 2 }, d));
-		target.push_back(new Tensor({ 1 }, t));
+		o_input.push_back(new Tensor({ 2 }, d));
+		o_target.push_back(new Tensor({ 1 }, t));
 	}
 
-	//Adadelta model(&_network);
-	//Adagrad model(&_network);
-	//BackProp model(&_network);
-	//RMSProp model(&_network);
-	//AdaMax model(&_network);
-	ADAM model(&_network);
-	//Nadam model(&_network);
-	//AMSGrad model(&_network);
-	//PowerSign model(&_network);
+	Tensor input({ 4, 2 }, Tensor::ZERO);
+	Tensor target({ 4, 1 }, Tensor::ZERO);
 
-	//model.init(new QuadraticCost(), 0.1, 0.9, true);
-	//model.init(new QuadraticCost(), 8e-2);
-	model.init(new QuadraticCost(), 1e-1f);
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 2; j++)
+		{
+			input.set(i, j, data_i[i * 2 + j]);
+		}
+
+		target.set(i, 0, data_t[i]);
+	}
+
+	NeuralNetwork network;
+
+	network.add_layer(new CoreLayer("hidden", 4, SIGMOID, new TensorInitializer(LECUN_UNIFORM), 2));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
+	network.add_connection("hidden", "output");
+
+	network.init();
+
+	BackProp optimizer(&network);
+
+	optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
 
 	const auto start = chrono::system_clock::now();
 
-	for(int t = 0; t < 200; t++) {
-		//const float error = model.train(&input, &target);
+	for (int t = 0; t < 1000; t++) {
 		float error = 0;
-
-		error += model.train(&input, &target, 4);
-
 		/*
-		for(int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++)
 		{
-			error += model.train(input[i], target[i]);
+			error += optimizer.train(o_input[i], o_target[i]);
 		}
 		*/
 
-		cout << "Error: " << error << endl;
+		error = optimizer.train(&input, &target);
+		cout << error << endl;
 	}
-
-	cout << endl;
 
 	const auto end = chrono::system_clock::now();
 	chrono::duration<float> elapsed_seconds = end - start;
 	cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
 	for (int i = 0; i < 4; i++) {
-		_network.activate(input[i]);
-		cout << _network.get_output()->at(0) << endl;
-	}
-
-	/*
-	NeuralNetwork copy(_network);
-	copy.init();
-
-	cout << endl;
-	for (int i = 0; i < 4; i++) {
-		copy.activate(input[i]);
-		cout << copy.get_output()->at(0) << endl;
-	}
-
-	IOUtils::save_network(copy, "test.net");
-
-	NeuralNetwork loaded(IOUtils::load_network("test.net"));
-
-	cout << endl;
-	for (int i = 0; i < 4; i++) {
-		loaded.activate(input[i]);
-		cout << loaded.get_output()->at(0) << endl;
-	}
-	*/
-
-	for (int i = 0; i < 4; i++) {
-		delete input[i];
-		delete target[i];
+		network.activate(o_input[i]);
+		cout << *network.get_output() << endl;
 	}
 
 	
 }
 
 void FFN::run_iris() {
+	/*
 	_dataset.load_data("./data/iris.data");
 
 	_network.add_layer(new InputLayer("input", IrisDataset::SIZE));
@@ -175,5 +145,5 @@ void FFN::run_iris() {
 		cout << data->at(i).target << endl;
 
 	}
-
+	*/
 }

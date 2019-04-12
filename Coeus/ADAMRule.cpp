@@ -5,10 +5,10 @@ using namespace  Coeus;
 ADAMRule::ADAMRule(NetworkGradient* p_network_gradient, float p_alpha, float p_beta1, float p_beta2, float p_epsilon) : IUpdateRule(p_network_gradient, p_alpha), 
 	_beta1(p_beta1), _beta2(p_beta2), _epsilon(p_epsilon)
 {
-	_m = p_network_gradient->get_empty_params();
-	_m_mean = p_network_gradient->get_empty_params();
-	_v = p_network_gradient->get_empty_params();
-	_v_mean = p_network_gradient->get_empty_params();
+	_m = p_network_gradient->get_network()->get_empty_params();
+	_m_mean = p_network_gradient->get_network()->get_empty_params();
+	_v = p_network_gradient->get_network()->get_empty_params();
+	_v_mean = p_network_gradient->get_network()->get_empty_params();
 }
 
 ADAMRule::~ADAMRule()

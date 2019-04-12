@@ -1,4 +1,5 @@
 #include "SingleBatchModule.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -7,7 +8,7 @@ SingleBatchModule::SingleBatchModule(NeuralNetwork* p_network, NetworkGradient* 
 	_cost_function(p_cost_function), 
 	_network_gradient(p_network_gradient)
 {
-	_gradient = p_network_gradient->get_empty_params();
+	_gradient = p_network_gradient->get_network()->get_empty_params();
 }
 
 SingleBatchModule::~SingleBatchModule()
@@ -28,7 +29,7 @@ void SingleBatchModule::run_batch(const int p_b, const int p_batch, vector<Tenso
 
 		for (auto& it : *_network_gradient->get_gradient())
 		{
-			_gradient[it.first] += it.second;
+			TensorOperator::instance().vv_add(_gradient[it.first].arr(), it.second.arr(), _gradient[it.first].arr(), _gradient[it.first].size());
 		}
 	}
 }

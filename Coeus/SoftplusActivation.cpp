@@ -1,6 +1,5 @@
 #include "SoftplusActivation.h"
 #include <cmath>
-#include <cstring>
 
 using namespace Coeus;
 

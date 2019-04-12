@@ -7,8 +7,6 @@
 #include "rk4.hpp"
 #include <iostream>
 
-using namespace FLAB;
-
 float *derivs(float t, int n, float sensors[], float params[]) {
     /*
      * This function is needed for the Runge-Kutta integration approximation method. It calculates the

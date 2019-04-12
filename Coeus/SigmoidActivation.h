@@ -13,5 +13,3 @@ namespace Coeus
 		inline float activate(float p_value) override;
 	};
 }
-
-

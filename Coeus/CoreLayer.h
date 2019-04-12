@@ -1,31 +1,40 @@
 #pragma once
 #include "BaseLayer.h"
-#include "Connection.h"
+#include "Coeus.h"
+#include "Param.h"
+#include "IActivationFunction.h"
+#include "NeuronOperator.h"
+#include "TensorInitializer.h"
 
-namespace Coeus {
-
-class __declspec(dllexport) CoreLayer : public BaseLayer
+namespace Coeus
 {
-	friend class CoreLayerGradient;
-public:
-	CoreLayer(const string& p_id, int p_dim, ACTIVATION p_activation);
-	explicit CoreLayer(json p_data);
-	CoreLayer(CoreLayer &p_copy);
-	~CoreLayer();
-	CoreLayer* clone() override;
+	class __declspec(dllexport) CoreLayer : public BaseLayer
+	{
+	public:
+		CoreLayer(const string& p_id, int p_dim, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_in_dim = 0);
+		explicit CoreLayer(const json& p_data);
+		CoreLayer(CoreLayer &p_copy);
+		~CoreLayer();
+		CoreLayer* clone() override;
 
-	void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
-	void activate(Tensor* p_input = nullptr) override;
-	void override(BaseLayer* p_source) override;
-	void reset() override {}
-	void init(vector<BaseLayer*>& p_input_layers) override {}
-	json get_json() const override;
+		void activate() override;
 
+		void calc_derivative(map<string, Tensor*>& p_derivative) override;
+		void calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
+		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
+
+		void override(BaseLayer* p_source) override;
+		void reset() override {}
+		void init(vector<BaseLayer*>& p_input_layers) override;
+
+		json get_json() const override;
+
+	private:
+		explicit CoreLayer(CoreLayer* p_source);
 	
-private:
-	explicit CoreLayer(CoreLayer* p_source);
-	SimpleCellGroup *_group;
-};
+		NeuronOperator* _y;
+		Param*			_W;
 
+		TensorInitializer *_initializer;
+	};
 }
-

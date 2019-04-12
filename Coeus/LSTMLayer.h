@@ -1,21 +1,29 @@
 #pragma once
 #include "BaseLayer.h"
-#include "LSTMCellGroup.h"
+#include "Coeus.h"
+#include "Param.h"
+#include "IActivationFunction.h"
+#include "NeuronOperator.h"
+#include "TensorInitializer.h"
 
 namespace Coeus
 {
 	class __declspec(dllexport) LSTMLayer : public BaseLayer
 	{
-		friend class LSTMLayerGradient;
 	public:
-		LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation);
+		LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_in_dim = 0);
 		explicit LSTMLayer(json p_data);
 		~LSTMLayer();
 		LSTMLayer* clone() override;
 
 		void init(vector<BaseLayer*>& p_input_layers) override;
-		void integrate(Tensor* p_input, Tensor* p_weights = nullptr) override;
-		void activate(Tensor* p_input = nullptr) override;
+		void activate() override;
+
+		void calc_derivative(map<string, Tensor*>& p_derivative) override;
+		void calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
+		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
+
+
 		void override(BaseLayer* p_source) override;
 		void reset() override;
 		json get_json() const override;
@@ -23,19 +31,22 @@ namespace Coeus
 	private:
 		explicit LSTMLayer(LSTMLayer* p_source);
 
-		LSTMCellGroup*		_cec{};
-		SimpleCellGroup*	_input_gate;
-		SimpleCellGroup*	_output_gate;
-		SimpleCellGroup*	_forget_gate;
-		SimpleCellGroup*	_aux_input{};
-		SimpleCellGroup*	_context;
+		NeuronOperator* _cec;
+		NeuronOperator* _ig;
+		NeuronOperator* _fg;
+		NeuronOperator* _og;
 
-		Connection* _in_input_gate{};
-		Connection* _in_output_gate{};
-		Connection* _in_forget_gate{};
-		Connection* _ct_cec{};
+		Param*		_Wxc;
+		Param*		_Wxfg;
+		Param*		_Wxig;
+		Param*		_Wxog;
 
-		vector<Tensor*> _input;
+		Tensor*		_context;
+		Tensor*		_state;
+		Tensor*		_state_error;
+
+		IActivationFunction* _activation_function;
+		TensorInitializer *_initializer;
 	};
 }
 

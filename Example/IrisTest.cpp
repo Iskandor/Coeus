@@ -1,28 +1,24 @@
 #include "IrisTest.h"
-#include "LSOM_params.h"
-#include "LSOM_learning.h"
-#include "SOM_learning.h"
 #include <fstream>
-#include "FLAB.h"
-
 
 IrisTest::IrisTest() {
-	_lsom = nullptr;
+	//_lsom = nullptr;
 	_dataset.load_data("./data/iris.data");
 	_dataset.encode();
 }
 
 IrisTest::~IrisTest()
 {
-	delete _lsom;
+	//delete _lsom;
 }
 
 void IrisTest::init() {
-	_lsom = new LSOM("LSOM", 128, 5, 5, TANH);
+	//_lsom = new LSOM("LSOM", 128, 5, 5, TANH);
 	//_lsom = new SOM("LSOM", 4, 8, 8, NeuralGroup::EXPONENTIAL);
 }
 
 void IrisTest::run(const int p_epochs) {
+	/*
 	SOM_analyzer analyzer;
 	//SOM_params params(_lsom);
 	//params.init_training(0.8, p_epochs);
@@ -65,12 +61,11 @@ void IrisTest::run(const int p_epochs) {
 		params.param_decay();		
 	}
 
-	/*
-	for(int i = 0; i < learner._friendship.size(); i++) {
-		cout << i << " " << learner._friendship[i] << endl;
-	}
-	cout << endl;
-	*/
+	//for(int i = 0; i < learner._friendship.size(); i++) {
+	//	cout << i << " " << learner._friendship[i] << endl;
+	//}
+	//cout << endl;
+
 	for (int i = 0; i < _lsom->get_lattice()->get_dim(); i++) {
 		float sum = 0;
 		for (int j = 0; j < _lsom->get_lattice()->get_dim(); j++) {
@@ -78,9 +73,11 @@ void IrisTest::run(const int p_epochs) {
 		}
 		cout << i << " " << sum << endl;
 	}
+	*/
 }
 
 void IrisTest::test() {
+	/*
 	float* activity = new float[_lsom->dim_x() * _lsom->dim_y() * IrisDataset::CATEGORIES]{ 0 };
 
 	vector<IrisDatasetItem>* data = _dataset.permute();
@@ -96,6 +93,7 @@ void IrisTest::test() {
 	save_results("iris_test.act", _lsom->dim_x(), _lsom->dim_y(), activity, IrisDataset::CATEGORIES);
 
 	delete[] activity;
+	*/
 }
 
 void IrisTest::save_results(const string p_filename, const int p_dim_x, const int p_dim_y, float* p_data, 	const int p_category) const {

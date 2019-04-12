@@ -4,7 +4,7 @@
 
 using namespace Coeus;
 
-ExponentialActivation::ExponentialActivation(const int p_k): IActivationFunction(EXPONENTIAL), _k(p_k) {
+ExponentialActivation::ExponentialActivation(const int p_k): IActivationFunction(EXP), _k(p_k) {
 }
 
 ExponentialActivation::~ExponentialActivation()

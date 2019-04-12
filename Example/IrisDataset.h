@@ -5,7 +5,6 @@
 #include <map>
 
 using namespace std;
-using namespace FLAB;
 
 struct IrisDatasetItem
 {
@@ -22,7 +21,7 @@ public:
 	IrisDataset();
 	~IrisDataset();
 
-	void load_data(string p_filename);
+	void load_data(const string& p_filename);
 	void encode();
 	vector<IrisDatasetItem>* permute();
 

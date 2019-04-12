@@ -47,7 +47,7 @@ float DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_stat
 			}			
 		}
 
-		error = _gradient_algorithm->train(_input, _target, sample->size());
+		//error = _gradient_algorithm->train(_input, _target, sample->size());
 	}
 
 	return error;

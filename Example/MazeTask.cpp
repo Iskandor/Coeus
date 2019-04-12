@@ -6,8 +6,6 @@
 #include "MazeTask.h"
 #include "RandomGenerator.h"
 
-using namespace FLAB;
-
 MazeTask::MazeTask() {
     int topology[] = {0, 0, 2,
                       0, 0, 0};

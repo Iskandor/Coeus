@@ -1,6 +1,6 @@
 #include "Metrics.h"
 #include <cmath>
-#include "FLAB.h"
+#include "Coeus.h"
 
 using namespace Coeus;
 
@@ -18,7 +18,7 @@ float Metrics::euclidean_distance(const int p_x1, const int p_y1, const int p_x2
 }
 
 float Metrics::gaussian_distance(const float p_d, const float p_sigma, const float p_mu) {
-	return  exp(-pow(p_d - p_mu, 2) / (2 * pow(p_sigma, 2))) / (p_sigma * FLAB::sqrt2PI);
+	return  exp(-pow(p_d - p_mu, 2) / (2 * pow(p_sigma, 2))) / (p_sigma * sqrt2PI);
 }
 
 float Metrics::binary_distance(const float p_d, const float p_h) {
