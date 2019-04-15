@@ -19,6 +19,8 @@
 #include "PowerSign.h"
 #include "CrossEntropyCost.h"
 #include "ExponentialDecay.h"
+#include "GenKLDivergence.h"
+#include "ItakuraSaitoDistance.h"
 
 
 RNN::RNN()
@@ -37,8 +39,8 @@ void RNN::run()
 	network.add_layer(new LSTMLayer("hidden", 4, SIGMOID));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	network.add_connection("input", "hidden", Connection::UNIFORM, 0.1);
-	network.add_connection("hidden", "output", Connection::UNIFORM, 0.1);
+	network.add_connection("input", "hidden", Connection::UNIFORM, -0.1, 0.1);
+	network.add_connection("hidden", "output", Connection::UNIFORM, -0.1, 0.1);
 
 	network.init();
 
@@ -92,11 +94,11 @@ void RNN::run_add_problem()
 
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 2));
-	network.add_layer(new LSTMLayer("hidden", 4, TANH));
+	network.add_layer(new LSTMLayer("hidden", 4, SIGMOID));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID));
 
-	network.add_connection("input", "hidden", Connection::UNIFORM, 1e-3);
-	network.add_connection("hidden", "output", Connection::UNIFORM, 1e-3);
+	network.add_connection("input", "hidden", Connection::UNIFORM, -1e-3, 1e-3);
+	network.add_connection("hidden", "output", Connection::UNIFORM, -1e-3, 1e-3);
 
 	network.init();
 
@@ -163,8 +165,9 @@ void RNN::run_pack()
 	//PackDataset validset;
 	//validset.load_data("./data/pack_data_test.csv", false, true);
 
-	//NeuralNetwork network(IOUtils::load_network("predictor.net"));
-	
+	NeuralNetwork network(IOUtils::load_network("predictor.net"));
+
+	/*
 	NeuralNetwork network;
 	network.add_layer(new InputLayer("input", 230));
 	network.add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH));
@@ -176,6 +179,7 @@ void RNN::run_pack()
 	network.add_connection("hidden1", "output", Connection::LECUN_UNIFORM);
 
 	network.init();
+	*/
 
 	Nadam algorithm(&network);
 	algorithm.init(new QuadraticCost(), config["alpha"].get<float>());
@@ -193,7 +197,7 @@ void RNN::run_pack()
 	float precision = 0;
 	float accuracy = 0;
 	float fn_ratio = 1;
-	const float bound = 0.9;
+	const float bound = 0.999;
 	const int size = dataset.data()->size();
 
 	cout << size << " sequences" << endl;
@@ -406,7 +410,8 @@ void RNN::test_pack_cm() const
 {
 	cout << "Loading dataset..." << endl;
 	PackDataset dataset;
-	dataset.load_data("./data/pack_data_test.csv", false, true);
+	dataset.load_data("./data/pack_data_train10.csv", false, false);
+	//dataset.load_data("./data/pack_data_red.csv", false, false);
 
 	cout << "Loading network..." << endl;
 	NeuralNetwork network(IOUtils::load_network("predictor.net"));
@@ -425,15 +430,20 @@ void RNN::test_pack_cm() const
 		const int prediction = network.get_output()->at(0) > 0.5 ? 1 : 0;
 
 		if (sequence.target[0] == 1 && prediction == 1) {
-			cout << "TP " << sequence.player_id << endl;
+			//cout << "TP " << network.get_output()->at(0) << endl;
 			tp++;
 		}
 		if (sequence.target[0] == 1 && prediction == 0) {
-			cout << "FN " << sequence.player_id << endl;
+			//cout << "FN " << sequence.player_id << endl;
 			fn++;
 		}
-		if (sequence.target[0] == 0 && prediction == 1) fp++;
-		if (sequence.target[0] == 0 && prediction == 0) tn++;
+		if (sequence.target[0] == 0 && prediction == 1) {
+			//cout << "FP " << network.get_output()->at(0) << endl;
+			fp++;
+		}
+		if (sequence.target[0] == 0 && prediction == 0) {
+			tn++;
+		}
 	}
 
 	cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;

@@ -28,7 +28,7 @@ public:
 
 	BaseLayer*	add_layer(BaseLayer* p_layer);
 	BaseLayer*	get_layer(const string& p_layer);
-	Connection* add_connection(const string& p_input_layer, const string& p_output_layer, Connection::INIT p_init, float p_limit = 0, bool p_trainable = true);
+	Connection* add_connection(const string& p_input_layer, const string& p_output_layer, Connection::INIT p_init, float p_arg1 = 0, float p_arg2 = 0);
 	Connection* get_connection(const string& p_input_layer, const string& p_output_layer);
 	vector<BaseLayer*> get_input_layers(const string& p_layer);
 

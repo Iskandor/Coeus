@@ -773,7 +773,7 @@ void Tensor::fill(const INIT p_init, const float p_value) const {
 			for (int i = 0; i < _size; i++) _arr[i] = p_value;
 			break;
 		case RANDOM:
-			for (int i = 0; i < _size; i++) _arr[i] = RandomGenerator::getInstance().random(-p_value, p_value);
+			for (int i = 0; i < _size; i++) _arr[i] = RandomGenerator::get_instance().random(-p_value, p_value);
 			break;
 	}
 }

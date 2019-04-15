@@ -85,8 +85,8 @@ void CartPole::performAction(float p_action) {
 
 void CartPole::reset() {
     if (_randomInit) {
-        _angle = RandomGenerator::getInstance().random(-0.2f, 0.2f);
-        _pos = RandomGenerator::getInstance().random(-0.5f, 0.5f);
+        _angle = RandomGenerator::get_instance().random(-0.2f, 0.2f);
+        _pos = RandomGenerator::get_instance().random(-0.5f, 0.5f);
     }
     else {
         _angle = -0.2;

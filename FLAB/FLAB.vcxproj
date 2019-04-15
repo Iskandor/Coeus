@@ -148,14 +148,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FLAB.h" />
-    <ClInclude Include="RandomGenerator.h" />
-    <ClInclude Include="Tensor.h" />
     <ClInclude Include="TensorPool.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RandomGenerator.cpp" />
-    <ClCompile Include="Tensor.cpp" />
     <ClCompile Include="TensorPool.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

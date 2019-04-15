@@ -19,7 +19,7 @@ CountModule::~CountModule()
 
 float CountModule::get_reward(Tensor* p_state) const
 {
-	const float reward = 1 / sqrt(_lookup_table[p_state->max_value_index()]);
+	const float reward = 1.f / sqrt(_lookup_table[p_state->max_value_index()]);
 	return reward;
 }
 

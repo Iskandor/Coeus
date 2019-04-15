@@ -1,4 +1,5 @@
 #include "Connection.h"
+#include "RandomGenerator.h"
 
 using namespace Coeus;
 
@@ -14,7 +15,7 @@ Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_
 	_weights = nullptr;
 }
 
-Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable, float p_limit)
+Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_in_id, const string& p_out_id, INIT p_init, bool p_trainable, float p_arg1, float p_arg2)
 {
     _id = p_out_id + "_" + p_in_id;
 	_in_dim = p_in_dim;
@@ -23,7 +24,7 @@ Connection::Connection(const int p_in_dim, const int p_out_dim, const string& p_
 	_out_id = p_out_id;
 	_trainable = p_trainable;
 	_norm = Tensor::Zero({ _out_dim });
-	init(p_init, p_trainable, p_limit);
+	init(p_init, p_trainable, p_arg1, p_arg2);
 }
 
 Connection::Connection(json p_data) {
@@ -67,23 +68,41 @@ Connection* Connection::clone() const
 Connection::~Connection()
 = default;
 
-void Connection::init(const INIT p_init, const bool p_trainable, const float p_limit) {
+void Connection::init(const INIT p_init, const bool p_trainable, const float p_arg1, const float p_arg2) {
     switch(p_init) {
 		case NONE:			
 			_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ZERO);
 			break;
         case UNIFORM:
-            uniform(p_limit);
+            uniform(p_arg1, p_arg2);
             break;
         case LECUN_UNIFORM:
-            uniform(static_cast<float>(pow(_in_dim, -.5)));
+            uniform(-pow(_in_dim, -.5f), pow(_in_dim, -.5f));
             break;
         case GLOROT_UNIFORM:
-            uniform(2.0f / (_in_dim + _out_dim));
+            uniform(-2.f / (_in_dim + _out_dim), 2.f / (_in_dim + _out_dim));
             break;
         case IDENTITY:
             identity();
             break;
+	    case NORMAL:
+			normal(p_arg1, p_arg2);
+    		break;
+	    case EXPONENTIAL:
+			exponential(p_arg1);
+    		break;
+	    case HE_UNIFORM:
+			uniform(-sqrt(6.f / _in_dim), sqrt(6.f / _in_dim));
+    		break;
+	    case LECUN_NORMAL:
+			normal(0., sqrt(1.f / _in_dim));
+    		break;		
+	    case GLOROT_NORMAL:
+			normal(0., 2.f / (_in_dim + _out_dim));
+    		break;
+	    case HE_NORMAL:
+			normal(0., sqrt(2.f / _in_dim));
+    		break;
     }
 	_trainable = p_trainable;
 
@@ -116,8 +135,33 @@ json Connection::get_json() const
 	return result;
 }
 
-void Connection::uniform(const float p_limit) {
-	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::RANDOM, p_limit);
+void Connection::uniform(const float p_min, const float p_max) {
+	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ZERO);
+
+	for (int i = 0; i < _weights->size(); i++)
+	{
+		(*_weights)[i] = RandomGenerator::get_instance().random(p_min, p_max);
+	}
+}
+
+void Connection::normal(const float p_mean, const float p_dev)
+{
+	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ZERO);
+
+	for(int i = 0; i < _weights->size(); i++)
+	{
+		(*_weights)[i] = RandomGenerator::get_instance().normal_random(p_mean, p_dev);
+	}
+}
+
+void Connection::exponential(const float p_lambda)
+{
+	_weights = new Tensor({ _out_dim, _in_dim }, Tensor::ZERO);
+
+	for (int i = 0; i < _weights->size(); i++)
+	{
+		(*_weights)[i] = RandomGenerator::get_instance().exp_random(p_lambda);
+	}
 }
 
 void Connection::identity() {

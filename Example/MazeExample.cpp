@@ -45,9 +45,9 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID));
 	network.add_layer(new CoreLayer("output", 4, TANH));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.1f);
-	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, 0.1f);
-	network.add_connection("hidden1", "output", Connection::UNIFORM, 0.1f);
+	network.add_connection("input", "hidden0", Connection::UNIFORM, -0.1, 0.1);
+	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, -0.1, 0.1);
+	network.add_connection("hidden1", "output", Connection::UNIFORM, -0.1, 0.1);
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -718,12 +718,12 @@ Tensor MazeExample::encode_state(vector<float>* p_sensors) {
 
 int MazeExample::choose_action(Tensor* p_input, const float epsilon) {
 	int action = 0;
-	const float random = RandomGenerator::getInstance().random();
+	const float random = RandomGenerator::get_instance().random();
 
 	//cout << *p_input << endl;
 
 	if (random < epsilon) {
-		action = RandomGenerator::getInstance().random(0, 3);
+		action = RandomGenerator::get_instance().random(0, 3);
 	}
 	else {
 		/*

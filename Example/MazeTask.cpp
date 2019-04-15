@@ -22,7 +22,7 @@ void MazeTask::run() {
 
     for(int e = 0; e < 100; e++) {
         cout << e << endl;
-        action = RandomGenerator::getInstance().random(0, 3);
+        action = RandomGenerator::get_instance().random(0, 3);
         cout << maze->toString() << endl;
         maze->performAction(action);
         cout << getReward() << endl;

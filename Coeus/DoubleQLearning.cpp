@@ -21,7 +21,7 @@ float DoubleQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_st
 
 	float error;
 
-	if (RandomGenerator::getInstance().random() > 0.5) {
+	if (RandomGenerator::get_instance().random() > 0.5) {
 		const float maxQs1a = calc_max_qa(p_state1, _network_a);
 		_network_a->activate(p_state0);
 		_target.override(_network_a->get_output());

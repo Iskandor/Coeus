@@ -28,7 +28,7 @@ vector<ReplayBuffer::Item*>* ReplayBuffer::get_sample(const int p_size) {
 
 	if (size > _buffer.size()) size = _buffer.size();
 
-	vector<int> index = RandomGenerator::getInstance().choice(_buffer.size(), size);
+	vector<int> index = RandomGenerator::get_instance().choice(_buffer.size(), size);
 
 	for(int i = 0; i < index.size(); i++) {
 		_sample.push_back(_buffer[i]);

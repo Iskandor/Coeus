@@ -46,7 +46,7 @@ void Encoder::pop_code(Tensor& p_result, const float p_value, const float p_lowe
 
 	for(int i = 0; i < p_result.size(); i++)
 	{
-		p_result[i] = Metrics::gaussian_distance((p_value - p_lower_limit) * c, 0.4, i);
+		p_result[i] = Metrics::gaussian_distance((p_value - p_lower_limit) * c, 0.4f, i);
 	}
 }
 

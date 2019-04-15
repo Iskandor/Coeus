@@ -17,7 +17,7 @@ Tensor BinaryActivation::activate(Tensor& p_input) {
 	float* x = &p_input.arr()[0];
 
 	for(int i = 0; i < p_input.size(); i++) {
-		*y++ = *x++ > 0 ? 1 : 0;
+		*y++ = *x++ > 0 ? 1.f : 0.f;
 	}
 
 	return Tensor({ p_input.size() }, arr);
@@ -29,7 +29,7 @@ Tensor BinaryActivation::derivative(Tensor& p_input) {
 	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
-		*y++ = *x++ > 0 ? 1 : 0;
+		*y++ = *x++ > 0 ? 1.f : 0.f;
 	}
 
 	return Tensor({ p_input.size() }, arr);
@@ -37,5 +37,5 @@ Tensor BinaryActivation::derivative(Tensor& p_input) {
 
 float BinaryActivation::activate(const float p_value)
 {
-	return p_value > 0 ? 1 : 0;
+	return p_value > 0 ? 1.f : 0.f;
 }

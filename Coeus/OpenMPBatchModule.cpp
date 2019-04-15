@@ -38,10 +38,6 @@ void OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input
 {
 	auto start = chrono::high_resolution_clock::now();
 
-	for (auto it = _gradient.begin(); it != _gradient.end(); ++it) {
-		_gradient[it->first].fill(0);
-	}
-
 	#pragma omp parallel for
 	for (int i = 0; i < p_batch; i++) {
 		size_t index = p_b * p_batch + i;
@@ -52,14 +48,60 @@ void OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input
 		_network_gradient[i]->calc_gradient(&dloss);
 	}
 
-	for (int i = 0; i < _batch_size; i++)
+	auto end = chrono::high_resolution_clock::now();
+
+	//cout << "Gradient" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+
+	start = chrono::high_resolution_clock::now();
+
+	#pragma omp parallel
 	{
-		for (auto it = _network_gradient[i]->get_gradient()->begin(); it != _network_gradient[i]->get_gradient()->end(); ++it) {
-			_gradient[it->first] += it->second;
+		_gradient_accumulator->clear();
+		#pragma omp for nowait
+		for (int i = 0; i < _batch_size; i++)
+		{
+			for (auto it = _network_gradient[i]->get_gradient()->begin(); it != _network_gradient[i]->get_gradient()->end(); ++it) {
+				#pragma omp critical
+				_gradient[it->first] += it->second;
+			}
 		}
 	}
 
-	auto end = chrono::high_resolution_clock::now();
+	end = chrono::high_resolution_clock::now();
 
-	//cout << "Batch" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+	//cout << "Accumulate" << p_b << ": " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+}
+
+float OpenMPBatchModule::get_error(vector<Tensor*>* p_input, vector<Tensor*>* p_target)
+{
+	float error = 0;
+	int nbatch = p_input->size() / _batch_size;
+	if (p_input->size() % _batch_size > 0) nbatch++;
+	int size = _batch_size;
+
+	omp_lock_t writelock;
+
+	omp_init_lock(&writelock);
+
+	for (int b = 0; b < nbatch; b++)
+	{
+		if (b * _batch_size + _batch_size > p_input->size())
+		{
+			size = p_input->size() - b * _batch_size;
+		}
+
+		#pragma omp parallel for
+		for(int i = 0; i < size; i++) {
+			const int index = b * _batch_size + i;
+			_clone_network[i]->activate(p_input->at(index));
+			const float e = _cost_function->cost(_clone_network[i]->get_output(), p_target->at(index));
+			omp_set_lock(&writelock);
+			error += e;
+			omp_unset_lock(&writelock);
+		}
+	}
+
+	omp_destroy_lock(&writelock);
+
+	return error;
 }

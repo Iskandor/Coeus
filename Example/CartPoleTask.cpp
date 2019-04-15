@@ -24,7 +24,7 @@ void CartPoleTask::run() {
 
     for(int e = 0; e < 1000; e++) {
         cout << e << endl;
-        action = RandomGenerator::getInstance().random(-1, 1);
+        action = RandomGenerator::get_instance().random(-1, 1);
         cout << _cartPole->toString() << endl;
         _cartPole->performAction(action);
         cout << getReward() << endl;

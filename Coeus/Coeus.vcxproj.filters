@@ -127,6 +127,12 @@
     <Filter Include="Source Files\Algorithm\Modules\Batch">
       <UniqueIdentifier>{0f1cf89f-31a3-4e67-aa9b-bc8cb59f343c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Backend">
+      <UniqueIdentifier>{8d1927fd-a77f-4176-a2c7-99554f448b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Backend">
+      <UniqueIdentifier>{fde9d39d-16cd-48cb-b15c-be58a747bf0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -452,6 +458,12 @@
     </ClCompile>
     <ClCompile Include="ExponentialInterpolation.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomGenerator.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="Tensor.cpp">
+      <Filter>Source Files\Backend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -784,6 +796,15 @@
     </ClInclude>
     <ClInclude Include="ExponentialInterpolation.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FLAB.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomGenerator.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="Tensor.h">
+      <Filter>Header Files\Backend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

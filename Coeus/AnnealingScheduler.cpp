@@ -16,7 +16,7 @@ AnnealingScheduler::~AnnealingScheduler()
 float AnnealingScheduler::get_alpha()
 {
 	_step++;
-	const float alpha = 1.0f / sqrt(_model_size) * std::min<float>(1 / sqrt(_step), _step * _warmup);
+	const float alpha = 1.0f / sqrt(_model_size) * std::min<float>(1.0f / sqrt(_step), _step * _warmup);
 
 	//std::cout << alpha << std::endl;
 
