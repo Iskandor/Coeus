@@ -20,23 +20,25 @@ int main()
 	//FFN model;
 	//model.run();
 
-	RNN model;
-	model.run_pack();
+	//RNN model;
+	//model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
 	//model.test_pack_alt();
 	//model.run_add_problem();
+	
+	MazeExample example;
+	example.example_q(64, 1e-3, 0, true);
 
 	/*
-	MazeExample example;
-	//example.example_q(24, 4e-4, 0, false);
-
 	int c = 0;
 
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < 1; i++)
 	{
-		//c += example.example_sarsa(24, 3e-4, 0, false);
-		c += example.example_q(48, 1e-4, 0, false);
+		//c += example.example_sarsa(72, 1e-4f, 0, false);
+		//c += example.example_q(72, 1e-4f, 0, false);
+		c += example.example_deep_q(96, 1e-4f, 0, false);
+		//c += example.example_deep_q(48, 1e-4f, 0, false); 3x2
 	}
 	cout << c << " / 10" << endl;
 	*/

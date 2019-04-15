@@ -112,6 +112,21 @@
     <Filter Include="Header Files\Algorithm\Modules\Batch">
       <UniqueIdentifier>{8dd5fa7b-bc76-4493-9a3a-44a6d890e46d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Algorithm\RL\Exploration">
+      <UniqueIdentifier>{0765787b-ab3f-405e-aa93-19f9d31f4850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Algorithm\RL\Exploration">
+      <UniqueIdentifier>{fd3fc86b-7753-4267-8e11-ef97b318ebbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithm\Modules\Exploration">
+      <UniqueIdentifier>{cc79c4dd-2d69-4c80-a1f1-15fb286d5956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Algorithm\Modules\Exploration">
+      <UniqueIdentifier>{c5344f31-3888-4087-88a4-be154a56fe2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Algorithm\Modules\Batch">
+      <UniqueIdentifier>{0f1cf89f-31a3-4e67-aa9b-bc8cb59f343c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -327,15 +342,6 @@
     <ClCompile Include="ParamModel.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="PPLBatchModule.cpp">
-      <Filter>Source Files\Algorithm\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="IBatchModule.cpp">
-      <Filter>Source Files\Algorithm\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="SingleBatchModule.cpp">
-      <Filter>Source Files\Algorithm\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="AdadeltaRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
@@ -378,9 +384,6 @@
     <ClCompile Include="NadamRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="ILearningRateModule.cpp">
-      <Filter>Source Files\Algorithm\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="QLearning.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
@@ -405,9 +408,6 @@
     <ClCompile Include="PowerSign.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
-    <ClCompile Include="OpenMPBatchModule.cpp">
-      <Filter>Source Files\Algorithm\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="QLearningRule.cpp">
       <Filter>Source Files\Algorithm\RL\Rules</Filter>
     </ClCompile>
@@ -425,6 +425,33 @@
     </ClCompile>
     <ClCompile Include="GradientAccumulator.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="BoltzmanExploration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EGreedyExploration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Modules\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="ILearningRateModule.cpp">
+      <Filter>Source Files\Algorithm\Modules\LRM</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenMPBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Modules\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="PPLBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Modules\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleBatchModule.cpp">
+      <Filter>Source Files\Algorithm\Modules\Batch</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearInterpolation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExponentialInterpolation.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -742,6 +769,21 @@
     </ClInclude>
     <ClInclude Include="GradientAccumulator.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="BoltzmanExploration.h">
+      <Filter>Header Files\Algorithm\Modules\Exploration</Filter>
+    </ClInclude>
+    <ClInclude Include="EGreedyExploration.h">
+      <Filter>Header Files\Algorithm\Modules\Exploration</Filter>
+    </ClInclude>
+    <ClInclude Include="IInterpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearInterpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExponentialInterpolation.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

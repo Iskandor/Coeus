@@ -9,10 +9,11 @@
 using namespace FLAB;
 
 MazeTask::MazeTask() {
-    int topology[] = {0, 0, 2,
-                      0, 0, 0};
+    int topology[] = {0, 0, 0,
+                      0, 0, 2,
+					  0, 0, 0};
 
-    maze = new Maze(topology, 3, 2, 5);
+    maze = new Maze(topology, 3, 3, 8);
 }
 
 void MazeTask::run() {

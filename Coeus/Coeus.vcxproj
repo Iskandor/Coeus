@@ -182,7 +182,10 @@
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BaseCellGroup.cpp" />
+    <ClCompile Include="BoltzmanExploration.cpp" />
+    <ClCompile Include="EGreedyExploration.cpp" />
     <ClCompile Include="ExponentialDecay.cpp" />
+    <ClCompile Include="ExponentialInterpolation.cpp" />
     <ClCompile Include="GradientAccumulator.cpp" />
     <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
@@ -217,6 +220,7 @@
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
+    <ClCompile Include="LinearInterpolation.cpp" />
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="GeneralTDRule.cpp" />
     <ClCompile Include="RuleFactory.cpp" />
@@ -287,7 +291,10 @@
     <ClInclude Include="BackProph.h" />
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BaseCellGroup.h" />
+    <ClInclude Include="BoltzmanExploration.h" />
+    <ClInclude Include="EGreedyExploration.h" />
     <ClInclude Include="ExponentialDecay.h" />
+    <ClInclude Include="ExponentialInterpolation.h" />
     <ClInclude Include="GradientAccumulator.h" />
     <ClInclude Include="GradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
@@ -318,12 +325,14 @@
     <ClInclude Include="ICuriosityModule.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IGradientComponent.h" />
+    <ClInclude Include="IInterpolation.h" />
     <ClInclude Include="ILearningRateModule.h" />
     <ClInclude Include="InputLayer.h" />
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="KLDivergence.h" />
+    <ClInclude Include="LinearInterpolation.h" />
     <ClInclude Include="QLearning.h" />
     <ClInclude Include="GeneralTDRule.h" />
     <ClInclude Include="QLearningRule.h" />

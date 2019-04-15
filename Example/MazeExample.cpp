@@ -18,6 +18,10 @@
 #include "CountModule.h"
 #include "Nadam.h"
 #include "BackProph.h"
+#include "BoltzmanExploration.h"
+#include "EGreedyExploration.h"
+#include "LinearInterpolation.h"
+#include "ExponentialInterpolation.h"
 
 using namespace Coeus;
 
@@ -36,9 +40,9 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 6));
-	network.add_layer(new CoreLayer("hidden0", p_hidden, RELU));
-	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU));
+	network.add_layer(new InputLayer("input", 9));
+	network.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID));
+	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID));
 	network.add_layer(new CoreLayer("output", 4, TANH));
 	// feed-forward connections
 	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.1f);
@@ -59,8 +63,10 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 	vector<float> sensors;
 	Tensor state0, state1;
 	float reward = 0;
-	float epsilon = 1;
-	int epochs = 0;
+	const int epochs = 10000;
+
+	//EGreedyExploration exploration(0.3, new ExponentialInterpolation(0.3, 0.1, epochs));
+	BoltzmanExploration exploration(10, new ExponentialInterpolation(10, 0.1, epochs));
 
 	int wins = 0, loses = 0;
 	
@@ -70,9 +76,7 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 
 	//test(&network);
 
-	//for (int e = 0; e < epochs; e++) {
-	while(wins < 100 && loses < 10) {
-		epochs++;
+	for (int e = 0; e < epochs; e++) {
 		//if (p_verbose) cout << "Epoch " << e << endl;
 
 		task.getEnvironment()->reset();
@@ -83,7 +87,7 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 		while (!task.isFinished()) {
 			//cout << maze->toString() << endl;
 			network.activate(&state0);
-			const int action0 = choose_action(network.get_output(), epsilon);
+			const int action0 = exploration.get_action(network.get_output());
 			maze->performAction(action0);
 
 			sensors = maze->getSensors();
@@ -103,13 +107,13 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 			state0.override(&state1);
 		}
 
+		exploration.update(e);
+
 		if (task.isWinner()) {
 			wins++;
-			if (epsilon > 0) epsilon *= 0.999f;
 		}
 		else {
-			wins = 0;
-			if (epsilon < 1e-1)	loses++;
+			loses++;
 		}
 
 		//cout << epsilon << endl;
@@ -119,28 +123,17 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 		if (p_verbose)
 		{
 			cout << task.getEnvironment()->moves() << endl;
-			cout << epsilon << endl;
 			cout << wins << " / " << loses << endl;
 		}
 
 		//cout << maze->toString() << endl;
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
-
-
-		//exploration->update((float)e / epochs);
-		/*
-		if (epsilon > 0.1) {
-			epsilon -= (1.0 / epochs);
-		}
-		*/
 	}
-
-	cout << epochs << endl;
 
 	return test(&network, true);
 }
 
-void MazeExample::example_float_q() {
+void MazeExample::example_double_q() {
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
@@ -427,83 +420,120 @@ void MazeExample::example_actor_critic() {
 	//test(&network_actor);
 }
 
-void MazeExample::example_deep_q() {
+int MazeExample::example_deep_q(int p_hidden, float p_alpha, float p_lambda, const bool p_verbose) {
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden0", 256, RELU));
-	network.add_layer(new CoreLayer("output", 4, LINEAR));
+	network.add_layer(new InputLayer("input", 9));
+	network.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID));
+	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID));
+	network.add_layer(new CoreLayer("hidden2", p_hidden / 4, SIGMOID));
+	network.add_layer(new CoreLayer("output", 4, TANH));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.1f);
+	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, 0.1f);
+	network.add_connection("hidden1", "hidden2", Connection::UNIFORM, 0.1f);
+	network.add_connection("hidden2", "output", Connection::UNIFORM, 0.1f);
 	network.init();
 
 	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), 0.01, 0.9, true);
+	//optimizer.init(new QuadraticCost(), p_alpha, 0.9, true);
 	ADAM optimizer(&network);
-	optimizer.init(new QuadraticCost(), 1e-4f);
-	DeepQLearning agent(&network, &optimizer, 0.9f, 256, 32);
+	//RMSProp optimizer(&network);
+	optimizer.init(new QuadraticCost(), p_alpha);
+	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
+	//CountModule curiosity(maze->mazeX() * maze->mazeY());
+	//QLearning agent(&network, ADAM_RULE, p_alpha, 0.9, p_lambda);
+	DeepQLearning agent(&network, &optimizer, 0.9f, 1024, 64);
 
 	vector<float> sensors;
 	Tensor state0, state1;
-	int action;
 	float reward = 0;
-	float epsilon = 1;
-	int epochs = 5000;
+	float epsilon = 0.3;
+	int epochs = 0;
 
 	int wins = 0, loses = 0;
+
+	BoltzmanExploration exploration(1.f);
 
 	//FILE* pFile = fopen("application.log", "w");
 	//Output2FILE::Stream() = pFile;
 	//FILELog::ReportingLevel() = FILELog::FromString("DEBUG1");
 
-	for (int e = 0; e < epochs; e++) {
-		cout << "Epoch " << e << endl;
+	//test(&network);
+
+	//for (int e = 0; e < epochs; e++) {
+	while (wins < 100 && loses < 10 && epochs < 100000) {
+		epochs++;
+		//if (p_verbose) cout << "Epoch " << e << endl;
 
 		task.getEnvironment()->reset();
 
+		sensors = maze->getSensors();
+		state0 = encode_state(&sensors);
+
 		while (!task.isFinished()) {
 			//cout << maze->toString() << endl;
-
-			sensors = maze->getSensors();
-			state0 = encode_state(&sensors);
 			network.activate(&state0);
-			//action = exploration->chooseAction(network.getOutput());
-			action = choose_action(network.get_output(), epsilon);
-			maze->performAction(action);
+			//const int action0 = choose_action(network.get_output(), epsilon);
+			const int action0 = exploration.get_action(network.get_output());
+
+			maze->performAction(action0);
 
 			sensors = maze->getSensors();
 			state1 = encode_state(&sensors);
-			reward = task.getReward();
-			agent.train(&state0, action, &state1, reward, task.isFinished());
+			//curiosity.update(&state1);
+			reward = task.getReward(); // +curiosity.get_reward(&state1);
+
+		   /*
+		   cout << maze->toString() << endl;
+		   cout << state0 << endl;
+		   cout << action0 << endl;
+		   cout << state1 << endl;
+		   cout << reward << endl;
+		   */
+
+			agent.train(&state0, action0, &state1, reward, task.isFinished());
+			state0.override(&state1);
 		}
 
-		cout << task.getEnvironment()->moves() << endl;
-		cout << epsilon << endl;
-
-		if (reward > 0) {
+		if (task.isWinner()) {
 			wins++;
+			if (epsilon > 0) epsilon *= 0.999f;
 		}
 		else {
-			loses++;
+			wins = 0;
+			if (epsilon < 1e-1)	loses++;
+		}
+
+		//cout << epsilon << endl;
+		//cout << wins << " " << task.getEnvironment()->moves() << " " << reward << endl;
+
+		//agent.reset_traces();
+		if (p_verbose)
+		{
+			cout << task.getEnvironment()->moves() << endl;
+			cout << epsilon << endl;
+			cout << wins << " / " << loses << endl;
 		}
 
 		//cout << maze->toString() << endl;
-		cout << wins << " / " << loses << endl;
 		//FILE_LOG(logDEBUG1) << wins << " " << loses;
 
 
 		//exploration->update((float)e / epochs);
-
+		/*
 		if (epsilon > 0.1) {
-			epsilon -= (1.0f / epochs);
+		epsilon -= (1.0 / epochs);
 		}
+		*/
 	}
 
-	//test(&network);
+	cout << epochs << endl;
+
+	return test(&network, true);
 }
 
 void MazeExample::example_icm() {
