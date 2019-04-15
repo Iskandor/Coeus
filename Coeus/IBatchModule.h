@@ -4,8 +4,6 @@
 #include <map>
 #include "GradientAccumulator.h"
 
-using namespace FLAB;
-
 namespace Coeus {
 	class __declspec(dllexport) IBatchModule
 	{

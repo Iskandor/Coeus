@@ -7,8 +7,6 @@
 #include "CartPoleTask.h"
 #include "RandomGenerator.h"
 
-using namespace FLAB;
-
 CartPoleTask::CartPoleTask(int p_maxT) {
     _maxT = p_maxT;
     _cartPole = new CartPole();

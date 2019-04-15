@@ -1,73 +1,63 @@
 #include "NetworkGradient.h"
-#include "IGradientComponent.h"
-#include "CoreLayerGradient.h"
-#include "RecurrentLayerGradient.h"
-#include "LSTMLayerGradient.h"
+#include "TensorOperator.h"
+#include "NeuronOperator.h"
 
 using namespace Coeus;
 
 NetworkGradient::NetworkGradient(NeuralNetwork* p_network)
 {
 	_network = p_network;
-
-	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		IGradientComponent* component = create_component(*it);
-		if (component != nullptr) {
-			component->init();
-			_gradient_component[(*it)->get_id()] = component;
-		}
-	}
-
-	_gradient = get_empty_params();
+	_gradient = _network->get_empty_params();
 }
 
 
 NetworkGradient::~NetworkGradient()
 {
+	for (auto& it : _delta)
+	{
+		delete it.second;
+		it.second = nullptr;
+	}
+
+	for (auto& it : _derivative)
+	{
+		delete it.second;
+		it.second = nullptr;
+	}
 }
 
 void NetworkGradient::calc_gradient(Tensor* p_value) {
 
-	for(auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->calc_deriv();
-		}
-	}
-
 	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
 
-	Tensor delta;
-
-	if (p_value == nullptr)
+	if (p_value != nullptr)
 	{
-		delta = *_gradient_component[output_layer->get_id()]->get_output_deriv() * Tensor::Ones({_network->get_output()->size()});
+		if (p_value->rank() == 1)
+		{
+			_delta[_network->_output_layer] = NeuronOperator::init_auxiliary_parameter(_delta[_network->_output_layer], 1, output_layer->get_dim());
+			TensorOperator::instance().vv_ewprod(p_value->arr(), _derivative[_network->_output_layer]->arr(), _delta[_network->_output_layer]->arr(), output_layer->get_dim());
+		}
+		if (p_value->rank() == 2)
+		{
+			_delta[_network->_output_layer] = NeuronOperator::init_auxiliary_parameter(_delta[_network->_output_layer], p_value->shape(0), output_layer->get_dim());
+			TensorOperator::instance().vv_ewprod(p_value->arr(), _derivative[_network->_output_layer]->arr(), _delta[_network->_output_layer]->arr(), p_value->shape(0) * output_layer->get_dim());
+		}
 	}
 	else
 	{
-		delta = *_gradient_component[output_layer->get_id()]->get_output_deriv() * *p_value;
-	}
-	
-
-	_gradient_component[output_layer->get_id()]->set_delta(&delta);
-
-	BaseLayer* prev_layer = output_layer;
-
-	for (auto it = ++_network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->calc_delta(_network->get_connection((*it)->get_id(), prev_layer->get_id())->get_weights(), _gradient_component[prev_layer->get_id()]->get_input_delta());
-			prev_layer = *it;
-		}		
+		_delta[_network->_output_layer] = _derivative[_network->_output_layer];
 	}
 
-	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->calc_gradient(_gradient);
-		}
+	for (auto& it : _network->_backward_graph)
+	{
+		it->calc_delta(_delta, _derivative);
+		it->calc_gradient(_gradient, _delta, _derivative);
 	}
 }
 
 void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss) {
-	const float epsilon = 1e-4;
+	/*
+	const float epsilon = 1e-4f;
 
 	for (auto it = _network->_connections.begin(); it != _network->_connections.end(); ++it) {
 		if (it->second->is_trainable())
@@ -130,50 +120,25 @@ void NetworkGradient::check_gradient(Tensor* p_input, Tensor* p_target, ICostFun
 			}
 		}
 	}
+	*/
 }
 
 void NetworkGradient::reset()
 {
-	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->reset();
-		}
-	}
-}
+	_network->reset();
 
-map<string, Tensor> NetworkGradient::get_empty_params() const
-{
-	map<string, Tensor> result;
-
-	for(auto it = _network->_params.begin(); it != _network->_params.end(); ++it)
+	for (auto& it : _derivative)
 	{
-		result[it->first] = Tensor(it->second->rank(), it->second->shape(), Tensor::ZERO);
+		it.second->fill(0);
 	}
-
-	return result;
 }
 
-IGradientComponent* NetworkGradient::create_component(BaseLayer* p_layer) const {
-	IGradientComponent* component = nullptr;
-
-	switch(p_layer->get_type()) {
-		case BaseLayer::SOM: break;
-		case BaseLayer::MSOM: break;
-		case BaseLayer::INPUT: break;
-		case BaseLayer::CORE: 
-			component = new CoreLayerGradient(p_layer, _network);
-		break;
-		case BaseLayer::RECURRENT: 
-			component = new RecurrentLayerGradient(p_layer, _network);
-		break;
-		case BaseLayer::LSTM: 
-			component = new LSTMLayerGradient(p_layer, _network);
-		break;
-		case BaseLayer::LSOM: break;
-		default: ;
+void NetworkGradient::calc_derivative()
+{
+	for (auto& it : _network->_backward_graph)
+	{
+		it->calc_derivative(_derivative);
 	}
-
-	return component;
 }
 
 float NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss) const {
@@ -183,37 +148,18 @@ float NetworkGradient::check_estimate(Tensor* p_input, Tensor* p_target, ICostFu
 
 void NetworkGradient::activate(Tensor* p_input)
 {
-	// single input
-	if (p_input->rank() == 1)
-	{
-		_network->_layers[_network->_input_layer[0]]->activate(p_input);
-
-		_network->activate();
-		calc_deriv_estimate();
-	}
-
-	// sequence
-	if (p_input->rank() == 2)
-	{
-		Tensor input = Tensor::Zero({ p_input->shape(1) });
-
-		reset();
-		for (int i = 0; i < p_input->shape(0); i++)
-		{
-			p_input->get_row(input, i);
-			_network->_layers[_network->_input_layer[0]]->activate(&input);
-
-			_network->activate();
-			calc_deriv_estimate();
-		}
-	}
+	_network->_layers[_network->_input_layer[0]]->integrate(p_input);
+	_network->activate();
+	calc_derivative();
 }
 
-void NetworkGradient::calc_deriv_estimate()
-{
-	for (auto it = _network->_backward_graph.begin(); it != _network->_backward_graph.end(); ++it) {
-		if (_gradient_component[(*it)->get_id()] != nullptr) {
-			_gradient_component[(*it)->get_id()]->calc_deriv_estimate();
-		}
+void NetworkGradient::activate(vector<Tensor*>* p_input)
+{	
+	reset();
+	for (auto& it : *p_input)
+	{
+		_network->_layers[_network->_input_layer[0]]->integrate(it);
+		_network->activate();
+		calc_derivative();
 	}
 }

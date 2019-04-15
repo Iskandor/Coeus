@@ -4,8 +4,6 @@
 
 #include "RandomGenerator.h"
 
-using namespace FLAB;
-
 RandomGenerator::RandomGenerator() {
   _mt.seed(_rd());
 }

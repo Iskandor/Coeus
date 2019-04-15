@@ -43,6 +43,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseIntelMKL>Sequential</UseIntelMKL>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -50,6 +51,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseIntelMKL>Sequential</UseIntelMKL>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -165,7 +167,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ActivationFunctions.cpp" />
+    <ClCompile Include="ActivationFunctionFactory.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="ActorRule.cpp" />
     <ClCompile Include="Adadelta.cpp" />
@@ -181,7 +183,6 @@
     <ClCompile Include="AnnealingScheduler.cpp" />
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BackPropRule.cpp" />
-    <ClCompile Include="BaseCellGroup.cpp" />
     <ClCompile Include="BoltzmanExploration.cpp" />
     <ClCompile Include="EGreedyExploration.cpp" />
     <ClCompile Include="ExponentialDecay.cpp" />
@@ -189,13 +190,9 @@
     <ClCompile Include="GradientAccumulator.cpp" />
     <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
-    <ClCompile Include="Base_SOM_learning.cpp" />
-    <ClCompile Include="Base_SOM_params.cpp" />
     <ClCompile Include="BinaryActivation.cpp" />
     <ClCompile Include="BPTT.cpp" />
-    <ClCompile Include="Connection.cpp" />
     <ClCompile Include="CoreLayer.cpp" />
-    <ClCompile Include="CoreLayerGradient.cpp" />
     <ClCompile Include="CountModule.cpp" />
     <ClCompile Include="CrossEntropyCost.cpp" />
     <ClCompile Include="DDPG.cpp" />
@@ -210,17 +207,16 @@
     <ClCompile Include="IActivationFunction.cpp" />
     <ClCompile Include="IBatchModule.cpp" />
     <ClCompile Include="ICM.cpp" />
-    <ClCompile Include="ICostFunction.cpp" />
     <ClCompile Include="ICuriosityModule.cpp" />
     <ClCompile Include="IDGen.cpp" />
-    <ClCompile Include="IGradientComponent.cpp" />
     <ClCompile Include="ILearningRateModule.cpp" />
-    <ClCompile Include="InputLayer.cpp" />
     <ClCompile Include="IOUtils.cpp" />
     <ClCompile Include="ItakuraSaitoDistance.cpp" />
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
     <ClCompile Include="LinearInterpolation.cpp" />
+    <ClCompile Include="NeuronOperator.cpp" />
+    <ClCompile Include="Param.cpp" />
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="GeneralTDRule.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -230,36 +226,22 @@
     <ClCompile Include="PowerSignRule.cpp" />
     <ClCompile Include="QLearningRule.cpp" />
     <ClCompile Include="Tensor.cpp" />
+    <ClCompile Include="TensorInitializer.cpp" />
+    <ClCompile Include="TensorOperatorMKL.cpp" />
     <ClCompile Include="WarmStartup.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
-    <ClCompile Include="LISSOM.cpp" />
-    <ClCompile Include="LISSOM_learning.cpp" />
-    <ClCompile Include="LISSOM_params.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="LSOM.cpp" />
-    <ClCompile Include="LSOM1.cpp" />
-    <ClCompile Include="LSOM1_learning.cpp" />
-    <ClCompile Include="LSOM1_params.cpp" />
-    <ClCompile Include="LSOM_learning.cpp" />
-    <ClCompile Include="LSOM_params.cpp" />
-    <ClCompile Include="LSTMCellGroup.cpp" />
     <ClCompile Include="LSTMLayer.cpp" />
-    <ClCompile Include="LSTMLayerGradient.cpp" />
     <ClCompile Include="Metrics.cpp" />
-    <ClCompile Include="MSOM.cpp" />
-    <ClCompile Include="MSOM_learning.cpp" />
-    <ClCompile Include="MSOM_params.cpp" />
     <ClCompile Include="Nadam.cpp" />
     <ClCompile Include="NadamRule.cpp" />
     <ClCompile Include="NetworkGradient.cpp" />
     <ClCompile Include="PPLBatchModule.cpp" />
     <ClCompile Include="ParamModel.cpp" />
     <ClCompile Include="RMSPropRule.cpp" />
-    <ClCompile Include="SimpleCellGroup.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="QuadraticCost.cpp" />
     <ClCompile Include="RecurrentLayer.cpp" />
-    <ClCompile Include="RecurrentLayerGradient.cpp" />
     <ClCompile Include="ReluActivation.cpp" />
     <ClCompile Include="ReplayBuffer.cpp" />
     <ClCompile Include="RMSProp.cpp" />
@@ -268,15 +250,11 @@
     <ClCompile Include="SingleBatchModule.cpp" />
     <ClCompile Include="SoftmaxActivation.cpp" />
     <ClCompile Include="SoftplusActivation.cpp" />
-    <ClCompile Include="SOM.cpp" />
-    <ClCompile Include="SOM_analyzer.cpp" />
-    <ClCompile Include="SOM_learning.cpp" />
-    <ClCompile Include="SOM_params.cpp" />
     <ClCompile Include="TanhActivation.cpp" />
     <ClCompile Include="TD.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ActivationFunctions.h" />
+    <ClInclude Include="ActivationFunctionFactory.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="ActorRule.h" />
     <ClInclude Include="Adadelta.h" />
@@ -292,7 +270,6 @@
     <ClInclude Include="AnnealingScheduler.h" />
     <ClInclude Include="BackProph.h" />
     <ClInclude Include="BackPropRule.h" />
-    <ClInclude Include="BaseCellGroup.h" />
     <ClInclude Include="BoltzmanExploration.h" />
     <ClInclude Include="EGreedyExploration.h" />
     <ClInclude Include="ExponentialDecay.h" />
@@ -301,14 +278,10 @@
     <ClInclude Include="GradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />
-    <ClInclude Include="Base_SOM_learning.h" />
-    <ClInclude Include="Base_SOM_params.h" />
     <ClInclude Include="BinaryActivation.h" />
     <ClInclude Include="BPTT.h" />
     <ClInclude Include="Coeus.h" />
-    <ClInclude Include="Connection.h" />
     <ClInclude Include="CoreLayer.h" />
-    <ClInclude Include="CoreLayerGradient.h" />
     <ClInclude Include="CountModule.h" />
     <ClInclude Include="CrossEntropyCost.h" />
     <ClInclude Include="DDPG.h" />
@@ -326,14 +299,16 @@
     <ClInclude Include="ICostFunction.h" />
     <ClInclude Include="ICuriosityModule.h" />
     <ClInclude Include="IDGen.h" />
-    <ClInclude Include="IGradientComponent.h" />
     <ClInclude Include="IInterpolation.h" />
     <ClInclude Include="ILearningRateModule.h" />
-    <ClInclude Include="InputLayer.h" />
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="ItakuraSaitoDistance.h" />
+    <ClInclude Include="ITensorOperator.h" />
     <ClInclude Include="IUpdateRule.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="KLDivergence.h" />
+    <ClInclude Include="NeuronOperator.h" />
+    <ClInclude Include="Param.h" />
     <ClInclude Include="LinearInterpolation.h" />
     <ClInclude Include="QLearning.h" />
     <ClInclude Include="GeneralTDRule.h" />
@@ -344,36 +319,23 @@
     <ClInclude Include="PowerSign.h" />
     <ClInclude Include="PowerSignRule.h" />
     <ClInclude Include="Tensor.h" />
+    <ClInclude Include="TensorInitializer.h" />
+    <ClInclude Include="TensorOperator.h" />
+    <ClInclude Include="TensorOperatorMKL.h" />
     <ClInclude Include="WarmStartup.h" />
     <ClInclude Include="LinearActivation.h" />
-    <ClInclude Include="LISSOM.h" />
-    <ClInclude Include="LISSOM_learning.h" />
-    <ClInclude Include="LISSOM_params.h" />
     <ClInclude Include="Logger.h" />
-    <ClInclude Include="LSOM.h" />
-    <ClInclude Include="LSOM1.h" />
-    <ClInclude Include="LSOM1_learning.h" />
-    <ClInclude Include="LSOM1_params.h" />
-    <ClInclude Include="LSOM_learning.h" />
-    <ClInclude Include="LSOM_params.h" />
-    <ClInclude Include="LSTMCellGroup.h" />
     <ClInclude Include="LSTMLayer.h" />
-    <ClInclude Include="LSTMLayerGradient.h" />
     <ClInclude Include="Metrics.h" />
-    <ClInclude Include="MSOM.h" />
-    <ClInclude Include="MSOM_learning.h" />
-    <ClInclude Include="MSOM_params.h" />
     <ClInclude Include="Nadam.h" />
     <ClInclude Include="NadamRule.h" />
     <ClInclude Include="NetworkGradient.h" />
     <ClInclude Include="PPLBatchModule.h" />
     <ClInclude Include="ParamModel.h" />
     <ClInclude Include="RMSPropRule.h" />
-    <ClInclude Include="SimpleCellGroup.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="QuadraticCost.h" />
     <ClInclude Include="RecurrentLayer.h" />
-    <ClInclude Include="RecurrentLayerGradient.h" />
     <ClInclude Include="ReluActivation.h" />
     <ClInclude Include="ReplayBuffer.h" />
     <ClInclude Include="RMSProp.h" />
@@ -382,10 +344,6 @@
     <ClInclude Include="SingleBatchModule.h" />
     <ClInclude Include="SoftmaxActivation.h" />
     <ClInclude Include="SoftplusActivation.h" />
-    <ClInclude Include="SOM.h" />
-    <ClInclude Include="SOM_analyzer.h" />
-    <ClInclude Include="SOM_learning.h" />
-    <ClInclude Include="SOM_params.h" />
     <ClInclude Include="TanhActivation.h" />
     <ClInclude Include="TD.h" />
   </ItemGroup>

@@ -3,7 +3,6 @@
 #include "Tensor.h"
 #include "NetworkGradient.h"
 
-using namespace FLAB;
 using namespace std;
 
 namespace Coeus {

@@ -1,7 +1,5 @@
 #include "IOUtils.h"
 #include <fstream>
-#include "InputLayer.h"
-#include "CoreLayer.h"
 #include "LinearActivation.h"
 #include "BinaryActivation.h"
 #include "SigmoidActivation.h"
@@ -9,6 +7,8 @@
 #include "SoftplusActivation.h"
 #include "ReluActivation.h"
 #include "SoftmaxActivation.h"
+#include "RecurrentLayer.h"
+#include "CoreLayer.h"
 #include "LSTMLayer.h"
 
 using namespace Coeus;
@@ -46,7 +46,7 @@ json IOUtils::load_network(const string& p_filename)
 	return data["network"];
 }
 
-BaseLayer* IOUtils::create_layer(json p_data)
+BaseLayer* IOUtils::create_layer(const json& p_data)
 {
 	BaseLayer* layer = nullptr;
 
@@ -58,13 +58,11 @@ BaseLayer* IOUtils::create_layer(json p_data)
 		break;
 	case BaseLayer::MSOM: 
 		break;
-	case BaseLayer::INPUT:
-		layer = create_layer<InputLayer>(p_data);
-		break;
 	case BaseLayer::CORE:
 		layer = create_layer<CoreLayer>(p_data);
 		break;
-	case BaseLayer::RECURRENT: 
+	case BaseLayer::RECURRENT:
+		layer = create_layer<RecurrentLayer>(p_data);
 		break;
 	case BaseLayer::LSTM:
 		layer = create_layer<LSTMLayer>(p_data);

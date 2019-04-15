@@ -6,7 +6,6 @@
 #include "Tensor.h"
 #include "CisLoader.h"
 
-using namespace FLAB;
 using namespace std;
 
 #define BIG_ENDIAN 0

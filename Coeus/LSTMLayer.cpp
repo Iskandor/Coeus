@@ -1,63 +1,59 @@
 #include "LSTMLayer.h"
-#include "LSTMLayerGradient.h"
+#include "IDGen.h"
+#include "ActivationFunctionFactory.h"
+#include "TensorInitializer.h"
+#include "TensorOperator.h"
+#include "NeuronOperator.h"
 
 using namespace Coeus;
 
 
-LSTMLayer::LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation) : BaseLayer(p_id)
+LSTMLayer::LSTMLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, p_in_dim)
 {
 	_type = LSTM;
 
-	_input_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, SIGMOID, true));
-	_output_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, SIGMOID, true));
-	_forget_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, SIGMOID, true));
-	_cec = add_group<LSTMCellGroup>(new LSTMCellGroup(p_dim, p_activation, _input_gate, _output_gate, _forget_gate));
-	_context = add_group<SimpleCellGroup>(new SimpleCellGroup(p_dim, LINEAR, false));
+	_activation_function = ActivationFunctionFactory::create_function(p_activation);
+	_initializer = p_initializer;
 
-	_aux_input = nullptr;
-	_in_input_gate = nullptr;
-	_in_output_gate = nullptr;
-	_in_forget_gate = nullptr;
+	_cec = new NeuronOperator(p_dim, TANH);
+	add_param(_cec);
+	_ig = new NeuronOperator(p_dim, SIGMOID);
+	add_param(_ig);
+	_fg = new NeuronOperator(p_dim, SIGMOID);
+	add_param(_fg);
+	_og = new NeuronOperator(p_dim, SIGMOID);
+	add_param(_og);
 
-	_output_group = _cec;
-
-	_ct_cec = add_connection(new Connection(p_dim, p_dim, _context->get_id(), _cec->get_id(), Connection::LECUN_UNIFORM));
+	_Wxc = nullptr;
+	_Wxig = nullptr;
+	_Wxfg = nullptr;
+	_Wxog = nullptr;
+	
+	_state = nullptr;
+	_state_error = nullptr;
+	_context = nullptr;
 }
 
 LSTMLayer::LSTMLayer(json p_data) : BaseLayer(p_data)
 {
 	_type = LSTM;
-
-	_input_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_data["input_gate"]));
-	_output_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_data["output_gate"]));
-	_forget_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_data["forget_gate"]));
-	_cec = add_group<LSTMCellGroup>(new LSTMCellGroup(p_data["cec"], _input_gate, _output_gate, _forget_gate));
-	_context = add_group<SimpleCellGroup>(new SimpleCellGroup(p_data["context"]));
-
-	_output_group = _cec;
-
-	_ct_cec = add_connection(new Connection(p_data["context_cec"]));
-
-	_aux_input = add_group<SimpleCellGroup>(new SimpleCellGroup(p_data["aux_input"]));
-	_in_input_gate = add_connection(new Connection(p_data["in_input_gate"]));;
-	_in_output_gate = add_connection(new Connection(p_data["in_output_gate"]));;
-	_in_forget_gate = add_connection(new Connection(p_data["in_forget_gate"]));;
 }
 
 LSTMLayer::~LSTMLayer()
 {
 	delete _cec;
-	delete _input_gate;
-	delete _output_gate;
-	delete _forget_gate;
-	delete _aux_input;
-	delete _input_group;
-	delete _context;
+	delete _ig;
+	delete _fg;
+	delete _og;
 
-	delete _in_input_gate;
-	delete _in_output_gate;
-	delete _in_forget_gate;
-	delete _ct_cec;
+	delete _Wxc;
+	delete _Wxig;
+	delete _Wxfg;
+	delete _Wxog;
+
+	delete _state;
+	delete _state_error;
+	delete _context;
 }
 
 LSTMLayer* LSTMLayer::clone()
@@ -67,67 +63,255 @@ LSTMLayer* LSTMLayer::clone()
 
 void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 {
-	int dim = 0;
-	for (auto& layer : p_input_layers)
-	{
-		dim += layer->get_output()->size();
-	}
+	BaseLayer::init(p_input_layers);
 
-	const int aux_dim = dim + _cec->get_dim();
+	_in_dim += _dim;
 
-	_input_group = add_group<SimpleCellGroup>(new SimpleCellGroup(dim, LINEAR, false));
+	_Wxc = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	add_param(_Wxc->get_id(), _Wxc->get_data());
+	_initializer->init(_Wxc->get_data());
 
-	if (_aux_input == nullptr)
-	{
-		_aux_input = add_group<SimpleCellGroup>(new SimpleCellGroup(aux_dim, LINEAR, false));
-	}
+	_Wxig = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	add_param(_Wxig->get_id(), _Wxig->get_data());
+	_initializer->init(_Wxig->get_data());
 
-	if (_in_input_gate == nullptr)
-	{
-		_in_input_gate = add_connection(new Connection(_aux_input->get_dim(), _input_gate->get_dim(), _aux_input->get_id(), _input_gate->get_id(), Connection::LECUN_UNIFORM));
-		add_param(_in_input_gate);
-	}
+	_Wxfg = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	add_param(_Wxfg->get_id(), _Wxfg->get_data());
+	_initializer->init(_Wxfg->get_data());
 
-	if (_in_output_gate == nullptr)
-	{
-		_in_output_gate = add_connection(new Connection(_aux_input->get_dim(), _output_gate->get_dim(), _aux_input->get_id(), _output_gate->get_id(), Connection::LECUN_UNIFORM));
-		add_param(_in_output_gate);
-	}
-
-	if (_in_forget_gate == nullptr)
-	{
-		_in_forget_gate = add_connection(new Connection(_aux_input->get_dim(), _forget_gate->get_dim(), _aux_input->get_id(), _forget_gate->get_id(), Connection::LECUN_UNIFORM));
-		add_param(_in_forget_gate);
-	}
-
-
+	_Wxog = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	add_param(_Wxog->get_id(), _Wxog->get_data());
+	_initializer->init(_Wxog->get_data());
 }
 
-void LSTMLayer::integrate(Tensor* p_input, Tensor* p_weights)
-{
-	_cec->integrate(p_input, p_weights);
-	_input.emplace_back(p_input);
-}
+void LSTMLayer::activate()
+{	
+	_context = NeuronOperator::init_auxiliary_parameter(_context, _batch_size, _dim);
+	_state = NeuronOperator::init_auxiliary_parameter(_state, _batch_size, _dim);
+	_state_error = NeuronOperator::init_auxiliary_parameter(_state_error, _batch_size, _dim);
+	_output = NeuronOperator::init_auxiliary_parameter(_output, _batch_size, _dim);
 
-void LSTMLayer::activate(Tensor* p_input)
-{
-	_input_group->set_output(_input);
-	_context->set_output(_cec->get_output());
+	_input->push_back(_context);
+	_input->reset_index();
 
-	_input.emplace_back(_cec->get_output());
-	_aux_input->set_output(_input);
+	_ig->integrate(_input, _Wxig->get_data());
+	_ig->activate();
+	
+	_fg->integrate(_input, _Wxfg->get_data());
+	_fg->activate();
+	
+	_og->integrate(_input, _Wxog->get_data());
+	_og->activate();
 
-	_input_gate->integrate(_aux_input->get_output(), _in_input_gate->get_weights());
-	_input_gate->activate();
-	_output_gate->integrate(_aux_input->get_output(), _in_output_gate->get_weights());
-	_output_gate->activate();
-	_forget_gate->integrate(_aux_input->get_output(), _in_forget_gate->get_weights());
-	_forget_gate->activate();
-
-	_cec->integrate(_context->get_output(), _ct_cec->get_weights());
+	_cec->integrate(_input, _Wxc->get_data());
 	_cec->activate();
 
-	_input.clear();
+	if (_batch_size == 1)
+	{
+		TensorOperator::instance().lstm_state_s(_state->arr(), _ig->get_output()->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), _dim);
+		Tensor ac = _activation_function->activate(*_state);
+		TensorOperator::instance().vv_ewprod(_og->get_output()->arr(), ac.arr(), _output->arr(), _dim);
+	}
+	if (_batch_size > 1)
+	{
+		TensorOperator::instance().lstm_state_b(_batch_size, _state->arr(), _ig->get_output()->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), _dim);
+		Tensor ac = _activation_function->activate(*_state);
+		TensorOperator::instance().vv_ewprod(_og->get_output()->arr(), ac.arr(), _output->arr(), _batch_size * _dim);
+	}
+
+	_context->override(_output);
+
+	//cout << _id << endl;
+	//cout << *_input << endl;
+}
+
+void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+{
+	_in_derivative->reset_index();
+	for (auto it : _input_layer)
+	{
+		_in_derivative->push_back(p_derivative_map[it->get_id()]);
+	}
+
+	Tensor h = _activation_function->activate(*_state);
+	Tensor dh = _activation_function->derivative(*_state);
+
+	Tensor*	 delta_out = p_delta_map[_id];
+	Tensor*	 delta_in = nullptr;
+	Tensor*	 delta = nullptr;
+
+	p_delta_map[_og->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[_og->get_id()], _batch_size, _dim);
+	p_delta_map[_cec->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[_cec->get_id()], _batch_size, _dim);
+	p_delta_map[_ig->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[_ig->get_id()], _batch_size, _dim);
+	p_delta_map[_fg->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[_fg->get_id()], _batch_size, _dim);
+
+	_state_error = NeuronOperator::init_auxiliary_parameter(_state_error, _batch_size, _dim);
+
+	if (_batch)
+	{
+		TensorOperator::instance().lstm_delta_b(_batch_size, p_delta_map[_og->get_id()]->arr(), _og->derivative().arr(), h.arr(), delta_out->arr(), _dim);
+		TensorOperator::instance().lstm_delta_b(_batch_size, _state_error->arr(), _og->get_output()->arr(), dh.arr(), delta_out->arr(), _dim);
+		p_delta_map[_cec->get_id()]->override(p_derivative_map[_cec->get_bias()->get_id()]);
+
+		TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_ig->get_bias()->get_id()]->arr(), p_delta_map[_ig->get_id()]->arr(), _batch_size * _dim);
+		TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_fg->get_bias()->get_id()]->arr(), p_delta_map[_fg->get_id()]->arr(), _batch_size * _dim);
+
+		if (!_input_layer.empty())
+		{
+			delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
+			delta = NeuronOperator::init_auxiliary_parameter(delta, _batch_size, _in_dim);
+
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_cec->get_id()]->arr(), _Wxc->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_ig->get_id()]->arr(), _Wxig->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_fg->get_id()]->arr(), _Wxfg->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_og->get_id()]->arr(), _Wxog->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
+
+			int index = 0;
+
+			for (auto it : _input_layer)
+			{
+				p_delta_map[it->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[it->get_id()], _batch_size, it->get_dim());
+				delta_in->splice(index, p_delta_map[it->get_id()]);
+				index += it->get_dim();
+			}
+
+			delete delta_in;
+			delete delta;
+		}
+	}
+	else
+	{
+		TensorOperator::instance().lstm_delta_s(p_delta_map[_og->get_id()]->arr(), _og->derivative().arr(), h.arr(), delta_out->arr(), _dim);
+		TensorOperator::instance().lstm_delta_s(_state_error->arr(), _og->get_output()->arr(), dh.arr(), delta_out->arr(), _dim);
+
+		p_delta_map[_cec->get_id()]->override(p_derivative_map[_cec->get_bias()->get_id()]);
+		TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_ig->get_bias()->get_id()]->arr(), p_delta_map[_ig->get_id()]->arr(), _dim);
+		TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_fg->get_bias()->get_id()]->arr(), p_delta_map[_fg->get_id()]->arr(), _dim);
+
+		if (!_input_layer.empty())
+		{
+			delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
+			delta = NeuronOperator::init_auxiliary_parameter(delta, _batch_size, _in_dim);
+
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_cec->get_id()]->arr(), _Wxc->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_ig->get_id()]->arr(), _Wxig->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_fg->get_id()]->arr(), _Wxfg->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_og->get_id()]->arr(), _Wxog->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
+
+			int index = 0;
+
+			for (auto it : _input_layer)
+			{
+				p_delta_map[it->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[it->get_id()], _batch_size, it->get_dim());
+				delta_in->splice(index, p_delta_map[it->get_id()]);
+				index += it->get_dim();
+			}
+
+			delete delta_in;
+			delete delta;
+		}
+	}
+}
+
+void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+{
+	Tensor* gWxig = &p_gradient_map[_Wxig->get_id()];
+	Tensor* gWxfg = &p_gradient_map[_Wxfg->get_id()];
+	Tensor* gWxog = &p_gradient_map[_Wxog->get_id()];
+	Tensor* gWxc = &p_gradient_map[_Wxc->get_id()];
+
+	Tensor* dWxig = p_derivative_map[_Wxig->get_id()];
+	Tensor* dWxfg = p_derivative_map[_Wxfg->get_id()];
+	Tensor* dWxc = p_derivative_map[_Wxc->get_id()];
+
+	if (_batch)
+	{
+		TensorOperator::instance().full_gradient_b(_batch_size, _input->arr(), p_delta_map[_og->get_id()]->arr(), gWxog->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_gradient_b(_batch_size, gWxig->arr(), _state_error->arr(), dWxig->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_gradient_b(_batch_size, gWxfg->arr(), _state_error->arr(), dWxfg->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_gradient_b(_batch_size, gWxc->arr(), _state_error->arr(), dWxc->arr(), _dim, _in_dim);
+
+		TensorOperator::instance().m_reduce(p_gradient_map[_og->get_bias()->get_id()].arr(), p_delta_map[_og->get_id()]->arr(), _batch_size, _dim);
+		TensorOperator::instance().m_reduce(p_gradient_map[_cec->get_bias()->get_id()].arr(), p_delta_map[_cec->get_id()]->arr(), _batch_size, _dim);
+		TensorOperator::instance().m_reduce(p_gradient_map[_ig->get_bias()->get_id()].arr(), p_delta_map[_ig->get_id()]->arr(), _batch_size, _dim);
+		TensorOperator::instance().m_reduce(p_gradient_map[_fg->get_bias()->get_id()].arr(), p_delta_map[_fg->get_id()]->arr(), _batch_size, _dim);
+	}
+	else
+	{
+		TensorOperator::instance().full_gradient_s(_input->arr(), p_delta_map[_og->get_id()]->arr(), gWxog->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_gradient_s(gWxig->arr(), _state_error->arr(), dWxig->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_gradient_s(gWxfg->arr(), _state_error->arr(), dWxfg->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_gradient_s(gWxc->arr(), _state_error->arr(), dWxc->arr(), _dim, _in_dim);
+
+		p_gradient_map[_og->get_bias()->get_id()].override(p_delta_map[_og->get_id()]);
+		p_gradient_map[_cec->get_bias()->get_id()].override(p_delta_map[_cec->get_id()]);
+		p_gradient_map[_ig->get_bias()->get_id()].override(p_delta_map[_ig->get_id()]);
+		p_gradient_map[_fg->get_bias()->get_id()].override(p_delta_map[_fg->get_id()]);
+	}
+
+}
+
+void LSTMLayer::calc_derivative(map<string, Tensor*>& p_derivative)
+{
+	Tensor dy = _activation_function->derivative(*_output);
+	p_derivative[_id] = NeuronOperator::init_auxiliary_parameter(p_derivative[_id], _batch_size, _dim);
+	p_derivative[_id]->override(&dy);
+
+	Tensor dcec = _cec->derivative();
+	p_derivative[_cec->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_cec->get_id()], _batch_size, _dim);
+	p_derivative[_cec->get_id()]->override(&dcec);
+
+	Tensor dig = _ig->derivative();
+	p_derivative[_ig->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_ig->get_id()], _batch_size, _dim);
+	p_derivative[_ig->get_id()]->override(&dig);
+
+	Tensor dfg = _fg->derivative();
+	p_derivative[_fg->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_fg->get_id()], _batch_size, _dim);
+	p_derivative[_fg->get_id()]->override(&dfg);
+
+	Tensor dog = _og->derivative();
+	p_derivative[_og->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_og->get_id()], _batch_size, _dim);
+	p_derivative[_og->get_id()]->override(&dog);
+
+	p_derivative[_Wxc->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_Wxc->get_id()], _batch_size, _dim * _in_dim);
+	p_derivative[_Wxfg->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_Wxfg->get_id()], _batch_size, _dim * _in_dim);
+	p_derivative[_Wxig->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_Wxig->get_id()], _batch_size, _dim * _in_dim);
+	p_derivative[_cec->get_bias()->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_cec->get_bias()->get_id()], _batch_size, _dim);
+	p_derivative[_fg->get_bias()->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_fg->get_bias()->get_id()], _batch_size, _dim);
+	p_derivative[_ig->get_bias()->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_ig->get_bias()->get_id()], _batch_size, _dim);
+
+	if (_batch)
+	{
+		Tensor bias_input = Tensor::Ones({ _batch_size, 1 });
+
+		TensorOperator::instance().lstm_derivative_b(_batch_size, p_derivative[_Wxc->get_id()]->arr(), _fg->get_output()->arr(), dcec.arr(), _ig->get_output()->arr(), _input->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_derivative_b(_batch_size, p_derivative[_Wxig->get_id()]->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), dig.arr(), _input->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_derivative_b(_batch_size, p_derivative[_Wxfg->get_id()]->arr(), _fg->get_output()->arr(), _state->arr(), dfg.arr(), _input->arr(), _dim, _in_dim);
+
+		TensorOperator::instance().lstm_derivative_b(_batch_size, p_derivative[_cec->get_bias()->get_id()]->arr(), _fg->get_output()->arr(), dcec.arr(), _ig->get_output()->arr(), bias_input.arr(), _dim, 1);
+		TensorOperator::instance().lstm_derivative_b(_batch_size, p_derivative[_ig->get_bias()->get_id()]->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), dig.arr(), bias_input.arr(), _dim, 1);
+		TensorOperator::instance().lstm_derivative_b(_batch_size, p_derivative[_fg->get_bias()->get_id()]->arr(), _fg->get_output()->arr(), _state->arr(), dfg.arr(), bias_input.arr(), _dim, 1);
+	}
+	else
+	{
+		Tensor bias_input = Tensor::Ones({ 1 });
+
+		TensorOperator::instance().lstm_derivative_s(p_derivative[_Wxc->get_id()]->arr(), _fg->get_output()->arr(), dcec.arr(), _ig->get_output()->arr(), _input->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_derivative_s(p_derivative[_Wxig->get_id()]->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), dig.arr(), _input->arr(), _dim, _in_dim);
+		TensorOperator::instance().lstm_derivative_s(p_derivative[_Wxfg->get_id()]->arr(), _fg->get_output()->arr(), _state->arr(), dfg.arr(), _input->arr(), _dim, _in_dim);
+
+		TensorOperator::instance().lstm_derivative_s(p_derivative[_cec->get_bias()->get_id()]->arr(), _fg->get_output()->arr(), dcec.arr(), _ig->get_output()->arr(), bias_input.arr(), _dim, 1);
+		TensorOperator::instance().lstm_derivative_s(p_derivative[_ig->get_bias()->get_id()]->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), dig.arr(), bias_input.arr(), _dim, 1);
+		TensorOperator::instance().lstm_derivative_s(p_derivative[_fg->get_bias()->get_id()]->arr(), _fg->get_output()->arr(), _state->arr(), dfg.arr(), bias_input.arr(), _dim, 1);
+	}
 }
 
 void LSTMLayer::override(BaseLayer* p_source)
@@ -137,14 +321,15 @@ void LSTMLayer::override(BaseLayer* p_source)
 
 void LSTMLayer::reset()
 {
-	_cec->reset();
-	_context->get_output()->fill(0);
+	if (_context != nullptr) _context->fill(0);
+	if (_state != nullptr) _state->fill(0);
 }
 
 json LSTMLayer::get_json() const
 {
 	json data = BaseLayer::get_json();
 
+	/*
 	data["input_gate"] = _input_gate->get_json();
 	data["output_gate"] = _output_gate->get_json();
 	data["forget_gate"] = _forget_gate->get_json();
@@ -155,6 +340,7 @@ json LSTMLayer::get_json() const
 	data["in_input_gate"] = _in_input_gate->get_json();
 	data["in_output_gate"] = _in_output_gate->get_json();
 	data["in_forget_gate"] = _in_forget_gate->get_json();
+	*/
 
 	return data;
 }
@@ -163,6 +349,7 @@ LSTMLayer::LSTMLayer(LSTMLayer* p_source) : BaseLayer(p_source)
 {
 	_type = LSTM;
 
+	/*
 	_input_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_input_gate));
 	_output_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_output_gate));
 	_forget_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_forget_gate));
@@ -177,4 +364,5 @@ LSTMLayer::LSTMLayer(LSTMLayer* p_source) : BaseLayer(p_source)
 	_output_group = _cec;
 
 	_ct_cec = add_connection(p_source->_ct_cec->clone());
+	*/
 }

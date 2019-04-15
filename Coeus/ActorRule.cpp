@@ -1,4 +1,5 @@
 #include "ActorRule.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -38,11 +39,11 @@ void ActorRule::calc_update(map<string, Tensor>* p_gradient, const float p_delta
 
 		for(int i = 0; i < p_policy->size(); i++)
 		{
-
-			g += gsb[i][it->first] * p_policy->at(i);
+			TensorOperator::instance().vc_prod_add(gsb[i][it->first].arr(), p_policy->at(i), g.arr(), g.size());
 		}
 
-		_update[it->first] = -p_delta * (gsa[it->first] - g);
+		TensorOperator::instance().vv_sub(gsa[it->first].arr(), g.arr(), _update[it->first].arr(), g.size());
+		TensorOperator::instance().vc_prod(_update[it->first].arr(), -p_delta, _update[it->first].arr(), _update[it->first].size());
 	}
 
 	delete[] gsb;

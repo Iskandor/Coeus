@@ -22,12 +22,6 @@
     <Filter Include="Source Files\Network\Layer">
       <UniqueIdentifier>{83a2b3a6-b9c5-45c4-bdab-8352b24eca48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Network\SOM">
-      <UniqueIdentifier>{37809e74-c498-4cd2-9f5c-a9bf5ed43a5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Network\SOM">
-      <UniqueIdentifier>{1deeff18-e9fe-48c3-b6f7-9c6b3b8c84cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Algorithm">
       <UniqueIdentifier>{2b497b99-eb1c-4f30-b691-3d00c5a19c95}</UniqueIdentifier>
     </Filter>
@@ -48,9 +42,6 @@
     </Filter>
     <Filter Include="Header Files\Algorithm\Unsupervised">
       <UniqueIdentifier>{a5404374-d74a-4efe-91a6-e345e6568f05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Algorithm\Unsupervised">
-      <UniqueIdentifier>{51ac72c3-5e2b-4fb9-a94e-1747a07c1af8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Algorithm\Supervised">
       <UniqueIdentifier>{18ad6569-82d9-481f-abaf-0dc5a6abfcc2}</UniqueIdentifier>
@@ -78,12 +69,6 @@
     </Filter>
     <Filter Include="Source Files\Network\ActivationFunctions">
       <UniqueIdentifier>{5f0a3940-ec5b-415e-bc09-62ffb9755960}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Network\Group">
-      <UniqueIdentifier>{f9fb4bba-3de1-4a59-9fea-919945a677f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Network\Group">
-      <UniqueIdentifier>{ea8444e6-41bd-4d30-b67a-a40c64250451}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Algorithm\Supervised\Rules">
       <UniqueIdentifier>{f3a20436-e1d0-4c90-9a44-898c1d02157c}</UniqueIdentifier>
@@ -138,35 +123,20 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Connection.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivationFunctions.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="BaseLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
     <ClCompile Include="IDGen.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="SOM.cpp">
-      <Filter>Source Files\Network\SOM</Filter>
-    </ClCompile>
     <ClCompile Include="NeuralNetwork.cpp">
       <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="MSOM.cpp">
-      <Filter>Source Files\Network\SOM</Filter>
     </ClCompile>
     <ClCompile Include="IOUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputLayer.cpp">
-      <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
     <ClCompile Include="CoreLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
@@ -177,32 +147,8 @@
     <ClCompile Include="Metrics.cpp">
       <Filter>Source Files\Algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="ICostFunction.cpp">
-      <Filter>Source Files\Algorithm\CostFunctions</Filter>
-    </ClCompile>
     <ClCompile Include="QuadraticCost.cpp">
       <Filter>Source Files\Algorithm\CostFunctions</Filter>
-    </ClCompile>
-    <ClCompile Include="Base_SOM_learning.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="Base_SOM_params.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="MSOM_learning.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="MSOM_params.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="SOM_analyzer.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="SOM_learning.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="SOM_params.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
     <ClCompile Include="ExponentialCost.cpp">
       <Filter>Source Files\Algorithm\CostFunctions</Filter>
@@ -219,29 +165,11 @@
     <ClCompile Include="GenKLDivergence.cpp">
       <Filter>Source Files\Algorithm\CostFunctions</Filter>
     </ClCompile>
-    <ClCompile Include="IGradientComponent.cpp">
-      <Filter>Source Files\Algorithm\Gradient</Filter>
-    </ClCompile>
-    <ClCompile Include="CoreLayerGradient.cpp">
-      <Filter>Source Files\Algorithm\Gradient</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkGradient.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
     </ClCompile>
     <ClCompile Include="ItakuraSaitoDistance.cpp">
       <Filter>Source Files\Algorithm\CostFunctions</Filter>
-    </ClCompile>
-    <ClCompile Include="LISSOM.cpp">
-      <Filter>Source Files\Network\SOM</Filter>
-    </ClCompile>
-    <ClCompile Include="RecurrentLayerGradient.cpp">
-      <Filter>Source Files\Algorithm\Gradient</Filter>
-    </ClCompile>
-    <ClCompile Include="LISSOM_learning.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="LISSOM_params.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
     <ClCompile Include="RMSProp.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
@@ -249,32 +177,11 @@
     <ClCompile Include="LSTMLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="LSTMLayerGradient.cpp">
-      <Filter>Source Files\Algorithm\Gradient</Filter>
-    </ClCompile>
     <ClCompile Include="BPTT.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
-    <ClCompile Include="LSOM1.cpp">
-      <Filter>Source Files\Network\SOM</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM1_learning.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM1_params.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
     <ClCompile Include="Encoder.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM.cpp">
-      <Filter>Source Files\Network\SOM</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM_learning.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
-    </ClCompile>
-    <ClCompile Include="LSOM_params.cpp">
-      <Filter>Source Files\Algorithm\Unsupervised</Filter>
     </ClCompile>
     <ClCompile Include="TD.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
@@ -329,15 +236,6 @@
     </ClCompile>
     <ClCompile Include="DDPG.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
-    </ClCompile>
-    <ClCompile Include="LSTMCellGroup.cpp">
-      <Filter>Source Files\Network\Group</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseCellGroup.cpp">
-      <Filter>Source Files\Network\Group</Filter>
-    </ClCompile>
-    <ClCompile Include="SimpleCellGroup.cpp">
-      <Filter>Source Files\Network\Group</Filter>
     </ClCompile>
     <ClCompile Include="IUpdateRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
@@ -429,9 +327,6 @@
     <ClCompile Include="ExponentialDecay.cpp">
       <Filter>Source Files\Algorithm\Modules\LRM</Filter>
     </ClCompile>
-    <ClCompile Include="GradientAccumulator.cpp">
-      <Filter>Source Files\Algorithm\Gradient</Filter>
-    </ClCompile>
     <ClCompile Include="BoltzmanExploration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -465,14 +360,26 @@
     <ClCompile Include="Tensor.cpp">
       <Filter>Source Files\Backend</Filter>
     </ClCompile>
+    <ClCompile Include="TensorInitializer.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorOperatorMKL.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuronOperator.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="Param.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivationFunctionFactory.cpp">
+      <Filter>Source Files\Network\ActivationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientAccumulator.cpp">
+      <Filter>Source Files\Algorithm\Gradient</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Connection.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivationFunctions.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="BaseLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
@@ -482,23 +389,14 @@
     <ClInclude Include="IDGen.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="SOM.h">
-      <Filter>Header Files\Network\SOM</Filter>
-    </ClInclude>
     <ClInclude Include="NeuralNetwork.h">
       <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="MSOM.h">
-      <Filter>Header Files\Network\SOM</Filter>
     </ClInclude>
     <ClInclude Include="IOUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputLayer.h">
-      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="CoreLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
@@ -515,27 +413,6 @@
     <ClInclude Include="QuadraticCost.h">
       <Filter>Header Files\Algorithm\CostFunctions</Filter>
     </ClInclude>
-    <ClInclude Include="Base_SOM_learning.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="Base_SOM_params.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="MSOM_learning.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="MSOM_params.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="SOM_analyzer.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="SOM_learning.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="SOM_params.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
     <ClInclude Include="CrossEntropyCost.h">
       <Filter>Header Files\Algorithm\CostFunctions</Filter>
     </ClInclude>
@@ -551,29 +428,11 @@
     <ClInclude Include="GenKLDivergence.h">
       <Filter>Header Files\Algorithm\CostFunctions</Filter>
     </ClInclude>
-    <ClInclude Include="IGradientComponent.h">
-      <Filter>Header Files\Algorithm\Gradient</Filter>
-    </ClInclude>
-    <ClInclude Include="CoreLayerGradient.h">
-      <Filter>Header Files\Algorithm\Gradient</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkGradient.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
     </ClInclude>
     <ClInclude Include="ItakuraSaitoDistance.h">
       <Filter>Header Files\Algorithm\CostFunctions</Filter>
-    </ClInclude>
-    <ClInclude Include="LISSOM.h">
-      <Filter>Header Files\Network\SOM</Filter>
-    </ClInclude>
-    <ClInclude Include="RecurrentLayerGradient.h">
-      <Filter>Header Files\Algorithm\Gradient</Filter>
-    </ClInclude>
-    <ClInclude Include="LISSOM_learning.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="LISSOM_params.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
     <ClInclude Include="RMSProp.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
@@ -581,32 +440,11 @@
     <ClInclude Include="LSTMLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="LSTMLayerGradient.h">
-      <Filter>Header Files\Algorithm\Gradient</Filter>
-    </ClInclude>
     <ClInclude Include="BPTT.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
-    <ClInclude Include="LSOM1.h">
-      <Filter>Header Files\Network\SOM</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM1_learning.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM1_params.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
     <ClInclude Include="Encoder.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM.h">
-      <Filter>Header Files\Network\SOM</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM_learning.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
-    </ClInclude>
-    <ClInclude Include="LSOM_params.h">
-      <Filter>Header Files\Algorithm\Unsupervised</Filter>
     </ClInclude>
     <ClInclude Include="TD.h">
       <Filter>Header Files\Algorithm\RL</Filter>
@@ -664,15 +502,6 @@
     </ClInclude>
     <ClInclude Include="DDPG.h">
       <Filter>Header Files\Algorithm\RL</Filter>
-    </ClInclude>
-    <ClInclude Include="LSTMCellGroup.h">
-      <Filter>Header Files\Network\Group</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseCellGroup.h">
-      <Filter>Header Files\Network\Group</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleCellGroup.h">
-      <Filter>Header Files\Network\Group</Filter>
     </ClInclude>
     <ClInclude Include="IUpdateRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
@@ -805,6 +634,30 @@
     </ClInclude>
     <ClInclude Include="Tensor.h">
       <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationFunctionFactory.h">
+      <Filter>Header Files\Network\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="ITensorOperator.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuronOperator.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorInitializer.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorOperator.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorOperatorMKL.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="Param.h">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

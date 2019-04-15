@@ -3,7 +3,6 @@
 #include <vector>
 #include "NeuralNetwork.h"
 
-using namespace FLAB;
 using namespace Coeus;
 
 class MazeExample

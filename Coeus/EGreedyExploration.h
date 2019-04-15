@@ -2,8 +2,6 @@
 #include "Tensor.h"
 #include "IInterpolation.h"
 
-using namespace FLAB;
-
 namespace Coeus
 {
 	class __declspec(dllexport) EGreedyExploration

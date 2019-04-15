@@ -1,4 +1,5 @@
 #include "QLearningRule.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -8,7 +9,7 @@ QLearningRule::QLearningRule(NetworkGradient* p_network_gradient, const float p_
 {
 	if (p_lambda > 0)
 	{
-		_e_traces = p_network_gradient->get_empty_params();
+		_e_traces = p_network_gradient->get_network()->get_empty_params();
 	}
 
 	_rule = new ADAMRule(p_network_gradient, p_alpha, 0.9, 0.999, 1e-8);
@@ -51,11 +52,11 @@ void QLearningRule::calc_update(map<string, Tensor>* p_gradient, const float p_d
 	for (auto it = _rule->get_update()->begin(); it != _rule->get_update()->end(); ++it) {
 		if (_lambda > 0)
 		{
-			_update[it->first] = -p_delta * _e_traces[it->first];
+			 TensorOperator::instance().vc_prod(_e_traces[it->first].arr(), -p_delta, _update[it->first].arr(), _update[it->first].size());
 		}
 		else
 		{
-			_update[it->first] = -p_delta * it->second;
+			TensorOperator::instance().vc_prod(it->second.arr(), -p_delta, _update[it->first].arr(), _update[it->first].size());
 		}
 	}
 }
@@ -80,6 +81,8 @@ void QLearningRule::reset_traces()
 void QLearningRule::update_traces(map<string, Tensor>* p_gradient)
 {
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
-		_e_traces[it->first] = _lambda * _gamma * _e_traces[it->first] + it->second;
+		const int size = _e_traces[it->first].size();
+		TensorOperator::instance().vc_prod(_e_traces[it->first].arr(), _lambda * _gamma, _e_traces[it->first].arr(), size);
+		TensorOperator::instance().vv_add(_e_traces[it->first].arr(), it->second.arr(), _e_traces[it->first].arr(), size);
 	}
 }

@@ -1,6 +1,7 @@
 #include "OpenMPBatchModule.h"
 #include <chrono>
 #include <omp.h>
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -18,7 +19,7 @@ OpenMPBatchModule::OpenMPBatchModule(NeuralNetwork* p_network, ICostFunction* p_
 		_network_gradient[i] = new NetworkGradient(_clone_network[i]);
 	}
 
-	_gradient = _network_gradient[0]->get_empty_params();
+	_gradient = _network->get_empty_params();
 }
 
 OpenMPBatchModule::~OpenMPBatchModule()
@@ -62,7 +63,7 @@ void OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input
 		{
 			for (auto it = _network_gradient[i]->get_gradient()->begin(); it != _network_gradient[i]->get_gradient()->end(); ++it) {
 				#pragma omp critical
-				_gradient[it->first] += it->second;
+				TensorOperator::instance().vv_add(_gradient[it->first].arr(), it->second.arr(), _gradient[it->first].arr(), _gradient[it->first].size());
 			}
 		}
 	}

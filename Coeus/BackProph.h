@@ -1,9 +1,9 @@
 #pragma once
+#include "NeuralNetwork.h"
+#include "ICostFunction.h"
 #include "GradientAlgorithm.h"
 
-
 namespace Coeus {
-
 	class __declspec(dllexport) BackProp : public GradientAlgorithm
 	{
 	public:

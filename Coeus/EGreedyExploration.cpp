@@ -28,10 +28,10 @@ void EGreedyExploration::update(const int p_t)
 int EGreedyExploration::get_action(Tensor* p_values) const
 {
 	int action = 0;
-	const float random = RandomGenerator::getInstance().random();
+	const float random = RandomGenerator::get_instance().random();
 	
 	if (random < _epsilon) {
-		action = RandomGenerator::getInstance().random(0, p_values->size() - 1);
+		action = RandomGenerator::get_instance().random(0, p_values->size() - 1);
 	}
 	else {
 		action = p_values->max_value_index();

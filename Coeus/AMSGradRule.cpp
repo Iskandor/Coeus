@@ -5,9 +5,9 @@ using namespace Coeus;
 AMSGradRule::AMSGradRule(NetworkGradient* p_network_gradient, const float p_alpha, const float p_beta1, const float p_beta2,
                          const float p_epsilon): IUpdateRule(p_network_gradient, p_alpha), _beta1(p_beta1), _beta2(p_beta2), _epsilon(p_epsilon)
 {
-	_m = p_network_gradient->get_empty_params();
-	_v = p_network_gradient->get_empty_params();
-	_v_mean = p_network_gradient->get_empty_params();
+	_m = p_network_gradient->get_network()->get_empty_params();
+	_v = p_network_gradient->get_network()->get_empty_params();
+	_v_mean = p_network_gradient->get_network()->get_empty_params();
 }
 
 AMSGradRule::~AMSGradRule()

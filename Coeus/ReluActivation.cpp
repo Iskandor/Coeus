@@ -1,5 +1,4 @@
 #include "ReluActivation.h"
-#include "FLAB.h"
 
 using namespace Coeus;
 
@@ -8,8 +7,7 @@ ReluActivation::ReluActivation(): IActivationFunction(RELU) {
 
 
 ReluActivation::~ReluActivation()
-{
-}
+= default;
 
 Tensor ReluActivation::activate(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
@@ -17,7 +15,7 @@ Tensor ReluActivation::activate(Tensor& p_input) {
 	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
-		(*y++) =  FLAB::max(0, *x++);
+		(*y++) =  Tensor::max(0, *x++);
 	}
 
 	return Tensor({ p_input.size() }, arr);
@@ -29,7 +27,7 @@ Tensor ReluActivation::derivative(Tensor& p_input) {
 	float* x = &p_input.arr()[0];
 
 	for (int i = 0; i < p_input.size(); i++) {
-		*y++ = *x++ > 0 ? 1 : 0;
+		*y++ = *x++ > 0.f ? 1.f : 0.f;
 	}
 
 	return Tensor({ p_input.size() }, arr);
@@ -37,5 +35,5 @@ Tensor ReluActivation::derivative(Tensor& p_input) {
 
 float ReluActivation::activate(const float p_value)
 {
-	return FLAB::max(0, p_value);
+	return Tensor::max(0, p_value);
 }

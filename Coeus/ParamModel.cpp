@@ -2,11 +2,9 @@
 
 using namespace Coeus;
 
-ParamModel::ParamModel(): 
-	_size(0)
+ParamModel::ParamModel(): _size(0)
 {
 }
-
 
 ParamModel::~ParamModel()
 = default;
@@ -26,9 +24,20 @@ Tensor* ParamModel::add_param(const string& p_id, Tensor* p_param)
 
 void ParamModel::add_param(ParamModel* p_model)
 {
-	for (auto& _param : p_model->_params)
+	for (auto& param : p_model->_params)
 	{
-		_params[_param.first] = _param.second;
+		add_param(param.first, param.second);
 	}
-	_size += p_model->_size;
+}
+
+map<string, Tensor> ParamModel::get_empty_params() const
+{
+	map<string, Tensor> result;
+
+	for (const auto& param : _params)
+	{
+		result[param.first] = Tensor(param.second->rank(), param.second->shape(), Tensor::ZERO);
+	}
+
+	return result;
 }

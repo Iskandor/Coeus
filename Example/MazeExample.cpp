@@ -4,7 +4,6 @@
 #include "QLearning.h"
 #include "MazeTask.h"
 #include "QuadraticCost.h"
-#include "InputLayer.h"
 #include "CoreLayer.h"
 #include "RMSProp.h"
 #include "SARSA.h"
@@ -40,14 +39,12 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 9));
-	network.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID));
-	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID));
-	network.add_layer(new CoreLayer("output", 4, TANH));
+	network.add_layer(new CoreLayer("hidden0", p_hidden, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1), 9));
+	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network.add_layer(new CoreLayer("output", 4, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::UNIFORM, -0.1, 0.1);
-	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, -0.1, 0.1);
-	network.add_connection("hidden1", "output", Connection::UNIFORM, -0.1, 0.1);
+	network.add_connection("hidden0", "hidden1");
+	network.add_connection("hidden1", "output");
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -139,12 +136,10 @@ void MazeExample::example_double_q() {
 
 	NeuralNetwork network_a;
 
-	network_a.add_layer(new InputLayer("input", 64));
-	network_a.add_layer(new CoreLayer("hidden0", 164, RELU));
-	network_a.add_layer(new CoreLayer("output", 4, LINEAR));
+	network_a.add_layer(new CoreLayer("hidden0", 164, RELU, new TensorInitializer(LECUN_UNIFORM), 64));
+	network_a.add_layer(new CoreLayer("output", 4, LINEAR, new TensorInitializer(LECUN_UNIFORM)));
 	// feed-forward connections
-	network_a.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network_a.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network_a.add_connection("hidden0", "output");
 	network_a.init();
 
 	RMSProp optimizer1(&network_a);
@@ -152,12 +147,10 @@ void MazeExample::example_double_q() {
 
 	NeuralNetwork network_b;
 
-	network_b.add_layer(new InputLayer("input", 64));
-	network_b.add_layer(new CoreLayer("hidden0", 164, RELU));
-	network_b.add_layer(new CoreLayer("output", 4, LINEAR));
+	network_b.add_layer(new CoreLayer("hidden0", 164, RELU, new TensorInitializer(LECUN_UNIFORM), 64));
+	network_b.add_layer(new CoreLayer("output", 4, LINEAR, new TensorInitializer(LECUN_UNIFORM)));
 	// feed-forward connections
-	network_b.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network_b.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network_b.add_connection("hidden0", "output");
 	network_b.init();
 
 	RMSProp optimizer2(&network_b);
@@ -192,7 +185,7 @@ void MazeExample::example_double_q() {
 			network_a.activate(&state0);
 			network_b.activate(&state0);
 
-			output = (*network_a.get_output() + *network_b.get_output()) / 2;
+			//output = (*network_a.get_output() + *network_b.get_output()) / 2;
 			action0 = choose_action(&output, epsilon);
 			maze->performAction(action0);
 
@@ -232,14 +225,12 @@ int MazeExample::example_sarsa(int p_hidden, float p_alpha, float p_lambda, cons
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 6));
-	network.add_layer(new CoreLayer("hidden0", p_hidden, RELU));
-	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU));
-	network.add_layer(new CoreLayer("output", 4, TANH));
+	network.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(GLOROT_UNIFORM), 6));
+	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU, new TensorInitializer(GLOROT_UNIFORM)));
+	network.add_layer(new CoreLayer("output", 4, TANH, new TensorInitializer(GLOROT_UNIFORM)));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::GLOROT_UNIFORM);
-	network.add_connection("hidden0", "hidden1", Connection::GLOROT_UNIFORM);
-	network.add_connection("hidden1", "output", Connection::GLOROT_UNIFORM);
+	network.add_connection("hidden0", "hidden1");
+	network.add_connection("hidden1", "output");
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -329,24 +320,20 @@ void MazeExample::example_actor_critic() {
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new InputLayer("input", 16));
-	network_critic.add_layer(new CoreLayer("hidden0", 256, RELU));
-	network_critic.add_layer(new CoreLayer("output", 1, LINEAR));
+	network_critic.add_layer(new CoreLayer("hidden0", 256, RELU, new TensorInitializer(LECUN_UNIFORM), 16));
+	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(LECUN_UNIFORM)));
 	// feed-forward connections
-	network_critic.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network_critic.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
 
 	TD critic(&network_critic, NADAM_RULE, 2e-4f, 0.9f);
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new InputLayer("input", 16));
-	network_actor.add_layer(new CoreLayer("hidden0", 256, RELU));
-	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX));
+	network_actor.add_layer(new CoreLayer("hidden0", 256, RELU, new TensorInitializer(LECUN_UNIFORM), 16));
+	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
 	// feed-forward connections
-	network_actor.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network_actor.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
 
 	//Actor actor(&network_actor, ADAM_RULE, 1e-4);
@@ -426,16 +413,10 @@ int MazeExample::example_deep_q(int p_hidden, float p_alpha, float p_lambda, con
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 9));
-	network.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID));
-	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID));
-	network.add_layer(new CoreLayer("hidden2", p_hidden / 4, SIGMOID));
-	network.add_layer(new CoreLayer("output", 4, TANH));
+	network.add_layer(new CoreLayer("hidden0", 256, RELU, new TensorInitializer(LECUN_UNIFORM), 16));
+	network.add_layer(new CoreLayer("output", 4, LINEAR, new TensorInitializer(LECUN_UNIFORM)));
 	// feed-forward connections
-	network.add_connection("input", "hidden0", Connection::UNIFORM, 0.1f);
-	network.add_connection("hidden0", "hidden1", Connection::UNIFORM, 0.1f);
-	network.add_connection("hidden1", "hidden2", Connection::UNIFORM, 0.1f);
-	network.add_connection("hidden2", "output", Connection::UNIFORM, 0.1f);
+	network.add_connection("hidden0", "output");
 	network.init();
 
 	//BackProp optimizer(&network);
@@ -542,11 +523,9 @@ void MazeExample::example_icm() {
 
 	NeuralNetwork network;
 
-	network.add_layer(new InputLayer("input", 16));
-	network.add_layer(new CoreLayer("hidden0", 256, RELU));
-	network.add_layer(new CoreLayer("output", 4, LINEAR));
-	network.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network.add_layer(new CoreLayer("hidden0", 256, RELU, new TensorInitializer(LECUN_UNIFORM), 16));
+	network.add_layer(new CoreLayer("output", 4, LINEAR, new TensorInitializer(LECUN_UNIFORM)));
+	network.add_connection("hidden0", "output");
 	network.init();
 
 	//RMSProp optimizer(&network);
@@ -555,11 +534,9 @@ void MazeExample::example_icm() {
 
 
 	NeuralNetwork network_fm;
-	network_fm.add_layer(new InputLayer("input", 20));
-	network_fm.add_layer(new CoreLayer("hidden0", 512, RELU));
-	network_fm.add_layer(new CoreLayer("output", 16, SOFTMAX));
-	network_fm.add_connection("input", "hidden0", Connection::LECUN_UNIFORM);
-	network_fm.add_connection("hidden0", "output", Connection::LECUN_UNIFORM);
+	network_fm.add_layer(new CoreLayer("hidden0", 512, RELU, new TensorInitializer(LECUN_UNIFORM), 20));
+	network_fm.add_layer(new CoreLayer("output", 16, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
+	network_fm.add_connection("hidden0", "output");
 	network_fm.init();
 
 	RMSProp optimizer_fm(&network_fm);

@@ -166,8 +166,6 @@
     <ClCompile Include="CartPole.cpp" />
     <ClCompile Include="CartPoleTask.cpp" />
     <ClCompile Include="CisLoader.cpp" />
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="Dataset.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FFN.cpp" />
     <ClCompile Include="IrisDataset.cpp" />
@@ -177,21 +175,16 @@
     <ClCompile Include="MazeAction.cpp" />
     <ClCompile Include="MazeExample.cpp" />
     <ClCompile Include="MazeTask.cpp" />
-    <ClCompile Include="ModelMNS.cpp" />
-    <ClCompile Include="ModelMNS2.cpp" />
-    <ClCompile Include="ModelMNS3.cpp" />
     <ClCompile Include="PackDataset.cpp" />
     <ClCompile Include="RNN.cpp" />
     <ClCompile Include="rk4.cpp" />
-    <ClCompile Include="Sequence.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AddProblemDataset.h" />
+    <ClInclude Include="..\Coeus\AddProblemDataset.h" />
+    <ClInclude Include="..\Coeus\RNN.h" />
     <ClInclude Include="CartPole.h" />
     <ClInclude Include="CartPoleTask.h" />
     <ClInclude Include="CisLoader.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Dataset.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FFN.h" />
     <ClInclude Include="IrisDataset.h" />
@@ -200,13 +193,8 @@
     <ClInclude Include="MazeAction.h" />
     <ClInclude Include="MazeExample.h" />
     <ClInclude Include="MazeTask.h" />
-    <ClInclude Include="ModelMNS.h" />
-    <ClInclude Include="ModelMNS2.h" />
-    <ClInclude Include="ModelMNS3.h" />
     <ClInclude Include="PackDataset.h" />
-    <ClInclude Include="RNN.h" />
     <ClInclude Include="rk4.hpp" />
-    <ClInclude Include="Sequence.h" />
     <ClInclude Include="UBALTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

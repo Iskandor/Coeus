@@ -34,7 +34,7 @@ int BoltzmanExploration::get_action(Tensor* p_values)
 		evals[i] /= sum;
 	}
 
-	result = RandomGenerator::getInstance().choice(evals, p_values->size());
+	result = RandomGenerator::get_instance().choice(evals, p_values->size());
 
 	delete[] evals;
 

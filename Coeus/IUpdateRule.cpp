@@ -6,7 +6,7 @@ IUpdateRule::IUpdateRule(NetworkGradient* p_network_gradient, const float p_alph
 	_alpha(p_alpha),
 	_network_gradient(p_network_gradient)
 {
-	_update = p_network_gradient->get_empty_params();
+	_update = p_network_gradient->get_network()->get_empty_params();
 }
 
 IUpdateRule::~IUpdateRule()

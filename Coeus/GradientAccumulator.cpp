@@ -1,4 +1,5 @@
 #include "GradientAccumulator.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -37,7 +38,7 @@ GradientAccumulator& GradientAccumulator::operator+=(const GradientAccumulator& 
 {
 	for (auto& it : *p_accumulator._gradient)
 	{		
-		(*_gradient)[it.first] += it.second;
+		 TensorOperator::instance().vv_add((*_gradient)[it.first].arr(), it.second.arr(), (*_gradient)[it.first].arr(), (*_gradient)[it.first].size());
 	}
 
 	return *this;

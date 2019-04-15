@@ -1,4 +1,5 @@
 #include "GeneralTDRule.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -9,7 +10,7 @@ GeneralTDRule::GeneralTDRule(NetworkGradient* p_network_gradient, IUpdateRule* p
 {
 	if (p_lambda > 0)
 	{
-		_e_traces = p_network_gradient->get_empty_params();
+		_e_traces = p_network_gradient->get_network()->get_empty_params();
 	}
 }
 
@@ -40,11 +41,11 @@ void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const float p_a
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
 		if (_lambda > 0)
 		{
-			_update[it->first] = -_delta * _e_traces[it->first];
+			TensorOperator::instance().vc_prod(_e_traces[it->first].arr(), -_delta, _update[it->first].arr(), _update[it->first].size());
 		}
 		else
 		{
-			_update[it->first] = -_delta * it->second;
+			TensorOperator::instance().vc_prod(it->second.arr(), -_delta, _update[it->first].arr(), _update[it->first].size());
 		}
 	}
 
@@ -71,6 +72,8 @@ void GeneralTDRule::reset_traces()
 void GeneralTDRule::update_traces(map<string, Tensor>* p_gradient)
 {
 	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
-		_e_traces[it->first] = _lambda * _gamma * _e_traces[it->first] + it->second;
+		const int size = _e_traces[it->first].size();
+		TensorOperator::instance().vc_prod(_e_traces[it->first].arr(), _lambda * _gamma, _e_traces[it->first].arr(), size);
+		TensorOperator::instance().vv_add(_e_traces[it->first].arr(), it->second.arr(), _e_traces[it->first].arr(), size);
 	}
 }

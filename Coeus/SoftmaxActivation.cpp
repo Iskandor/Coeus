@@ -1,6 +1,5 @@
 #include "SoftmaxActivation.h"
 #include <cmath>
-#include "FLAB.h"
 
 using namespace Coeus;
 
@@ -36,7 +35,7 @@ Tensor SoftmaxActivation::derivative(Tensor& p_input) {
 
 	for (int i = 0; i < p_input.size(); i++) {
 		for (int j = 0; j < p_input.size(); j++) {
-			arr[i * p_input.size() + j] = activation[i] * (kronecker_delta(i, j) - activation[j]);
+			arr[i * p_input.size() + j] = activation[i] * (Tensor::kronecker_delta(i, j) - activation[j]);
 		}
 	}
 
