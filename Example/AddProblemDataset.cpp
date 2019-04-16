@@ -14,13 +14,22 @@ AddProblemDataset::AddProblemDataset()
 
 AddProblemDataset::~AddProblemDataset()
 {
-	for(auto it = _raw_data.begin(); it != _raw_data.end(); ++it)
+	for (auto& it : _raw_data)
 	{
-		for(auto i = it->input.begin(); i !=  it->input.end(); ++i)
+		for (auto& i : it.input)
 		{
-			delete *i;
+			delete i;
 		}
-		delete it->target;
+		delete it.target;
+	}
+
+	for (auto& it : _batch_data)
+	{
+		for (auto& i : it.input)
+		{
+			delete i;
+		}
+		delete it.target;
 	}
 }
 

@@ -36,8 +36,8 @@ struct PackDataRow
 struct PackDataSequence
 {
 	int player_id;
-	Tensor  input;
-	Tensor	target;
+	vector<Tensor*>  input;
+	Tensor*			target;
 };
 
 class PackDataset
@@ -48,11 +48,13 @@ public:
 
 	
 	void load_data(const string& p_filename, bool p_prob = false, bool p_test = false);
-	vector<PackDataSequence>* permute();
-	vector<PackDataSequence>* data() { return &_data; }
+	vector<PackDataSequence>* permute(bool p_batch);
+	vector<PackDataSequence>* data() { return &_raw_data; }
 	pair<vector<Tensor*>, vector<Tensor*>> to_vector();
 
 	vector<PackDataSequence> create_sequence_test(int p_player);
+
+	void split(int p_batch);
 
 private:
 	void parse_line(string& p_line);
@@ -62,7 +64,7 @@ private:
 	
 	bool has_target(vector<PackDataRow>& p_row) const;
 
-	static bool compare(PackDataSequence x, PackDataSequence y);
+	static bool compare(const PackDataSequence& x, PackDataSequence y);
 
 	template<typename T>
 	void add_bin_data(T* p_value, vector<float> &p_data) const;
@@ -75,7 +77,8 @@ private:
 	int get_endian() const;
 
 	map<int, vector<PackDataRow>> *_data_tree;
-	vector<PackDataSequence> _data;
+	vector<PackDataSequence> _raw_data;
+	vector<PackDataSequence> _batch_data;
 
 	CisLoader _cis_price_category;
 	CisLoader _cis_device;

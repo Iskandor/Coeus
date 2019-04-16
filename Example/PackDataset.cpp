@@ -21,6 +21,23 @@ PackDataset::PackDataset()
 
 PackDataset::~PackDataset()
 {
+	for (auto& it : _raw_data)
+	{
+		for(auto& i : it.input)
+		{
+			delete i;
+		}
+		delete it.target;
+	}
+
+	for (auto& it : _batch_data)
+	{
+		for (auto& i : it.input)
+		{
+			delete i;
+		}
+		delete it.target;
+	}
 }
 
 void PackDataset::parse_line(string& p_line)
@@ -58,9 +75,7 @@ void PackDataset::parse_line(string& p_line)
 
 void PackDataset::create_sequence(vector<PackDataRow>& p_sequence)
 {
-
-	Tensor input;
-	Tensor target = Tensor::Zero({ 1 });
+	Tensor *target = new Tensor({ 1 }, Tensor::ZERO);
 
 
 	while(has_target(p_sequence)) {
@@ -68,71 +83,70 @@ void PackDataset::create_sequence(vector<PackDataRow>& p_sequence)
 		PackDataSequence sequence;
 
 		int index = -1;
-		vector<Tensor> input_list;
+		vector<Tensor*> input_list;
 
 		do		
 		{
-			vector<Tensor> value_list;
+			vector<Tensor*> value_list;
 			index++;
 
 			Tensor price_category({ _cis_price_category.category_count() }, Tensor::ZERO);
 			Encoder::one_hot(price_category, _cis_price_category.get_key(to_string(p_sequence[index].price_category)));
-			value_list.push_back(price_category);
+			value_list.push_back(&price_category);
 
 			Tensor region({ 5 }, Tensor::ZERO);
 			Encoder::one_hot(region, p_sequence[index].region - 1);
-			value_list.push_back(region);
+			value_list.push_back(&region);
 
 			Tensor device({ _cis_device.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_register_device.empty())
 			{
 				Encoder::one_hot(device, _cis_device.get_key(p_sequence[index].profiles_register_device));
 			}			
-			value_list.push_back(device);
+			value_list.push_back(&device);
 
 			Tensor platform({ _cis_platform.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_register_platform.empty())
 			{
 				Encoder::one_hot(platform, _cis_platform.get_key(p_sequence[index].profiles_register_platform));
 			}			
-			value_list.push_back(platform);
+			value_list.push_back(&platform);
 
 			Tensor gender({ _cis_gender.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_gender.empty())
 			{
 				Encoder::one_hot(gender, _cis_gender.get_key(p_sequence[index].profiles_gender));
 			}
-			value_list.push_back(gender);
+			value_list.push_back(&gender);
 
 			Tensor country({ _cis_country.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_country.empty())
 			{
 				Encoder::one_hot(country, _cis_country.get_key(p_sequence[index].profiles_country));
 			}
-			value_list.push_back(country);
+			value_list.push_back(&country);
 
 			int* level_bin = to_binary<int>(p_sequence[index].level, 16);
 			Tensor level({ 16 }, Tensor::ZERO);
 			level.override(level_bin);
-			value_list.push_back(level);
+			value_list.push_back(&level);
 
 			Tensor netto({ 20 }, Tensor::ZERO);
 			Encoder::pop_code(netto, p_sequence[index].netto, 0, 100);
-			value_list.push_back(netto);
+			value_list.push_back(&netto);
 
 			int* login_count_bin = to_binary<int>(p_sequence[index].login_count, 16);
 			Tensor login_count({ 16 }, Tensor::ZERO);
 			login_count.override(login_count_bin);
-			value_list.push_back(login_count);
+			value_list.push_back(&login_count);
 
-
-			input = Tensor::concat(value_list);
+			Tensor* input = Tensor::concat(value_list);
 
 			input_list.push_back(input);
 
 			if (p_sequence[index].target == 1)
 			{
-				target[0] = p_sequence[index].bought ? 1 : 0;
+				(*target)[0] = p_sequence[index].bought ? 1 : 0;
 			}
 			
 
@@ -142,11 +156,9 @@ void PackDataset::create_sequence(vector<PackDataRow>& p_sequence)
 
 		
 
-		sequence.input = Tensor::Zero({int(input_list.size()), input.size()});
-
 		for(auto i = 0; i < input_list.size(); i++)
 		{
-			sequence.input.set_row(input_list[i], i);
+			sequence.input.push_back(input_list[i]);
 		}
 
 		sequence.player_id = p_sequence[0].player_id;
@@ -154,77 +166,76 @@ void PackDataset::create_sequence(vector<PackDataRow>& p_sequence)
 		sequence.target = target;
 		
 
-		_data.push_back(sequence);
+		_raw_data.push_back(sequence);
 	}
 
 }
 
 void PackDataset::create_sequence_prob(vector<PackDataRow>& p_sequence)
 {
-	Tensor input;
-	Tensor target = Tensor::Zero({ _cis_price_category.category_count() });
+	Tensor *target = new Tensor({ _cis_price_category.category_count() }, Tensor::ZERO);
 
 	while (has_target(p_sequence)) {
 
 		PackDataSequence sequence;
 
 		int index = -1;
-		vector<Tensor> input_list;
+		vector<Tensor*> input_list;
 
 		do
 		{
-			vector<Tensor> value_list;
+			vector<Tensor*> value_list;
 			index++;
 
 			Tensor region({ 5 }, Tensor::ZERO);
 			Encoder::one_hot(region, p_sequence[index].region - 1);
-			value_list.push_back(region);
+			value_list.push_back(&region);
 
 			Tensor device({ _cis_device.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_register_device.empty())
 			{
 				Encoder::one_hot(device, _cis_device.get_key(p_sequence[index].profiles_register_device));
 			}
-			value_list.push_back(device);
+			value_list.push_back(&device);
 
 			Tensor platform({ _cis_platform.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_register_platform.empty())
 			{
 				Encoder::one_hot(platform, _cis_platform.get_key(p_sequence[index].profiles_register_platform));
 			}
-			value_list.push_back(platform);
+			value_list.push_back(&platform);
 
 			Tensor gender({ _cis_gender.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_gender.empty())
 			{
 				Encoder::one_hot(gender, _cis_gender.get_key(p_sequence[index].profiles_gender));
 			}
-			value_list.push_back(gender);
+			value_list.push_back(&gender);
 
 			Tensor country({ _cis_country.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_country.empty())
 			{
 				Encoder::one_hot(country, _cis_country.get_key(p_sequence[index].profiles_country));
 			}
-			value_list.push_back(country);
+			value_list.push_back(&country);
 
 			int* level_bin = to_binary<int>(p_sequence[index].level, 16);
 			Tensor tmp({ 16 }, Tensor::ZERO);
 			tmp.override(level_bin);
 			Tensor level({ 16 }, Tensor::ZERO);
 			Encoder::grey_code(level, tmp);
-			value_list.push_back(level);
+			value_list.push_back(&level);
 
 			Tensor netto({ 20 }, Tensor::ZERO);
 			Encoder::pop_code(netto, p_sequence[index].netto, 0, 100);
-			value_list.push_back(netto);
+			value_list.push_back(&netto);
 
 			int* login_count_bin = to_binary<int>(p_sequence[index].login_count, 16);
 			Tensor login_count({ 16 }, Tensor::ZERO);
 			login_count.override(login_count_bin);
-			value_list.push_back(login_count);
+			value_list.push_back(&login_count);
 
-			input = Tensor::concat(value_list);
+			Tensor* input = Tensor::concat(value_list);
 
 			input_list.push_back(input);
 
@@ -232,11 +243,11 @@ void PackDataset::create_sequence_prob(vector<PackDataRow>& p_sequence)
 			{
 				if (p_sequence[index].bought)
 				{
-					Encoder::one_hot(target, _cis_price_category.get_key(to_string(p_sequence[index].price_category)));
+					Encoder::one_hot(*target, _cis_price_category.get_key(to_string(p_sequence[index].price_category)));
 				}
 				else
 				{
-					target.fill(1.0f / _cis_price_category.category_count());
+					target->fill(1.0f / _cis_price_category.category_count());
 				}				
 			}
 
@@ -247,108 +258,102 @@ void PackDataset::create_sequence_prob(vector<PackDataRow>& p_sequence)
 
 		sequence.player_id = p_sequence[0].player_id;
 
-		sequence.input = Tensor::Zero({ int(input_list.size()), input.size() });
-
 		for (auto i = 0; i < input_list.size(); i++)
 		{
-			sequence.input.set_row(input_list[i], i);
+			sequence.input.push_back(input_list[i]);
 		}
 
 		sequence.target = target;
 
-		_data.push_back(sequence);
+		_raw_data.push_back(sequence);
 	}
 }
 
 void PackDataset::create_sequence_test(vector<PackDataRow>& p_sequence)
 {
-
-	Tensor input;
-	Tensor target = Tensor::Zero({ 1 });
+	Tensor *target = new Tensor({ 1 }, Tensor::ZERO);
 
 
 	PackDataSequence sequence;
 
 	int index = -1;
-	vector<Tensor> input_list;
+	vector<Tensor*> input_list;
 
 	for(auto it = p_sequence.begin() ; it != p_sequence.end(); ++it) {
-		vector<Tensor> value_list;
+		vector<Tensor*> value_list;
 		index++;
 
 		Tensor price_category({ _cis_price_category.category_count() }, Tensor::ZERO);
 		Encoder::one_hot(price_category, _cis_price_category.get_key(to_string(p_sequence[index].price_category)));
-		value_list.push_back(price_category);
+		value_list.push_back(&price_category);
 
 		Tensor region({ 5 }, Tensor::ZERO);
 		Encoder::one_hot(region, p_sequence[index].region - 1);
-		value_list.push_back(region);
+		value_list.push_back(&region);
 
 		Tensor device({ _cis_device.category_count() }, Tensor::ZERO);
 		if (!p_sequence[index].profiles_register_device.empty())
 		{
 			Encoder::one_hot(device, _cis_device.get_key(p_sequence[index].profiles_register_device));
 		}
-		value_list.push_back(device);
+		value_list.push_back(&device);
 
 		Tensor platform({ _cis_platform.category_count() }, Tensor::ZERO);
 		if (!p_sequence[index].profiles_register_platform.empty())
 		{
 			Encoder::one_hot(platform, _cis_platform.get_key(p_sequence[index].profiles_register_platform));
 		}
-		value_list.push_back(platform);
+		value_list.push_back(&platform);
 
 		Tensor gender({ _cis_gender.category_count() }, Tensor::ZERO);
 		if (!p_sequence[index].profiles_gender.empty())
 		{
 			Encoder::one_hot(gender, _cis_gender.get_key(p_sequence[index].profiles_gender));
 		}
-		value_list.push_back(gender);
+		value_list.push_back(&gender);
 
 		Tensor country({ _cis_country.category_count() }, Tensor::ZERO);
 		if (!p_sequence[index].profiles_country.empty())
 		{
 			Encoder::one_hot(country, _cis_country.get_key(p_sequence[index].profiles_country));
 		}
-		value_list.push_back(country);
+		value_list.push_back(&country);
 
 		int* level_bin = to_binary<int>(p_sequence[index].level, 16);
 		Tensor level({ 16 }, Tensor::ZERO);
 		level.override(level_bin);
-		value_list.push_back(level);
+		value_list.push_back(&level);
 
 		Tensor netto({ 20 }, Tensor::ZERO);
 		Encoder::pop_code(netto, p_sequence[index].netto, 0, 100);
-		value_list.push_back(netto);
+		value_list.push_back(&netto);
 
 		int* login_count_bin = to_binary<int>(p_sequence[index].login_count, 16);
 		Tensor login_count({ 16 }, Tensor::ZERO);
 		login_count.override(login_count_bin);
-		value_list.push_back(login_count);
+		value_list.push_back(&login_count);
 
 
-		input = Tensor::concat(value_list);
+		Tensor* input = Tensor::concat(value_list);
 
 		input_list.push_back(input);
 
 		if (p_sequence[index].target == 1)
 		{
-			target[0] = p_sequence[index].bought ? 1 : 0;
+			(*target)[0] = p_sequence[index].bought ? 1 : 0;
 		}
 	}
 
 	sequence.player_id = p_sequence[0].player_id;
 
-	sequence.input = Tensor::Zero({ int(input_list.size()), input.size() });
-
 	for (auto i = 0; i < input_list.size(); i++)
 	{
-		sequence.input.set_row(input_list[i], i);
+		sequence.input.push_back(input_list[i]);
 	}
 
 	sequence.target = target;
 
-	_data.push_back(sequence);
+	_raw_data.push_back(sequence);
 }
 
 bool PackDataset::has_target(vector<PackDataRow>& p_sequence) const
@@ -363,9 +368,9 @@ bool PackDataset::has_target(vector<PackDataRow>& p_sequence) const
 	return result;
 }
 
-bool PackDataset::compare(PackDataSequence x, PackDataSequence y)
+bool PackDataset::compare(const PackDataSequence& x, PackDataSequence y)
 {
-	return x.input.shape(0) > y.input.shape(0);
+	return x.input.size() > y.input.size();
 }
 
 int PackDataset::get_endian() const
@@ -415,11 +420,21 @@ void PackDataset::load_data(const string& p_filename, bool p_prob, const bool p_
 	//delete _data_tree;
 }
 
-vector<PackDataSequence>* PackDataset::permute()
+vector<PackDataSequence>* PackDataset::permute(const bool p_batch)
 {
-	shuffle(_data.begin(), _data.end(), std::mt19937(std::random_device()()));
-	//sort(_data.begin(), _data.end(), compare);
-	return &_data;
+	vector<PackDataSequence>* result;
+
+	if (p_batch)
+	{
+		result = &_batch_data;
+	}
+	else
+	{
+		result = &_raw_data;
+	}
+
+	shuffle(result->begin(), result->end(), std::mt19937(std::random_device()()));
+	return result;
 }
 
 pair<vector<Tensor*>, vector<Tensor*>> PackDataset::to_vector()
@@ -427,6 +442,7 @@ pair<vector<Tensor*>, vector<Tensor*>> PackDataset::to_vector()
 	vector<Tensor*> input;
 	vector<Tensor*> target;
 
+	/*
 	vector<PackDataSequence>* data = permute();
 	//vector<PackDataSequence>* data = &_data;
 
@@ -435,6 +451,7 @@ pair<vector<Tensor*>, vector<Tensor*>> PackDataset::to_vector()
 		input.push_back(&(*it).input);
 		target.push_back(&(*it).target);
 	}
+	*/
 
 	return pair<vector<Tensor*>, vector<Tensor*>>(input, target);
 }
@@ -446,15 +463,15 @@ vector<PackDataSequence> PackDataset::create_sequence_test(const int p_player)
 
 	for(int c = 0; c < _cis_price_category.category_count(); c++)
 	{
-		Tensor input;
-		Tensor target = Tensor::Zero({ 1 });
+		Tensor* input;
+		Tensor* target = new Tensor({ 1 }, Tensor::ZERO);
 
 		PackDataSequence sequence;
 		int index = -1;
-		vector<Tensor> input_list;
+		vector<Tensor*> input_list;
 
 		for (auto it = p_sequence.begin(); it != p_sequence.end(); ++it) {
-			vector<Tensor> value_list;
+			vector<Tensor*> value_list;
 			index++;
 
 			Tensor price_category({ _cis_price_category.category_count() }, Tensor::ZERO);
@@ -467,53 +484,53 @@ vector<PackDataSequence> PackDataset::create_sequence_test(const int p_player)
 				Encoder::one_hot(price_category, _cis_price_category.get_key(to_string(p_sequence[index].price_category)));
 			}
 			
-			value_list.push_back(price_category);
+			value_list.push_back(&price_category);
 
 			Tensor region({ 5 }, Tensor::ZERO);
 			Encoder::one_hot(region, p_sequence[index].region - 1);
-			value_list.push_back(region);
+			value_list.push_back(&region);
 
 			Tensor device({ _cis_device.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_register_device.empty())
 			{
 				Encoder::one_hot(device, _cis_device.get_key(p_sequence[index].profiles_register_device));
 			}
-			value_list.push_back(device);
+			value_list.push_back(&device);
 
 			Tensor platform({ _cis_platform.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_register_platform.empty())
 			{
 				Encoder::one_hot(platform, _cis_platform.get_key(p_sequence[index].profiles_register_platform));
 			}
-			value_list.push_back(platform);
+			value_list.push_back(&platform);
 
 			Tensor gender({ _cis_gender.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_gender.empty())
 			{
 				Encoder::one_hot(gender, _cis_gender.get_key(p_sequence[index].profiles_gender));
 			}
-			value_list.push_back(gender);
+			value_list.push_back(&gender);
 
 			Tensor country({ _cis_country.category_count() }, Tensor::ZERO);
 			if (!p_sequence[index].profiles_country.empty())
 			{
 				Encoder::one_hot(country, _cis_country.get_key(p_sequence[index].profiles_country));
 			}
-			value_list.push_back(country);
+			value_list.push_back(&country);
 
 			int* level_bin = to_binary<int>(p_sequence[index].level, 16);
 			Tensor level({ 16 }, Tensor::ZERO);
 			level.override(level_bin);
-			value_list.push_back(level);
+			value_list.push_back(&level);
 
 			Tensor netto({ 20 }, Tensor::ZERO);
 			Encoder::pop_code(netto, p_sequence[index].netto, 0, 100);
-			value_list.push_back(netto);
+			value_list.push_back(&netto);
 
 			int* login_count_bin = to_binary<int>(p_sequence[index].login_count, 16);
 			Tensor login_count({ 16 }, Tensor::ZERO);
 			login_count.override(login_count_bin);
-			value_list.push_back(login_count);
+			value_list.push_back(&login_count);
 
 			input = Tensor::concat(value_list);
 
@@ -521,17 +538,15 @@ vector<PackDataSequence> PackDataset::create_sequence_test(const int p_player)
 
 			if (p_sequence[index].target == 1)
 			{
-				target[0] = p_sequence[index].bought ? 1 : 0;
+				(*target)[0] = p_sequence[index].bought ? 1 : 0;
 			}
 		}
 
 		sequence.player_id = p_sequence[0].player_id;
 
-		sequence.input = Tensor::Zero({ int(input_list.size()), input.size() });
-
 		for (auto i = 0; i < input_list.size(); i++)
 		{
-			sequence.input.set_row(input_list[i], i);
+			sequence.input.push_back(input_list[i]);
 		}
 
 		sequence.target = target;
@@ -540,4 +555,73 @@ vector<PackDataSequence> PackDataset::create_sequence_test(const int p_player)
 	}
 
 	return vector<PackDataSequence>(result);
+}
+
+void PackDataset::split(const int p_batch)
+{
+	sort(_raw_data.begin(), _raw_data.end(), compare);
+
+	const int batch_size = _raw_data.size() / p_batch + (_raw_data.size() % p_batch == 0 ? 0 : 1);
+	int index = 0;	
+	const int dim = _raw_data[0].input[0]->size();
+	Tensor padding({ dim }, Tensor::ZERO);
+	//_data.clear();
+
+	for (int i = 0; i < batch_size; i++)
+	{
+		int max_len = 0;
+		PackDataSequence data;
+		data.target = new Tensor({ p_batch, _raw_data[index].target->size() }, Tensor::ZERO);
+
+		index = i * p_batch;
+
+		for (int j = 0; j < p_batch; j++)
+		{
+			if (max_len < _raw_data[index].input.size())
+			{
+				max_len = _raw_data[index].input.size();
+			}
+
+			data.target->push_back(_raw_data[index].target);
+
+			index++;
+			if (index == _raw_data.size())
+			{
+				index = 0;
+			}
+		}
+
+		data.input.reserve(max_len);
+		for (int k = 0; k < max_len; k++)
+		{
+			data.input.push_back(new Tensor({ p_batch, dim }, Tensor::ZERO));
+		}
+
+		for (int k = 0; k < max_len; k++)
+		{
+			index = i * p_batch;
+
+			for (int j = 0; j < p_batch; j++)
+			{
+				const int seq_len = _raw_data[index].input.size();
+
+				if (k + seq_len < max_len)
+				{
+					data.input[k]->push_back(&padding);
+				}
+				else
+				{
+					data.input[k]->push_back(_raw_data[index].input[k - (max_len - seq_len)]);
+				}
+
+				index++;
+				if (index == _raw_data.size())
+				{
+					index = 0;
+				}
+			}
+		}
+
+		_batch_data.push_back(data);
+	}
 }
