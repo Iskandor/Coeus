@@ -33,8 +33,8 @@ private:
 
 	NeuronOperator* _y;
 
-	Tensor* _context;
-	Param* _W;
+	Tensor* _context{};
+	Param* _W{};
 
 	TensorInitializer *_initializer;
 };

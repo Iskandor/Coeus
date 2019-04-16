@@ -16,6 +16,7 @@
 #include "BackProph.h"
 #include "Nadam.h"
 #include "PowerSign.h"
+#include "RecurrentLayer.h"
 
 FFN::FFN()
 {
@@ -93,8 +94,6 @@ void FFN::run() {
 		network.activate(o_input[i]);
 		cout << *network.get_output() << endl;
 	}
-
-	
 }
 
 void FFN::run_iris() {

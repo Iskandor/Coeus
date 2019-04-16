@@ -2,6 +2,7 @@
 #include "IDGen.h"
 #include "NeuronOperator.h"
 #include "TensorOperator.h"
+#include "IOUtils.h"
 
 using namespace Coeus;
 
@@ -13,7 +14,7 @@ RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVA
 
 	_y = new NeuronOperator(p_dim, p_activation);
 	add_param(_y);	
-
+	_W = nullptr;
 	_context = nullptr;	
 }
 
@@ -28,6 +29,11 @@ RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(p_copy._id, p
 RecurrentLayer::RecurrentLayer(const json& p_data) : BaseLayer(p_data)
 {
 	_type = RECURRENT;
+	_y = new NeuronOperator(p_data["y"]);
+	add_param(_y);
+	_W = IOUtils::load_param(p_data["W"]);
+	_initializer = nullptr;
+	_context = nullptr;
 }
 
 RecurrentLayer::~RecurrentLayer()
@@ -137,8 +143,10 @@ void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers)
 
 	_in_dim += _dim;
 
-	_W = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
-	_initializer->init(_W->get_data());
+	if (_W == nullptr) {
+		_W = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+		_initializer->init(_W->get_data());
+	}
 	add_param(_W->get_id(), _W->get_data());
 }
 
@@ -146,7 +154,8 @@ json RecurrentLayer::get_json() const
 {
 	json data = BaseLayer::get_json();
 
-	//data["group"] = _group->get_json();
+	data["W"] = IOUtils::save_param(_W);
+	data["y"] = _y->get_json();
 
 	return data;
 }

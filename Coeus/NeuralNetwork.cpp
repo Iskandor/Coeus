@@ -13,10 +13,16 @@ using namespace Coeus;
 
 NeuralNetwork::NeuralNetwork() = default;
 
-NeuralNetwork::NeuralNetwork(json& p_data)
+NeuralNetwork::NeuralNetwork(json p_data)
 {
 	for (json::iterator it = p_data["layers"].begin(); it != p_data["layers"].end(); ++it) {
 		add_layer(IOUtils::create_layer(it.value()));
+	}
+
+	for (json::iterator out_layer = p_data["graph"].begin(); out_layer != p_data["graph"].end(); ++out_layer) {
+		for (json::iterator in_layer = out_layer.value().begin(); in_layer != out_layer.value().end(); ++in_layer) {
+			add_connection(in_layer.value().get<string>(), out_layer.key());
+		}
 	}
 
 	init();
@@ -312,6 +318,11 @@ json NeuralNetwork::get_json() const
 
 	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
 		data["layers"][it->first] = it->second->get_json();
+	}
+
+	for(const auto& out_layer : _graph)
+	{
+		data["graph"][out_layer.first] = out_layer.second;
 	}
 
 	return data;

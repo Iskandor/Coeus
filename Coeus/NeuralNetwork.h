@@ -14,7 +14,7 @@ class __declspec(dllexport) NeuralNetwork : public ParamModel
 	friend class NetworkGradient;
 public:
 	NeuralNetwork();
-	explicit NeuralNetwork(json& p_data);
+	explicit NeuralNetwork(json p_data);
 	NeuralNetwork(NeuralNetwork &p_copy);
 	virtual ~NeuralNetwork();
 	NeuralNetwork* clone() const;

@@ -3,6 +3,7 @@
 #include "ActivationFunctionFactory.h"
 #include "IDGen.h"
 #include "TensorOperator.h"
+#include "IOUtils.h"
 
 
 using namespace Coeus;
@@ -15,6 +16,20 @@ NeuronOperator::NeuronOperator(const int p_dim, const ACTIVATION p_activation)
 	add_param(_bias->get_id(), _bias->get_data());
 
 	_activation_function = ActivationFunctionFactory::create_function(p_activation);
+	_net = nullptr;
+	_dnet = nullptr;
+	_int = nullptr;
+	_output = nullptr;
+}
+
+NeuronOperator::NeuronOperator(json p_data)
+{
+	_id = p_data["id"].get<string>();
+	_dim = p_data["dim"].get<int>();
+	_activation_function = IOUtils::init_activation_function(p_data["f"]);
+	_bias = IOUtils::load_param(p_data["b"]);
+	add_param(_bias->get_id(), _bias->get_data());
+
 	_net = nullptr;
 	_dnet = nullptr;
 	_int = nullptr;
@@ -87,6 +102,18 @@ void NeuronOperator::activate()
 Tensor NeuronOperator::derivative() const
 {
 	return _activation_function->derivative(*_dnet);
+}
+
+json NeuronOperator::get_json() const
+{
+	json data;
+
+	data["id"] = _id;
+	data["dim"] = _dim;
+	data["f"] = _activation_function->get_json();
+	data["b"] = IOUtils::save_param(_bias);
+
+	return data;
 }
 
 Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_rows, const int p_cols)

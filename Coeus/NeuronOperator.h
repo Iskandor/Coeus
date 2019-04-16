@@ -9,6 +9,7 @@ namespace Coeus
 	{
 	public:
 		NeuronOperator(int p_dim, ACTIVATION p_activation);
+		explicit NeuronOperator(json p_data);
 		NeuronOperator(NeuronOperator& p_copy);
 		~NeuronOperator();
 
@@ -19,6 +20,8 @@ namespace Coeus
 		Tensor* get_output() const { return _output; }
 		Param*	get_bias() const { return _bias; }
 		string	get_id() const { return _id; }
+
+		json get_json() const;
 
 		static Tensor* init_auxiliary_parameter(Tensor* p_param, int p_rows, int p_cols);
 

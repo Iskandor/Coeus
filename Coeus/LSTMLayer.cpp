@@ -4,6 +4,7 @@
 #include "TensorInitializer.h"
 #include "TensorOperator.h"
 #include "NeuronOperator.h"
+#include "IOUtils.h"
 
 using namespace Coeus;
 
@@ -37,6 +38,27 @@ LSTMLayer::LSTMLayer(const string& p_id, const int p_dim, const ACTIVATION p_act
 LSTMLayer::LSTMLayer(json p_data) : BaseLayer(p_data)
 {
 	_type = LSTM;
+
+	_activation_function = IOUtils::init_activation_function(p_data["f"]);
+	_initializer = nullptr;
+
+	_cec = new NeuronOperator(p_data["cec"]);
+	add_param(_cec);
+	_ig = new NeuronOperator(p_data["ig"]);
+	add_param(_ig);
+	_fg = new NeuronOperator(p_data["fg"]);
+	add_param(_fg);
+	_og = new NeuronOperator(p_data["og"]);
+	add_param(_og);
+
+	_Wxc = IOUtils::load_param(p_data["Wxc"]);
+	_Wxig = IOUtils::load_param(p_data["Wxig"]);
+	_Wxfg = IOUtils::load_param(p_data["Wxfg"]);
+	_Wxog = IOUtils::load_param(p_data["Wxog"]);
+
+	_state = nullptr;
+	_state_error = nullptr;
+	_context = nullptr;
 }
 
 LSTMLayer::~LSTMLayer()
@@ -67,21 +89,29 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 
 	_in_dim += _dim;
 
-	_Wxc = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	if (_Wxc == nullptr) {
+		_Wxc = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+		_initializer->init(_Wxc->get_data());
+	}
 	add_param(_Wxc->get_id(), _Wxc->get_data());
-	_initializer->init(_Wxc->get_data());
 
-	_Wxig = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	if (_Wxig == nullptr) {
+		_Wxig = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+		_initializer->init(_Wxig->get_data());
+	}
 	add_param(_Wxig->get_id(), _Wxig->get_data());
-	_initializer->init(_Wxig->get_data());
 
-	_Wxfg = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	if (_Wxfg == nullptr) {
+		_Wxfg = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+		_initializer->init(_Wxfg->get_data());
+	}
 	add_param(_Wxfg->get_id(), _Wxfg->get_data());
-	_initializer->init(_Wxfg->get_data());
 
-	_Wxog = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+	if (_Wxog == nullptr) {
+		_Wxog = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+		_initializer->init(_Wxog->get_data());
+	}
 	add_param(_Wxog->get_id(), _Wxog->get_data());
-	_initializer->init(_Wxog->get_data());
 }
 
 void LSTMLayer::activate()
@@ -120,9 +150,6 @@ void LSTMLayer::activate()
 	}
 
 	_context->override(_output);
-
-	//cout << _id << endl;
-	//cout << *_input << endl;
 }
 
 void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
@@ -329,18 +356,17 @@ json LSTMLayer::get_json() const
 {
 	json data = BaseLayer::get_json();
 
-	/*
-	data["input_gate"] = _input_gate->get_json();
-	data["output_gate"] = _output_gate->get_json();
-	data["forget_gate"] = _forget_gate->get_json();
+	data["f"] = _activation_function->get_json();
+
 	data["cec"] = _cec->get_json();
-	data["context"] = _context->get_json();
-	data["context_cec"] = _ct_cec->get_json();
-	data["aux_input"] = _aux_input->get_json();
-	data["in_input_gate"] = _in_input_gate->get_json();
-	data["in_output_gate"] = _in_output_gate->get_json();
-	data["in_forget_gate"] = _in_forget_gate->get_json();
-	*/
+	data["ig"] = _ig->get_json();
+	data["fg"] = _fg->get_json();
+	data["og"] = _og->get_json();
+
+	data["Wxc"] = IOUtils::save_param(_Wxc);
+	data["Wxig"] = IOUtils::save_param(_Wxig);
+	data["Wxfg"] = IOUtils::save_param(_Wxfg);
+	data["Wxog"] = IOUtils::save_param(_Wxog);
 
 	return data;
 }

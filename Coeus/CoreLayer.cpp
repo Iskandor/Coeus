@@ -3,6 +3,7 @@
 #include "TensorOperator.h"
 #include "ActivationFunctionFactory.h"
 #include "TensorInitializer.h"
+#include "IOUtils.h"
 
 using namespace Coeus;
 
@@ -18,6 +19,10 @@ CoreLayer::CoreLayer(const string& p_id, const int p_dim, const ACTIVATION p_act
 CoreLayer::CoreLayer(const json& p_data) : BaseLayer(p_data)
 {
 	_type = CORE;
+	_y = new NeuronOperator(p_data["y"]);
+	add_param(_y);
+	_W = IOUtils::load_param(p_data["W"]);
+	_initializer = nullptr;
 }
 
 CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(p_copy._id, p_copy._dim, p_copy._in_dim) {
@@ -114,8 +119,11 @@ void CoreLayer::init(vector<BaseLayer*>& p_input_layers)
 {
 	BaseLayer::init(p_input_layers);
 
-	_W = new Param(IDGen::instance().next(), new Tensor({_dim, _in_dim}, Tensor::ZERO));
-	_initializer->init(_W->get_data());
+	if (_W == nullptr)
+	{
+		_W = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
+		_initializer->init(_W->get_data());
+	}
 	add_param(_W->get_id(), _W->get_data());
 }
 
@@ -123,7 +131,8 @@ json CoreLayer::get_json() const
 {
 	json data = BaseLayer::get_json();
 
-	//data["group"] = _group->get_json();
+	data["W"] = IOUtils::save_param(_W);
+	data["y"] = _y->get_json();
 
 	return data;
 }
