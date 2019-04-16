@@ -411,7 +411,13 @@ void Tensor::reset_index()
 
 Tensor* Tensor::concat(vector<Tensor*>& p_input)
 {
-	Tensor* result = new Tensor({ static_cast<int>(p_input.size()), p_input[0]->size() }, ZERO);
+	int dim = 0;
+	for(auto t : p_input)
+	{
+		dim += t->size();
+	}
+
+	Tensor* result = new Tensor({ dim }, ZERO);
 
 	for(auto t : p_input)
 	{
