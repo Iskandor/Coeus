@@ -8,6 +8,7 @@ BaseLayer::BaseLayer(const string& p_id, const int p_dim, const int p_in_dim)
 	_id = p_id;
 	_dim = p_dim;
 	_in_dim = p_in_dim;
+	_input_dim = p_in_dim;
 	_valid = false;
 	_batch_size = 0;
 
@@ -20,7 +21,8 @@ BaseLayer::BaseLayer(json p_data)
 {
 	_id = p_data["id"].get<string>();
 	_dim = p_data["dim"].get<int>();
-	_in_dim = p_data["in_dim"].get<int>();
+	_input_dim = p_data["in_dim"].get<int>();
+	_in_dim = _input_dim;
 	_valid = false;
 	_batch_size = 0;
 
@@ -75,7 +77,7 @@ json BaseLayer::get_json() const
 	data["id"] = _id;
 	data["type"] = _type;
 	data["dim"] = _dim;
-	data["in_dim"] = _in_dim;
+	data["in_dim"] = _input_dim;
 
 	return data;
 }
@@ -86,6 +88,7 @@ BaseLayer::BaseLayer(BaseLayer* p_source)
 	_dim = p_source->_dim;
 	_type = p_source->_type;
 	_in_dim = p_source->_in_dim;
+	_input_dim = p_source->_input_dim;
 	_batch_size = p_source->_batch_size;
 	_batch = p_source->_batch;
 	_valid = false;

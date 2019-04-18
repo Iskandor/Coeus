@@ -57,6 +57,7 @@ namespace Coeus
 		TYPE		_type;
 		int			_dim;
 		int			_in_dim;
+		int			_input_dim;
 
 		int			_batch_size;
 		bool		_batch;
