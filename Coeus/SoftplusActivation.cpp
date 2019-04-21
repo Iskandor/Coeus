@@ -13,6 +13,7 @@ SoftplusActivation::~SoftplusActivation()
 
 Tensor SoftplusActivation::activate(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
 	float* y = &arr[0];
 	float* x = &p_input.arr()[0];
 
@@ -20,11 +21,12 @@ Tensor SoftplusActivation::activate(Tensor& p_input) {
 		(*y++) = log(1 + exp((*x++)));
 	}
 
-	return Tensor({ p_input.size() }, arr);
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 Tensor SoftplusActivation::derivative(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
 	float* y = &arr[0];
 	float* x = &p_input.arr()[0];
 
@@ -32,7 +34,7 @@ Tensor SoftplusActivation::derivative(Tensor& p_input) {
 		(*y++) = 1 / (1 + exp(-(*x++)));
 	}
 
-	return Tensor({ p_input.size() }, arr);
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 float SoftplusActivation::activate(const float p_value)

@@ -13,6 +13,7 @@ GaussianActivation::~GaussianActivation()
 
 Tensor GaussianActivation::activate(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
 	float* y = &arr[0];
 	float* x = &p_input.arr()[0];
 
@@ -20,7 +21,7 @@ Tensor GaussianActivation::activate(Tensor& p_input) {
 		*y++ = 1.0 / sqrt(2 * PI * pow(_sigma, 2)) * exp(-(pow(*x++, 2) / 2 * pow(_sigma, 2)));
 	}
 
-	return Tensor({ p_input.size() }, arr);
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 Tensor GaussianActivation::derivative(Tensor& p_input) {

@@ -13,6 +13,8 @@ SoftmaxActivation::~SoftmaxActivation()
 
 Tensor SoftmaxActivation::activate(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
+
 	float esum = 0;
 	const int max = p_input.max_value_index();
 
@@ -25,7 +27,7 @@ Tensor SoftmaxActivation::activate(Tensor& p_input) {
 		arr[i] = arr[i] / esum;
 	}
 
-	return Tensor({ p_input.size() }, arr);
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 Tensor SoftmaxActivation::derivative(Tensor& p_input) {

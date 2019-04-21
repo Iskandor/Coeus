@@ -13,6 +13,7 @@ ExponentialActivation::~ExponentialActivation()
 
 Tensor ExponentialActivation::activate(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
 	float* y = &arr[0];
 	float* x = &p_input.arr()[0];
 
@@ -20,11 +21,12 @@ Tensor ExponentialActivation::activate(Tensor& p_input) {
 		*y++ = exp(-_k * *x++);
 	}
 
-	return Tensor({ p_input.size() }, arr);
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 Tensor ExponentialActivation::derivative(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size());
+	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
 	float* y = &arr[0];
 	float* x = &p_input.arr()[0];
 
@@ -32,8 +34,7 @@ Tensor ExponentialActivation::derivative(Tensor& p_input) {
 		(*y++) = -exp(-_k * *x++);
 	}
 
-	return Tensor({ p_input.size() }, arr);
-
+	return Tensor(p_input.rank(), shape, arr);
 }
 
 json ExponentialActivation::get_json()
