@@ -139,14 +139,14 @@ void LSTMLayer::activate()
 	if (_batch_size == 1)
 	{
 		TensorOperator::instance().lstm_state_s(_state->arr(), _ig->get_output()->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), _dim);
-		Tensor ac = _activation_function->activate(*_state);
-		TensorOperator::instance().vv_ewprod(_og->get_output()->arr(), ac.arr(), _output->arr(), _dim);
+		Tensor *ac = _activation_function->forward(_state);
+		TensorOperator::instance().vv_ewprod(_og->get_output()->arr(), ac->arr(), _output->arr(), _dim);
 	}
 	if (_batch_size > 1)
 	{
 		TensorOperator::instance().lstm_state_b(_batch_size, _state->arr(), _ig->get_output()->arr(), _fg->get_output()->arr(), _cec->get_output()->arr(), _dim);
-		Tensor ac = _activation_function->activate(*_state);
-		TensorOperator::instance().vv_ewprod(_og->get_output()->arr(), ac.arr(), _output->arr(), _batch_size * _dim);
+		Tensor *ac = _activation_function->forward(_state);
+		TensorOperator::instance().vv_ewprod(_og->get_output()->arr(), ac->arr(), _output->arr(), _batch_size * _dim);
 	}
 
 	_context->override(_output);
@@ -160,7 +160,7 @@ void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor
 		_in_derivative->push_back(p_derivative_map[it->get_id()]);
 	}
 
-	Tensor h = _activation_function->activate(*_state);
+	Tensor* h = _activation_function->forward(_state);
 	Tensor dh = _activation_function->derivative(*_state);
 
 	Tensor*	 delta_out = p_delta_map[_id];
@@ -176,7 +176,7 @@ void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor
 
 	if (_batch)
 	{
-		TensorOperator::instance().lstm_delta_b(_batch_size, p_delta_map[_og->get_id()]->arr(), _og->derivative().arr(), h.arr(), delta_out->arr(), _dim);
+		TensorOperator::instance().lstm_delta_b(_batch_size, p_delta_map[_og->get_id()]->arr(), _og->derivative().arr(), h->arr(), delta_out->arr(), _dim);
 		TensorOperator::instance().lstm_delta_b(_batch_size, _state_error->arr(), _og->get_output()->arr(), dh.arr(), delta_out->arr(), _dim);
 		p_delta_map[_cec->get_id()]->override(p_derivative_map[_cec->get_bias()->get_id()]);
 
@@ -212,7 +212,7 @@ void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor
 	}
 	else
 	{
-		TensorOperator::instance().lstm_delta_s(p_delta_map[_og->get_id()]->arr(), _og->derivative().arr(), h.arr(), delta_out->arr(), _dim);
+		TensorOperator::instance().lstm_delta_s(p_delta_map[_og->get_id()]->arr(), _og->derivative().arr(), h->arr(), delta_out->arr(), _dim);
 		TensorOperator::instance().lstm_delta_s(_state_error->arr(), _og->get_output()->arr(), dh.arr(), delta_out->arr(), _dim);
 
 		p_delta_map[_cec->get_id()]->override(p_derivative_map[_cec->get_bias()->get_id()]);

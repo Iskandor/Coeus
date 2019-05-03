@@ -34,6 +34,9 @@ public:
 	Tensor*		get_output() { return _layers[_output_layer]->get_output(); }	
 	vector<Tensor*> get_input();
 
+	int get_output_dim();
+	int get_input_dim();
+
 	json get_json() const;
 
 protected:	

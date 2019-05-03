@@ -291,3 +291,9 @@ void TensorOperatorMKL::vc_prod_add(float* p_x, const float p_y, float* p_z, con
 {
 	cblas_saxpy(p_size, p_y, p_x, 1, p_z, 1);
 }
+
+void TensorOperatorMKL::vM_prod(float* p_x, float* p_A, float* p_y, int p_rows, int p_cols)
+{
+	memset(p_y, 0, sizeof(float) * p_rows);
+	cblas_sgemv(CblasRowMajor, CblasNoTrans, p_rows, p_cols, 1, p_A, p_cols, p_x, 1, 0, p_y, 1);
+}

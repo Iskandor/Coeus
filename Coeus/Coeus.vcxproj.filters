@@ -192,9 +192,6 @@
     <ClCompile Include="Actor.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
-    <ClCompile Include="ReplayBuffer.cpp">
-      <Filter>Source Files\Algorithm\RL</Filter>
-    </ClCompile>
     <ClCompile Include="DeepQLearning.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
@@ -652,6 +649,12 @@
     </ClInclude>
     <ClInclude Include="EGreedyExploration.h">
       <Filter>Header Files\Algorithm\RL\Exploration</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferItems.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="IGate.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

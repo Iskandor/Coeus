@@ -245,7 +245,6 @@
     <ClCompile Include="QuadraticCost.cpp" />
     <ClCompile Include="RecurrentLayer.cpp" />
     <ClCompile Include="ReluActivation.cpp" />
-    <ClCompile Include="ReplayBuffer.cpp" />
     <ClCompile Include="RMSProp.cpp" />
     <ClCompile Include="SARSA.cpp" />
     <ClCompile Include="SigmoidActivation.cpp" />
@@ -273,6 +272,7 @@
     <ClInclude Include="BackProph.h" />
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BoltzmanExploration.h" />
+    <ClInclude Include="BufferItems.h" />
     <ClInclude Include="EGreedyExploration.h" />
     <ClInclude Include="ExponentialDecay.h" />
     <ClInclude Include="ExponentialInterpolation.h" />
@@ -303,6 +303,7 @@
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IInterpolation.h" />
     <ClInclude Include="ILearningRateModule.h" />
+    <ClInclude Include="IGate.h" />
     <ClInclude Include="IOUtils.h" />
     <ClInclude Include="ItakuraSaitoDistance.h" />
     <ClInclude Include="ITensorOperator.h" />

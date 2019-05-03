@@ -186,20 +186,38 @@ void NeuralNetwork::reset()
 vector<Tensor*> NeuralNetwork::get_input() {
 	vector<Tensor*> result;
 
-	for(auto it = _input_layer.begin(); it != _input_layer.end(); ++it) {
-		result.push_back(_layers[*it]->get_output());
+	for (auto& it : _input_layer)
+	{
+		result.push_back(_layers[it]->get_output());
 	}
 
 	return vector<Tensor*>(result);
 }
 
+int NeuralNetwork::get_output_dim()
+{
+	return _layers[_output_layer]->get_dim();
+}
+
+int NeuralNetwork::get_input_dim()
+{
+	int dim = 0;
+	for (auto& it : _input_layer)
+	{
+		dim += _layers[it]->get_in_dim();
+	}
+
+	return dim;
+}
+
 void NeuralNetwork::activate()
 {
-	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {
-		for (auto input = _graph[(*layer)->get_id()].begin(); input != _graph[(*layer)->get_id()].end(); ++input) {
-			(*layer)->integrate(_layers[*input]->get_output());
+	for (auto& layer : _forward_graph)
+	{
+		for (auto input = _graph[layer->get_id()].begin(); input != _graph[layer->get_id()].end(); ++input) {
+			layer->integrate(_layers[*input]->get_output());
 		}
-		(*layer)->activate();
+		layer->activate();
 	}
 }
 
@@ -230,8 +248,9 @@ void NeuralNetwork::add_connection(const string& p_input_layer, const string& p_
 vector<BaseLayer*> NeuralNetwork::get_input_layers(const string& p_layer) {
 	vector<BaseLayer*> result;
 
-	for(auto it = _graph[p_layer].begin(); it != _graph[p_layer].end(); ++it) {
-		result.push_back(_layers[*it]);
+	for (auto& it : _graph[p_layer])
+	{
+		result.push_back(_layers[it]);
 	}
 
 	return result;
@@ -249,9 +268,9 @@ void NeuralNetwork::create_directed_graph()
 
 	queue<string> q;
 
-	for(auto it = _input_layer.begin(); it != _input_layer.end(); ++it)
+	for (auto& it : _input_layer)
 	{
-		q.push(*it);
+		q.push(it);
 	}
 	
 
@@ -264,11 +283,12 @@ void NeuralNetwork::create_directed_graph()
 			_forward_graph.push_back(_layers[v]);
 			_layers[v]->set_valid(true);
 
-			for (auto it = _graph.begin(); it != _graph.end(); ++it) {
-				if (!_layers[it->first]->is_valid()) {
-					for (auto n = it->second.begin(); n != it->second.end(); ++n) {
+			for (auto& it : _graph)
+			{
+				if (!_layers[it.first]->is_valid()) {
+					for (auto n = it.second.begin(); n != it.second.end(); ++n) {
 						if (*n == v) {
-							q.push(it->first);
+							q.push(it.first);
 						}
 					}
 				}

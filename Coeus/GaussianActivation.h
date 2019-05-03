@@ -8,7 +8,8 @@ namespace Coeus
 	public:
 		GaussianActivation(float p_sigma);
 		~GaussianActivation();
-		Tensor activate(Tensor& p_input) override;
+		Tensor* backward(Tensor* p_input) override;
+		Tensor* forward(Tensor* p_input) override;
 		Tensor derivative(Tensor& p_input) override;
 
 		json get_json() override;

@@ -8,16 +8,11 @@ DeepQLearning::DeepQLearning(NeuralNetwork* p_network, GradientAlgorithm* p_grad
 	_gradient_algorithm = p_gradient_algorithm;
 	_gamma = p_gamma;
 
-	_replay_buffer = new ReplayBuffer(p_size);
+	_replay_buffer = new ReplayBuffer<DQItem>(p_size);
 	_sample_size = p_sample;
 
-	_target = new vector<Tensor*>(_sample_size);
-	_input = new vector<Tensor*>(_sample_size);
-
-	for(int i = 0; i < _sample_size; i++) {
-		(*_target)[i] = new Tensor({ _network->get_output()->size() }, Tensor::ZERO);
-		(*_input)[i] = new Tensor({ _network->get_input()[0]->size() }, Tensor::ZERO);
-	}
+	_target = new Tensor({ p_sample, _network->get_output_dim() }, Tensor::ZERO);
+	_input = new Tensor({ p_sample, _network->get_input_dim() }, Tensor::ZERO);
 }
 
 DeepQLearning::~DeepQLearning()
@@ -26,28 +21,35 @@ DeepQLearning::~DeepQLearning()
 }
 
 float DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, const bool p_final) const {
-	_replay_buffer->add_item(p_state0, p_action0, p_state1, p_reward, p_final);
+	_replay_buffer->add_item(new DQItem(p_state0, p_action0, p_state1, p_reward, p_final));
 
 	float error = 0;
 
 	if (_replay_buffer->get_size() >= _sample_size) {
-		vector<ReplayBuffer::Item*>* sample = _replay_buffer->get_sample(_sample_size);
+		vector<DQItem*>* sample = _replay_buffer->get_sample(_sample_size);
+
+		_input->reset_index();
+		_target->reset_index();
 
 		for (int i = 0; i < sample->size(); i++) {
 			const float maxQs1a = calc_max_qa(&sample->at(i)->s1);
 
 			_network->activate(&sample->at(i)->s0);
-			_input->at(i)->override(&sample->at(i)->s0);
-			_target->at(i)->override(_network->get_output());
+			_input->push_back(&sample->at(i)->s0);
+			
+			Tensor *target = _network->get_output();
+
 			if (sample->at(i)->final) {
-				_target->at(i)->set(sample->at(i)->a, sample->at(i)->r);
+				target->set(sample->at(i)->a, sample->at(i)->r);
 			}
 			else {
-				_target->at(i)->set(sample->at(i)->a, sample->at(i)->r + _gamma * maxQs1a);
-			}			
+				target->set(sample->at(i)->a, sample->at(i)->r + _gamma * maxQs1a);
+			}
+
+			_target->push_back(target);
 		}
 
-		//error = _gradient_algorithm->train(_input, _target, sample->size());
+		error = _gradient_algorithm->train(_input, _target);
 	}
 
 	return error;

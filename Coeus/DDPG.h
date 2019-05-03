@@ -2,6 +2,7 @@
 #include "NeuralNetwork.h"
 #include "GradientAlgorithm.h"
 #include "ReplayBuffer.h"
+#include "BufferItems.h"
 
 namespace Coeus
 {
@@ -27,7 +28,7 @@ private:
 	GradientAlgorithm* _gradient_algorithm_critic;
 	float _gamma;
 
-	ReplayBuffer* _buffer;
+	ReplayBuffer<DQItem>* _buffer;
 	int _sample_size;
 
 	vector<Tensor*> _input;

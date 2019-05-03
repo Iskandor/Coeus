@@ -2,6 +2,7 @@
 #include "QLearning.h"
 #include "ReplayBuffer.h"
 #include "GradientAlgorithm.h"
+#include "BufferItems.h"
 
 namespace Coeus
 {
@@ -20,10 +21,10 @@ namespace Coeus
 		GradientAlgorithm* _gradient_algorithm;
 		float _gamma;
 
-		vector<Tensor*> *_input;
-		vector<Tensor*> *_target;
+		Tensor* _input;
+		Tensor* _target;
 
-		ReplayBuffer*	_replay_buffer;
+		ReplayBuffer<DQItem>*	_replay_buffer;
 		int _sample_size;
 	};
 }

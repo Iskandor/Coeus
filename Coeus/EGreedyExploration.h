@@ -7,7 +7,7 @@ namespace Coeus
 	class __declspec(dllexport) EGreedyExploration
 	{
 	public:
-		EGreedyExploration(float p_epsilon, IInterpolation* p_interpolation);
+		EGreedyExploration(float p_epsilon, IInterpolation* p_interpolation = nullptr);
 		~EGreedyExploration();
 
 		int get_action(Tensor* p_values) const;

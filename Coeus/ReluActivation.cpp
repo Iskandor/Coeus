@@ -1,4 +1,5 @@
 #include "ReluActivation.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -9,17 +10,33 @@ ReluActivation::ReluActivation(): IActivationFunction(RELU) {
 ReluActivation::~ReluActivation()
 = default;
 
-Tensor ReluActivation::activate(Tensor& p_input) {
-	float* arr = Tensor::alloc_arr(p_input.size());
-	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
+Tensor* ReluActivation::backward(Tensor* p_input)
+{
+	float* arr = Tensor::alloc_arr(_output->size());
+	int* shape = Tensor::copy_shape(_output->rank(), _output->shape());
 	float* y = &arr[0];
-	float* x = &p_input.arr()[0];
+	float* x = &_input->arr()[0];
 
-	for (int i = 0; i < p_input.size(); i++) {
-		(*y++) =  Tensor::max(0, *x++);
+	for (int i = 0; i < _output->size(); i++) {
+		*y++ = *x++ > 0.f ? 1.f : 0.f;
 	}
 
-	return Tensor(p_input.rank(), shape, arr);
+	TensorOperator::instance().vv_ewprod(arr, p_input->arr(), arr, _output->size());
+
+	return new Tensor(_output->rank(), shape, arr);
+}
+
+Tensor* ReluActivation::forward(Tensor* p_input)
+{
+	IActivationFunction::forward(p_input);
+	float* y = &_output->arr()[0];
+	float* x = &_input->arr()[0];
+
+	for (int i = 0; i < _output->size(); i++) {
+		(*y++) = Tensor::max(0, *x++);
+	}
+
+	return _output;
 }
 
 Tensor ReluActivation::derivative(Tensor& p_input) {
@@ -33,9 +50,4 @@ Tensor ReluActivation::derivative(Tensor& p_input) {
 	}
 
 	return Tensor(p_input.rank(), shape, arr);
-}
-
-float ReluActivation::activate(const float p_value)
-{
-	return Tensor::max(0, p_value);
 }

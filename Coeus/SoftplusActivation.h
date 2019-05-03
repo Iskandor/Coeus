@@ -8,9 +8,10 @@ namespace Coeus
 	public:
 		SoftplusActivation();
 		~SoftplusActivation();
-		Tensor activate(Tensor& p_input) override;
+
 		Tensor derivative(Tensor& p_input) override;
-		inline float activate(float p_value) override;
+		Tensor* backward(Tensor* p_input) override;
+		Tensor* forward(Tensor* p_input) override;
 	};
 }
 

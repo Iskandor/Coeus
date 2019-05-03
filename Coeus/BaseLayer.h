@@ -47,6 +47,7 @@ namespace Coeus
 
 		Tensor* get_output() const { return _output; }
 		int get_dim() const { return _dim; }
+		int get_in_dim() const { return _input_dim; }
 
 		virtual json get_json() const;
 

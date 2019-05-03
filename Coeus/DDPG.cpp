@@ -12,20 +12,21 @@ DDPG::DDPG(	NeuralNetwork* p_network_critic, GradientAlgorithm* p_gradient_algor
 	_network_actor_target = new NeuralNetwork(*p_network_actor);
 	_network_critic_target = new NeuralNetwork(*p_network_critic);
 
-	_buffer = new ReplayBuffer(p_buffer_size);
+	_buffer = new ReplayBuffer<DQItem>(p_buffer_size);
 }
 
 DDPG::~DDPG()
 {
+	delete _buffer;
 }
 
 float DDPG::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward) {
-	_buffer->add_item(p_state0, p_action0, p_state1, p_reward, false);
+	_buffer->add_item(new DQItem(p_state0, p_action0, p_state1, p_reward, false));
 
 	float error = 0;
 
 	if (_buffer->get_size() >= _sample_size) {
-		vector<ReplayBuffer::Item*>* sample = _buffer->get_sample(_sample_size);
+		vector<DQItem*>* sample = _buffer->get_sample(_sample_size);
 
 		_input.clear();
 		_target.clear();

@@ -1,5 +1,6 @@
 #include "SoftmaxActivation.h"
 #include <cmath>
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -11,40 +12,54 @@ SoftmaxActivation::~SoftmaxActivation()
 {
 }
 
-Tensor SoftmaxActivation::activate(Tensor& p_input) {
-	float* arr = Tensor::alloc_arr(p_input.size());
-	int* shape = Tensor::copy_shape(p_input.rank(), p_input.shape());
+Tensor* SoftmaxActivation::backward(Tensor* p_input)
+{
+	float* deriv = Tensor::alloc_arr(_output->size() * _output->size());
+	float* arr = Tensor::alloc_arr(_output->size() * _output->size());
+	int* shape = Tensor::copy_shape(_output->rank(), _output->shape());
 
+
+	for (int i = 0; i < _output->size(); i++) {
+		for (int j = 0; j < _output->size(); j++) {
+			deriv[i * _output->size() + j] = (*_output)[i] * (Tensor::kronecker_delta(i, j) - (*_output)[j]);
+		}
+	}
+
+	TensorOperator::instance().vM_prod(p_input->arr(), deriv, arr, _output->size(), _output->size());
+
+	delete[] deriv;
+
+	return new Tensor(_output->rank(), shape, arr);
+}
+
+Tensor* SoftmaxActivation::forward(Tensor* p_input)
+{
+	IActivationFunction::forward(p_input);
 	float esum = 0;
-	const int max = p_input.max_value_index();
+	const float max = (*_input)[_input->max_value_index()];
 
-	for (int i = 0; i < p_input.size(); i++) {
-		arr[i] = exp(p_input[i] - p_input[max]);
-		esum += arr[i];
+	for (int i = 0; i < _output->size(); i++) {
+		(*_output)[i] = exp((*_input)[i] - max);
+		esum += (*_output)[i];
 	}
 
-	for (int i = 0; i < p_input.size(); i++) {
-		arr[i] = arr[i] / esum;
+	for (int i = 0; i < _output->size(); i++) {
+		(*_output)[i] /= esum;
 	}
 
-	return Tensor(p_input.rank(), shape, arr);
+	return _output;
 }
 
 Tensor SoftmaxActivation::derivative(Tensor& p_input) {
 	float* arr = Tensor::alloc_arr(p_input.size() * p_input.size());
 
-	const Tensor activation = activate(p_input);
+	Tensor* activation = forward(&p_input);
 
 	for (int i = 0; i < p_input.size(); i++) {
 		for (int j = 0; j < p_input.size(); j++) {
-			arr[i * p_input.size() + j] = activation[i] * (Tensor::kronecker_delta(i, j) - activation[j]);
+			arr[i * p_input.size() + j] = (*activation)[i] * (Tensor::kronecker_delta(i, j) - (*activation)[j]);
 		}
 	}
 
 	return Tensor({ p_input.size(), p_input.size() }, arr);
-}
-
-float SoftmaxActivation::activate(float p_value)
-{
-	return 0;
 }

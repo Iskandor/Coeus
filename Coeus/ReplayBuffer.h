@@ -1,41 +1,60 @@
 #pragma once
-#include "Tensor.h"
-#include <queue>
+#include <vector>
+#include "RandomGenerator.h"
+
+using namespace std;
 
 namespace Coeus {
 
+	template <typename T>
 	class __declspec(dllexport) ReplayBuffer
 	{
 		public:
-			struct Item
+			ReplayBuffer(const int p_size) {
+				_size = p_size;
+			}
+
+			~ReplayBuffer()
 			{
-				Tensor s0;
-				float a;
-				Tensor s1;
-				float r;
-				bool final;
-
-				Item(Tensor* p_s0, const float p_a, Tensor* p_s1, const float p_r, const bool p_final) {
-					s0 = Tensor(*p_s0);
-					a = p_a;
-					s1 = Tensor(*p_s1);
-					r = p_r;
-					final = p_final;
+				for (int i = 0; i < _buffer.size(); i++) {
+					delete _buffer[i];
 				}
-			};
+			}
 
-			explicit ReplayBuffer(int p_size);
-			~ReplayBuffer();
+			void add_item(T* p_item) {
+				if (_buffer.size() > _size) {
+					delete _buffer[0];
+					_buffer.erase(_buffer.begin());
+				}
+				_buffer.push_back(p_item);
+			}
 
-			void add_item(Tensor* p_s0, float p_a, Tensor* p_s1, float p_r, bool p_final);
-			vector<Item*>* get_sample(int p_size);
-			size_t get_size() const { return _buffer.size(); }
+			vector<T*>* get_sample(const int p_size) {
+				int size = p_size;
+				_sample.clear();
+
+				if (size > _buffer.size()) size = _buffer.size();
+
+				vector<int> index = RandomGenerator::get_instance().choice(_buffer.size(), size);
+
+				for (int i = 0; i < index.size(); i++) {
+					_sample.push_back(_buffer[i]);
+				}
+
+				return &_sample;
+			}
+
+			size_t get_size() const
+			{
+				return _buffer.size();
+			}
 
 		private:
-			vector<Item*>	_buffer;
-			vector<Item*>	_sample;
+			vector<T*>	_buffer;
+			vector<T*>	_sample;
 			int _size;
-	};
 
+
+	};
 }
 

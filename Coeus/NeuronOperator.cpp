@@ -58,7 +58,6 @@ NeuronOperator::~NeuronOperator()
 	delete _net;
 	delete _dnet;
 	delete _int;
-	delete _output;
 }
 
 void NeuronOperator::integrate(Tensor* p_input, Tensor* p_weights)
@@ -84,17 +83,15 @@ void NeuronOperator::activate()
 	if (_net->rank() == 1)
 	{
 		TensorOperator::instance().full_bias_s(_net->arr(), _bias->get_data()->arr(), _dim);
-		_output = init_auxiliary_parameter(_output, 1, _dim);
 		_dnet = init_auxiliary_parameter(_dnet, 1, _dim);
 	}
 	if (_net->rank() == 2)
 	{
 		TensorOperator::instance().full_bias_b(_net->shape(0), _net->arr(), _bias->get_data()->arr(), _dim);
-		_output = init_auxiliary_parameter(_output, _net->shape(0), _dim);
 		_dnet = init_auxiliary_parameter(_dnet, _net->shape(0), _dim);
 	}
 
-	*_output = _activation_function->activate(*_net);
+	_output = _activation_function->forward(_net);
 	_dnet->override(_net);
 	_net->fill(0);
 }

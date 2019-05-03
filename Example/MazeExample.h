@@ -16,10 +16,11 @@ public:
 	int example_sarsa(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
 	void example_actor_critic(int p_hidden);
 	int example_deep_q(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
-	void example_icm();
+	void example_icm(int p_hidden);
 
 private:
-	int test(NeuralNetwork* p_network, bool p_verbose = true) const;
+	int test_q(NeuralNetwork* p_network, bool p_verbose = true) const;
+	void test_v(NeuralNetwork* p_network, bool p_verbose = true) const;
 
 	static Tensor encode_state(vector<float> *p_sensors);
 	static int choose_action(Tensor* p_input, float epsilon);
