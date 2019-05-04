@@ -17,6 +17,7 @@ namespace Coeus
 		void activate();
 		Tensor derivative() const;
 
+		IActivationFunction* get_function() const { return _activation_function; }
 		Tensor* get_output() const { return _output; }
 		Param*	get_bias() const { return _bias; }
 		string	get_id() const { return _id; }

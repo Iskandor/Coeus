@@ -176,14 +176,13 @@ void TensorOperatorMKL::lstm_gradient_b(int p_batch, float* p_gradient, float* p
 	delete[] grad;
 }
 
-void TensorOperatorMKL::full_delta_s(float* p_delta0, float* p_delta1, float* p_w, float* p_derivative, const int p_rows, const int p_cols)
+void TensorOperatorMKL::full_delta_s(float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
 {
 	memset(p_delta0, 0, sizeof(float) * p_cols);
 	cblas_sgemv(CblasRowMajor, CblasTrans, p_rows, p_cols, 1, p_w, p_cols, p_delta1, 1, 0, p_delta0, 1);
-	vsMul(p_cols, p_delta0, p_derivative, p_delta0);
 }
 
-void TensorOperatorMKL::full_delta_b(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, float* p_derivative, const int p_rows, const int p_cols)
+void TensorOperatorMKL::full_delta_b(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
 {
 	memset(p_delta0, 0, sizeof(float) * p_batch * p_cols);
 	cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
@@ -191,7 +190,6 @@ void TensorOperatorMKL::full_delta_b(const int p_batch, float* p_delta0, float* 
 		1, p_delta1, p_rows,
 		p_w, p_cols,
 		1, p_delta0, p_cols);
-	vsMul(p_batch * p_cols, p_delta0, p_derivative, p_delta0);
 }
 
 void TensorOperatorMKL::full_gradient_s(float* p_x0, float* p_delta1, float* p_grad, const int p_rows, const int p_cols)

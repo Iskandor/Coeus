@@ -33,8 +33,8 @@ public:
 	virtual void lstm_gradient_s(float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) = 0;
 	virtual void lstm_gradient_b(int p_batch, float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) = 0;
 
-	virtual void full_delta_s(float* p_delta0, float* p_delta1, float* p_w, float* p_derivative, int p_rows, int p_cols) = 0;
-	virtual void full_delta_b(int p_batch, float* p_delta0, float* p_delta1, float* p_w, float* p_derivative, int p_rows, int p_cols) = 0;
+	virtual void full_delta_s(float* p_delta0, float* p_delta1, float* p_w, int p_rows, int p_cols) = 0;
+	virtual void full_delta_b(int p_batch, float* p_delta0, float* p_delta1, float* p_w, int p_rows, int p_cols) = 0;
 	virtual void full_gradient_s(float* p_x0, float* p_delta1, float* p_grad, int p_rows, int p_cols) = 0;
 	virtual void full_gradient_b(int p_batch, float* p_x0, float* p_delta1, float* p_grad, int p_rows, int p_cols) = 0;
 

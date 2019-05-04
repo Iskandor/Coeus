@@ -35,22 +35,20 @@ void NetworkGradient::calc_gradient(Tensor* p_value) {
 		if (p_value->rank() == 1)
 		{
 			_delta[_network->_output_layer] = NeuronOperator::init_auxiliary_parameter(_delta[_network->_output_layer], 1, output_layer->get_dim());
-			TensorOperator::instance().vv_ewprod(p_value->arr(), _derivative[_network->_output_layer]->arr(), _delta[_network->_output_layer]->arr(), output_layer->get_dim());
 		}
 		if (p_value->rank() == 2)
 		{
 			_delta[_network->_output_layer] = NeuronOperator::init_auxiliary_parameter(_delta[_network->_output_layer], p_value->shape(0), output_layer->get_dim());
-			TensorOperator::instance().vv_ewprod(p_value->arr(), _derivative[_network->_output_layer]->arr(), _delta[_network->_output_layer]->arr(), p_value->shape(0) * output_layer->get_dim());
 		}
+		_delta[_network->_output_layer]->override(p_value);
 	}
 	else
 	{
-		_delta[_network->_output_layer] = _derivative[_network->_output_layer];
+		_delta[_network->_output_layer] = new Tensor(_network->get_output()->rank(), Tensor::copy_shape(_network->get_output()->rank(), _network->get_output()->shape()), Tensor::ONES);
 	}
 
 	for (auto& it : _network->_backward_graph)
 	{
-		it->calc_delta(_delta, _derivative);
 		it->calc_gradient(_gradient, _delta, _derivative);
 	}
 }

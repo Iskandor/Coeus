@@ -154,12 +154,10 @@ void LSTMLayer::activate()
 
 void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
-	_in_derivative->reset_index();
-	for (auto it : _input_layer)
-	{
-		_in_derivative->push_back(p_derivative_map[it->get_id()]);
-	}
+}
 
+void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+{
 	Tensor* h = _activation_function->forward(_state);
 	Tensor dh = _activation_function->derivative(*_state);
 
@@ -188,13 +186,13 @@ void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor
 			delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
 			delta = NeuronOperator::init_auxiliary_parameter(delta, _batch_size, _in_dim);
 
-			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_cec->get_id()]->arr(), _Wxc->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_cec->get_id()]->arr(), _Wxc->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
-			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_ig->get_id()]->arr(), _Wxig->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_ig->get_id()]->arr(), _Wxig->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
-			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_fg->get_id()]->arr(), _Wxfg->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_fg->get_id()]->arr(), _Wxfg->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
-			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_og->get_id()]->arr(), _Wxog->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_b(_batch_size, delta->arr(), p_delta_map[_og->get_id()]->arr(), _Wxog->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _batch_size *_in_dim);
 
 			int index = 0;
@@ -224,13 +222,13 @@ void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor
 			delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
 			delta = NeuronOperator::init_auxiliary_parameter(delta, _batch_size, _in_dim);
 
-			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_cec->get_id()]->arr(), _Wxc->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_cec->get_id()]->arr(), _Wxc->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
-			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_ig->get_id()]->arr(), _Wxig->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_ig->get_id()]->arr(), _Wxig->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
-			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_fg->get_id()]->arr(), _Wxfg->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_fg->get_id()]->arr(), _Wxfg->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
-			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_og->get_id()]->arr(), _Wxog->get_data()->arr(), _in_derivative->arr(), _dim, _in_dim);
+			TensorOperator::instance().full_delta_s(delta->arr(), p_delta_map[_og->get_id()]->arr(), _Wxog->get_data()->arr(), _dim, _in_dim);
 			TensorOperator::instance().vv_add(delta->arr(), delta_in->arr(), delta_in->arr(), _in_dim);
 
 			int index = 0;
@@ -246,10 +244,7 @@ void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor
 			delete delta;
 		}
 	}
-}
 
-void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
-{
 	Tensor* gWxig = &p_gradient_map[_Wxig->get_id()];
 	Tensor* gWxfg = &p_gradient_map[_Wxfg->get_id()];
 	Tensor* gWxog = &p_gradient_map[_Wxog->get_id()];

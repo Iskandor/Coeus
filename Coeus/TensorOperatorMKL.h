@@ -26,8 +26,8 @@ namespace Coeus
 		void lstm_state_s(float* p_state, float* p_ig, float* p_fg, float* p_cec, int p_size) override;
 		void lstm_state_b(int p_batch, float* p_state, float* p_ig, float* p_fg, float* p_cec, int p_size) override;
 
-		void full_delta_s(float* p_delta0, float* p_delta1, float* p_w, float* p_derivative, int p_rows, int p_cols) override;
-		void full_delta_b(int p_batch, float* p_delta0, float* p_delta1, float* p_w, float* p_derivative, int p_rows, int p_cols) override;
+		void full_delta_s(float* p_delta0, float* p_delta1, float* p_w, int p_rows, int p_cols) override;
+		void full_delta_b(int p_batch, float* p_delta0, float* p_delta1, float* p_w, int p_rows, int p_cols) override;
 		void full_gradient_s(float* p_x0, float* p_delta1, float* p_grad, int p_rows, int p_cols) override;
 		void full_gradient_b(int p_batch, float* p_x0, float* p_delta1, float* p_grad, int p_rows, int p_cols) override;
 

@@ -75,6 +75,7 @@ void FFN::run() {
 
 	for (int t = 0; t < 1000; t++) {
 		float error = 0;
+
 		/*
 		for (int i = 0; i < 4; i++)
 		{
@@ -97,19 +98,16 @@ void FFN::run() {
 }
 
 void FFN::run_iris() {
-	/*
 	_dataset.load_data("./data/iris.data");
 
-	_network.add_layer(new InputLayer("input", IrisDataset::SIZE));
-	_network.add_layer(new CoreLayer("hidden", 256, SIGMOID));
-	_network.add_layer(new CoreLayer("output", 3, SOFTMAX));
-
-	_network.add_connection("input", "hidden", Connection::LECUN_UNIFORM);
-	_network.add_connection("hidden", "output", Connection::LECUN_UNIFORM);
-	_network.init();
+	NeuralNetwork network;
+	network.add_layer(new CoreLayer("hidden", 16, SIGMOID, new TensorInitializer(LECUN_UNIFORM), IrisDataset::SIZE));
+	network.add_layer(new CoreLayer("output", IrisDataset::CATEGORIES, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
+	network.add_connection("hidden", "output");
+	network.init();
 
 
-	const int epochs = 500;
+	const int epochs = 1000;
 	vector<IrisDatasetItem>* data = nullptr;
 	map<int, Tensor> target;
 
@@ -118,13 +116,9 @@ void FFN::run_iris() {
 		target[i][i] = 1;
 	}
 
-	//BackProp model(&_network);
-	//model.init(new CrossEntropyCost(), 0.001, 0.9, true);
-	//ADAM model(&_network);
-	RMSProp model(&_network);
-	//Nadam model(&_network);
-	model.init(new CrossEntropyCost(), 0.001f);
-	//model.add_learning_rate_module(new WarmStartup(1e-4, 1e-2, 10, 2));
+	RMSProp model(&network);
+	//model.init(new CrossEntropyCost(), 0.001f);
+	model.init(new QuadraticCost(), 0.001f);
 
 	for (int t = 0; t < epochs; t++) {
 		data = _dataset.permute();
@@ -137,12 +131,11 @@ void FFN::run_iris() {
 	}
 
 	for (int i = 0; i < data->size(); i++) {
-		_network.activate(data->at(i).data);
+		network.activate(data->at(i).data);
 		for (int o = 0; o < 3; o++) {
-			cout << _network.get_output()->at(o) << " , ";
+			cout << network.get_output()->at(o) << " , ";
 		}
 		cout << data->at(i).target << endl;
 
 	}
-	*/
 }
