@@ -605,6 +605,21 @@
     <ClInclude Include="GradientAccumulator.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
     </ClInclude>
+    <ClInclude Include="BoltzmanExploration.h">
+      <Filter>Header Files\Algorithm\Modules\Exploration</Filter>
+    </ClInclude>
+    <ClInclude Include="EGreedyExploration.h">
+      <Filter>Header Files\Algorithm\Modules\Exploration</Filter>
+    </ClInclude>
+    <ClInclude Include="IInterpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearInterpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExponentialInterpolation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="RandomGenerator.h">
       <Filter>Header Files\Backend</Filter>
     </ClInclude>
