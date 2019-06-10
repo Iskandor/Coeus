@@ -89,8 +89,10 @@ void TensorOperatorMKL::lstm_derivative_s(float* p_derivative, float* p_fg, floa
 {
 	float* gx = &p_derivative[0];
 	float* fgx = &p_fg[0];
-	float* a1x = &p_arg1[0];
-	float* a2x = &p_arg2[0];
+
+	float* ta = new float[p_rows];
+	float* tax = &ta[0];
+	vv_ewprod(p_arg1, p_arg2, ta, p_rows);
 
 	for (int i = 0; i < p_rows; i++)
 	{
@@ -98,20 +100,20 @@ void TensorOperatorMKL::lstm_derivative_s(float* p_derivative, float* p_fg, floa
 
 		for(int j = 0; j < p_cols; j++)
 		{
-			*gx = *gx * *fgx + *a1x * *a2x * *x++;
+			*gx = *gx * *fgx + *tax * *x++;
 			gx++;
 		}
 
 		fgx++;
-		a1x++;
-		a2x++;
+		tax++;
 	}
+
+	delete[] ta;
 }
 
 void TensorOperatorMKL::lstm_derivative_b(const int p_batch, float* p_derivative, float* p_fg, float* p_arg1, float* p_arg2, float* p_input, const int p_rows, const int p_cols)
 {
 	float* gx = &p_derivative[0];
-
 	float* fgx = &p_fg[0];
 	float* a1x = &p_arg1[0];
 	float* a2x = &p_arg2[0];
@@ -121,10 +123,11 @@ void TensorOperatorMKL::lstm_derivative_b(const int p_batch, float* p_derivative
 		for (int i = 0; i < p_rows; i++)
 		{
 			float* x = &p_input[b * p_cols];
+			const float a = *a1x * *a2x;
 
 			for (int j = 0; j < p_cols; j++)
 			{
-				*gx = *gx * *fgx + *a1x * *a2x * *x++;
+				*gx = *gx * *fgx + a * *x++;
 				gx++;
 			}
 
