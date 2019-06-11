@@ -31,6 +31,12 @@
     <Filter Include="Header Files\RNN">
       <UniqueIdentifier>{64d3f9b9-5353-49d7-885f-87db65afa5c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\MNIST">
+      <UniqueIdentifier>{f5e71797-5e3b-45a3-a9bd-d6de55a38e11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MNIST">
+      <UniqueIdentifier>{433c17ea-a2f2-42e9-9d80-ad61a66d07d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -130,6 +136,18 @@
     </ClInclude>
     <ClInclude Include="..\Coeus\RNN.h">
       <Filter>Header Files\RNN</Filter>
+    </ClInclude>
+    <ClInclude Include="mnist_reader.hpp">
+      <Filter>Header Files\MNIST</Filter>
+    </ClInclude>
+    <ClInclude Include="mnist_reader_common.hpp">
+      <Filter>Header Files\MNIST</Filter>
+    </ClInclude>
+    <ClInclude Include="mnist_reader_less.hpp">
+      <Filter>Header Files\MNIST</Filter>
+    </ClInclude>
+    <ClInclude Include="mnist_utils.hpp">
+      <Filter>Header Files\MNIST</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

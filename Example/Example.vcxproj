@@ -193,6 +193,10 @@
     <ClInclude Include="MazeAction.h" />
     <ClInclude Include="MazeExample.h" />
     <ClInclude Include="MazeTask.h" />
+    <ClInclude Include="mnist_reader.hpp" />
+    <ClInclude Include="mnist_reader_common.hpp" />
+    <ClInclude Include="mnist_reader_less.hpp" />
+    <ClInclude Include="mnist_utils.hpp" />
     <ClInclude Include="PackDataset.h" />
     <ClInclude Include="rk4.hpp" />
     <ClInclude Include="UBALTest.h" />
