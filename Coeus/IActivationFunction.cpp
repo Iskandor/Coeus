@@ -23,6 +23,10 @@ Tensor* IActivationFunction::forward(Tensor* p_input)
 	{
 		_input = NeuronOperator::init_auxiliary_parameter(_input, p_input->shape(0), p_input->shape(1));
 	}
+	if (p_input->rank() == 3)
+	{
+		_input = NeuronOperator::init_auxiliary_parameter(_input, p_input->shape(0), p_input->shape(1), p_input->shape(2));
+	}
 
 	_input->override(p_input);
 
@@ -33,6 +37,10 @@ Tensor* IActivationFunction::forward(Tensor* p_input)
 	if (p_input->rank() == 2)
 	{
 		_output = NeuronOperator::init_auxiliary_parameter(_output, p_input->shape(0), p_input->shape(1));
+	}
+	if (p_input->rank() == 3)
+	{
+		_output = NeuronOperator::init_auxiliary_parameter(_output, p_input->shape(0), p_input->shape(1), p_input->shape(2));
 	}
 
 	return _output;

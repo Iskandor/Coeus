@@ -87,6 +87,9 @@
     <ClCompile Include="CisLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CNN.cpp">
+      <Filter>Source Files\MNIST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFN.h">
@@ -147,6 +150,9 @@
       <Filter>Header Files\MNIST</Filter>
     </ClInclude>
     <ClInclude Include="mnist_utils.hpp">
+      <Filter>Header Files\MNIST</Filter>
+    </ClInclude>
+    <ClInclude Include="CNN.h">
       <Filter>Header Files\MNIST</Filter>
     </ClInclude>
   </ItemGroup>

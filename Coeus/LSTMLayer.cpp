@@ -9,7 +9,7 @@
 using namespace Coeus;
 
 
-LSTMLayer::LSTMLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, p_in_dim)
+LSTMLayer::LSTMLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, { p_in_dim })
 {
 	_type = LSTM;
 
@@ -244,6 +244,8 @@ void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 			delete delta;
 		}
 	}
+
+	delete delta_out;
 
 	Tensor* gWxig = &p_gradient_map[_Wxig->get_id()];
 	Tensor* gWxfg = &p_gradient_map[_Wxfg->get_id()];

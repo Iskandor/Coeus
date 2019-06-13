@@ -20,10 +20,11 @@ namespace Coeus
 			CORE = 4,
 			RECURRENT = 5,
 			LSTM = 6,
-			LSOM = 7
+			LSOM = 7,
+			CONV = 8
 		};
 
-		BaseLayer(const string& p_id, int p_dim, int p_in_dim);
+		BaseLayer(const string& p_id, int p_dim, initializer_list<int> p_in_dim);
 		BaseLayer(json p_data);
 		virtual ~BaseLayer();
 		virtual BaseLayer* clone() = 0;
@@ -52,11 +53,13 @@ namespace Coeus
 		virtual json get_json() const;
 
 	protected:
+		int sum_input_dim(initializer_list<int> p_in_dim) const;
 		explicit BaseLayer(BaseLayer* p_source);
 
 		string		_id;
 		TYPE		_type;
 		int			_dim;
+		Tensor*		_dim_tensor;
 		int			_in_dim;
 		int			_input_dim;
 
@@ -65,10 +68,7 @@ namespace Coeus
 		Tensor*		_input;
 		Tensor*		_output;
 
-		vector<BaseLayer*> _input_layer;
-
-		Tensor*		_in_derivative;
-
+		vector<BaseLayer*>		_input_layer;
 	private:
 		bool	_valid;
 	};

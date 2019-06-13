@@ -35,7 +35,7 @@ namespace Coeus
 	};
 
 	enum INIT {
-		NONE = 0,
+		DEBUG = 0,
 		UNIFORM = 1,
 		LECUN_UNIFORM = 2,
 		GLOROT_UNIFORM = 3,

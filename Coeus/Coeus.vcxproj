@@ -186,6 +186,7 @@
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BoltzmanExploration.cpp" />
+    <ClCompile Include="ConvLayer.cpp" />
     <ClCompile Include="EGreedyExploration.cpp" />
     <ClCompile Include="ExponentialDecay.cpp" />
     <ClCompile Include="ExponentialInterpolation.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BoltzmanExploration.h" />
     <ClInclude Include="BufferItems.h" />
+    <ClInclude Include="ConvLayer.h" />
     <ClInclude Include="EGreedyExploration.h" />
     <ClInclude Include="ExponentialDecay.h" />
     <ClInclude Include="ExponentialInterpolation.h" />

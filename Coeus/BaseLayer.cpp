@@ -3,18 +3,17 @@
 
 using namespace Coeus;
 
-BaseLayer::BaseLayer(const string& p_id, const int p_dim, const int p_in_dim)
+BaseLayer::BaseLayer(const string& p_id, const int p_dim, const initializer_list<int> p_in_dim)
 {
 	_id = p_id;
 	_dim = p_dim;
-	_in_dim = p_in_dim;
-	_input_dim = p_in_dim;
+	_in_dim = sum_input_dim(p_in_dim);
+	_input_dim = sum_input_dim(p_in_dim);
 	_valid = false;
 	_batch_size = 0;
 
 	_input = nullptr;
 	_output = nullptr;
-	_in_derivative = nullptr;
 }
 
 BaseLayer::BaseLayer(json p_data)
@@ -28,13 +27,11 @@ BaseLayer::BaseLayer(json p_data)
 
 	_input = nullptr;
 	_output = nullptr;
-	_in_derivative = nullptr;
 }
 
 BaseLayer::~BaseLayer()
 {
 	delete _input;
-	delete _in_derivative;
 }
 
 void BaseLayer::init(vector<BaseLayer*>& p_input_layers)
@@ -65,7 +62,6 @@ void BaseLayer::integrate(Tensor* p_input)
 	}
 
 	_input = NeuronOperator::init_auxiliary_parameter(_input, _batch_size, _in_dim);
-	_in_derivative = NeuronOperator::init_auxiliary_parameter(_in_derivative, _batch_size, _in_dim);
 
 	_input->push_back(p_input);
 }
@@ -95,4 +91,16 @@ BaseLayer::BaseLayer(BaseLayer* p_source)
 
 	_input = nullptr;
 	_output = nullptr;
+}
+
+int BaseLayer::sum_input_dim(initializer_list<int> p_in_dim) const
+{
+	int result = 0;
+
+	for(auto it = p_in_dim.begin(); it != p_in_dim.end(); it++)
+	{
+		result += *it;
+	}
+
+	return result;
 }

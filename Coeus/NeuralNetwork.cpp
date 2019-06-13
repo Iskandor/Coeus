@@ -102,9 +102,16 @@ void NeuralNetwork::init()
 		}
 	}
 
-	for (auto it = _graph.begin(); it != _graph.end(); ++it) {
-		if (control_set.find((*it).first) == control_set.end()) {
-			_output_layer = (*it).first;
+	if (_graph.empty())
+	{
+		_output_layer = (*_layers.begin()).first;
+	}
+	else
+	{
+		for (auto it = _graph.begin(); it != _graph.end(); ++it) {
+			if (control_set.find((*it).first) == control_set.end()) {
+				_output_layer = (*it).first;
+			}
 		}
 	}
 
@@ -114,6 +121,8 @@ void NeuralNetwork::init()
 			_input_layer.push_back(it->first);
 		}
 	}
+
+
 
 	create_directed_graph();
 
@@ -241,7 +250,7 @@ void NeuralNetwork::add_connection(const string& p_input_layer, const string& p_
 	}
 	else
 	{
-		assert(("add_connection: One or both layers does not exist", 0));
+		assert(("add_connection: One or both layers do not exist", 0));
 	}
 }
 

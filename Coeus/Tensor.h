@@ -65,8 +65,16 @@ public:
 	void push_back(Tensor* p_tensor);
 	void splice(int p_start, Tensor* p_output) const;
 	void reset_index();
-	static Tensor* concat(vector<Tensor*> &p_input);
-	static Tensor concat(vector<Tensor>& p_vector);
+	static Tensor*	concat(vector<Tensor*> &p_input);
+	static Tensor	concat(vector<Tensor>& p_vector);
+
+	void padding(int p_padding);
+	void reshape(initializer_list<int> p_shape);
+	Tensor slice(int p_index) const;
+
+	static void subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
+	static void slice(Tensor* p_dest, Tensor* p_source, int p_index);
+
 
 	static int kronecker_delta(const int i, const int j) {
 		return i == j ? 1 : 0;

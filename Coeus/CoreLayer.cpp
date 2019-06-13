@@ -7,7 +7,7 @@
 
 using namespace Coeus;
 
-CoreLayer::CoreLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, p_in_dim)
+CoreLayer::CoreLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, { p_in_dim })
 {
 	_type = CORE;
 	_y = new NeuronOperator(p_dim, p_activation);
@@ -25,7 +25,7 @@ CoreLayer::CoreLayer(const json& p_data) : BaseLayer(p_data)
 	_initializer = nullptr;
 }
 
-CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(p_copy._id, p_copy._dim, p_copy._in_dim) {
+CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = CORE;
 	_y = new NeuronOperator(*p_copy._y);
 	add_param(_y);
