@@ -16,10 +16,10 @@ ConvLayer::ConvLayer(const string& p_id, const ACTIVATION p_activation, TensorIn
 	_initializer = p_initializer;
 	_filter_input = nullptr;
 
-	_y = new NeuronOperator*[p_filters];
-	_W = new Param*[p_filters];
+	_y = new NeuronOperator*[_filters];
+	_W = new Param*[_filters];
 
-	for(int i = 0; i < p_filters; i++)
+	for (int i = 0; i < _filters; i++)
 	{
 		_y[i] = new NeuronOperator(1, LINEAR);
 		_W[i] = new Param(IDGen::instance().next(), new Tensor({ 1, _extent * _extent }, Tensor::ZERO));
@@ -48,6 +48,58 @@ ConvLayer::~ConvLayer()
 ConvLayer* ConvLayer::clone()
 {
 	return nullptr;
+}
+
+void ConvLayer::init(vector<BaseLayer*>& p_input_layers)
+{
+	int h1 = 0;
+	int w1 = 0;
+
+	if (!p_input_layers.empty())
+	{
+		for (auto it : p_input_layers)
+		{
+
+
+			if (it->get_dim_tensor()->size() != 3)
+			{
+				assert(("Invalid input shape", 0));
+			}
+			else
+			{
+				h1 = it->get_dim_tensor()->at(1);
+				w1 = it->get_dim_tensor()->at(2);
+			}
+
+			_input_layer.push_back(it);
+		}
+	}
+	else
+	{
+		if (get_in_dim_tensor() != nullptr)
+		{
+			if (get_in_dim_tensor()->size() != 3)
+			{
+				assert(("Invalid input shape", 0));
+			}
+			else
+			{
+				h1 = get_in_dim_tensor()->at(1);
+				w1 = get_in_dim_tensor()->at(2);
+			}
+		}
+	}
+
+	int d2 = _filters;
+	int h2 = (h1 - _extent + 2 * _padding) / _stride + 1;
+	int w2 = (w1 - _extent + 2 * _padding) / _stride + 1;
+
+	_dim_tensor = new Tensor({ 3 }, Tensor::ZERO);
+	_dim_tensor->set(0, d2);
+	_dim_tensor->set(1, h2);
+	_dim_tensor->set(2, w2);
+
+	_dim = d2 * h2 * w2;
 }
 
 void ConvLayer::integrate(Tensor* p_input)
@@ -134,4 +186,16 @@ void ConvLayer::override(BaseLayer* p_source)
 
 void ConvLayer::reset()
 {
+}
+
+json ConvLayer::get_json() const
+{
+	json data = BaseLayer::get_json();
+
+	return data;
+}
+
+Tensor* ConvLayer::get_dim_tensor()
+{
+	return _dim_tensor;
 }

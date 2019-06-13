@@ -129,6 +129,16 @@ json CoreLayer::get_json() const
 	return data;
 }
 
+Tensor* CoreLayer::get_dim_tensor()
+{
+	if (_dim_tensor == nullptr)
+	{
+		_dim_tensor = new Tensor({ 1 }, Tensor::VALUE, _dim);
+	}
+
+	return _dim_tensor;
+}
+
 CoreLayer::CoreLayer(CoreLayer* p_source) : BaseLayer(p_source)
 {
 	_type = CORE;

@@ -389,3 +389,13 @@ LSTMLayer::LSTMLayer(LSTMLayer* p_source) : BaseLayer(p_source)
 	_ct_cec = add_connection(p_source->_ct_cec->clone());
 	*/
 }
+
+Tensor* LSTMLayer::get_dim_tensor()
+{
+	if (_dim_tensor == nullptr)
+	{
+		_dim_tensor = new Tensor({ 1 }, Tensor::VALUE, _dim);
+	}
+
+	return _dim_tensor;
+}

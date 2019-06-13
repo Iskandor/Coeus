@@ -48,11 +48,14 @@ namespace Coeus
 
 		Tensor* get_output() const { return _output; }
 		int get_dim() const { return _dim; }
+		virtual Tensor* get_dim_tensor() = 0;
 		int get_in_dim() const { return _input_dim; }
+		Tensor* get_in_dim_tensor() const { return _in_dim_tensor; }
 
 		virtual json get_json() const;
 
 	protected:
+		
 		int sum_input_dim(initializer_list<int> p_in_dim) const;
 		explicit BaseLayer(BaseLayer* p_source);
 
@@ -61,10 +64,11 @@ namespace Coeus
 		int			_dim;
 		Tensor*		_dim_tensor;
 		int			_in_dim;
+		Tensor*		_in_dim_tensor;
 		int			_input_dim;
 
 		int			_batch_size;
-		bool		_batch;
+		bool		_batch{};
 		Tensor*		_input;
 		Tensor*		_output;
 

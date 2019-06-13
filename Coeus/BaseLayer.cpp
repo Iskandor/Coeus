@@ -12,6 +12,22 @@ BaseLayer::BaseLayer(const string& p_id, const int p_dim, const initializer_list
 	_valid = false;
 	_batch_size = 0;
 
+	_dim_tensor = nullptr;
+	_in_dim_tensor = nullptr;
+
+	if (p_in_dim.size() != 0)
+	{
+		_in_dim_tensor = new Tensor({ static_cast<int>(p_in_dim.size()) }, Tensor::ZERO);
+
+		int i = 0;
+
+		for(auto it = p_in_dim.begin(); it != p_in_dim.end(); it++)
+		{
+			_in_dim_tensor->set(i, *it);
+			i++;
+		}
+	}
+
 	_input = nullptr;
 	_output = nullptr;
 }
@@ -31,6 +47,7 @@ BaseLayer::BaseLayer(json p_data)
 
 BaseLayer::~BaseLayer()
 {
+	delete _dim_tensor;
 	delete _input;
 }
 
@@ -59,6 +76,11 @@ void BaseLayer::integrate(Tensor* p_input)
 	{
 		_batch_size = p_input->shape(0);
 		_batch = true;
+	}
+	if (p_input->rank() == 3)
+	{
+		_batch_size = 1;
+		_batch = false;
 	}
 
 	_input = NeuronOperator::init_auxiliary_parameter(_input, _batch_size, _in_dim);

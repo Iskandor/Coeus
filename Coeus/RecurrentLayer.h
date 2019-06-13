@@ -30,6 +30,7 @@ public:
 
 private:
 	explicit RecurrentLayer(RecurrentLayer* p_source);
+	Tensor* get_dim_tensor() override;
 
 	NeuronOperator* _y;
 

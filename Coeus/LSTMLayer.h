@@ -30,6 +30,7 @@ namespace Coeus
 
 	private:
 		explicit LSTMLayer(LSTMLayer* p_source);
+		Tensor* get_dim_tensor() override;
 
 		NeuronOperator* _cec;
 		NeuronOperator* _ig;

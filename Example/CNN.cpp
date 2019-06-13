@@ -30,9 +30,11 @@ void CNN::run()
 {
 	Tensor input({ 2,5,5 }, Tensor::VALUE, 1);
 
-	_network.add_layer(new ConvLayer("hidden0", RELU, new TensorInitializer(DEBUG), 3, 3, 1, 1, { 2,5,5 }));
-	_network.add_layer(new CoreLayer("hidden1", 2, SOFTMAX, new TensorInitializer(DEBUG)));
+	_network.add_layer(new ConvLayer("hidden0", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1, { 2,5,5 }));
+	_network.add_layer(new ConvLayer("hidden1", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1));
+	_network.add_layer(new CoreLayer("hidden2", 2, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
 	_network.add_connection("hidden0", "hidden1");
+	_network.add_connection("hidden1", "hidden2");
 	_network.init();
 
 	_network.activate(&input);
