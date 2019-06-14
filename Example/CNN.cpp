@@ -3,6 +3,7 @@
 #include "CoreLayer.h"
 #include "BackProph.h"
 #include "QuadraticCost.h"
+#include "ADAM.h"
 
 using namespace std;
 
@@ -30,9 +31,20 @@ CNN::~CNN()
 
 void CNN::run()
 {
-	Tensor input({ 2,5,5 }, Tensor::VALUE, 1);
-	Tensor target({ 2 }, Tensor::VALUE, 1);
-	target[0] = 0;
+	vector<Tensor*> input;
+
+	input.push_back(new Tensor({ 2,5,5 }, Tensor::VALUE, 1));
+	input.push_back(new Tensor({ 2,5,5 }, Tensor::VALUE, 2));
+
+	vector<Tensor*> target;
+
+	Tensor* t = new Tensor({ 2 }, Tensor::VALUE, 1);
+	(*t)[0] = 0;
+	target.push_back(t);
+
+	t = new Tensor({ 2 }, Tensor::VALUE, 1);
+	(*t)[1] = 0;
+	target.push_back(t);
 
 	_network.add_layer(new ConvLayer("hidden0", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1, { 2,5,5 }));
 	_network.add_layer(new ConvLayer("hidden1", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1));
@@ -41,21 +53,24 @@ void CNN::run()
 	_network.add_connection("hidden1", "hidden2");
 	_network.init();
 
-	_network.activate(&input);
-
-	cout << *_network.get_output() << endl;
-
 	BackProp optimizer(&_network);
 	optimizer.init(new QuadraticCost(), 0.1);
 
 
 	for(int i = 0; i < 100; i++)
 	{
-		const float error = optimizer.train(&input, &target);
+		float error = 0;
+		for(int s  = 0; s < 2; s++)
+		{
+			error += optimizer.train(input[s], target[s]);
+		}
 
 		cout << error << endl;
 	}
 
-	cout << *_network.get_output() << endl;
-	
+	for (int s = 0; s < 2; s++)
+	{
+		_network.activate(input[s]);
+		cout << *_network.get_output() << endl;
+	}
 }
