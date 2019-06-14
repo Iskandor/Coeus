@@ -152,10 +152,6 @@ void LSTMLayer::activate()
 	_context->override(_output);
 }
 
-void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
-{
-}
-
 void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
 	Tensor* h = _activation_function->forward(_state);

@@ -16,6 +16,7 @@ public:
 
 	virtual void vM_prod(float* p_x, float* p_A, float* p_y, int p_rows, int p_cols) = 0;
 
+	virtual void v_reduce(float* p_x, float* p_y, int p_size) = 0;
 	virtual void m_reduce(float* p_x, float* p_A, int p_rows, int p_cols) = 0;
 	virtual void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols) = 0;
 

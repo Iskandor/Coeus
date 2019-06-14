@@ -222,6 +222,17 @@ void TensorOperatorMKL::full_gradient_b(const int p_batch, float* p_x0, float* p
 	delete[] grad;
 }
 
+void TensorOperatorMKL::v_reduce(float* p_x, float* p_y, const int p_size)
+{
+	p_x[0] = 0;
+	float* y = &p_y[0];
+
+	for (int i = 0; i < p_size; i++)
+	{
+		p_x[0] += *y++;
+	}
+}
+
 void TensorOperatorMKL::m_reduce(float* p_x, float* p_A, const int p_rows, const int p_cols)
 {
 	for (int j = 0; j < p_cols; j++)

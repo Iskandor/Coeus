@@ -73,6 +73,8 @@ public:
 	Tensor slice(int p_index) const;
 
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
+	static void add_subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x);
+
 	static void slice(Tensor* p_dest, Tensor* p_source, int p_index);
 
 

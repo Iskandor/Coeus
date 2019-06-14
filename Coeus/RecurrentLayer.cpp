@@ -63,10 +63,6 @@ void RecurrentLayer::activate()
 	_context->override(_y->get_output());
 }
 
-void RecurrentLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
-{
-}
-
 void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
 	Tensor*	 delta_out = _y->get_function()->backward(p_delta_map[_id]);

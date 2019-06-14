@@ -493,7 +493,15 @@ void Tensor::padding(const int p_padding)
 	{
 		arr = alloc_arr(_shape[0] + 2 * p_padding);
 		memset(arr, 0, sizeof(float) * (_shape[0] + 2 * p_padding));
-		memcpy(arr + p_padding, _arr, sizeof(float) * _size);
+
+		if (p_padding > 0)
+		{
+			memcpy(arr + p_padding, _arr, sizeof(float) * _size);
+		}
+		if (p_padding < 0)
+		{
+			memcpy(arr, _arr - p_padding, sizeof(float) * (_size - 2 * p_padding)); 
+		}		
 
 		_shape[0] += 2 * p_padding;
 		_size = _shape[0];
@@ -557,6 +565,24 @@ void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const in
 	{
 		const int index = (p_y + i) * p_source->_shape[1] + p_x;
 		memcpy(p_dest->_arr + (i * p_w), p_source->_arr + index, sizeof(float) * p_w);
+	}
+}
+
+void Tensor::add_subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x)
+{
+#ifdef _DEBUG
+	if (p_dest->_size < p_source->_size)
+	{
+		assert(("Invalid size", 0));
+	}
+#endif
+
+	for(int i = 0; i < p_source->_shape[0]; i++)
+	{
+		for (int j = 0; j < p_source->_shape[1]; j++)
+		{
+			p_dest->_arr[(p_y + i) * p_dest->_shape[1] + j + p_x] += p_source->_arr[i * p_source->_shape[1] + j];
+		}
 	}
 }
 

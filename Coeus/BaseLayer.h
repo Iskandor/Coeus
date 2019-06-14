@@ -34,7 +34,6 @@ namespace Coeus
 		virtual void activate() = 0;
 
 		virtual void calc_derivative(map<string, Tensor*>& p_derivative) = 0;
-		virtual void calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) = 0;
 		virtual void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) = 0;
 
 		virtual void override(BaseLayer* p_source) = 0;

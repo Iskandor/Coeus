@@ -1,6 +1,8 @@
 #include "CNN.h"
 #include "ConvLayer.h"
 #include "CoreLayer.h"
+#include "BackProph.h"
+#include "QuadraticCost.h"
 
 using namespace std;
 
@@ -29,6 +31,8 @@ CNN::~CNN()
 void CNN::run()
 {
 	Tensor input({ 2,5,5 }, Tensor::VALUE, 1);
+	Tensor target({ 2 }, Tensor::VALUE, 1);
+	target[0] = 0;
 
 	_network.add_layer(new ConvLayer("hidden0", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1, { 2,5,5 }));
 	_network.add_layer(new ConvLayer("hidden1", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1));
@@ -40,4 +44,18 @@ void CNN::run()
 	_network.activate(&input);
 
 	cout << *_network.get_output() << endl;
+
+	BackProp optimizer(&_network);
+	optimizer.init(new QuadraticCost(), 0.1);
+
+
+	for(int i = 0; i < 100; i++)
+	{
+		const float error = optimizer.train(&input, &target);
+
+		cout << error << endl;
+	}
+
+	cout << *_network.get_output() << endl;
+	
 }
