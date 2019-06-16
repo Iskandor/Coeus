@@ -161,7 +161,7 @@ void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	Tensor* h = _activation_function->forward(_state);
 	Tensor dh = _activation_function->derivative(*_state);
 
-	Tensor*	 delta_out = p_delta_map[_id];
+	Tensor*	 delta_out = _activation_function->backward(p_delta_map[_id]);
 	Tensor*	 delta_in = nullptr;
 	Tensor*	 delta = nullptr;
 
