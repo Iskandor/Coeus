@@ -17,6 +17,7 @@
 #include "Nadam.h"
 #include "PowerSign.h"
 #include "RecurrentLayer.h"
+#include "KLDivergence.h"
 
 FFN::FFN()
 {
@@ -117,8 +118,7 @@ void FFN::run_iris() {
 	}
 
 	RMSProp model(&network);
-	//model.init(new CrossEntropyCost(), 0.001f);
-	model.init(new QuadraticCost(), 0.001f);
+	model.init(new CrossEntropyCost(), 0.001f);
 
 	for (int t = 0; t < epochs; t++) {
 		data = _dataset.permute();

@@ -31,7 +31,8 @@ void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const float p_a
 {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 
-	//_rule->calc_update(p_gradient);
+	_rule->calc_update(p_gradient);
+	_update = *_rule->get_update();
 
 	if (_lambda > 0)
 	{
@@ -45,12 +46,9 @@ void GeneralTDRule::calc_update(map<string, Tensor>* p_gradient, const float p_a
 		}
 		else
 		{
-			TensorOperator::instance().vc_prod(it->second.arr(), -_delta, _update[it->first].arr(), _update[it->first].size());
+			TensorOperator::instance().vc_prod(_update[it->first].arr(), -_delta, _update[it->first].arr(), _update[it->first].size());
 		}
 	}
-
-	_rule->calc_update(&_update);
-	_update = *_rule->get_update();
 }
 
 IUpdateRule* GeneralTDRule::clone(NetworkGradient* p_network_gradient)
@@ -71,9 +69,10 @@ void GeneralTDRule::reset_traces()
 
 void GeneralTDRule::update_traces(map<string, Tensor>* p_gradient)
 {
-	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
-		const int size = _e_traces[it->first].size();
-		TensorOperator::instance().vc_prod(_e_traces[it->first].arr(), _lambda * _gamma, _e_traces[it->first].arr(), size);
-		TensorOperator::instance().vv_add(_e_traces[it->first].arr(), it->second.arr(), _e_traces[it->first].arr(), size);
+	for (auto& it : *p_gradient)
+	{
+		const int size = _e_traces[it.first].size();
+		TensorOperator::instance().vc_prod(_e_traces[it.first].arr(), _lambda * _gamma, _e_traces[it.first].arr(), size);
+		TensorOperator::instance().vv_add(_e_traces[it.first].arr(), it.second.arr(), _e_traces[it.first].arr(), size);
 	}
 }

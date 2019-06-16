@@ -9,7 +9,8 @@ namespace Coeus
 		CountModule(int p_state_space_size);
 		~CountModule();
 
-		float get_reward(Tensor* p_state) const;
+		float get_reward_u(Tensor* p_state) const;
+		float get_reward_f(Tensor* p_state) const;
 		void update(Tensor* p_state) const;
 
 	private:

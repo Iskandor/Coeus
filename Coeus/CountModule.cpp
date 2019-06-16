@@ -17,11 +17,18 @@ CountModule::~CountModule()
 	delete _lookup_table;
 }
 
-float CountModule::get_reward(Tensor* p_state) const
+float CountModule::get_reward_u(Tensor* p_state) const
 {
 	const float reward = 1.f / sqrt(_lookup_table[p_state->max_value_index()]);
 	return reward;
 }
+
+float CountModule::get_reward_f(Tensor* p_state) const
+{
+	const float reward = tanh(_lookup_table[p_state->max_value_index()] / 100);
+	return reward;
+}
+
 
 void CountModule::update(Tensor* p_state) const
 {

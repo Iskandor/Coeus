@@ -28,6 +28,7 @@ int main()
 	example.example_actor_critic(64);
 	//example.example_deep_q(64, 1e-3, 0, true);
 	//example.example_icm(64);
+	//example.example_selector(64);
 
 	/*
 	IrisTest iris;

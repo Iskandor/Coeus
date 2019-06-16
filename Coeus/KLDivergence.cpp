@@ -20,7 +20,7 @@ float KLDivergence::cost(Tensor * p_prediction, Tensor * p_target)
 		float e = p_target->at(i);
 		float a = p_prediction->at(i);
 
-		r += e * log(e / a);
+		r += e * log(e) - e * log(a);
 	}
 
 	return r;
@@ -35,7 +35,7 @@ Tensor KLDivergence::cost_deriv(Tensor * p_prediction, Tensor * p_target)
 		float e = p_target->at(i);
 		float a = p_prediction->at(i);
 
-		data[i] = e / a;
+		data[i] = log(e) - log(a);
 	}
 
 	return Tensor(p_prediction->rank(), shape, data);

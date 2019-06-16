@@ -481,6 +481,9 @@ void Tensor::fill(const INIT p_init, const float p_value) const {
 			for (int i = 0; i < _size; i++) _arr[i] = 0;
 			break;
 		case ONES:
+			if (_rank == 1) {
+				fill(VALUE, 1);
+			}
 			if (_rank == 2) {
 				if (_shape[0] == _shape[1]) {
 					for (int i = 0; i < _shape[0]; i++) _arr[i * _shape[1] + i] = 1;
