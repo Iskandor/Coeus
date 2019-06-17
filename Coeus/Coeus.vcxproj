@@ -220,6 +220,7 @@
     <ClCompile Include="LinearInterpolation.cpp" />
     <ClCompile Include="NeuronOperator.cpp" />
     <ClCompile Include="Param.cpp" />
+    <ClCompile Include="PoolingLayer.cpp" />
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="GeneralTDRule.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="NeuronOperator.h" />
     <ClInclude Include="Param.h" />
     <ClInclude Include="LinearInterpolation.h" />
+    <ClInclude Include="PoolingLayer.h" />
     <ClInclude Include="QLearning.h" />
     <ClInclude Include="GeneralTDRule.h" />
     <ClInclude Include="QLearningRule.h" />

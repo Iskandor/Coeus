@@ -8,6 +8,7 @@
 #include "mnist_reader.hpp"
 #include "CNN.h"
 #include "ConvLayer.h"
+#include "PoolingLayer.h"
 
 
 using namespace std;

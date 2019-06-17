@@ -4,6 +4,7 @@
 #include "BackProph.h"
 #include "QuadraticCost.h"
 #include "ADAM.h"
+#include "PoolingLayer.h"
 
 using namespace std;
 
@@ -33,8 +34,8 @@ void CNN::run()
 {
 	vector<Tensor*> input;
 
-	input.push_back(new Tensor({ 2,5,5 }, Tensor::VALUE, 1));
-	input.push_back(new Tensor({ 2,5,5 }, Tensor::VALUE, 2));
+	input.push_back(new Tensor({ 2,6,6 }, Tensor::VALUE, 1));
+	input.push_back(new Tensor({ 2,6,6 }, Tensor::VALUE, 2));
 
 	vector<Tensor*> target;
 
@@ -46,11 +47,14 @@ void CNN::run()
 	(*t)[1] = 0;
 	target.push_back(t);
 
-	_network.add_layer(new ConvLayer("hidden0", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1, { 2,5,5 }));
-	_network.add_layer(new ConvLayer("hidden1", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1));
-	_network.add_layer(new CoreLayer("hidden2", 2, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
-	_network.add_connection("hidden0", "hidden1");
-	_network.add_connection("hidden1", "hidden2");
+	_network.add_layer(new ConvLayer("conv0", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1, { 2,6,6 }));
+	_network.add_layer(new PoolingLayer("pool0", 2, 2));
+	_network.add_layer(new ConvLayer("conv1", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1));
+	_network.add_layer(new CoreLayer("output", 2, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
+	_network.add_connection("conv0", "pool0");
+	_network.add_connection("pool0", "conv1");
+	//_network.add_connection("conv0", "conv1");
+	_network.add_connection("conv1", "output");
 	_network.init();
 
 	BackProp optimizer(&_network);

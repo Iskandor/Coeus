@@ -575,6 +575,14 @@ void Tensor::add_subregion(Tensor* p_dest, Tensor* p_source, const int p_y, cons
 	{
 		assert(("Invalid size", 0));
 	}
+	if (p_dest->_shape[0] < p_y + p_source->_shape[0])
+	{
+		assert(("Insufficient rows", 0));
+	}
+	if (p_dest->_shape[1] < p_x + p_source->_shape[1])
+	{
+		assert(("Insufficient cols", 0));
+	}
 #endif
 
 	for(int i = 0; i < p_source->_shape[0]; i++)
@@ -584,6 +592,27 @@ void Tensor::add_subregion(Tensor* p_dest, Tensor* p_source, const int p_y, cons
 			p_dest->_arr[(p_y + i) * p_dest->_shape[1] + j + p_x] += p_source->_arr[i * p_source->_shape[1] + j];
 		}
 	}
+}
+
+int Tensor::subregion_max_index(Tensor* p_source, const int p_y, const int p_x, const int p_h, const int p_w)
+{
+	int index = p_y * p_source->_shape[1] + p_x;
+	int result = index;
+
+	for (int i = 0; i < p_h; i++)
+	{
+		for (int j = 0; j < p_w; j++)
+		{
+			index = (p_y + i) * p_source->_shape[1] + p_x + j;
+
+			if (p_source->_arr[result] < p_source->_arr[index])
+			{
+				result = index;
+			}
+		}
+	}
+
+	return result;
 }
 
 void Tensor::slice(Tensor* p_dest, Tensor* p_source, const int p_index)

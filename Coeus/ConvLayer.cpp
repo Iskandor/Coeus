@@ -239,7 +239,8 @@ void ConvLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	if (!_input_layer.empty())
 	{
 		Tensor filter_delta({ _extent, _extent }, Tensor::ZERO);
-		Tensor delta({ h1, w1 }, Tensor::ZERO);
+		Tensor delta({ h1 + 2 * _padding, w1 + 2 * _padding }, Tensor::ZERO);
+		Tensor delta_padding({ h1, w1 }, Tensor::ZERO);
 
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, d1, h1, w1);
 		delta_in->reset_index();
@@ -260,10 +261,10 @@ void ConvLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 					}
 				}
 			}
-			delta_in->push_back(&delta);
+			Tensor::subregion(&delta_padding, &delta, _padding, _padding, w1, h1);
+			delta_in->push_back(&delta_padding);
 			delta.fill(0);
 		}
-
 
 		int index = 0;
 
