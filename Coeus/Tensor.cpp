@@ -19,6 +19,18 @@ Tensor::Tensor(const initializer_list<int> p_shape, float* p_data) {
 	_end = 0;
 }
 
+Tensor::Tensor(const initializer_list<int> p_shape, const vector<uint8_t>& p_data)
+{
+	init_shape(p_shape);
+	_arr = alloc_arr(_size);
+	_end = 0;
+
+	for (int i = 0; i < p_data.size(); i++)
+	{
+		_arr[i] = p_data.at(i);
+	}
+}
+
 Tensor::Tensor(const int p_rank, int* p_shape, float* p_data) {
 	init_shape(p_rank, p_shape, false);
 	_arr = p_data;

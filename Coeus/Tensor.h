@@ -18,7 +18,8 @@ public:
 	Tensor();
 	Tensor(initializer_list<int> p_shape, INIT p_init, float p_value = 1.);
 	Tensor(initializer_list<int> p_shape, float* p_data);
-	Tensor(int p_rank, int* p_shape, float* p_data);
+	Tensor(initializer_list<int> p_shape, const vector<uint8_t>& p_data);
+	Tensor(int p_rank, int* p_shape, float* p_data);	
 	Tensor(int p_rank, int* p_shape, INIT p_init, float p_value = 1.);
 	Tensor(initializer_list<int> p_shape, initializer_list <float> p_inputs);
 	Tensor(const Tensor &p_copy);

@@ -27,7 +27,9 @@ int main()
 	//model.run_add_problem();
 
 	CNN model;
-	model.run();
+	//model.run();
+	model.run_mnist();
+	model.test();
 	
 	//MazeExample example;
 	//example.example_q(64, 1e-3, 0, true);

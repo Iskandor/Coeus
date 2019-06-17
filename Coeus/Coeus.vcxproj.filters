@@ -376,7 +376,7 @@
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
     <ClCompile Include="PoolingLayer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -681,7 +681,7 @@
       <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="PoolingLayer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

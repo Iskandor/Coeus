@@ -113,6 +113,8 @@ void CoreLayer::init(vector<BaseLayer*>& p_input_layers)
 		_initializer->init(_W->get_data());
 	}
 	add_param(_W->get_id(), _W->get_data());
+
+	cout << _id << " " << _in_dim << " - " << _dim << endl;
 }
 
 json CoreLayer::get_json() const

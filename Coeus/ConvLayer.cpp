@@ -114,6 +114,8 @@ void ConvLayer::init(vector<BaseLayer*>& p_input_layers)
 	_dim_tensor->set(2, w2);
 
 	_dim = d2 * h2 * w2;
+
+	cout << _id << " " << *_in_dim_tensor << " - " << *_dim_tensor << endl;
 }
 
 void ConvLayer::integrate(Tensor* p_input)

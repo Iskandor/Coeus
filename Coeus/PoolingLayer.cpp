@@ -74,6 +74,8 @@ void PoolingLayer::init(vector<BaseLayer*>& p_input_layers)
 	_dim_tensor->set(2, w2);
 
 	_dim = d2 * h2 * w2;
+
+	cout << _id << " " << *_in_dim_tensor << " - " << *_dim_tensor << endl;
 }
 
 void PoolingLayer::integrate(Tensor* p_input)
@@ -97,6 +99,7 @@ void PoolingLayer::integrate(Tensor* p_input)
 void PoolingLayer::activate()
 {
 	_input->reset_index();
+	_max_index.clear();
 
 	int d1 = _input->shape(0);
 	int h1 = _input->shape(1);
