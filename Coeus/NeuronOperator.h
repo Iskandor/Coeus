@@ -25,6 +25,8 @@ namespace Coeus
 		json get_json() const;
 
 		static Tensor* init_auxiliary_parameter(Tensor* p_param, int p_rows, int p_cols);
+		static Tensor* init_auxiliary_parameter(Tensor* p_param, int p_depth, int p_rows, int p_cols);
+		static Tensor* init_auxiliary_parameter(Tensor* p_param, int p_batch, int p_depth, int p_rows, int p_cols);
 
 	private:
 		string	_id;

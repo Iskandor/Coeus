@@ -9,7 +9,7 @@
 using namespace Coeus;
 
 
-LSTMLayer::LSTMLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, p_in_dim)
+LSTMLayer::LSTMLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, { p_in_dim })
 {
 	_type = LSTM;
 
@@ -152,10 +152,6 @@ void LSTMLayer::activate()
 	_context->override(_output);
 }
 
-void LSTMLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
-{
-}
-
 void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
 	Tensor* h = _activation_function->forward(_state);
@@ -244,6 +240,8 @@ void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 			delete delta;
 		}
 	}
+
+	delete delta_out;
 
 	Tensor* gWxig = &p_gradient_map[_Wxig->get_id()];
 	Tensor* gWxfg = &p_gradient_map[_Wxfg->get_id()];
@@ -386,4 +384,14 @@ LSTMLayer::LSTMLayer(LSTMLayer* p_source) : BaseLayer(p_source)
 
 	_ct_cec = add_connection(p_source->_ct_cec->clone());
 	*/
+}
+
+Tensor* LSTMLayer::get_dim_tensor()
+{
+	if (_dim_tensor == nullptr)
+	{
+		_dim_tensor = new Tensor({ 1 }, Tensor::VALUE, _dim);
+	}
+
+	return _dim_tensor;
 }

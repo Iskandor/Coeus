@@ -134,3 +134,47 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_ro
 
 	return p_param;
 }
+
+Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_depth, const int p_rows, const int p_cols)
+{
+	if (p_depth == 1)
+	{
+		if (p_param == nullptr || p_param->rank() != 2)
+		{
+			delete p_param;
+			p_param = new Tensor({ p_rows, p_cols }, Tensor::ZERO);
+		}
+	}
+	if (p_depth > 1)
+	{
+		if (p_param == nullptr || p_param->rank() != 3)
+		{
+			delete p_param;
+			p_param = new Tensor({ p_depth, p_rows, p_cols }, Tensor::ZERO);
+		}
+	}
+
+	return p_param;
+}
+
+Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, int p_batch, int p_depth, int p_rows, int p_cols)
+{
+	if (p_batch == 1)
+	{
+		if (p_param == nullptr || p_param->rank() != 3)
+		{
+			delete p_param;
+			p_param = new Tensor({ p_depth, p_rows, p_cols }, Tensor::ZERO);
+		}
+	}
+	if (p_batch > 1)
+	{
+		if (p_param == nullptr || p_param->rank() != 4)
+		{
+			delete p_param;
+			p_param = new Tensor({ p_batch, p_depth, p_rows, p_cols }, Tensor::ZERO);
+		}
+	}
+
+	return p_param;
+}

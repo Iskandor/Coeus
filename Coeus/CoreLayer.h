@@ -20,7 +20,6 @@ namespace Coeus
 		void activate() override;
 
 		void calc_derivative(map<string, Tensor*>& p_derivative) override;
-		void calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
 		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
 
 		void override(BaseLayer* p_source) override;
@@ -31,7 +30,8 @@ namespace Coeus
 
 	private:
 		explicit CoreLayer(CoreLayer* p_source);
-	
+		Tensor* get_dim_tensor() override;
+
 		NeuronOperator* _y;
 		Param*			_W;
 

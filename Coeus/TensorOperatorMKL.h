@@ -38,6 +38,7 @@ namespace Coeus
 		void lstm_gradient_s(float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) override;
 		void lstm_gradient_b(int p_batch, float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) override;
 
+		void v_reduce(float* p_x, float* p_y, int p_size) override;
 		void m_reduce(float* p_x, float* p_A, int p_rows, int p_cols) override;
 		void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols) override;
 		

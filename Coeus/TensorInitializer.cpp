@@ -5,7 +5,7 @@ using namespace Coeus;
 
 TensorInitializer::TensorInitializer()
 {
-	_init = NONE;
+	_init = DEBUG;
 	_arg1 = 0;
 	_arg2 = 0;
 }
@@ -34,8 +34,8 @@ void TensorInitializer::init(Tensor* p_tensor, const INIT p_init, const float p_
 	}
 
 	switch (p_init) {
-		case NONE:
-			p_tensor->fill(0);
+		case DEBUG:
+			p_tensor->fill(1);
 			break;
 		case UNIFORM:
 			uniform(p_tensor, p_arg1, p_arg2);

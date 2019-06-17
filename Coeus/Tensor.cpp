@@ -1,6 +1,7 @@
 #include "Tensor.h"
 #include "RandomGenerator.h"
 #include <cassert>
+#include <iostream>
 
 Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0) {
 }
@@ -16,6 +17,18 @@ Tensor::Tensor(const initializer_list<int> p_shape, float* p_data) {
 	init_shape(p_shape);
 	_arr = p_data;
 	_end = 0;
+}
+
+Tensor::Tensor(const initializer_list<int> p_shape, const vector<uint8_t>& p_data)
+{
+	init_shape(p_shape);
+	_arr = alloc_arr(_size);
+	_end = 0;
+
+	for (int i = 0; i < p_data.size(); i++)
+	{
+		_arr[i] = p_data.at(i);
+	}
 }
 
 Tensor::Tensor(const int p_rank, int* p_shape, float* p_data) {
@@ -372,6 +385,38 @@ void Tensor::push_back(Tensor* p_tensor)
 		}
 		_end += cols;
 	}
+	if (_rank == 3)
+	{
+		int depth = 0;
+		int rows = 0;
+		int cols = 0;
+
+		if (p_tensor->_rank == 1)
+		{
+			depth = 1;
+			rows = 1;
+			cols = p_tensor->_shape[0];
+		}
+		if (p_tensor->_rank == 2)
+		{
+			depth = 1;
+			rows = p_tensor->_shape[0];
+			cols = p_tensor->_shape[1];
+		}
+		if (p_tensor->_rank == 3)
+		{
+			depth = p_tensor->_shape[0];
+			rows = p_tensor->_shape[1];
+			cols = p_tensor->_shape[2];
+		}
+
+		for (int i = 0; i < depth; i++)
+		{
+			const int index = (i * _shape[1] * _shape[2] + _end);
+			memcpy((_arr + index), (p_tensor->_arr + i * rows * cols), sizeof(float) * rows * cols);
+		}
+		_end += rows * cols;
+	}
 }
 
 void Tensor::splice(const int p_start, Tensor* p_output) const
@@ -450,6 +495,145 @@ Tensor Tensor::concat(vector<Tensor>& p_vector)
 	}
 
 	return Tensor({ size }, res);
+}
+
+void Tensor::padding(const int p_padding)
+{
+	float* arr = nullptr;
+
+	if (_rank == 1)
+	{
+		arr = alloc_arr(_shape[0] + 2 * p_padding);
+		memset(arr, 0, sizeof(float) * (_shape[0] + 2 * p_padding));
+
+		if (p_padding > 0)
+		{
+			memcpy(arr + p_padding, _arr, sizeof(float) * _size);
+		}
+		if (p_padding < 0)
+		{
+			memcpy(arr, _arr - p_padding, sizeof(float) * (_size - 2 * p_padding)); 
+		}		
+
+		_shape[0] += 2 * p_padding;
+		_size = _shape[0];
+	}
+
+	if (_rank == 2)
+	{
+		arr = alloc_arr((_shape[0] + 2 * p_padding) * (_shape[1] + 2 * p_padding));
+		memset(arr, 0, sizeof(float) * (_shape[0] + 2 * p_padding) * (_shape[1] + 2 * p_padding));
+
+		for(int i = 0; i < _shape[0]; i++)
+		{
+			const int index = (i + p_padding) * (_shape[1] + 2 * p_padding) + p_padding;
+			memcpy(arr + index, _arr + i * _shape[1], sizeof(float) * _shape[1]);
+		}
+
+		_shape[0] += 2 * p_padding;
+		_shape[1] += 2 * p_padding;
+		_size = _shape[0] * _shape[1];
+	}
+
+	delete _arr;
+	_arr = arr;
+
+}
+
+void Tensor::reshape(const initializer_list<int> p_shape)
+{
+	free_shape();
+	init_shape(p_shape);
+}
+
+Tensor Tensor::slice(const int p_index) const
+{
+	const int rank = 2;
+	float* arr = alloc_arr(_shape[1] * _shape[2]);
+	int* shape = alloc_shape(rank);
+
+	if (_rank == 3)
+	{
+		shape[0] = _shape[1];
+		shape[1] = _shape[2];
+
+		const int index = p_index * _shape[1] * _shape[2];
+		memcpy(arr, _arr + index, sizeof(float) * _shape[1] * _shape[2]);
+	}
+
+	return Tensor(rank, shape, arr);
+}
+
+void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x, const int p_h, const int p_w)
+{
+#ifdef _DEBUG
+	if (p_dest->_size != p_h * p_w)
+	{
+		assert(("Invalid size", 0));
+	}
+#endif
+
+	for(int i = 0; i < p_h; i++)
+	{
+		const int index = (p_y + i) * p_source->_shape[1] + p_x;
+		memcpy(p_dest->_arr + (i * p_w), p_source->_arr + index, sizeof(float) * p_w);
+	}
+}
+
+void Tensor::add_subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x)
+{
+#ifdef _DEBUG
+	if (p_dest->_size < p_source->_size)
+	{
+		assert(("Invalid size", 0));
+	}
+	if (p_dest->_shape[0] < p_y + p_source->_shape[0])
+	{
+		assert(("Insufficient rows", 0));
+	}
+	if (p_dest->_shape[1] < p_x + p_source->_shape[1])
+	{
+		assert(("Insufficient cols", 0));
+	}
+#endif
+
+	for(int i = 0; i < p_source->_shape[0]; i++)
+	{
+		for (int j = 0; j < p_source->_shape[1]; j++)
+		{
+			p_dest->_arr[(p_y + i) * p_dest->_shape[1] + j + p_x] += p_source->_arr[i * p_source->_shape[1] + j];
+		}
+	}
+}
+
+int Tensor::subregion_max_index(Tensor* p_source, const int p_y, const int p_x, const int p_h, const int p_w)
+{
+	int index = p_y * p_source->_shape[1] + p_x;
+	int result = index;
+
+	for (int i = 0; i < p_h; i++)
+	{
+		for (int j = 0; j < p_w; j++)
+		{
+			index = (p_y + i) * p_source->_shape[1] + p_x + j;
+
+			if (p_source->_arr[result] < p_source->_arr[index])
+			{
+				result = index;
+			}
+		}
+	}
+
+	return result;
+}
+
+void Tensor::slice(Tensor* p_dest, Tensor* p_source, const int p_index)
+{
+	if (p_source->rank() == 3)
+	{
+		const int index = p_index * p_source->shape(1) * p_source->shape(2);
+		memcpy(p_dest->_arr, p_source->_arr + index, sizeof(float) * p_source->shape(1) * p_source->shape(2));
+	}
 }
 
 void Tensor::init_shape(const int p_rank, int* p_shape, const bool p_copy_shape) {

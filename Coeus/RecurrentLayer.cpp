@@ -6,7 +6,7 @@
 
 using namespace Coeus;
 
-RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, p_in_dim)
+RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, { p_in_dim })
 {
 	_type = RECURRENT;
 
@@ -18,7 +18,7 @@ RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVA
 	_context = nullptr;	
 }
 
-RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(p_copy._id, p_copy._dim, p_copy._in_dim) {
+RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = RECURRENT;
 	_y = new NeuronOperator(*p_copy._y);
 	_W = new Param(*p_copy._W);
@@ -61,10 +61,6 @@ void RecurrentLayer::activate()
 
 	_output = _y->get_output();
 	_context->override(_y->get_output());
-}
-
-void RecurrentLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
-{
 }
 
 void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
@@ -155,4 +151,14 @@ json RecurrentLayer::get_json() const
 RecurrentLayer::RecurrentLayer(RecurrentLayer* p_source) : BaseLayer(p_source)
 {
 	_type = RECURRENT;
+}
+
+Tensor* RecurrentLayer::get_dim_tensor()
+{
+	if (_dim_tensor == nullptr)
+	{
+		_dim_tensor = new Tensor({ 1 }, Tensor::VALUE, _dim);
+	}
+
+	return _dim_tensor;
 }

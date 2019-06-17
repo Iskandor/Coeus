@@ -166,6 +166,7 @@
     <ClCompile Include="CartPole.cpp" />
     <ClCompile Include="CartPoleTask.cpp" />
     <ClCompile Include="CisLoader.cpp" />
+    <ClCompile Include="CNN.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FFN.cpp" />
     <ClCompile Include="IrisDataset.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="CartPole.h" />
     <ClInclude Include="CartPoleTask.h" />
     <ClInclude Include="CisLoader.h" />
+    <ClInclude Include="CNN.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FFN.h" />
     <ClInclude Include="IrisDataset.h" />

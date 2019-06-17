@@ -372,6 +372,12 @@
     <ClCompile Include="EGreedyExploration.cpp">
       <Filter>Source Files\Algorithm\RL\Exploration</Filter>
     </ClCompile>
+    <ClCompile Include="ConvLayer.cpp">
+      <Filter>Source Files\Network\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="PoolingLayer.cpp">
+      <Filter>Source Files\Network\Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -605,12 +611,6 @@
     <ClInclude Include="GradientAccumulator.h">
       <Filter>Header Files\Algorithm\Gradient</Filter>
     </ClInclude>
-    <ClInclude Include="BoltzmanExploration.h">
-      <Filter>Header Files\Algorithm\Modules\Exploration</Filter>
-    </ClInclude>
-    <ClInclude Include="EGreedyExploration.h">
-      <Filter>Header Files\Algorithm\Modules\Exploration</Filter>
-    </ClInclude>
     <ClInclude Include="IInterpolation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -670,6 +670,18 @@
     </ClInclude>
     <ClInclude Include="IGate.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoltzmanExploration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EGreedyExploration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvLayer.h">
+      <Filter>Header Files\Network\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="PoolingLayer.h">
+      <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

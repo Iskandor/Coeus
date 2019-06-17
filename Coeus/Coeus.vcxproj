@@ -51,9 +51,9 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseIntelMKL>Sequential</UseIntelMKL>
-    <UseIntelTBB>false</UseIntelTBB>
-    <InstrumentIntelTBB>false</InstrumentIntelTBB>
+    <UseIntelMKL>Parallel</UseIntelMKL>
+    <UseIntelTBB>true</UseIntelTBB>
+    <InstrumentIntelTBB>true</InstrumentIntelTBB>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -186,6 +186,7 @@
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BoltzmanExploration.cpp" />
+    <ClCompile Include="ConvLayer.cpp" />
     <ClCompile Include="EGreedyExploration.cpp" />
     <ClCompile Include="ExponentialDecay.cpp" />
     <ClCompile Include="ExponentialInterpolation.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="LinearInterpolation.cpp" />
     <ClCompile Include="NeuronOperator.cpp" />
     <ClCompile Include="Param.cpp" />
+    <ClCompile Include="PoolingLayer.cpp" />
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="GeneralTDRule.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -273,6 +275,7 @@
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BoltzmanExploration.h" />
     <ClInclude Include="BufferItems.h" />
+    <ClInclude Include="ConvLayer.h" />
     <ClInclude Include="EGreedyExploration.h" />
     <ClInclude Include="ExponentialDecay.h" />
     <ClInclude Include="ExponentialInterpolation.h" />
@@ -313,6 +316,7 @@
     <ClInclude Include="NeuronOperator.h" />
     <ClInclude Include="Param.h" />
     <ClInclude Include="LinearInterpolation.h" />
+    <ClInclude Include="PoolingLayer.h" />
     <ClInclude Include="QLearning.h" />
     <ClInclude Include="GeneralTDRule.h" />
     <ClInclude Include="QLearningRule.h" />

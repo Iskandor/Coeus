@@ -7,7 +7,7 @@
 
 using namespace Coeus;
 
-CoreLayer::CoreLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, p_in_dim)
+CoreLayer::CoreLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, { p_in_dim })
 {
 	_type = CORE;
 	_y = new NeuronOperator(p_dim, p_activation);
@@ -25,7 +25,7 @@ CoreLayer::CoreLayer(const json& p_data) : BaseLayer(p_data)
 	_initializer = nullptr;
 }
 
-CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(p_copy._id, p_copy._dim, p_copy._in_dim) {
+CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = CORE;
 	_y = new NeuronOperator(*p_copy._y);
 	add_param(_y);
@@ -46,10 +46,6 @@ void CoreLayer::activate()
 	_y->integrate(_input, _W->get_data());
 	_y->activate();
 	_output = _y->get_output();
-}
-
-void CoreLayer::calc_delta(map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
-{
 }
 
 void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
@@ -117,6 +113,8 @@ void CoreLayer::init(vector<BaseLayer*>& p_input_layers)
 		_initializer->init(_W->get_data());
 	}
 	add_param(_W->get_id(), _W->get_data());
+
+	cout << _id << " " << _in_dim << " - " << _dim << endl;
 }
 
 json CoreLayer::get_json() const
@@ -127,6 +125,16 @@ json CoreLayer::get_json() const
 	data["y"] = _y->get_json();
 
 	return data;
+}
+
+Tensor* CoreLayer::get_dim_tensor()
+{
+	if (_dim_tensor == nullptr)
+	{
+		_dim_tensor = new Tensor({ 1 }, Tensor::VALUE, _dim);
+	}
+
+	return _dim_tensor;
 }
 
 CoreLayer::CoreLayer(CoreLayer* p_source) : BaseLayer(p_source)
