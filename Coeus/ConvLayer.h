@@ -2,6 +2,7 @@
 #include "BaseLayer.h"
 #include "NeuronOperator.h"
 #include "TensorInitializer.h"
+#include "ConvOperator.h"
 
 namespace Coeus
 {
@@ -29,6 +30,8 @@ namespace Coeus
 	protected:
 		Tensor* get_dim_tensor() override;
 
+		void im2col(Tensor* p_image, Tensor* column) const;
+
 	private:
 		int _filters;
 		int _extent;
@@ -37,9 +40,13 @@ namespace Coeus
 
 		NeuronOperator** _y;
 		Param**			 _W;
+
+		ConvOperator*	 _y_new;
+		Param*			 _W_new;
 		TensorInitializer *_initializer;
 		IActivationFunction* _activation_function;
 
 		Tensor* _filter_input;
+		Tensor* _column_input;
 	};
 }

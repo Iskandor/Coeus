@@ -378,6 +378,9 @@
     <ClCompile Include="PoolingLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
+    <ClCompile Include="ConvOperator.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -682,6 +685,9 @@
     </ClInclude>
     <ClInclude Include="PoolingLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvOperator.h">
+      <Filter>Header Files\Backend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

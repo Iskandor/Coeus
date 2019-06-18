@@ -16,7 +16,10 @@ namespace Coeus
 		void vc_prod(float* p_x, float p_y, float* p_z, int p_size) override;
 		void vc_prod_add(float* p_x, float p_y, float* p_z, int p_size) override;
 
+		void Mv_add(float* p_A, float* p_x, float* p_B, int p_rows, int p_cols) override;
+
 		void vM_prod(float* p_x, float* p_A, float* p_y, int p_rows, int p_cols) override;
+		void MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float* p_C, int p_rows, int p_common, int p_cols) override;
 
 		void full_int_s(float* p_net, float* p_x, float* p_w, int p_rows, int p_cols) override;
 		void full_int_b(int p_batch, float* p_net, float* p_x, float* p_w, int p_rows, int p_cols) override;
@@ -39,8 +42,7 @@ namespace Coeus
 		void lstm_gradient_b(int p_batch, float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) override;
 
 		void v_reduce(float* p_x, float* p_y, int p_size) override;
-		void m_reduce(float* p_x, float* p_A, int p_rows, int p_cols) override;
+		void M_reduce(float* p_x, float* p_A, int p_rows, int p_cols) override;
 		void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols) override;
-		
 	};
 }

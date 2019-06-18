@@ -59,6 +59,8 @@ public:
 	void set(int p_y, int p_x, float p_val) const;
 	void set(int p_z, int p_y, int p_x, float p_val) const;
 
+	float element_prod() const;
+
 	static float* alloc_arr(int p_size);
 	static int* alloc_shape(int p_size);
 	static int* copy_shape(int p_rank, const int* p_shape);
@@ -74,6 +76,7 @@ public:
 	Tensor slice(int p_index) const;
 
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
+	static void subregion(Tensor* p_dest, Tensor* p_source, int p_z, int p_y, int p_x, int p_h, int p_w);
 	static void add_subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x);
 	static int subregion_max_index(Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 

@@ -9,6 +9,7 @@
 #include "CNN.h"
 #include "ConvLayer.h"
 #include "PoolingLayer.h"
+#include "TensorOperator.h"
 
 
 using namespace std;
@@ -29,7 +30,7 @@ int main()
 	CNN model;
 	//model.run();
 	model.run_mnist();
-	model.test();
+	//model.test();
 	
 	//MazeExample example;
 	//example.example_q(64, 1e-3, 0, true);
