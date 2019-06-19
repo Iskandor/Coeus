@@ -253,6 +253,18 @@ void Tensor::set(const int p_z, const int p_y, const int p_x, const float p_val)
 	_arr[p_z * _shape[2] * _shape[1] + p_y * _shape[1] + p_x] = p_val;
 }
 
+float Tensor::element_prod() const
+{
+	float result = 1;
+
+	for(int i = 0; i < _size; i++)
+	{
+		result *= _arr[i];
+	}
+
+	return result;
+}
+
 float* Tensor::alloc_arr(const int p_size) {
 	return static_cast<float*>(malloc(p_size * sizeof(float)));
 }
@@ -580,28 +592,100 @@ void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const in
 	}
 }
 
-void Tensor::add_subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x)
+void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_z, const int p_y, const int p_x, const int p_h, const int p_w)
 {
 #ifdef _DEBUG
-	if (p_dest->_size < p_source->_size)
+	if (p_dest->_size != p_h * p_w)
 	{
 		assert(("Invalid size", 0));
 	}
-	if (p_dest->_shape[0] < p_y + p_source->_shape[0])
+	if (p_source->_shape[0] < p_z)
+	{
+		assert(("Invalid depth", 0));
+	}
+	if (p_source->_shape[1] < p_y + p_h)
+	{
+		assert(("Invalid height", 0));
+	}
+	if (p_source->_shape[2] < p_x + p_w)
+	{
+		assert(("Invalid width", 0));
+	}
+#endif
+
+	for (int i = 0; i < p_h; i++)
+	{
+		const int index = (p_z * p_source->_shape[1] * p_source->_shape[2]) + (p_y + i) * p_source->_shape[2] + p_x;
+		memcpy(p_dest->_arr + (i * p_w), p_source->_arr + index, sizeof(float) * p_w);
+	}
+}
+
+void Tensor::add_subregion(Tensor* p_dest, int p_yd, int p_xd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w)
+{
+#ifdef _DEBUG
+	if (p_dest->_shape[0] < p_yd + p_h)
 	{
 		assert(("Insufficient rows", 0));
 	}
-	if (p_dest->_shape[1] < p_x + p_source->_shape[1])
+	if (p_dest->_shape[1] < p_xd + p_w)
 	{
 		assert(("Insufficient cols", 0));
 	}
 #endif
 
-	for(int i = 0; i < p_source->_shape[0]; i++)
+	for(int i = 0; i < p_h; i++)
 	{
-		for (int j = 0; j < p_source->_shape[1]; j++)
+		for(int j = 0; j < p_w; j++)
 		{
-			p_dest->_arr[(p_y + i) * p_dest->_shape[1] + j + p_x] += p_source->_arr[i * p_source->_shape[1] + j];
+			p_dest->_arr[(p_yd + i) * p_dest->_shape[1] + p_xd + j] += p_source->_arr[(p_y + i) * p_source->_shape[1] + p_x + j];
+		}
+	}
+}
+
+void Tensor::add_subregion(Tensor* p_dest, int p_zd, int p_yd, int p_xd, int p_hd, int p_wd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w)
+{
+#ifdef _DEBUG
+	if (p_hd * p_wd != p_h * p_w)
+	{
+		assert(("Invalid shape dimension", 0));
+	}
+	if (p_source->_shape[0] < p_y + p_h)
+	{
+		assert(("Invalid source position (rows)", 0));
+	}
+	if (p_source->_shape[1] < p_x + p_w)
+	{
+		assert(("Invalid source position (cols)", 0));
+	}
+	if (p_dest->_shape[0] < p_zd)
+	{
+		assert(("Invalid destination position (depth)", 0));
+	}
+	if (p_dest->_shape[1] < p_yd + p_hd)
+	{
+		assert(("Invalid destination position (rows)", 0));
+	}
+	if (p_dest->_shape[2] < p_xd + p_wd)
+	{
+		assert(("Invalid destination position (cols)", 0));
+	}
+#endif
+
+	int id = 0;
+	int jd = 0;
+
+	for (int i = 0; i < p_h; i++)
+	{
+		for (int j = 0; j < p_w; j++)
+		{
+			p_dest->_arr[p_zd * p_dest->_shape[1] * p_dest->_shape[2] + (p_yd + id) * p_dest->_shape[2] + p_xd + jd] += p_source->_arr[(p_y + i) * p_source->_shape[1] + p_x + j];
+			jd++;
+
+			if (jd == p_wd)
+			{
+				jd = 0;
+				id++;
+			}
 		}
 	}
 }
@@ -662,7 +746,7 @@ void Tensor::init_shape(initializer_list<int> p_shape) {
 void Tensor::fill(const INIT p_init, const float p_value) const {
 	switch (p_init) {
 		case ZERO:
-			for (int i = 0; i < _size; i++) _arr[i] = 0;
+			memset(_arr, 0, sizeof(float) * _size);
 			break;
 		case ONES:
 			if (_rank == 1) {
@@ -674,7 +758,7 @@ void Tensor::fill(const INIT p_init, const float p_value) const {
 				}
 				else
 				{
-					for (int i = 0; i < _size; i++) _arr[i] = 1;
+					memset(_arr, 1, sizeof(float) * _size);
 				}
 			}			
 			break;

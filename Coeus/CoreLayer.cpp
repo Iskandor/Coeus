@@ -54,7 +54,7 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 
 	if (_batch)
 	{
-		TensorOperator::instance().m_reduce(p_gradient_map[_y->get_bias()->get_id()].arr(), delta_out->arr(), _batch_size, _dim);
+		TensorOperator::instance().M_reduce(p_gradient_map[_y->get_bias()->get_id()].arr(), delta_out->arr(), false, _batch_size, _dim);
 		TensorOperator::instance().full_gradient_b(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim);
 	}
 	else

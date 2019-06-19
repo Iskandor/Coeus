@@ -13,8 +13,8 @@ namespace Coeus
 		NeuronOperator(NeuronOperator& p_copy);
 		~NeuronOperator();
 
-		void integrate(Tensor* p_input, Tensor* p_weights);
-		void activate();
+		virtual void integrate(Tensor* p_input, Tensor* p_weights);
+		virtual void activate();
 		Tensor derivative() const;
 
 		IActivationFunction* get_function() const { return _activation_function; }
@@ -28,7 +28,7 @@ namespace Coeus
 		static Tensor* init_auxiliary_parameter(Tensor* p_param, int p_depth, int p_rows, int p_cols);
 		static Tensor* init_auxiliary_parameter(Tensor* p_param, int p_batch, int p_depth, int p_rows, int p_cols);
 
-	private:
+	protected:
 		string	_id;
 		int		_dim;
 		Param*	_bias;

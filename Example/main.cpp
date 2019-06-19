@@ -9,6 +9,7 @@
 #include "CNN.h"
 #include "ConvLayer.h"
 #include "PoolingLayer.h"
+#include "TensorOperator.h"
 
 
 using namespace std;
@@ -25,6 +26,19 @@ int main()
 	//model.test_pack_cm();
 	//model.test_pack_alt();
 	//model.run_add_problem();
+
+	/*
+	Tensor m({ 1,5,5 }, Tensor::RANDOM, 1);
+	Tensor n({ 5,5 }, Tensor::RANDOM, 1);
+
+	cout << n << endl;
+
+	cout << m << endl;
+
+	Tensor::add_subregion(&m, 0, 1, 1, 2, 2, &n, 1, 1, 4, 1);
+
+	cout << m << endl;
+	*/
 
 	CNN model;
 	//model.run();

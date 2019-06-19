@@ -51,9 +51,9 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseIntelMKL>Parallel</UseIntelMKL>
-    <UseIntelTBB>true</UseIntelTBB>
-    <InstrumentIntelTBB>true</InstrumentIntelTBB>
+    <UseIntelMKL>Sequential</UseIntelMKL>
+    <UseIntelTBB>false</UseIntelTBB>
+    <InstrumentIntelTBB>false</InstrumentIntelTBB>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -187,6 +187,7 @@
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BoltzmanExploration.cpp" />
     <ClCompile Include="ConvLayer.cpp" />
+    <ClCompile Include="ConvOperator.cpp" />
     <ClCompile Include="EGreedyExploration.cpp" />
     <ClCompile Include="ExponentialDecay.cpp" />
     <ClCompile Include="ExponentialInterpolation.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="BoltzmanExploration.h" />
     <ClInclude Include="BufferItems.h" />
     <ClInclude Include="ConvLayer.h" />
+    <ClInclude Include="ConvOperator.h" />
     <ClInclude Include="EGreedyExploration.h" />
     <ClInclude Include="ExponentialDecay.h" />
     <ClInclude Include="ExponentialInterpolation.h" />
