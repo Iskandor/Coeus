@@ -620,28 +620,72 @@ void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_z, const in
 	}
 }
 
-void Tensor::add_subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x)
+void Tensor::add_subregion(Tensor* p_dest, int p_yd, int p_xd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w)
 {
 #ifdef _DEBUG
-	if (p_dest->_size < p_source->_size)
-	{
-		assert(("Invalid size", 0));
-	}
-	if (p_dest->_shape[0] < p_y + p_source->_shape[0])
+	if (p_dest->_shape[0] < p_yd + p_h)
 	{
 		assert(("Insufficient rows", 0));
 	}
-	if (p_dest->_shape[1] < p_x + p_source->_shape[1])
+	if (p_dest->_shape[1] < p_xd + p_w)
 	{
 		assert(("Insufficient cols", 0));
 	}
 #endif
 
-	for(int i = 0; i < p_source->_shape[0]; i++)
+	for(int i = 0; i < p_h; i++)
 	{
-		for (int j = 0; j < p_source->_shape[1]; j++)
+		for(int j = 0; j < p_w; j++)
 		{
-			p_dest->_arr[(p_y + i) * p_dest->_shape[1] + j + p_x] += p_source->_arr[i * p_source->_shape[1] + j];
+			p_dest->_arr[(p_yd + i) * p_dest->_shape[1] + p_xd + j] += p_source->_arr[(p_y + i) * p_source->_shape[1] + p_x + j];
+		}
+	}
+}
+
+void Tensor::add_subregion(Tensor* p_dest, int p_zd, int p_yd, int p_xd, int p_hd, int p_wd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w)
+{
+#ifdef _DEBUG
+	if (p_hd * p_wd != p_h * p_w)
+	{
+		assert(("Invalid shape dimension", 0));
+	}
+	if (p_source->_shape[0] < p_y + p_h)
+	{
+		assert(("Invalid source position (rows)", 0));
+	}
+	if (p_source->_shape[1] < p_x + p_w)
+	{
+		assert(("Invalid source position (cols)", 0));
+	}
+	if (p_dest->_shape[0] < p_zd)
+	{
+		assert(("Invalid destination position (depth)", 0));
+	}
+	if (p_dest->_shape[1] < p_yd + p_hd)
+	{
+		assert(("Invalid destination position (rows)", 0));
+	}
+	if (p_dest->_shape[2] < p_xd + p_wd)
+	{
+		assert(("Invalid destination position (cols)", 0));
+	}
+#endif
+
+	int id = 0;
+	int jd = 0;
+
+	for (int i = 0; i < p_h; i++)
+	{
+		for (int j = 0; j < p_w; j++)
+		{
+			p_dest->_arr[p_zd * p_dest->_shape[1] * p_dest->_shape[2] + (p_yd + id) * p_dest->_shape[2] + p_xd + jd] += p_source->_arr[(p_y + i) * p_source->_shape[1] + p_x + j];
+			jd++;
+
+			if (jd == p_wd)
+			{
+				jd = 0;
+				id++;
+			}
 		}
 	}
 }
@@ -716,7 +760,7 @@ void Tensor::fill(const INIT p_init, const float p_value) const {
 			}			
 			break;
 		case VALUE:
-			memset(_arr, p_value, sizeof(float) * _size);
+			for (int i = 0; i < _size; i++) _arr[i] = p_value;
 			break;
 		case RANDOM:
 			for (int i = 0; i < _size; i++) _arr[i] = RandomGenerator::get_instance().random(-p_value, p_value);

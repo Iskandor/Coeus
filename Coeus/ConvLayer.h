@@ -31,22 +31,20 @@ namespace Coeus
 		Tensor* get_dim_tensor() override;
 
 		void im2col(Tensor* p_image, Tensor* column) const;
+		void col2im(Tensor* column, Tensor* p_image) const;
 
 	private:
 		int _filters;
 		int _extent;
 		int _stride;
 		int _padding;
-
-		NeuronOperator** _y;
-		Param**			 _W;
-
-		ConvOperator*	 _y_new;
-		Param*			 _W_new;
+		
+		ConvOperator*	 _y;
+		Param*			 _W;
 		TensorInitializer *_initializer;
-		IActivationFunction* _activation_function;
 
 		Tensor* _filter_input;
 		Tensor* _column_input;
+		Tensor* _padded_input;
 	};
 }

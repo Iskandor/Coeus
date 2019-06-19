@@ -15,39 +15,25 @@ ConvLayer::ConvLayer(const string& p_id, const ACTIVATION p_activation, TensorIn
 	_stride = p_stride;
 	_padding = p_padding;
 
-	_activation_function = ActivationFunctionFactory::create_function(p_activation);
 	_initializer = p_initializer;
 	_filter_input = nullptr;
+	_column_input = nullptr;
+	_padded_input = nullptr;
 
-	_y = new NeuronOperator*[_filters];
-
-	for (int i = 0; i < _filters; i++)
-	{
-		_y[i] = new NeuronOperator(1, LINEAR);
-		add_param(_y[i]);
-	}
-
-	_y_new = new ConvOperator(_filters, p_activation);
-	add_param(_y_new);
-
+	_y = new ConvOperator(_filters, p_activation);
+	add_param(_y);
+	_W = nullptr;
 }
 
 ConvLayer::~ConvLayer()
 {
-	for (int i = 0; i < _filters; i++)
-	{
-		delete _y[i];
-		delete _W[i];
-	}
-
 	delete _y;
 	delete _W;
 	delete _initializer;
 
 	delete _filter_input;
 	delete _column_input;
-
-	delete _activation_function;
+	delete _padded_input;
 }
 
 ConvLayer* ConvLayer::clone()
@@ -102,18 +88,9 @@ void ConvLayer::init(vector<BaseLayer*>& p_input_layers)
 	}
 
 
-	_W = new Param*[_filters * d1];
-
-	for (int i = 0; i < _filters * d1; i++)
-	{
-		_W[i] = new Param(IDGen::instance().next(), new Tensor({ 1, _extent * _extent }, Tensor::ZERO));
-		_initializer->init(_W[i]->get_data());
-		add_param(_W[i]->get_id(), _W[i]->get_data());
-	}
-
-	_W_new = new Param(IDGen::instance().next(), new Tensor({d1 * _extent * _extent, _filters }, Tensor::ZERO));
-	_initializer->init(_W_new->get_data());
-	add_param(_W_new->get_id(), _W_new->get_data());
+	_W = new Param(IDGen::instance().next(), new Tensor({d1 * _extent * _extent, _filters }, Tensor::ZERO));
+	_initializer->init(_W->get_data());
+	add_param(_W->get_id(), _W->get_data());
 
 	int d2 = _filters;
 	int h2 = (h1 - _extent + 2 * _padding) / _stride + 1;
@@ -127,6 +104,7 @@ void ConvLayer::init(vector<BaseLayer*>& p_input_layers)
 	_dim = d2 * h2 * w2;
 
 	_column_input = new Tensor({ d1 * _extent * _extent, h2 * w2 }, Tensor::ZERO);
+	_padded_input = new Tensor({ d1, h1 + 2 * _padding, w1 + 2 * _padding }, Tensor::ZERO);
 
 	cout << _id << " " << *_in_dim_tensor << " - " << *_dim_tensor << endl;
 }
@@ -165,9 +143,9 @@ void ConvLayer::activate()
 	_output->fill(0);
 	_filter_input = NeuronOperator::init_auxiliary_parameter(_filter_input, 1, _extent * _extent);
 
-	Tensor input({ d1, h1 + 2 * _padding, w1 + 2 * _padding }, Tensor::ZERO);
-
 	auto start = chrono::high_resolution_clock::now();
+
+	_padded_input->reset_index();
 
 	for (int d = 0; d < d1; d++)
 	{
@@ -176,49 +154,13 @@ void ConvLayer::activate()
 		{
 			input_slice.padding(_padding);
 		}
-		input.push_back(&input_slice);
+		_padded_input->push_back(&input_slice);
 	}
 
-	im2col(&input, _column_input);
-	_y_new->integrate(_dim_tensor, d1 * _extent * _extent, h2 * w2, _column_input, _W_new->get_data());
-	_y_new->activate();
-	_output = _y_new->get_output();
-
-	auto finish = chrono::high_resolution_clock::now();
-	//cout << "Conv New 1 : " << (finish - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
-	/*
-	start = chrono::high_resolution_clock::now();
-
-	for(int d = 0; d < d1; d++)
-	{
-		Tensor input_slice = _input->slice(d);
-		if (_padding > 0)
-		{
-			input_slice.padding(_padding);
-		}
-		
-		for (int h = 0; h < h2; h++)
-		{
-			for (int w = 0; w < w2; w++)
-			{
-				Tensor::subregion(_filter_input, &input_slice, h * _stride, w * _stride, _extent, _extent);
-				
-				for (int f = 0; f < _filters; f++)
-				{
-					_y[f]->integrate(_filter_input, _W[f * d1 + d]->get_data());
-					_y[f]->activate();
-					_output->set(f, h, w, _output->at(f, h, w) + _y[f]->get_output()->at(0));
-				}
-			}
-		}
-	}
-
-	_output = _activation_function->forward(_output);
-
-	finish = chrono::high_resolution_clock::now();
-
-	//cout << "Conv Old : " << (finish - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
-	*/
+	im2col(_padded_input, _column_input);
+	_y->integrate(_dim_tensor, d1 * _extent * _extent, h2 * w2, _column_input, _W->get_data());
+	_y->activate();
+	_output = _y->get_output();
 }
 
 void ConvLayer::calc_derivative(map<string, Tensor*>& p_derivative)
@@ -227,8 +169,7 @@ void ConvLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 
 void ConvLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
-	//Tensor*	 delta_out = _activation_function->backward(p_delta_map[_id]);
-	Tensor*	 delta_out = _y_new->get_function()->backward(p_delta_map[_id]);
+	Tensor*	 delta_out = _y->get_function()->backward(p_delta_map[_id]);
 
 	int d1 = _in_dim_tensor->at(0);
 	int h1 = _in_dim_tensor->at(1);
@@ -241,70 +182,20 @@ void ConvLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	Tensor gradient({ w2 * h2, _extent * _extent }, Tensor::ZERO);
 	Tensor gradient_slice({ _extent * _extent }, Tensor::ZERO);
 
-	float err[1];
+	TensorOperator::instance().M_reduce(p_gradient_map[_y->get_bias()->get_id()].arr(), delta_out->arr(), true, d2, h2 * w2);
 
-	for (int d = 0; d < d2; d++)
-	{
-		Tensor filter_error = delta_out->slice(d);
-		TensorOperator::instance().v_reduce(p_gradient_map[_y[d]->get_bias()->get_id()].arr(), filter_error.arr(), filter_error.size());
-	}
-
-
-	for(int id = 0; id < d1; id++)
-	{
-		Tensor input_slice = _input->slice(id);
-		if (_padding > 0)
-		{
-			input_slice.padding(_padding);
-		}
-
-		for (int d = 0; d < d2; d++)
-		{
-			for (int h = 0; h < h2; h++)
-			{
-				for (int w = 0; w < w2; w++)
-				{
-					err[0] = delta_out->at(d, h, w);
-					Tensor::subregion(_filter_input, &input_slice, h * _stride, w * _stride, _extent, _extent);
-					TensorOperator::instance().full_gradient_s(_filter_input->arr(), err, gradient_slice.arr(), 1, _extent * _extent);
-					gradient.push_back(&gradient_slice);
-				}
-			}
-
-			TensorOperator::instance().M_reduce(p_gradient_map[_W[d * d1 + id]->get_id()].arr(), gradient.arr(), w2 * h2, _extent * _extent);
-			gradient.reset_index();
-		}
-	}
+	TensorOperator::instance().MM_prod(delta_out->arr(), false, _column_input->arr(), true, p_gradient_map[_W->get_id()].arr(), _filters, h2 * w2, d1 * _extent * _extent);
 
 	Tensor*	 delta_in = nullptr;
 
 	if (!_input_layer.empty())
 	{
-		Tensor filter_delta({ _extent, _extent }, Tensor::ZERO);
-		Tensor delta({ h1 + 2 * _padding, w1 + 2 * _padding }, Tensor::ZERO);
-		Tensor delta_padding({ h1, w1 }, Tensor::ZERO);
+		TensorOperator::instance().MM_prod(_W->get_data()->arr(), false, delta_out->arr(), false, _column_input->arr(), d1 * _extent * _extent, _filters, h2 * w2);
 
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, d1, h1, w1);
 		delta_in->reset_index();
 
-		for (int id = 0; id < d1; id++)
-		{
-			for (int d = 0; d < d2; d++)
-			{
-				for (int h = 0; h < h2; h++)
-				{
-					for (int w = 0; w < w2; w++)
-					{
-						err[0] = delta_out->at(d, h, w);
-						TensorOperator::instance().full_delta_s(filter_delta.arr(), err, _W[d * d1 + id]->get_data()->arr(), 1, _extent * _extent);
-						Tensor::add_subregion(&delta, &filter_delta, h * _stride, w * _stride);
-					}
-				}
-			}
-			Tensor::subregion(&delta_padding, &delta, _padding, _padding, w1, h1);
-			delta_in->push_back(&delta_padding);
-			delta.fill(0);
-		}
+		col2im(_column_input, delta_in);
 
 		int index = 0;
 
@@ -365,5 +256,39 @@ void ConvLayer::im2col(Tensor* p_image, Tensor* column) const
 				column->push_back(&region);
 			}
 		}
+	}
+}
+
+void ConvLayer::col2im(Tensor* p_column, Tensor* p_image) const
+{
+	int d1 = _in_dim_tensor->at(0);
+	int h1 = _in_dim_tensor->at(1);
+	int w1 = _in_dim_tensor->at(2);
+
+	int d2 = _filters;
+	int h2 = (_in_dim_tensor->at(1) - _extent + 2 * _padding) / _stride + 1;
+	int w2 = (_in_dim_tensor->at(2) - _extent + 2 * _padding) / _stride + 1;
+
+	Tensor subregion({ d1, (h1 + 2 * _padding), (w1 + 2 * _padding) }, Tensor::ZERO);
+	Tensor subregion_padding({ h1, w1 }, Tensor::ZERO);
+
+	for (int h = 0; h < h2; h++)
+	{
+		for (int w = 0; w < w2; w++)
+		{
+			for (int d = 0; d < d1; d++)
+			{
+				Tensor::add_subregion(&subregion, d, h * _stride, w * _stride, _extent, _extent, p_column, d * _extent * _extent, h * w2 + w, _extent * _extent, 1);
+			}
+		}
+	}
+
+	p_image->reset_index();
+
+	for (int d = 0; d < d1; d++)
+	{
+		Tensor slice = subregion.slice(d);
+		Tensor::subregion(&subregion_padding, &slice, _padding, _padding, w1, h1);
+		p_image->push_back(&subregion_padding);
 	}
 }
