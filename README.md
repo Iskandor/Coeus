@@ -8,13 +8,14 @@ C++ Library supporting deep and reinforcement learning algorithms
 
 - Feed-forward neural networks and recurrent neural networks (Elman, Jordna, LSTM)
 - Self-organizing maps (SOM) and recurrent self-organizing maps
+- Convolutional neural networks
 - TD-learning, Q-Learning, SARSA, Double Q-learning, Deep Q-Learning
 - Backend based on MKL libraries
-- Supports parallelization across samples using PPL library
+- Supports parallelization across samples using PPL library / OpenMP library
 - Simple model building demanding only few lines of code
 
 ### Planned features
-- Convolutional neural networks and residual networks
+- Residual networks
 - Gated recurrent unit
 - Actor-Critic algorithms (NAC, A3C, DDPG)
 - CUDA support
