@@ -233,27 +233,31 @@ void TensorOperatorMKL::v_reduce(float* p_x, float* p_y, const int p_size)
 
 void TensorOperatorMKL::M_reduce(float* p_x, float* p_A, bool p_row_major, const int p_rows, const int p_cols)
 {
+	float* x = &p_x[0];
+
 	if (p_row_major)
-	{
+	{	
 		for (int i = 0; i < p_rows; i++)
 		{
-			p_x[i] = 0;
+			*x = 0;
 			for (int j = 0; j < p_cols; j++)
 			{
-				p_x[i] += p_A[i * p_cols + j];
+				*x += p_A[i * p_cols + j];
 			}
+			x++;
 		}
 	}
 	else
 	{
 		for (int j = 0; j < p_cols; j++)
 		{
-			p_x[j] = 0;
+			*x = 0;
 
 			for (int i = 0; i < p_rows; i++)
 			{
-				p_x[j] += p_A[i * p_cols + j];
+				*x += p_A[i * p_cols + j];
 			}
+			x++;
 		}
 	}
 }
