@@ -674,19 +674,25 @@ void Tensor::add_subregion(Tensor* p_dest, int p_zd, int p_yd, int p_xd, int p_h
 	int id = 0;
 	int jd = 0;
 
+	float* x = &p_source->_arr[p_y * p_source->_shape[1] + p_x];
+	float* y = &p_dest->_arr[p_zd * p_dest->_shape[1] * p_dest->_shape[2] + p_yd * p_dest->_shape[2] + p_xd];
+
 	for (int i = 0; i < p_h; i++)
 	{
 		for (int j = 0; j < p_w; j++)
 		{
-			p_dest->_arr[p_zd * p_dest->_shape[1] * p_dest->_shape[2] + (p_yd + id) * p_dest->_shape[2] + p_xd + jd] += p_source->_arr[(p_y + i) * p_source->_shape[1] + p_x + j];
+			//p_dest->_arr[p_zd * p_dest->_shape[1] * p_dest->_shape[2] + (p_yd + id) * p_dest->_shape[2] + p_xd + jd] += p_source->_arr[(p_y + i) * p_source->_shape[1] + p_x + j];
+			*y++ += *x++;
 			jd++;
 
 			if (jd == p_wd)
 			{
 				jd = 0;
 				id++;
+				y += p_dest->_shape[2] - p_wd;
 			}
 		}
+		x += p_source->_shape[1] - p_w;
 	}
 }
 
