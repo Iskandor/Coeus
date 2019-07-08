@@ -10,6 +10,11 @@ namespace Coeus {
 
 		float cost(Tensor* p_prediction, Tensor* p_target) override;
 		Tensor cost_deriv(Tensor* p_prediction, Tensor* p_target) override;
+
+	private:
+		int _n;
+		float _mean_cost;
+
 	};
 
 }

@@ -7,6 +7,8 @@
 #include "PoolingLayer.h"
 #include "RMSProp.h"
 #include "TensorOperator.h"
+#include <chrono>
+#include "CrossEntropyCost.h"
 
 using namespace std;
 
@@ -114,26 +116,41 @@ void CNN::run_mnist()
 	_network.init();
 
 	BackProp optimizer(&_network);
-	optimizer.init(new QuadraticCost(), 0.01, 0.9);
+	optimizer.init(new CrossEntropyCost(), 0.001, 0.9);
 
 
 	for (int i = 0; i < 100; i++)
 	{
 		float error = 0;
-		for (int s = 0; s < 60; s++)
+		auto start = chrono::high_resolution_clock::now();
+		for (int s = 0; s < _train_input.size() / 10; s++)
 		{
 			error += optimizer.train(_train_input[s], _train_target[s]);
 		}
-
+		auto finish = chrono::high_resolution_clock::now();
+		cout << "MNIST 60: " << (finish - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 		cout << error << endl;
 	}
 }
 
 void CNN::test()
 {
-	for (int s = 0; s < 60; s++)
+	int t = 0;
+	int f = 0;
+
+	for (int s = 0; s < _train_input.size(); s++)
 	{
 		_network.activate(_train_input[s]);
-		cout << _train_target[s]->max_value_index() << " " << _network.get_output()->max_value_index() << endl;
+		if (_network.get_output()->max_value_index() == _train_target[s]->max_value_index())
+		{
+			t++;
+		}
+		else
+		{
+			f++;
+		}
 	}
+
+	cout << "Correct: " << t << endl;
+	cout << "Incorrect: " << f << endl;
 }

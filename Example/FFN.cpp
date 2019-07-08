@@ -108,7 +108,7 @@ void FFN::run_iris() {
 	network.init();
 
 
-	const int epochs = 1000;
+	const int epochs = 100;
 	vector<IrisDatasetItem>* data = nullptr;
 	map<int, Tensor> target;
 
@@ -130,12 +130,23 @@ void FFN::run_iris() {
 		cout << "Error: " << error << endl;
 	}
 
+	int t = 0;
+	int f = 0;
+
 	for (int i = 0; i < data->size(); i++) {
 		network.activate(data->at(i).data);
-		for (int o = 0; o < 3; o++) {
-			cout << network.get_output()->at(o) << " , ";
-		}
-		cout << data->at(i).target << endl;
+		int c = network.get_output()->max_value_index();
 
+		if (c == (*_dataset.get_target_map())[data->at(i).target])
+		{
+			t++;
+		}
+		else
+		{
+			f++;
+		}
 	}
+
+	cout << "Correct: " << t << endl;
+	cout << "Incorrect: " << f << endl;
 }

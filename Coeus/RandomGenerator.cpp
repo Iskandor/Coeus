@@ -60,25 +60,19 @@ vector<int> RandomGenerator::choice(const int p_size, const int p_sample) {
 
 
 int RandomGenerator::choice(const float *p_prob, const int p_size) {
+	int result = 0;
 
-    vector<int> candidates;
+	const float r = random();
+	float p = 0;
 
-    while(candidates.empty()) {
-        for(int i = 0; i < p_size; i++) {
+	for (int i = 0; i < p_size; i++) {
+		if (r >= p && r < p + p_prob[i])
+		{
+			result = i;
+			break;
+		}
+		p += p_prob[i];
+	}
 
-            if (random() < p_prob[i]) {
-                candidates.push_back(i);
-            }
-        }
-    }
-
-    int result = candidates[0];
-
-    for(int i = 0; i < candidates.size(); i++) {
-        if (p_prob[result] < p_prob[candidates[i]]) {
-            result = candidates[i];
-        }
-    }
-
-    return result;
+	return result;
 }

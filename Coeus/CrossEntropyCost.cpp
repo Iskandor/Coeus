@@ -5,6 +5,8 @@ using namespace Coeus;
 
 CrossEntropyCost::CrossEntropyCost()
 {
+	_n = 0;
+	_mean_cost = 0;
 }
 
 
@@ -20,7 +22,10 @@ float CrossEntropyCost::cost(Tensor * p_prediction, Tensor * p_target)
 		float e = p_target->at(i);
 		float a = p_prediction->at(i);
 
-		r += e * log(a);
+		if (a == 1) a -= 1e-6;
+		if (a == 0) a += 1e-6;
+		
+		r += e * log(a) + (1 - e) * log(1 - a);
 	}
 
 	return -r;
@@ -35,7 +40,10 @@ Tensor CrossEntropyCost::cost_deriv(Tensor * p_prediction, Tensor * p_target)
 		float e = p_target->at(i);
 		float a = p_prediction->at(i);
 
-		data[i] = (a - e);
+		if (a == 1) a -= 1e-6;
+		if (a == 0) a += 1e-6;
+
+		data[i] = -(e / a - (1 - e) / (1 - a));
 	}
 
 	return Tensor(p_prediction->rank(), shape, data);
