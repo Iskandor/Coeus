@@ -30,6 +30,10 @@ void Encoder::one_hot(Tensor& p_result, const int p_value)
 	{
 		assert(("Encoder: one hot tensor too small", 0));
 	}
+	if (p_value < 0)
+	{
+		assert(("Encoder: invalid index", 0));
+	}
 
 	p_result.fill(0);
 	p_result[p_value] = 1;

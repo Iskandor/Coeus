@@ -77,14 +77,12 @@ void FFN::run() {
 	for (int t = 0; t < 1000; t++) {
 		float error = 0;
 
-		/*
 		for (int i = 0; i < 4; i++)
 		{
 			error += optimizer.train(o_input[i], o_target[i]);
 		}
-		*/
 
-		error = optimizer.train(&input, &target);
+		//error = optimizer.train(&input, &target);
 		cout << error << endl;
 	}
 

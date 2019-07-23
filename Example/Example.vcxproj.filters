@@ -90,6 +90,9 @@
     <ClCompile Include="CNN.cpp">
       <Filter>Source Files\MNIST</Filter>
     </ClCompile>
+    <ClCompile Include="PackDataset2.cpp">
+      <Filter>Source Files\RNN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFN.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="CNN.h">
       <Filter>Header Files\MNIST</Filter>
+    </ClInclude>
+    <ClInclude Include="PackDataset2.h">
+      <Filter>Header Files\RNN</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

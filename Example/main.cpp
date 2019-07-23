@@ -16,8 +16,8 @@ using namespace std;
 
 int main()
 {
-	//FFN model;
-	//model.run();
+	FFN model;
+	model.run();
 	//model.run_iris();
 
 	//RNN model;
@@ -40,10 +40,12 @@ int main()
 	cout << m << endl;
 	*/
 
+	/*
 	CNN model;
 	//model.run();
 	model.run_mnist();
 	model.test();
+	*/
 	
 	//MazeExample example;
 	//example.example_q(64, 1e-3, 0, true);

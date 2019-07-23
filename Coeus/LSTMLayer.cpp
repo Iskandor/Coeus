@@ -112,6 +112,8 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 		_initializer->init(_Wxog->get_data());
 	}
 	add_param(_Wxog->get_id(), _Wxog->get_data());
+
+	cout << _id << " " << _in_dim << " - " << _dim << endl;
 }
 
 void LSTMLayer::activate()

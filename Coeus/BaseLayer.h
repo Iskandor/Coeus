@@ -21,7 +21,8 @@ namespace Coeus
 			RECURRENT = 5,
 			LSTM = 6,
 			LSOM = 7,
-			CONV = 8
+			CONV = 8,
+			GRU = 9
 		};
 
 		BaseLayer(const string& p_id, int p_dim, initializer_list<int> p_in_dim);

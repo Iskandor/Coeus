@@ -15,6 +15,7 @@
 #include "ExponentialCost.h"
 #include "KLDivergence.h"
 #include "PowerSign.h"
+#include "PackDataset2.h"
 
 
 RNN::RNN()
@@ -124,18 +125,19 @@ void RNN::run_pack()
 	cout << config << endl;
 
 	cout << "Loading dataset..." << endl;
-	PackDataset dataset;
-	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv");
+	PackDataset2 dataset;
+	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv", false, true);
 	dataset.split(config["batch"].get<int>());
 	//PackDataset validset;
 	//validset.load_data("./data/pack_data_test.csv", false, true);
+
 
 	NeuralNetwork* network;
 
 	if (config["network"].get<string>().empty())
 	{
 		network = new NeuralNetwork();
-		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), 230));
+		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), dataset.get_input_dim()));
 		network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
 		network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(LECUN_UNIFORM)));
 		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
@@ -149,7 +151,6 @@ void RNN::run_pack()
 		network = new NeuralNetwork(IOUtils::load_network(config["network"].get<string>()));
 	}
 
-
 	Nadam algorithm(network);
 	algorithm.init(new QuadraticCost(), config["alpha"].get<float>());
 	//BackProp algorithm(&network);
@@ -160,23 +161,24 @@ void RNN::run_pack()
 	int epoch = 0;
 	float last_error = -1;
 
-	int tp = 0;
-	int fp = 0;
-	int tn = 0;
-	int fn = 0;
+	float tp = 0;
+	float fp = 0;
+	float tn = 0;
+	float fn = 0;
 	float precision = 0;
 	float accuracy = 0;
 	float fn_ratio = 1;
+	float mcc = 0;
 	const float bound = 0.999;
 	const int size = dataset.data()->size();
 
 	cout << size << " sequences" << endl;
 	cout << "Training..." << endl;
 
-	while (precision < bound || accuracy < bound || fn_ratio >(1 - bound)) {
+	while (mcc < 1) {
 		//pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
-		vector<PackDataSequence>* train = dataset.permute(true);
-		vector<PackDataSequence>* test = dataset.data();
+		vector<PackDataSequence2>* train = dataset.permute(true);
+		vector<PackDataSequence2>* test = dataset.data();
 
 		auto start = chrono::high_resolution_clock::now();
 		//const float error = algorithm.train(&data.first, &data.second, config["batch"].get<int>());
@@ -211,7 +213,24 @@ void RNN::run_pack()
 			accuracy = (float)(tp + tn) / dataset.data()->size();
 			fn_ratio = (fn + tp) == 0 ? 1 : (float)fn / (fn + tp);
 
-			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << precision << " , " << accuracy << " , " << fn_ratio << endl;
+			tp /= 1e4;
+			tn /= 1e4;
+			fp /= 1e4;
+			fn /= 1e4;
+
+			float nom = (tp * tn - fp * fn);
+			float den = (tp + fp)*(tp + fn)*(tn + fp)*(tn + fn);
+
+			if (den == 0) den = 1;
+
+			mcc = nom / sqrt(den);
+
+			tp *= 1e4;
+			tn *= 1e4;
+			fp *= 1e4;
+			fn *= 1e4;
+
+			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , MCC: " << mcc << " , precision: " << precision << " , accuracy: " << accuracy << " , fn_ratio: " << fn_ratio << endl;
 
 			if (last_error == -1 || error < last_error)
 			{
@@ -220,7 +239,7 @@ void RNN::run_pack()
 			}
 		}
 
-		Logger::instance().log(to_string(error) + " " + to_string(precision) + " " + to_string(accuracy) + " " + to_string(fn_ratio));
+		Logger::instance().log(to_string(error) + " " + to_string(mcc));
 
 		cout << error << endl;
 		cout << "Time: " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
@@ -238,7 +257,7 @@ void RNN::run_pack()
 void RNN::test_pack_cm() const
 {
 	cout << "Loading dataset..." << endl;
-	PackDataset dataset;
+	PackDataset2 dataset;
 	dataset.load_data("./data/pack_data_test.csv", false, true);
 	//dataset.load_data("./data/pack_data_train4500.csv", false, false);
 
@@ -246,7 +265,7 @@ void RNN::test_pack_cm() const
 	NeuralNetwork network(IOUtils::load_network("predictor.net"));
 
 	cout << "Testing..." << endl;
-	vector<PackDataSequence>* test = dataset.data();
+	vector<PackDataSequence2>* test = dataset.data();
 
 	int tp = 0;
 	int fp = 0;
@@ -256,18 +275,19 @@ void RNN::test_pack_cm() const
 	for (auto sequence : *test)
 	{
 		network.activate(&sequence.input);
-		const int prediction = network.get_output()->at(0) > 0.5 ? 1 : 0;
+		const float output = network.get_output()->at(0);
+		const int prediction = output > 0.5 ? 1 : 0;
 
 		if ((*sequence.target)[0] == 1 && prediction == 1) {
 			//cout << "TP " << network.get_output()->at(0) << endl;
 			tp++;
 		}
 		if ((*sequence.target)[0] == 1 && prediction == 0) {
-			//cout << "FN " << sequence.player_id << endl;
+			//cout << "FN " << output << endl;
 			fn++;
 		}
 		if ((*sequence.target)[0] == 0 && prediction == 1) {
-			//cout << "FP " << network.get_output()->at(0) << endl;
+			//cout << "FP " << output << endl;
 			fp++;
 		}
 		if ((*sequence.target)[0] == 0 && prediction == 0) {
@@ -276,19 +296,30 @@ void RNN::test_pack_cm() const
 	}
 
 	cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;
+
+	float den = 1;
+
+	if ((tp + fp) != 0 && (tp + fn) != 0 && (tn + fp) != 0 && (tn + fn) != 0)
+	{
+		den = sqrt((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn));
+	}
+
+	const float mcc = (tp * tn - fp * fn) / den;
+
+	cout << mcc << endl;
 }
 
 void RNN::test_pack_alt() const
 {
 	cout << "Loading dataset..." << endl;
-	PackDataset dataset;
+	PackDataset2 dataset;
 	dataset.load_data("./data/pack_data_test.csv", false, true);
 
 	cout << "Loading network..." << endl;
 	NeuralNetwork network(IOUtils::load_network("predictor.net"));
 
 	cout << "Testing..." << endl;
-	vector<PackDataSequence>* test = dataset.data();
+	vector<PackDataSequence2>* test = dataset.data();
 
 	int tp = 0;
 	int fp = 0;
@@ -304,7 +335,7 @@ void RNN::test_pack_alt() const
 			tp++;
 		}
 		if ((*sequence.target)[0] == 1 && prediction == 0) {
-			vector<PackDataSequence> d = dataset.create_sequence_test(sequence.player_id);
+			vector<PackDataSequence2> d = dataset.create_sequence_test(sequence.player_id);
 
 			for (int i = 0; i < d.size(); i++)
 			{

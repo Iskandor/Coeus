@@ -215,7 +215,14 @@ void Tensor::override(const int* p_data) const
 }
 
 void Tensor::fill(const float p_value) const {
-	fill(VALUE, p_value);
+	if (p_value == 0)
+	{
+		fill(ZERO, 0);
+	}
+	else
+	{
+		fill(VALUE, p_value);
+	}	
 }
 
 float Tensor::at(const int p_x) const {

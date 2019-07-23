@@ -41,6 +41,9 @@ BaseLayer::BaseLayer(json p_data)
 	_valid = false;
 	_batch_size = 0;
 
+	_dim_tensor = nullptr;
+	_in_dim_tensor = nullptr;
+
 	_input = nullptr;
 	_output = nullptr;
 }
