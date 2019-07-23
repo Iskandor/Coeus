@@ -183,58 +183,26 @@ void TensorOperatorMKL::lstm_gradient_b(int p_batch, float* p_gradient, float* p
 	*/
 }
 
-void TensorOperatorMKL::full_delta_s(float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
+void TensorOperatorMKL::full_delta(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
 {
-	memset(p_delta0, 0, sizeof(float) * p_cols);
-	cblas_sgemv(CblasRowMajor, CblasTrans, p_rows, p_cols, 1, p_w, p_cols, p_delta1, 1, 0, p_delta0, 1);
-}
-
-void TensorOperatorMKL::full_delta_b(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
-{
-	//memset(p_delta0, 0, sizeof(float) * p_batch * p_cols);
-	/*
-	cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
-		p_batch, p_cols, p_rows,
-		1, p_delta1, p_rows,
-		p_w, p_cols,
-		0, p_delta0, p_cols);
-	*/
 	MM_prod(p_delta1, false, p_w, false, p_delta0, p_batch, p_rows, p_cols);
 }
 
-void TensorOperatorMKL::full_gradient_s(float* p_x0, float* p_delta1, float* p_grad, const int p_rows, const int p_cols)
+void TensorOperatorMKL::full_w_gradient(const int p_batch, float* p_x0, float* p_delta1, float* p_grad, const int p_rows, const int p_cols)
 {
-	memset(p_grad, 0, sizeof(float) * p_rows * p_cols);
-	cblas_sger(CblasRowMajor, p_rows, p_cols, 1.f, p_delta1, 1, p_x0, 1, p_grad, p_cols);
+	MM_prod(p_delta1, true, p_x0, false, p_grad, p_rows, p_batch, p_cols);
 }
 
-void TensorOperatorMKL::full_gradient_b(const int p_batch, float* p_x0, float* p_delta1, float* p_grad, const int p_rows, const int p_cols)
+void TensorOperatorMKL::full_b_gradient(const int p_batch, float* p_delta1, float* p_grad, const int p_rows)
 {
-	/*
-	memset(p_grad, 0, sizeof(float) * p_rows * p_cols);
-
-	float *dx = &p_delta1[0];
-
-	for (int b = 0; b < p_batch; b++)
+	if (p_batch == 1)
 	{
-		float* gx = &p_grad[0];
-
-		for (int i = 0; i < p_rows; i++)
-		{
-			float *x = &p_x0[b * p_cols];
-
-			for (int j = 0; j < p_cols; j++)
-			{
-				*gx++ += *dx * *x++;
-			}
-			dx++;
-		}
+		memcpy(p_grad, p_delta1, sizeof(float) * p_rows);
 	}
-
-	float *grad = new float[p_rows * p_cols];
-	*/
-
-	MM_prod(p_delta1, true, p_x0, false, p_grad, p_rows, p_batch, p_cols);
+	if (p_batch > 1)
+	{
+		M_reduce(p_grad, p_delta1, false, p_batch, p_rows);
+	}
 }
 
 void TensorOperatorMKL::v_reduce(float* p_x, float* p_y, const int p_size)

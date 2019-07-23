@@ -16,16 +16,16 @@ using namespace std;
 
 int main()
 {
-	FFN model;
-	model.run();
+	//FFN model;
+	//model.run();
 	//model.run_iris();
 
-	//RNN model;
+	RNN model;
 	//model.run_pack();
 	//model.test_pack();
 	//model.test_pack_cm();
 	//model.test_pack_alt();
-	//model.run_add_problem();
+	model.run_add_problem();
 
 	/*
 	Tensor m({ 1,5,5 }, Tensor::RANDOM, 1);
@@ -40,12 +40,10 @@ int main()
 	cout << m << endl;
 	*/
 
-	/*
-	CNN model;
+	//CNN model;
 	//model.run();
-	model.run_mnist();
-	model.test();
-	*/
+	//model.run_mnist();
+	//model.test();
 	
 	//MazeExample example;
 	//example.example_q(64, 1e-3, 0, true);

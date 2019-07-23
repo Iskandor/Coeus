@@ -52,16 +52,8 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 {
 	Tensor*	 delta_out = _y->get_function()->backward(p_delta_map[_id]);
 
-	if (_batch)
-	{
-		TensorOperator::instance().M_reduce(p_gradient_map[_y->get_bias()->get_id()].arr(), delta_out->arr(), false, _batch_size, _dim);
-		TensorOperator::instance().full_gradient_b(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim);
-	}
-	else
-	{
-		p_gradient_map[_y->get_bias()->get_id()].override(delta_out);
-		TensorOperator::instance().full_gradient_s(_input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim);
-	}
+	TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim);
+	TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim);
 
 	Tensor*	 delta_in = nullptr;
 
@@ -69,14 +61,7 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	{
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
 
-		if (_batch)
-		{
-			TensorOperator::instance().full_delta_b(_batch_size, delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _dim, _in_dim);
-		}
-		else
-		{
-			TensorOperator::instance().full_delta_s(delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _dim, _in_dim);
-		}
+		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _dim, _in_dim);
 
 		int index = 0;
 
