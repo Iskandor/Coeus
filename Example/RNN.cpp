@@ -126,7 +126,7 @@ void RNN::run_pack()
 
 	cout << "Loading dataset..." << endl;
 	PackDataset2 dataset;
-	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv", false, true);
+	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv", false, false);
 	dataset.split(config["batch"].get<int>());
 	//PackDataset validset;
 	//validset.load_data("./data/pack_data_test.csv", false, true);

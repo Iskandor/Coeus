@@ -43,70 +43,34 @@ void TensorOperatorMKL::full_bias_b(const int p_batch, float* p_net, float* p_bi
 	}
 }
 
-void TensorOperatorMKL::lstm_state_s(float* p_state, float* p_ig, float* p_fg, float* p_cec, const int p_size)
+void TensorOperatorMKL::lstm_state(const int p_batch, float* p_state, float* p_ig, float* p_fg, float* p_cec, const int p_size)
 {
 	float* sx = &p_state[0];
 	float* cx = &p_cec[0];
 	float* igx = &p_ig[0];
 	float* fgx = &p_fg[0];
 
-	for(int i = 0; i < p_size; i++)
+	for(int i = 0; i < p_batch * p_size; i++)
 	{
 		*sx = *fgx++ * *sx + *igx++ * *cx++;
 		sx++;
 	}
 }
 
-void TensorOperatorMKL::lstm_state_b(const int p_batch, float* p_state, float* p_ig, float* p_fg, float* p_cec, const int p_size)
-{
-	lstm_state_s(p_state, p_ig, p_fg, p_cec, p_batch * p_size);
-}
-
-void TensorOperatorMKL::lstm_delta_s(float* p_delta0, float* p_derivative, float* p_output, float* p_delta1, const int p_size)
+void TensorOperatorMKL::lstm_delta(const int p_batch, float* p_delta0, float* p_derivative, float* p_output, float* p_delta1, const int p_size)
 {
 	float* d0x = &p_delta0[0];
 	float* dx = &p_derivative[0];
 	float* ox = &p_output[0];
 	float* d1x = &p_delta1[0];
 
-	for (int i = 0; i < p_size; i++)
+	for (int i = 0; i < p_batch * p_size; i++)
 	{
 		*d0x++ = *dx++ * *ox++ * *d1x++;
 	}
 }
 
-void TensorOperatorMKL::lstm_delta_b(const int p_batch, float* p_delta0, float* p_derivative, float* p_output, float* p_delta1, const int p_size)
-{
-	lstm_delta_s(p_delta0, p_derivative, p_output, p_delta1, p_batch * p_size);
-}
-
-void TensorOperatorMKL::lstm_derivative_s(float* p_derivative, float* p_fg, float* p_arg1, float* p_arg2, float* p_input, const int p_rows, const int p_cols)
-{
-	float* gx = &p_derivative[0];
-	float* fgx = &p_fg[0];
-
-	float* ta = new float[p_rows];
-	float* tax = &ta[0];
-	vv_ewprod(p_arg1, p_arg2, ta, p_rows);
-
-	for (int i = 0; i < p_rows; i++)
-	{
-		float* x = &p_input[0];
-
-		for(int j = 0; j < p_cols; j++)
-		{
-			*gx = *gx * *fgx + *tax * *x++;
-			gx++;
-		}
-
-		fgx++;
-		tax++;
-	}
-
-	delete[] ta;
-}
-
-void TensorOperatorMKL::lstm_derivative_b(const int p_batch, float* p_derivative, float* p_fg, float* p_arg1, float* p_arg2, float* p_input, const int p_rows, const int p_cols)
+void TensorOperatorMKL::lstm_derivative(const int p_batch, float* p_derivative, float* p_fg, float* p_arg1, float* p_arg2, float* p_input, const int p_rows, const int p_cols)
 {
 	float* gx = &p_derivative[0];
 	float* fgx = &p_fg[0];
@@ -133,54 +97,27 @@ void TensorOperatorMKL::lstm_derivative_b(const int p_batch, float* p_derivative
 	}
 }
 
-void TensorOperatorMKL::lstm_gradient_s(float* p_gradient, float* p_error, float* p_derivative, const int p_rows, const int p_cols)
+void TensorOperatorMKL::lstm_w_gradient(int p_batch, float* p_gradient, float* p_error, float* p_derivative, const int p_rows, const int p_cols)
 {
-	float* gx = &p_gradient[0];
-	float* ex = &p_error[0];
-	float* dx = &p_derivative[0];
-
-	for (int i = 0; i < p_rows; i++)
-	{
-		for (int j = 0; j < p_cols; j++)
-		{
-			*gx++ = *ex * *dx++;
-		}
-		ex++;
-	}
-}
-
-void TensorOperatorMKL::lstm_gradient_b(int p_batch, float* p_gradient, float* p_error, float* p_derivative, const int p_rows, const int p_cols)
-{
-	memset(p_gradient, 0, sizeof(int) * p_cols * p_rows);
+	memset(p_gradient, 0, sizeof(float) * p_cols * p_rows);
 
 	float* ex = &p_error[0];
 	float* dx = &p_derivative[0];
 
-	for (int i = 0; i < p_batch; i++)
+	for (int b = 0; b < p_batch; b++)
 	{
 		float *gx = &p_gradient[0];
 
-		for (int j = 0; j < p_rows; j++)
+		for (int i = 0; i < p_rows; i++)
 		{
-			for (int k = 0; k < p_cols; k++)
+			//cblas_saxpy(p_cols, *ex, (dx + b * p_rows * p_cols + i * p_cols), 1, (gx + i * p_cols), 1);
+			for (int j = 0; j < p_cols; j++)
 			{
 				*gx++ += *ex * *dx++;
 			}
 			ex++;
 		}
 	}
-
-	/*
-	float *grad = new float[p_rows * p_rows * p_cols];
-	float *grad2 = new float[p_rows * p_cols];
-	float *grad3 = new float[p_rows * p_cols];
-
-	//MM_prod(p_error, true, p_derivative, false, grad, p_rows, p_batch, p_rows * p_cols);
-	MM_prod(p_derivative, true, p_error, false, grad, p_rows * p_cols, p_batch, p_rows);
-	V_reduce(grad2, grad, p_rows, p_cols, p_rows);
-	mkl_somatcopy('R', 'T', p_rows, p_cols, 1, grad2, p_rows, grad3, p_rows);
-	vv_sub(grad3, p_gradient, grad2, p_rows * p_cols);
-	*/
 }
 
 void TensorOperatorMKL::full_delta(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
@@ -222,12 +159,13 @@ void TensorOperatorMKL::M_reduce(float* p_x, float* p_A, bool p_row_major, const
 
 	if (p_row_major)
 	{	
+		float *a = &p_A[0];
 		for (int i = 0; i < p_rows; i++)
 		{
 			*x = 0;
 			for (int j = 0; j < p_cols; j++)
 			{
-				*x += p_A[i * p_cols + j];
+				*x += *a++;
 			}
 			x++;
 		}

@@ -31,14 +31,10 @@ public:
 	virtual void full_w_gradient(int p_batch, float* p_x0, float* p_delta1, float* p_grad, int p_rows, int p_cols) = 0;
 	virtual void full_b_gradient(int p_batch, float* p_delta1, float* p_grad, int p_rows) = 0;
 
-	virtual void lstm_state_s(float* p_state, float* p_ig, float* p_fg, float* p_cec, int p_size) = 0;
-	virtual void lstm_state_b(int p_batch, float* p_state, float* p_ig, float* p_fg, float* p_cec, int p_size) = 0;
-	virtual void lstm_delta_s(float* p_delta0, float* p_derivative, float* p_output, float* p_delta1, int p_size) = 0;
-	virtual void lstm_delta_b(int p_batch, float* p_delta0, float* p_derivative, float* p_output, float* p_delta1, int p_size) = 0;
-	virtual void lstm_derivative_s(float* p_derivative, float* p_fg, float* p_arg1, float* p_arg2, float* p_input, int p_rows, int p_cols) = 0;
-	virtual void lstm_derivative_b(int p_batch, float* p_derivative, float* p_fg, float* p_arg1, float* p_arg2, float* p_input, int p_rows, int p_cols) = 0;
-	virtual void lstm_gradient_s(float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) = 0;
-	virtual void lstm_gradient_b(int p_batch, float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) = 0;
+	virtual void lstm_state(int p_batch, float* p_state, float* p_ig, float* p_fg, float* p_cec, int p_size) = 0;
+	virtual void lstm_delta(int p_batch, float* p_delta0, float* p_derivative, float* p_output, float* p_delta1, int p_size) = 0;
+	virtual void lstm_derivative(int p_batch, float* p_derivative, float* p_fg, float* p_arg1, float* p_arg2, float* p_input, int p_rows, int p_cols) = 0;
+	virtual void lstm_w_gradient(int p_batch, float* p_gradient, float* p_error, float* p_derivative, int p_rows, int p_cols) = 0;
 
 protected:
 	ITensorOperator() = default;
