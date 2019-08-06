@@ -113,7 +113,7 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers)
 	}
 	add_param(_Wxog->get_id(), _Wxog->get_data());
 
-	cout << _id << " " << _in_dim << " - " << _dim << endl;
+	cout << _id << " " << (_input_dim > 0 ? _input_dim : _in_dim - _dim) << " - " << _dim << endl;
 }
 
 void LSTMLayer::activate()
@@ -192,7 +192,6 @@ void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	TensorOperator::instance().lstm_delta(_batch_size, _state_error->arr(), _og->get_output()->arr(), dh.arr(), delta_out->arr(), _dim);
 
 	p_delta_map[_cec->get_id()]->override(p_derivative_map[_cec->get_bias()->get_id()]);
-
 	TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_ig->get_bias()->get_id()]->arr(), p_delta_map[_ig->get_id()]->arr(), _batch_size * _dim);
 	TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_fg->get_bias()->get_id()]->arr(), p_delta_map[_fg->get_id()]->arr(), _batch_size * _dim);
 
@@ -220,25 +219,9 @@ void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 
 void LSTMLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 {
-	Tensor dy = _activation_function->derivative(*_output);
-	p_derivative[_id] = NeuronOperator::init_auxiliary_parameter(p_derivative[_id], _batch_size, _dim);
-	p_derivative[_id]->override(&dy);
-
 	Tensor dcec = _cec->derivative();
-	p_derivative[_cec->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_cec->get_id()], _batch_size, _dim);
-	p_derivative[_cec->get_id()]->override(&dcec);
-
 	Tensor dig = _ig->derivative();
-	p_derivative[_ig->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_ig->get_id()], _batch_size, _dim);
-	p_derivative[_ig->get_id()]->override(&dig);
-
 	Tensor dfg = _fg->derivative();
-	p_derivative[_fg->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_fg->get_id()], _batch_size, _dim);
-	p_derivative[_fg->get_id()]->override(&dfg);
-
-	Tensor dog = _og->derivative();
-	p_derivative[_og->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_og->get_id()], _batch_size, _dim);
-	p_derivative[_og->get_id()]->override(&dog);
 
 	p_derivative[_Wxc->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_Wxc->get_id()], _batch_size, _dim * _in_dim);
 	p_derivative[_Wxfg->get_id()] = NeuronOperator::init_auxiliary_parameter(p_derivative[_Wxfg->get_id()], _batch_size, _dim * _in_dim);
