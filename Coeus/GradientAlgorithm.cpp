@@ -60,6 +60,11 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, Tensor* p_target) {
 	return error;
 }
 
+void GradientAlgorithm::reset() const
+{
+	_network_gradient->reset();
+}
+
 void GradientAlgorithm::init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule)
 {
 	_cost_function = p_cost_function;

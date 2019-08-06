@@ -16,6 +16,8 @@
 #include "KLDivergence.h"
 #include "PowerSign.h"
 #include "PackDataset2.h"
+#include "CrossEntropyCost.h"
+#include "GRULayer.h"
 
 
 RNN::RNN()
@@ -34,8 +36,8 @@ void RNN::run_add_problem()
 	dataset.split(64);
 
 	NeuralNetwork network;
-	//network.add_layer(new RecurrentLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
-	network.add_layer(new LSTMLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	network.add_layer(new RecurrentLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	//network.add_layer(new LSTMLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
 	network.add_connection("hidden0", "output");
 	network.init();
@@ -70,6 +72,144 @@ void RNN::run_add_problem()
 		for (auto sequence : *train_s)
 		{
 			error += algorithm.train(&sequence.input, sequence.target);
+		}
+		*/
+
+		for (auto sequence : *test)
+		{
+			//error += algorithm.train(&sequence.input, sequence.target);
+			network.activate(&sequence.input);
+
+			if (abs(network.get_output()->at(0) - (*sequence.target)[0]) < 0.04)
+			{
+				correct++;
+			}
+		}
+
+		epochs++;
+		cout << error << endl;
+		cout << correct << " / " << size << endl;
+	}
+	cout << epochs << endl;
+
+	test_add_problem(network);
+}
+
+void RNN::run_sin_prediction()
+{
+	vector<Tensor*> input;
+	vector<Tensor*> target;
+
+	for(int i = 0; i < 359; i++)
+	{
+		Tensor* ti = new Tensor({ 1 }, Tensor::ZERO);
+		ti->set(0, sin(i* (2 * PI / 360)));
+
+		Tensor* tt = new Tensor({ 1 }, Tensor::ZERO);
+		tt->set(0, sin((i + 1) * (2 * PI / 360)));
+
+		input.push_back(ti);
+		target.push_back(tt);
+	}
+
+	NeuralNetwork network;
+	network.add_layer(new RecurrentLayer("hidden0", 16, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 1));
+	network.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
+	network.add_connection("hidden0", "output");
+	network.init();
+
+	const int epochs = 2000;
+
+	Nadam algorithm(&network);
+	algorithm.init(new QuadraticCost(), 1e-4f);
+	//BackProp algorithm(&network);
+	//algorithm.init(new QuadraticCost(), 1e-4f, 0.996f, true);
+
+	for(int e = 0; e < epochs; e++)
+	{
+		algorithm.reset();
+		float error = 0;
+		
+		for(int i = 0; i < input.size(); i++)
+		{
+			error += algorithm.train(input[i], target[i]);
+		}
+
+		cout << error << endl;
+	}
+
+	Logger::instance().init("sin.csv");
+	network.reset();
+	for (int i = 0; i < input.size(); i++)
+	{
+		network.activate(input[i]);
+	}
+
+	for (int i = 0; i < input.size(); i++)
+	{
+		network.activate(input[i]);
+		cout << *network.get_output() << " " << *target[i] << endl;
+		Logger::instance().log(to_string(network.get_output()->at(0)) + ";" + to_string(target[i]->at(0)));
+	}
+	
+	/*
+	float x = input[0]->at(0);
+
+	Tensor ti({ 1 }, Tensor::ZERO);
+
+	for (int i = 0; i < 1000; i++)
+	{
+		ti.set(0, x);
+		network.activate(&ti);
+		x = network.get_output()->at(0);
+		Logger::instance().log(to_string(network.get_output()->at(0)));
+	}
+	*/
+	Logger::instance().close();
+}
+
+void RNN::run_add_problem_gru()
+{
+	AddProblemDataset dataset;
+	dataset.load_data("./data/add_problem_easy.dat");
+	dataset.split(64);
+
+	NeuralNetwork network;
+	network.add_layer(new GRULayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
+	network.add_connection("hidden0", "output");
+	network.init();
+
+	BackProp algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.1f, 0.9f, true);
+	//ADAM algorithm(&network);
+	//algorithm.init(new QuadraticCost(), 0.01f);
+
+	int epochs = 0;
+	int correct = 0;
+	const int size = dataset.raw_data()->size();
+	const int bound = size * 0.99;
+
+	cout << "Size " << size << endl;
+
+	while (correct < bound) {
+		//pair<vector<vector<Tensor*>>, vector<Tensor*>> data = dataset.to_vector();
+		vector<AddProblemSequence>* train_b = dataset.permute(true);
+		//vector<AddProblemSequence>* train_s = dataset.permute(false);
+		vector<AddProblemSequence>* test = dataset.raw_data();
+
+		float error = 0;
+		correct = 0;
+
+		for (auto sequence : *train_b)
+		{
+			error += algorithm.train(&sequence.input, sequence.target);
+		}
+
+		/*
+		for (auto sequence : *train_s)
+		{
+		error += algorithm.train(&sequence.input, sequence.target);
 		}
 		*/
 
@@ -138,12 +278,12 @@ void RNN::run_pack()
 	{
 		network = new NeuralNetwork();
 		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), dataset.get_input_dim()));
-		network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
-		network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(LECUN_UNIFORM)));
+		//network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
+		//network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(LECUN_UNIFORM)));
 		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
-		network->add_connection("hidden0", "hidden1");
-		network->add_connection("hidden1", "hidden2");
-		network->add_connection("hidden2", "output");
+		//network->add_connection("hidden0", "hidden1");
+		//network->add_connection("hidden1", "hidden2");
+		network->add_connection("hidden0", "output");
 		network->init();
 	}
 	else

@@ -19,11 +19,11 @@ public:
 	map<string, Tensor>* get_gradient() { return &_gradient; }
 	
 	void check_gradient(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss);
-
+	void reset();
 	
 
 private:
-	void reset();
+	
 	void calc_derivative();
 	float check_estimate(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss) const;
 

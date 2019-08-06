@@ -14,6 +14,7 @@ namespace Coeus {
 
 		virtual float train(Tensor* p_input, Tensor* p_target);
 		virtual float train(vector<Tensor*>* p_input, Tensor* p_target);
+		void reset() const;
 
 	protected:
 		void init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule);
