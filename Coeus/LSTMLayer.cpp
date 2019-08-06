@@ -194,9 +194,7 @@ void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	p_delta_map[_cec->get_id()]->override(p_derivative_map[_cec->get_bias()->get_id()]);
 	TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_ig->get_bias()->get_id()]->arr(), p_delta_map[_ig->get_id()]->arr(), _batch_size * _dim);
 	TensorOperator::instance().vv_ewprod(_state_error->arr(), p_derivative_map[_fg->get_bias()->get_id()]->arr(), p_delta_map[_fg->get_id()]->arr(), _batch_size * _dim);
-
-	delete delta_out;
-
+	
 	Tensor* gWxig = &p_gradient_map[_Wxig->get_id()];
 	Tensor* gWxfg = &p_gradient_map[_Wxfg->get_id()];
 	Tensor* gWxog = &p_gradient_map[_Wxog->get_id()];

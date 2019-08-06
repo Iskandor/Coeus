@@ -51,8 +51,8 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseIntelMKL>Parallel</UseIntelMKL>
-    <UseIntelTBB>true</UseIntelTBB>
+    <UseIntelMKL>Sequential</UseIntelMKL>
+    <UseIntelTBB>false</UseIntelTBB>
     <InstrumentIntelTBB>false</InstrumentIntelTBB>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />

@@ -208,8 +208,6 @@ void ConvLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 
 		delete delta_in;
 	}
-
-	delete delta_out;
 }
 
 void ConvLayer::override(BaseLayer* p_source)

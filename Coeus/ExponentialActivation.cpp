@@ -12,20 +12,21 @@ ExponentialActivation::~ExponentialActivation()
 {
 }
 
-Tensor* ExponentialActivation::backward(Tensor* p_input)
+Tensor* ExponentialActivation::backward(Tensor* p_input, Tensor* p_x)
 {
-	float* arr = Tensor::alloc_arr(_output->size());
-	int* shape = Tensor::copy_shape(_output->rank(), _output->shape());
-	float* y = &arr[0];
+	IActivationFunction::backward(p_input, p_x);
+	float* y = &_gradient->arr()[0];
 	float* x = &_input->arr()[0];
+
+	if (p_x != nullptr) x = &p_x->arr()[0];
 
 	for (int i = 0; i < _input->size(); i++) {
 		(*y++) = -exp(-_k * *x++);
 	}
 
-	TensorOperator::instance().vv_ewprod(arr, p_input->arr(), arr, _output->size());
+	TensorOperator::instance().vv_ewprod(_gradient->arr(), p_input->arr(), _gradient->arr(), _output->size());
 
-	return new Tensor(_output->rank(), shape, arr);
+	return _gradient;
 }
 
 Tensor* ExponentialActivation::forward(Tensor* p_input)

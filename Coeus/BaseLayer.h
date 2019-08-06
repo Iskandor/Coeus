@@ -51,6 +51,7 @@ namespace Coeus
 		virtual Tensor* get_dim_tensor() = 0;
 		int get_in_dim() const { return _input_dim; }
 		Tensor* get_in_dim_tensor() const { return _in_dim_tensor; }
+		bool is_recurrent() const { return _is_recurrent; }
 
 		virtual json get_json() const;
 
@@ -68,9 +69,11 @@ namespace Coeus
 		int			_input_dim;
 
 		int			_batch_size;
-		bool		_batch{};
+		bool		_batch;
 		Tensor*		_input;
 		Tensor*		_output;
+
+		bool		_is_recurrent;
 
 		vector<BaseLayer*>		_input_layer;
 	private:

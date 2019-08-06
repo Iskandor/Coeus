@@ -30,6 +30,7 @@ BaseLayer::BaseLayer(const string& p_id, const int p_dim, const initializer_list
 
 	_input = nullptr;
 	_output = nullptr;
+	_is_recurrent = false;
 }
 
 BaseLayer::BaseLayer(json p_data)
@@ -46,6 +47,7 @@ BaseLayer::BaseLayer(json p_data)
 
 	_input = nullptr;
 	_output = nullptr;
+	_is_recurrent = false;
 }
 
 BaseLayer::~BaseLayer()

@@ -74,8 +74,6 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 
 		delete delta_in;
 	}
-
-	delete delta_out;
 }
 
 void CoreLayer::calc_derivative(map<string, Tensor*>& p_derivative)

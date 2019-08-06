@@ -13,7 +13,7 @@ namespace Coeus
 		= default;
 
 		virtual Tensor*	forward(Tensor* p_input) = 0;
-		virtual Tensor*	backward(Tensor* p_input) = 0;
+		virtual Tensor*	backward(Tensor* p_input, Tensor* p_x) = 0;
 	};
 }
 
