@@ -14,7 +14,7 @@ void ConvOperator::integrate(Tensor* p_dim_tensor, const int p_rows, const int p
 {
 	_net = init_auxiliary_parameter(_net, p_dim_tensor->at(0), p_dim_tensor->at(1), p_dim_tensor->at(2));
 
-	TensorOperator::instance().MM_prod(p_weights->arr(), true, p_input->arr(), true, _net->arr(), p_dim_tensor->at(0), p_rows, p_cols);
+	TensorOperator::instance().MM_prod(p_weights->arr(), true, p_input->arr(), true, _net->arr(), p_dim_tensor->at(0), p_rows, p_cols, false);
 }
 
 void ConvOperator::activate()

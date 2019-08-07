@@ -52,8 +52,8 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 {
 	Tensor*	 delta_out = _y->get_function()->backward(p_delta_map[_id]);
 
-	TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim);
-	TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim);
+	TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, false);
+	TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, false);
 
 	Tensor*	 delta_in = nullptr;
 

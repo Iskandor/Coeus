@@ -23,7 +23,7 @@ public:
 	
 
 private:
-	
+	void calc_loss(Tensor* p_value);
 	void calc_derivative();
 	float check_estimate(Tensor* p_input, Tensor* p_target, ICostFunction* p_loss) const;
 

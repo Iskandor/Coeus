@@ -182,15 +182,15 @@ void ConvLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	Tensor gradient({ w2 * h2, _extent * _extent }, Tensor::ZERO);
 	Tensor gradient_slice({ _extent * _extent }, Tensor::ZERO);
 
-	TensorOperator::instance().M_reduce(p_gradient_map[_y->get_bias()->get_id()].arr(), delta_out->arr(), true, d2, h2 * w2);
+	TensorOperator::instance().M_reduce(p_gradient_map[_y->get_bias()->get_id()].arr(), delta_out->arr(), true, d2, h2 * w2, false);
 
-	TensorOperator::instance().MM_prod(delta_out->arr(), false, _column_input->arr(), true, p_gradient_map[_W->get_id()].arr(), _filters, h2 * w2, d1 * _extent * _extent);
+	TensorOperator::instance().MM_prod(delta_out->arr(), false, _column_input->arr(), true, p_gradient_map[_W->get_id()].arr(), _filters, h2 * w2, d1 * _extent * _extent, false);
 
 	Tensor*	 delta_in = nullptr;
 
 	if (!_input_layer.empty())
 	{
-		TensorOperator::instance().MM_prod(_W->get_data()->arr(), false, delta_out->arr(), false, _column_input->arr(), d1 * _extent * _extent, _filters, h2 * w2);
+		TensorOperator::instance().MM_prod(_W->get_data()->arr(), false, delta_out->arr(), false, _column_input->arr(), d1 * _extent * _extent, _filters, h2 * w2, false);
 
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, d1, h1, w1);
 		delta_in->reset_index();

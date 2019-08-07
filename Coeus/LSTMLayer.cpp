@@ -204,14 +204,14 @@ void LSTMLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	Tensor* dWxfg = p_derivative_map[_Wxfg->get_id()];
 	Tensor* dWxc = p_derivative_map[_Wxc->get_id()];
 
-	TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), p_delta_map[_og->get_id()]->arr(), gWxog->arr(), _dim, _in_dim);
+	TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), p_delta_map[_og->get_id()]->arr(), gWxog->arr(), _dim, _in_dim, false);
 	TensorOperator::instance().lstm_w_gradient(_batch_size, gWxig->arr(), _state_error->arr(), dWxig->arr(), _dim, _in_dim);
 	TensorOperator::instance().lstm_w_gradient(_batch_size, gWxfg->arr(), _state_error->arr(), dWxfg->arr(), _dim, _in_dim);
 	TensorOperator::instance().lstm_w_gradient(_batch_size, gWxc->arr(), _state_error->arr(), dWxc->arr(), _dim, _in_dim);
-	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_og->get_id()]->arr(), p_gradient_map[_og->get_bias()->get_id()].arr(), _dim);
-	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_cec->get_id()]->arr(), p_gradient_map[_cec->get_bias()->get_id()].arr(), _dim);
-	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_ig->get_id()]->arr(), p_gradient_map[_ig->get_bias()->get_id()].arr(), _dim);
-	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_fg->get_id()]->arr(), p_gradient_map[_fg->get_bias()->get_id()].arr(), _dim);
+	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_og->get_id()]->arr(), p_gradient_map[_og->get_bias()->get_id()].arr(), _dim, false);
+	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_cec->get_id()]->arr(), p_gradient_map[_cec->get_bias()->get_id()].arr(), _dim, false);
+	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_ig->get_id()]->arr(), p_gradient_map[_ig->get_bias()->get_id()].arr(), _dim, false);
+	TensorOperator::instance().full_b_gradient(_batch_size, p_delta_map[_fg->get_id()]->arr(), p_gradient_map[_fg->get_bias()->get_id()].arr(), _dim, false);
 
 }
 

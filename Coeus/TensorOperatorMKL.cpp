@@ -15,7 +15,7 @@ void TensorOperatorMKL::full_int_s(float* p_net, float* p_x, float* p_w, const i
 
 void TensorOperatorMKL::full_int_b(const int p_batch, float* p_net, float* p_x, float* p_w, const int p_rows, const int p_cols)
 {
-	MM_prod(p_x, false, p_w, true, p_net, p_batch, p_cols, p_rows);
+	MM_prod(p_x, false, p_w, true, p_net, p_batch, p_cols, p_rows, false);
 }
 
 void TensorOperatorMKL::full_bias_s(float* p_net, float* p_bias, const int p_rows)
@@ -120,25 +120,44 @@ void TensorOperatorMKL::lstm_w_gradient(int p_batch, float* p_gradient, float* p
 	}
 }
 
+void TensorOperatorMKL::gru_state(int p_batch, float* p_state, float* p_zg, float* p_hcan, int p_size)
+{
+	float* hx = &p_state[0];
+	float* zgx = &p_zg[0];
+	float* hcx = &p_hcan[0];
+
+	for (int i = 0; i < p_batch * p_size; i++)
+	{
+		*hx = *zgx * *hx++ + (1 - *zgx++) * *hcx++;
+	}
+}
+
 void TensorOperatorMKL::full_delta(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
 {
-	MM_prod(p_delta1, false, p_w, false, p_delta0, p_batch, p_rows, p_cols);
+	MM_prod(p_delta1, false, p_w, false, p_delta0, p_batch, p_rows, p_cols, false);
 }
 
-void TensorOperatorMKL::full_w_gradient(const int p_batch, float* p_x0, float* p_delta1, float* p_grad, const int p_rows, const int p_cols)
+void TensorOperatorMKL::full_w_gradient(const int p_batch, float* p_x0, float* p_delta1, float* p_grad, const int p_rows, const int p_cols, bool p_accumulate)
 {
-	MM_prod(p_delta1, true, p_x0, false, p_grad, p_rows, p_batch, p_cols);
+	MM_prod(p_delta1, true, p_x0, false, p_grad, p_rows, p_batch, p_cols, p_accumulate);
 }
 
-void TensorOperatorMKL::full_b_gradient(const int p_batch, float* p_delta1, float* p_grad, const int p_rows)
+void TensorOperatorMKL::full_b_gradient(const int p_batch, float* p_delta1, float* p_grad, const int p_rows, bool p_accumulate)
 {
 	if (p_batch == 1)
 	{
-		memcpy(p_grad, p_delta1, sizeof(float) * p_rows);
+		if (p_accumulate)
+		{
+			vv_add(p_delta1, p_grad, p_grad, p_rows);
+		}
+		else
+		{
+			memcpy(p_grad, p_delta1, sizeof(float) * p_rows);
+		}		
 	}
 	if (p_batch > 1)
 	{
-		M_reduce(p_grad, p_delta1, false, p_batch, p_rows);
+		M_reduce(p_grad, p_delta1, false, p_batch, p_rows, p_accumulate);
 	}
 }
 
@@ -153,7 +172,7 @@ void TensorOperatorMKL::v_reduce(float* p_x, float* p_y, const int p_size)
 	}
 }
 
-void TensorOperatorMKL::M_reduce(float* p_x, float* p_A, bool p_row_major, const int p_rows, const int p_cols)
+void TensorOperatorMKL::M_reduce(float* p_x, float* p_A, bool p_row_major, const int p_rows, const int p_cols, bool p_accumulate)
 {
 	float* x = &p_x[0];
 
@@ -162,7 +181,7 @@ void TensorOperatorMKL::M_reduce(float* p_x, float* p_A, bool p_row_major, const
 		float *a = &p_A[0];
 		for (int i = 0; i < p_rows; i++)
 		{
-			*x = 0;
+			if (!p_accumulate) *x = 0;
 			for (int j = 0; j < p_cols; j++)
 			{
 				*x += *a++;
@@ -174,7 +193,7 @@ void TensorOperatorMKL::M_reduce(float* p_x, float* p_A, bool p_row_major, const
 	{
 		for (int j = 0; j < p_cols; j++)
 		{
-			*x = 0;
+			if (!p_accumulate) *x = 0;
 
 			for (int i = 0; i < p_rows; i++)
 			{
@@ -270,7 +289,7 @@ void TensorOperatorMKL::vM_prod(float* p_x, float* p_A, float* p_y, int p_rows, 
 	cblas_sgemv(CblasRowMajor, CblasNoTrans, p_rows, p_cols, 1, p_A, p_cols, p_x, 1, 0, p_y, 1);
 }
 
-void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float* p_C, int p_rows, int p_common, int p_cols)
+void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float* p_C, int p_rows, int p_common, int p_cols, bool p_accumulate)
 {
 	const CBLAS_TRANSPOSE Atrans = p_Atrans ? CblasTrans : CblasNoTrans;
 	const CBLAS_TRANSPOSE Btrans = p_Btrans ? CblasTrans : CblasNoTrans;
@@ -282,5 +301,5 @@ void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Bt
 		p_rows, p_cols, p_common,
 		1, p_A, lda,
 		p_B, ldb,
-		0, p_C, p_cols);
+		p_accumulate ? 1 : 0, p_C, p_cols);
 }
