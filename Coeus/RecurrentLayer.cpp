@@ -65,39 +65,26 @@ void RecurrentLayer::activate()
 	_output = _y->get_output();
 	_context->override(_y->get_output());
 
-	if (_learning_mode)
+	if (_mode == BPTT)
 	{
 		map<string, Tensor*> values;
 		values["input"] = new Tensor(*_input);
 		values[_y->get_id()] = new Tensor(*_y->get_output());
-		_bptt_values.push_back(values);
+		_bptt_values.push(values);
 	}
 }
 
 void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
+	map<string, Tensor*> values = _bptt_values.top();
 	Tensor*	 delta_out = nullptr; 
 	Tensor*	 delta_in = nullptr;
-	Tensor*	 delta_c = new Tensor(*p_delta_map[_id]);
 
 	delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
-	//delta_c = NeuronOperator::init_auxiliary_parameter(delta_c, _batch_size, _dim);
+	delta_out = _y->get_function()->backward(p_delta_map[_id], values[_y->get_id()]);
 
-	p_gradient_map[_W->get_id()].fill(0);
-	p_gradient_map[_y->get_bias()->get_id()].fill(0);
-
-	for(auto it = _bptt_values.rbegin(); it != _bptt_values.rend(); ++it )
-	{
-		delta_out = _y->get_function()->backward(delta_c, (*it)[_y->get_id()]);
-
-		TensorOperator::instance().full_w_gradient(_batch_size, (*it)["input"]->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, true);
-		TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, true);
-
-		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _dim, _in_dim);
-		delta_in->splice((_in_dim - _dim), delta_c);
-	}
-
-	delete delta_c;
+	TensorOperator::instance().full_w_gradient(_batch_size, values["input"]->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, _mode == BPTT);
+	TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, _mode == BPTT);
 
 	if (!_input_layer.empty())
 	{
@@ -105,7 +92,7 @@ void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<stri
 
 		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _dim, _in_dim);
 
-		int index = 0;
+		int index = _input_dim;
 
 		for (auto it : _input_layer)
 		{
@@ -115,18 +102,14 @@ void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<stri
 		}
 	}
 
-	delete delta_in;
+	_bptt_values.pop();
 
-	for (auto lit = _bptt_values.begin(); lit != _bptt_values.end(); ++lit)
+	for(auto it : values)
 	{
-		for(auto mit = lit->begin(); mit != lit->end(); ++mit)
-		{
-			delete mit->second;
-		}
-		lit->clear();
+		delete it.second;
 	}
 
-	_bptt_values.clear();
+	delete delta_in;
 }
 
 void RecurrentLayer::calc_derivative(map<string, Tensor*>& p_derivative)
@@ -150,6 +133,7 @@ void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers)
 {
 	BaseLayer::init(p_input_layers);
 
+	_input_layer.push_back(this);
 	_in_dim += _dim;
 
 	if (_W == nullptr) {

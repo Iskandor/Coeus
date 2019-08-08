@@ -15,7 +15,7 @@
 using namespace std;
 
 int main()
-{
+{	
 	//FFN model;
 	//model.run();
 	//model.run_iris();
@@ -24,8 +24,8 @@ int main()
 	//model.run_pack();
 	//model.test_pack_cm();
 	//model.test_pack_alt();
-	//model.run_add_problem();
-	model.run_sin_prediction();
+	model.run_add_problem();
+	//model.run_sin_prediction();
 	//model.run_add_problem_gru();
 
 	/*

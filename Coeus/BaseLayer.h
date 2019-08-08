@@ -52,9 +52,11 @@ namespace Coeus
 		int get_in_dim() const { return _input_dim; }
 		Tensor* get_in_dim_tensor() const { return _in_dim_tensor; }
 		bool is_recurrent() const { return _is_recurrent; }
-		void set_learning_mode(const bool p_value) { _learning_mode = p_value; }
+		void set_mode(const RECURRENT_MODE p_value) { _mode = p_value; }
 
 		virtual json get_json() const;
+
+		vector<string> unfold_layer();
 
 	protected:
 		
@@ -75,7 +77,7 @@ namespace Coeus
 		Tensor*		_output;
 
 		bool		_is_recurrent;
-		bool		_learning_mode;
+		RECURRENT_MODE	_mode;
 
 		vector<BaseLayer*>		_input_layer;
 	private:

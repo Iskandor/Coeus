@@ -119,6 +119,8 @@ public:
 		return output;
 	}
 
+	static bool pooling;
+
 private:
 	static void print_vector(ostream &output, const Tensor &p_tensor, bool p_cm);
 	static void print_matrix(ostream &output, const Tensor &p_tensor, bool p_cm);

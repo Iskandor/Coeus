@@ -237,9 +237,6 @@
     <ClCompile Include="RMSPropRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="ParamModel.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="AdadeltaRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
@@ -351,9 +348,6 @@
     <ClCompile Include="NeuronOperator.cpp">
       <Filter>Source Files\Backend</Filter>
     </ClCompile>
-    <ClCompile Include="Param.cpp">
-      <Filter>Source Files\Backend</Filter>
-    </ClCompile>
     <ClCompile Include="ActivationFunctionFactory.cpp">
       <Filter>Source Files\Network\ActivationFunctions</Filter>
     </ClCompile>
@@ -383,6 +377,15 @@
     </ClCompile>
     <ClCompile Include="GRULayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorPool.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="Param.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamModel.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -514,9 +517,6 @@
     </ClInclude>
     <ClInclude Include="RMSPropRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
-    </ClInclude>
-    <ClInclude Include="ParamModel.h">
-      <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="AdadeltaRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
@@ -653,9 +653,6 @@
     <ClInclude Include="TensorOperatorMKL.h">
       <Filter>Header Files\Backend</Filter>
     </ClInclude>
-    <ClInclude Include="Param.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="ExponentialInterpolation.h">
       <Filter>Header Files\Backend</Filter>
     </ClInclude>
@@ -694,6 +691,15 @@
     </ClInclude>
     <ClInclude Include="GRULayer.h">
       <Filter>Header Files\Network\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorPool.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="Param.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamModel.h">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

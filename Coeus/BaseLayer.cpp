@@ -31,7 +31,7 @@ BaseLayer::BaseLayer(const string& p_id, const int p_dim, const initializer_list
 	_input = nullptr;
 	_output = nullptr;
 	_is_recurrent = false;
-	_learning_mode = false;
+	_mode = NONE;
 }
 
 BaseLayer::BaseLayer(json p_data)
@@ -49,7 +49,7 @@ BaseLayer::BaseLayer(json p_data)
 	_input = nullptr;
 	_output = nullptr;
 	_is_recurrent = false;
-	_learning_mode = false;
+	_mode = NONE;
 }
 
 BaseLayer::~BaseLayer()
@@ -105,6 +105,18 @@ json BaseLayer::get_json() const
 	data["in_dim"] = _input_dim;
 
 	return data;
+}
+
+vector<string> BaseLayer::unfold_layer()
+{
+	vector<string> result;
+
+	for(BaseLayer* layer : _input_layer)
+	{
+		result.push_back(layer->get_id());
+	}
+
+	return vector<string>(result);
 }
 
 BaseLayer::BaseLayer(BaseLayer* p_source)                                     

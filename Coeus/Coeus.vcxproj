@@ -234,6 +234,7 @@
     <ClCompile Include="Tensor.cpp" />
     <ClCompile Include="TensorInitializer.cpp" />
     <ClCompile Include="TensorOperatorMKL.cpp" />
+    <ClCompile Include="TensorPool.cpp" />
     <ClCompile Include="WarmStartup.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -333,6 +334,7 @@
     <ClInclude Include="TensorInitializer.h" />
     <ClInclude Include="TensorOperator.h" />
     <ClInclude Include="TensorOperatorMKL.h" />
+    <ClInclude Include="TensorPool.h" />
     <ClInclude Include="WarmStartup.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="Logger.h" />

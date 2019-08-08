@@ -15,14 +15,18 @@ namespace Coeus {
 		virtual float train(Tensor* p_input, Tensor* p_target);
 		virtual float train(vector<Tensor*>* p_input, Tensor* p_target);
 		void reset() const;
+		void set_recurrent_mode(RECURRENT_MODE p_value);
 
 	protected:
+		
 		void init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule);
 		
 		NeuralNetwork*		_network;
 		ICostFunction*		_cost_function;
 		IUpdateRule*		_update_rule;
 		NetworkGradient*	_network_gradient;
+
+		RECURRENT_MODE		_recurrent_mode;
 	};
 }
 
