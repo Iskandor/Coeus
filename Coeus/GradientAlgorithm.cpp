@@ -25,7 +25,6 @@ float GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 	float error = 0;
 	float alpha = 0;
 
-	_network_gradient->set_recurrent_mode(_recurrent_mode);
 	_network_gradient->activate(p_input);
 	Tensor dloss = _cost_function->cost_deriv(_network->get_output(), p_target);
 
@@ -33,8 +32,6 @@ float GradientAlgorithm::train(Tensor* p_input, Tensor* p_target)
 	error = _cost_function->cost(_network->get_output(), p_target);	
 	_update_rule->calc_update(_network_gradient->get_gradient(), alpha);
 	_network->update(_update_rule->get_update());
-
-	_network_gradient->set_recurrent_mode(NONE);
 
 	return error;
 }

@@ -4,7 +4,6 @@
 #include "Param.h"
 #include "NeuronOperator.h"
 #include "TensorInitializer.h"
-#include <stack>
 
 namespace Coeus {
 
@@ -38,8 +37,6 @@ private:
 	Param* _W;
 
 	TensorInitializer *_initializer;
-
-	stack<map<string, Tensor*>> _bptt_values;
 };
 
 }

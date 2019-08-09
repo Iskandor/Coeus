@@ -195,7 +195,6 @@
     <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="BinaryActivation.cpp" />
-    <ClCompile Include="BPTT.cpp" />
     <ClCompile Include="CoreLayer.cpp" />
     <ClCompile Include="CountModule.cpp" />
     <ClCompile Include="CrossEntropyCost.cpp" />
@@ -288,7 +287,6 @@
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />
     <ClInclude Include="BinaryActivation.h" />
-    <ClInclude Include="BPTT.h" />
     <ClInclude Include="Coeus.h" />
     <ClInclude Include="CoreLayer.h" />
     <ClInclude Include="CountModule.h" />

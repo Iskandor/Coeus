@@ -174,9 +174,6 @@
     <ClCompile Include="LSTMLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="BPTT.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
     <ClCompile Include="Encoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -448,9 +445,6 @@
     </ClInclude>
     <ClInclude Include="LSTMLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="BPTT.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
     <ClInclude Include="Encoder.h">
       <Filter>Header Files</Filter>

@@ -41,20 +41,42 @@ void NetworkGradient::calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss)
 {
 	_calculation_graph.clear();
 
-	queue<string> q;
+	string recurrent_node;
 
+	for (auto& it : _network->_backward_graph)
+	{
+		if (it->is_recurrent())
+		{
+			if (recurrent_node.empty()) recurrent_node = it->get_id();
+		}
+		it->set_valid(false);
+	}
+
+	queue<string> q;
 	q.push(_network->_output_layer);
 
-	for(int i = 0; i < p_input->size(); i++)
+	while (!q.empty())
 	{
 		const string v = q.front();
 		q.pop();
 
-		_calculation_graph.push_back(_network->_layers[v]);
-
-		for (auto& it : _network->_layers[v]->unfold_layer())
+		if (v == recurrent_node)
 		{
-			q.push(it);
+			for(int i = 0; i < p_input->size(); i++)
+			{
+				unfold_layer(v);
+			}
+		}
+		else
+		{
+			_calculation_graph.push_back(_network->get_layer(v));
+
+			for (auto& it : _network->get_layer(v)->unfold_layer())
+			{
+				if (!_network->get_layer(it)->is_valid()) {
+					q.push(it);
+				}
+			}
 		}
 	}
 
@@ -123,6 +145,35 @@ void NetworkGradient::calc_derivative()
 	for (auto& it : _network->_backward_graph)
 	{
 		it->calc_derivative(_derivative);
+	}
+}
+
+void NetworkGradient::unfold_layer(const string& p_layer)
+{
+	for (auto& it : _network->_backward_graph)
+	{
+		it->set_valid(false);
+	}
+
+	queue<string> q;
+	q.push(p_layer);
+
+	while (!q.empty())
+	{
+		const string v = q.front();
+		q.pop();
+
+		if (!_network->get_layer(v)->is_valid()) {
+			_calculation_graph.push_back(_network->get_layer(v));
+			_network->get_layer(v)->set_valid(true);
+
+			for (auto& it : _network->get_layer(v)->unfold_layer())
+			{
+				if (!_network->get_layer(it)->is_valid()) {
+					q.push(it);
+				}
+			}
+		}
 	}
 }
 

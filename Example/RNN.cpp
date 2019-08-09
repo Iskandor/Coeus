@@ -35,11 +35,13 @@ void RNN::run_add_problem()
 	dataset.load_data("./data/add_problem_easy.dat");
 	dataset.split(64);
 
-	NeuralNetwork network;
-	network.add_layer(new RecurrentLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	NeuralNetwork network;	
+	network.add_layer(new CoreLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	network.add_layer(new RecurrentLayer("hidden1", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
 	//network.add_layer(new LSTMLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
-	network.add_connection("hidden0", "output");
+	network.add_connection("hidden0", "hidden1");
+	network.add_connection("hidden1", "output");
 	network.init();
 
 	BackProp algorithm(&network);

@@ -46,14 +46,42 @@ void CoreLayer::activate()
 	_y->integrate(_input, _W->get_data());
 	_y->activate();
 	_output = _y->get_output();
+
+	if (_mode == BPTT)
+	{
+		map<string, Tensor*> values;
+		values["input"] = new Tensor(*_input);
+		values[_y->get_id()] = new Tensor(*_y->get_output());
+		_bptt_values.push(values);
+	}
 }
 
 void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
 {
-	Tensor*	 delta_out = _y->get_function()->backward(p_delta_map[_id]);
+	Tensor*	 delta_out;
 
-	TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, false);
-	TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, false);
+	if (_mode == NONE)
+	{
+		delta_out = _y->get_function()->backward(p_delta_map[_id]);
+		TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, false);
+		TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, false);
+	}
+
+	if (_mode == BPTT)
+	{
+		map<string, Tensor*> values = _bptt_values.top();
+
+		delta_out = _y->get_function()->backward(p_delta_map[_id], values[_y->get_id()]);
+		TensorOperator::instance().full_w_gradient(_batch_size, values["input"]->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, true);
+		TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, true);
+
+		_bptt_values.pop();
+
+		for (auto it : values)
+		{
+			delete it.second;
+		}
+	}
 
 	Tensor*	 delta_in = nullptr;
 

@@ -26,6 +26,7 @@ public:
 private:
 	void calc_loss(Tensor* p_value);
 	void calc_derivative();
+	void unfold_layer(const string& p_layer);
 
 	RECURRENT_MODE	_recurrent_mode;
 	NeuralNetwork*	_network;

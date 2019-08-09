@@ -3,6 +3,7 @@
 #include "Coeus.h"
 #include "ParamModel.h"
 #include "json.hpp"
+#include <stack>
 
 
 using namespace std;
@@ -78,6 +79,7 @@ namespace Coeus
 
 		bool		_is_recurrent;
 		RECURRENT_MODE	_mode;
+		stack<map<string, Tensor*>> _bptt_values;
 
 		vector<BaseLayer*>		_input_layer;
 	private:
