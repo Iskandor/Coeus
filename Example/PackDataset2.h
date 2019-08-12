@@ -48,6 +48,13 @@ struct PackDataSequence2
 	Tensor*			target;
 };
 
+struct PackDataSequence3
+{
+	int player_id;
+	vector<Tensor*> input;
+	vector<Tensor*>	target;
+};
+
 class PackDataset2
 {
 public:
@@ -57,18 +64,21 @@ public:
 	
 	void load_data(const string& p_filename, bool p_prob = false, bool p_test = false);
 	vector<PackDataSequence2>* permute(bool p_batch);
+	vector<PackDataSequence3>* permute();
 	vector<PackDataSequence2>* data() { return &_raw_data; }
 	pair<vector<Tensor*>, vector<Tensor*>> to_vector();
 
 	vector<PackDataSequence2> create_sequence_test(int p_player);
 
 	void split(int p_batch);
+	void split2(int p_batch);
 	int get_input_dim() const { return _input_dim; }
 
 private:
 	void parse_line(string& p_line);
 	Tensor* encode_row(PackDataRow2& p_row);
 	void create_sequence(vector<PackDataRow2>& p_sequence);
+	void create_sequence2(vector<PackDataRow2>& p_sequence);
 	void create_sequence_prob(vector<PackDataRow2>& p_sequence);
 	void create_sequence_test(vector<PackDataRow2>& p_sequence);
 	
@@ -88,6 +98,7 @@ private:
 
 	map<int, vector<PackDataRow2>> *_data_tree;
 	vector<PackDataSequence2> _raw_data;
+	vector<PackDataSequence3> _raw_data2;
 	vector<PackDataSequence2> _batch_data;
 
 	CisLoader _cis_price_category;

@@ -51,8 +51,8 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseIntelMKL>Parallel</UseIntelMKL>
-    <UseIntelTBB>true</UseIntelTBB>
+    <UseIntelMKL>Sequential</UseIntelMKL>
+    <UseIntelTBB>false</UseIntelTBB>
     <InstrumentIntelTBB>false</InstrumentIntelTBB>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -207,7 +207,6 @@
     <ClCompile Include="ExponentialCost.cpp" />
     <ClCompile Include="GaussianActivation.cpp" />
     <ClCompile Include="GenKLDivergence.cpp" />
-    <ClCompile Include="GRULayer.cpp" />
     <ClCompile Include="HellingerDistance.cpp" />
     <ClCompile Include="IActivationFunction.cpp" />
     <ClCompile Include="IBatchModule.cpp" />
@@ -300,7 +299,6 @@
     <ClInclude Include="ExponentialCost.h" />
     <ClInclude Include="GaussianActivation.h" />
     <ClInclude Include="GenKLDivergence.h" />
-    <ClInclude Include="GRULayer.h" />
     <ClInclude Include="HellingerDistance.h" />
     <ClInclude Include="IActivationFunction.h" />
     <ClInclude Include="IBatchModule.h" />

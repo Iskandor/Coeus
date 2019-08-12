@@ -17,7 +17,6 @@
 #include "PowerSign.h"
 #include "PackDataset2.h"
 #include "CrossEntropyCost.h"
-#include "GRULayer.h"
 
 
 RNN::RNN()
@@ -36,8 +35,8 @@ void RNN::run_add_problem()
 	dataset.split(64);
 
 	NeuralNetwork network;
-	network.add_layer(new RecurrentLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
-	//network.add_layer(new LSTMLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	//network.add_layer(new RecurrentLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	network.add_layer(new LSTMLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
 	network.add_connection("hidden0", "output");
 	network.init();
@@ -93,6 +92,12 @@ void RNN::run_add_problem()
 	cout << epochs << endl;
 
 	test_add_problem(network);
+	/*
+	IOUtils::save_network(network, "test.net");
+	NeuralNetwork test(IOUtils::load_network("test.net"));
+
+	test_add_problem(test);
+	*/
 }
 
 void RNN::run_sin_prediction()
@@ -175,7 +180,7 @@ void RNN::run_add_problem_gru()
 	dataset.split(64);
 
 	NeuralNetwork network;
-	network.add_layer(new GRULayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
+	//network.add_layer(new GRULayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
 	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
 	network.add_connection("hidden0", "output");
 	network.init();
@@ -278,12 +283,12 @@ void RNN::run_pack()
 	{
 		network = new NeuralNetwork();
 		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), dataset.get_input_dim()));
-		//network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
+		network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
 		//network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(LECUN_UNIFORM)));
 		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
-		//network->add_connection("hidden0", "hidden1");
+		network->add_connection("hidden0", "hidden1");
 		//network->add_connection("hidden1", "hidden2");
-		network->add_connection("hidden0", "output");
+		network->add_connection("hidden1", "output");
 		network->init();
 	}
 	else
@@ -347,6 +352,155 @@ void RNN::run_pack()
 				if ((*sequence.target)[0] == 1 && prediction == 0) fn++;
 				if ((*sequence.target)[0] == 0 && prediction == 1) fp++;
 				if ((*sequence.target)[0] == 0 && prediction == 0) tn++;
+			}
+
+			precision = (fp + tp) == 0 ? 0 : (float)tp / (fp + tp);
+			accuracy = (float)(tp + tn) / dataset.data()->size();
+			fn_ratio = (fn + tp) == 0 ? 1 : (float)fn / (fn + tp);
+
+			tp /= 1e4;
+			tn /= 1e4;
+			fp /= 1e4;
+			fn /= 1e4;
+
+			float nom = (tp * tn - fp * fn);
+			float den = (tp + fp)*(tp + fn)*(tn + fp)*(tn + fn);
+
+			if (den == 0) den = 1;
+
+			mcc = nom / sqrt(den);
+
+			tp *= 1e4;
+			tn *= 1e4;
+			fp *= 1e4;
+			fn *= 1e4;
+
+			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , MCC: " << mcc << " , precision: " << precision << " , accuracy: " << accuracy << " , fn_ratio: " << fn_ratio << endl;
+
+			if (last_error == -1 || error < last_error)
+			{
+				IOUtils::save_network(*network, "predictor.net");
+				last_error = error;
+			}
+		}
+
+		Logger::instance().log(to_string(error) + " " + to_string(mcc));
+
+		cout << error << endl;
+		cout << "Time: " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+		epoch++;
+	}
+
+	Logger::instance().log("Finish");
+	Logger::instance().close();
+
+	IOUtils::save_network(*network, "predictor.net");
+
+	delete network;
+}
+
+void RNN::run_pack2()
+{
+	Logger::instance().init("log.log");
+	Logger::instance().log("Start");
+	cout << "Loading config..." << endl;
+	json config = load_config("config.json");
+	cout << config << endl;
+
+	cout << "Loading dataset..." << endl;
+	PackDataset2 dataset;
+	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv", false, false);
+	//dataset.split(config["batch"].get<int>());
+	//PackDataset validset;
+	//validset.load_data("./data/pack_data_test.csv", false, true);
+
+
+	NeuralNetwork* network;
+
+	if (config["network"].get<string>().empty())
+	{
+		network = new NeuralNetwork();
+		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), dataset.get_input_dim()));
+		network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
+		network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(LECUN_UNIFORM)));
+		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
+		network->add_connection("hidden0", "hidden1");
+		network->add_connection("hidden1", "hidden2");
+		network->add_connection("hidden2", "output");
+		network->init();
+	}
+	else
+	{
+		network = new NeuralNetwork(IOUtils::load_network(config["network"].get<string>()));
+	}
+
+	Nadam algorithm(network);
+	algorithm.init(new QuadraticCost(), config["alpha"].get<float>());
+	//BackProp algorithm(&network);
+	//algorithm.init(new QuadraticCost(), config["alpha"].get<float>(), 0.9, true);
+	//PowerSign algorithm(&network);
+	//algorithm.init(new QuadraticCost());
+
+	int epoch = 0;
+	float last_error = -1;
+
+	float tp = 0;
+	float fp = 0;
+	float tn = 0;
+	float fn = 0;
+	float precision = 0;
+	float accuracy = 0;
+	float fn_ratio = 1;
+	float mcc = 0;
+	const float bound = 0.999;
+	const int size = dataset.permute()->size();
+	int _batch_index = 0;
+
+	cout << size << " sequences" << endl;
+	cout << "Training..." << endl;
+
+	while (mcc < 1) {
+		//pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
+		vector<PackDataSequence3>* train = dataset.permute();
+		vector<PackDataSequence3>* test = train;
+
+		auto start = chrono::high_resolution_clock::now();
+		//const float error = algorithm.train(&data.first, &data.second, config["batch"].get<int>());
+		float error = 0;		
+
+		for (auto sequence : *train)
+		{			
+			error += algorithm.train(&sequence.input, &sequence.target, _batch_index == 0);
+			_batch_index++;
+			if (_batch_index == config["batch"].get<int>()) _batch_index = 0;
+		}
+
+		auto end = chrono::high_resolution_clock::now();
+
+		if (epoch % config["evaluate"].get<int>() == 0)
+		{
+			tp = 0;
+			fp = 0;
+			tn = 0;
+			fn = 0;
+
+			for (auto sequence : *test)
+			{
+				for (int i = 0; i < sequence.input.size(); i++)
+				{
+					network->activate(sequence.input[i]);
+
+					if (sequence.target[i] != nullptr)
+					{
+						const int prediction = network->get_output()->at(0) > 0.5 ? 1 : 0;
+						const float target = sequence.target[i]->at(0);
+
+						if (target == 1 && prediction == 1) tp++;
+						if (target == 1 && prediction == 0) fn++;
+						if (target == 0 && prediction == 1) fp++;
+						if (target == 0 && prediction == 0) tn++;
+					}
+				}
 			}
 
 			precision = (fp + tp) == 0 ? 0 : (float)tp / (fp + tp);

@@ -14,6 +14,7 @@ namespace Coeus {
 
 		virtual float train(Tensor* p_input, Tensor* p_target);
 		virtual float train(vector<Tensor*>* p_input, Tensor* p_target);
+		virtual float train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, bool p_update = true);
 		void reset() const;
 
 	protected:
@@ -23,6 +24,7 @@ namespace Coeus {
 		ICostFunction*		_cost_function;
 		IUpdateRule*		_update_rule;
 		NetworkGradient*	_network_gradient;
+		map<string, Tensor> _batch_gradient;
 	};
 }
 

@@ -221,6 +221,30 @@ void PackDataset2::create_sequence(vector<PackDataRow2>& p_sequence)
 
 }
 
+void PackDataset2::create_sequence2(vector<PackDataRow2>& p_sequence)
+{
+	PackDataSequence3 sequence;
+
+	for(PackDataRow2& row : p_sequence)
+	{
+		Tensor* input = encode_row(row);
+		Tensor *target = nullptr;
+
+		_input_dim = input->size();
+
+		if (row.target == 1)
+		{
+			target = new Tensor({ 1 }, Tensor::ZERO);
+			target->set(0, row.bought ? 1 : 0);
+		}
+
+		sequence.player_id = row.player_id;
+		sequence.input.push_back(input);
+		sequence.target.push_back(target);
+	}
+	_raw_data2.push_back(sequence);
+}
+
 void PackDataset2::create_sequence_prob(vector<PackDataRow2>& p_sequence)
 {
 	Tensor *target = new Tensor({ _cis_price_category.category_count() }, Tensor::ZERO);
@@ -406,6 +430,7 @@ void PackDataset2::load_data(const string& p_filename, bool p_prob, const bool p
 		}
 		else
 		{
+			create_sequence2(it->second);
 			create_sequence(it->second);
 		}
 		
@@ -429,6 +454,12 @@ vector<PackDataSequence2>* PackDataset2::permute(const bool p_batch)
 
 	shuffle(result->begin(), result->end(), std::mt19937(std::random_device()()));
 	return result;
+}
+
+vector<PackDataSequence3>* PackDataset2::permute()
+{
+	shuffle(_raw_data2.begin(), _raw_data2.end(), std::mt19937(std::random_device()()));
+	return &_raw_data2;
 }
 
 pair<vector<Tensor*>, vector<Tensor*>> PackDataset2::to_vector()
@@ -638,4 +669,8 @@ void PackDataset2::split(const int p_batch)
 
 		_batch_data.push_back(data);
 	}
+}
+
+void PackDataset2::split2(int p_batch)
+{
 }

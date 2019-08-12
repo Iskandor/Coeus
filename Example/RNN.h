@@ -14,6 +14,7 @@ public:
 	void run_add_problem_gru();
 	void test_add_problem(NeuralNetwork& p_network) const;
 	void run_pack();
+	void run_pack2();
 	void test_pack_cm() const;
 	void test_pack_alt() const;
 

@@ -33,16 +33,18 @@ void NadamRule::reset()
 
 void NadamRule::update_momentum(const string& p_id, Tensor & p_gradient)
 {
-	Tensor* m = &_m[p_id];
-	Tensor* v = &_v[p_id];
-	Tensor* m_mean = &_m_mean[p_id];
-	Tensor* v_mean = &_v_mean[p_id];
+	float* gx = &p_gradient.arr()[0];
+	float* mx = &_m[p_id].arr()[0];
+	float* vx = &_v[p_id].arr()[0];
+	float* mmx = &_m_mean[p_id].arr()[0];
+	float* vmx = &_v_mean[p_id].arr()[0];
 
 	for (int i = 0; i < p_gradient.size(); i++) {
-		(*m)[i] = _beta1 * (*m)[i] + (1 - _beta1) * p_gradient[i];
-		(*v)[i] = _beta2 * (*v)[i] + (1 - _beta2) * pow(p_gradient[i], 2);
-		(*m_mean)[i] = (*m)[i] / (1 - _beta1);
-		(*v_mean)[i] = (*v)[i] / (1 - _beta2);
+		*mx = _beta1 * *mx + (1 - _beta1) * *gx;
+		*vx = _beta2 * *vx + (1 - _beta2) * pow(*gx, 2);
+		*mmx++ = *mx++ / (1 - _beta1);
+		*vmx++ = *vx++ / (1 - _beta2);
+		gx++;
 	}
 }
 

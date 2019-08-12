@@ -22,10 +22,11 @@ int main()
 
 	RNN model;
 	//model.run_pack();
+	model.run_pack2();
 	//model.test_pack();
 	//model.test_pack_cm();
 	//model.test_pack_alt();
-	model.run_add_problem();
+	//model.run_add_problem();
 
 	/*
 	Tensor m({ 1,5,5 }, Tensor::RANDOM, 1);
