@@ -23,7 +23,7 @@ public:
 
 	void override(BaseLayer* p_source) override;
 	void reset() override;
-	void init(vector<BaseLayer*>& p_input_layers) override;
+	void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
 	json get_json() const override;
 

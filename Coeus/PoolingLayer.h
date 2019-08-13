@@ -10,7 +10,7 @@ namespace Coeus
 		~PoolingLayer();
 		PoolingLayer* clone() override;
 
-		void init(vector<BaseLayer*>& p_input_layers) override;
+		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
 		void integrate(Tensor* p_input) override;
 		void activate() override;

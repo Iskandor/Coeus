@@ -17,7 +17,7 @@ PoolingLayer* PoolingLayer::clone()
 	return nullptr;
 }
 
-void PoolingLayer::init(vector<BaseLayer*>& p_input_layers)
+void PoolingLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	int d1 = 0;
 	int h1 = 0;
