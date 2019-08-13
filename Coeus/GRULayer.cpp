@@ -51,9 +51,9 @@ BaseLayer* GRULayer::clone()
 	return nullptr;
 }
 
-void GRULayer::init(vector<BaseLayer*>& p_input_layers)
+void GRULayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
-	BaseLayer::init(p_input_layers);
+	BaseLayer::init(p_input_layers, p_output_layers);
 
 	if (_Why == nullptr) {
 		_Why = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));

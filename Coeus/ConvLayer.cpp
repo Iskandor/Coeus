@@ -41,7 +41,7 @@ ConvLayer* ConvLayer::clone()
 	return nullptr;
 }
 
-void ConvLayer::init(vector<BaseLayer*>& p_input_layers)
+void ConvLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	int d1 = 0;
 	int h1 = 0;

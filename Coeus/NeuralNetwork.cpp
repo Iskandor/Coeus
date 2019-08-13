@@ -128,12 +128,22 @@ void NeuralNetwork::init()
 
 	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {
 		vector<BaseLayer*> input;
+		vector<BaseLayer*> output;
 
 		for (auto n = _graph[(*layer)->get_id()].begin(); n != _graph[(*layer)->get_id()].end(); ++n) {
 			input.push_back(_layers[*n]);
 		}
+		for (auto o = _graph.begin(); o != _graph.end(); ++o) {
+			for(auto i = _graph[o->first].begin(); i != _graph[o->first].end(); ++i)
+			{
+				if (*i == (*layer)->get_id()) 
+				{
+					output.push_back(_layers[o->first]);
+				}
+			}
+		}
 
-		_layers[(*layer)->get_id()]->init(input);
+		_layers[(*layer)->get_id()]->init(input,output);
 		add_param(_layers[(*layer)->get_id()]);
 	}
 }

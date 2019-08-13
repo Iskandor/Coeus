@@ -122,6 +122,7 @@ void NetworkGradient::calc_loss(Tensor* p_value)
 {
 	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
 
+	output_layer->set_delta_out(p_value);
 	if (p_value != nullptr)
 	{
 		if (p_value->rank() == 1)
@@ -132,7 +133,7 @@ void NetworkGradient::calc_loss(Tensor* p_value)
 		{
 			_delta[_network->_output_layer] = NeuronOperator::init_auxiliary_parameter(_delta[_network->_output_layer], p_value->shape(0), output_layer->get_dim());
 		}
-		_delta[_network->_output_layer]->override(p_value);
+		_delta[_network->_output_layer]->override(p_value);		
 	}
 	else
 	{
