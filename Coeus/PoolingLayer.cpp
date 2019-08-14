@@ -17,7 +17,7 @@ PoolingLayer* PoolingLayer::clone()
 	return nullptr;
 }
 
-void PoolingLayer::init(vector<BaseLayer*>& p_input_layers)
+void PoolingLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	int d1 = 0;
 	int h1 = 0;
@@ -63,6 +63,14 @@ void PoolingLayer::init(vector<BaseLayer*>& p_input_layers)
 		}
 	}
 
+	_delta_out = nullptr;
+	if (!p_output_layers.empty())
+	{
+		for (auto it : p_output_layers)
+		{
+			_output_layer.push_back(it);
+		}
+	}
 
 	int d2 = d1;
 	int h2 = (h1 - _extent) / _stride + 1;
@@ -131,9 +139,9 @@ void PoolingLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 {
 }
 
-void PoolingLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+void PoolingLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
-	Tensor*	 delta_out = p_delta_map[_id];
+	BaseLayer::calc_gradient(p_gradient_map, p_derivative_map);
 
 	int d1 = _in_dim_tensor->at(0);
 	int h1 = _in_dim_tensor->at(1);
@@ -146,17 +154,17 @@ void PoolingLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, d1, h1, w1);
 		delta_in->fill(0);
 
-		for(int i = 0; i < delta_out->size(); i++)
+		for(int i = 0; i < _delta_out->size(); i++)
 		{
-			delta_in->set(_max_index[i], delta_out->at(i));
+			delta_in->set(_max_index[i], _delta_out->at(i));
 		}
 
 		int index = 0;
 
 		for (auto it : _input_layer)
 		{
-			p_delta_map[it->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[it->get_id()], _batch_size, it->get_dim());
-			delta_in->splice(index, p_delta_map[it->get_id()]);
+			_delta_in[it->get_id()] = NeuronOperator::init_auxiliary_parameter(_delta_in[it->get_id()], _batch_size, it->get_dim());
+			delta_in->splice(index, _delta_in[it->get_id()]);
 			index += it->get_dim();
 		}
 

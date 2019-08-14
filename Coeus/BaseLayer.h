@@ -3,6 +3,7 @@
 #include "Coeus.h"
 #include "ParamModel.h"
 #include "json.hpp"
+#include <stack>
 
 
 using namespace std;
@@ -30,12 +31,12 @@ namespace Coeus
 		virtual ~BaseLayer();
 		virtual BaseLayer* clone() = 0;
 
-		virtual void init(vector<BaseLayer*>& p_input_layers);
+		virtual void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers);
 		virtual void integrate(Tensor* p_input);
 		virtual void activate() = 0;
 
 		virtual void calc_derivative(map<string, Tensor*>& p_derivative) = 0;
-		virtual void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) = 0;
+		virtual void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map);
 
 		virtual void override(BaseLayer* p_source) = 0;
 		virtual void reset() = 0;
@@ -51,8 +52,15 @@ namespace Coeus
 		virtual Tensor* get_dim_tensor() = 0;
 		int get_in_dim() const { return _input_dim; }
 		Tensor* get_in_dim_tensor() const { return _in_dim_tensor; }
+		bool is_recurrent() const { return _is_recurrent; }
+		void set_mode(const RECURRENT_MODE p_value) { _mode = p_value; }
+
+		Tensor* get_delta_in(const string& p_id);
+		void set_delta_out(Tensor* p_value);
 
 		virtual json get_json() const;
+
+		vector<string> unfold_layer();
 
 	protected:
 		
@@ -68,11 +76,20 @@ namespace Coeus
 		int			_input_dim;
 
 		int			_batch_size;
-		bool		_batch{};
+		bool		_batch;
 		Tensor*		_input;
 		Tensor*		_output;
 
+		Tensor*				 _delta_out;
+		map<string, Tensor*> _delta;
+		map<string, Tensor*> _delta_in;
+
+		bool		_is_recurrent;
+		RECURRENT_MODE	_mode;
+		stack<map<string, Tensor*>> _bptt_values;
+
 		vector<BaseLayer*>		_input_layer;
+		vector<BaseLayer*>		_output_layer;
 	private:
 		bool	_valid;
 	};

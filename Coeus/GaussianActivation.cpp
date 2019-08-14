@@ -11,7 +11,7 @@ GaussianActivation::~GaussianActivation()
 {
 }
 
-Tensor* GaussianActivation::backward(Tensor* p_input)
+Tensor* GaussianActivation::backward(Tensor* p_input, Tensor* p_x)
 {
 	return nullptr;
 }

@@ -13,13 +13,13 @@ namespace Coeus
 		~ConvLayer();
 		ConvLayer* clone() override;
 
-		void init(vector<BaseLayer*>& p_input_layers) override;
+		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
 		void integrate(Tensor* p_input) override;
 		void activate() override;
 
 		void calc_derivative(map<string, Tensor*>& p_derivative) override;
-		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
+		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
 		void override(BaseLayer* p_source) override;
 		void reset() override;

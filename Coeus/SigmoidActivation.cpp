@@ -11,22 +11,22 @@ SigmoidActivation::SigmoidActivation(): IActivationFunction(SIGMOID) {
 SigmoidActivation::~SigmoidActivation()
 = default;
 
-Tensor* SigmoidActivation::backward(Tensor* p_input)
+Tensor* SigmoidActivation::backward(Tensor* p_input, Tensor* p_x)
 {
-	float* arr = Tensor::alloc_arr(_output->size());
-	int* shape = Tensor::copy_shape(_output->rank(), _output->shape());
-	float* y = &arr[0];
+	IActivationFunction::backward(p_input, p_x);
+	float* y = &_gradient->arr()[0];
 	float* x = &_output->arr()[0];
 
+	if (p_x != nullptr) x = &p_x->arr()[0];
 
 	for (int i = 0; i < _output->size(); i++) {
 		(*y++) = *x * (1 - *x);
 		x++;
 	}
 
-	TensorOperator::instance().vv_ewprod(arr, p_input->arr(), arr, _output->size());
+	TensorOperator::instance().vv_ewprod(_gradient->arr(), p_input->arr(), _gradient->arr(), _output->size());
 
-	return new Tensor(_output->rank(), shape, arr);
+	return _gradient;
 }
 
 Tensor* SigmoidActivation::forward(Tensor* p_input)

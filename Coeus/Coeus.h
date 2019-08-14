@@ -47,4 +47,11 @@ namespace Coeus
 		GLOROT_NORMAL = 9,
 		HE_NORMAL = 10
 	};
+
+	enum RECURRENT_MODE
+	{
+		NONE = 0,
+		BPTT = 1,
+		RTRL = 2
+	};
 }

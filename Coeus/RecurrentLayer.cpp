@@ -9,6 +9,7 @@ using namespace Coeus;
 RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, { p_in_dim })
 {
 	_type = RECURRENT;
+	_is_recurrent = true;
 
 	_initializer = p_initializer;
 
@@ -20,6 +21,7 @@ RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVA
 
 RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = RECURRENT;
+	_is_recurrent = true;
 	_y = new NeuronOperator(*p_copy._y);
 	_W = new Param(*p_copy._W);
 	_initializer = p_copy._initializer;
@@ -29,6 +31,7 @@ RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(p_copy._id, p
 RecurrentLayer::RecurrentLayer(const json& p_data) : BaseLayer(p_data)
 {
 	_type = RECURRENT;
+	_is_recurrent = true;
 	_y = new NeuronOperator(p_data["y"]);
 	add_param(_y);
 	_W = IOUtils::load_param(p_data["W"]);
@@ -61,36 +64,64 @@ void RecurrentLayer::activate()
 
 	_output = _y->get_output();
 	_context->override(_y->get_output());
+
+	if (_mode == BPTT)
+	{
+		map<string, Tensor*> values;
+		values["input"] = new Tensor(*_input);
+		values[_y->get_id()] = new Tensor(*_y->get_output());
+		_bptt_values.push(values);
+	}
 }
 
-void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
-	Tensor*	 delta_out = _y->get_function()->backward(p_delta_map[_id]);
+	BaseLayer::calc_gradient(p_gradient_map, p_derivative_map);
 
-	TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim);
-	TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim);
+	Tensor*	df = nullptr;
+
+	if (_mode == NONE)
+	{
+		df = _y->get_function()->backward(_delta_out);
+		TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), df->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, false);
+		TensorOperator::instance().full_b_gradient(_batch_size, df->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, false);
+	}
+
+	if (_mode == BPTT)
+	{
+		map<string, Tensor*> values = _bptt_values.top();
+
+		df = _y->get_function()->backward(_delta_out, values[_y->get_id()]);
+		TensorOperator::instance().full_w_gradient(_batch_size, values["input"]->arr(), df->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, true);
+		TensorOperator::instance().full_b_gradient(_batch_size, df->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, true);
+
+		_bptt_values.pop();
+
+		for (auto it : values)
+		{
+			delete it.second;
+		}
+	}
 
 	Tensor*	 delta_in = nullptr;
-
+	
 	if (!_input_layer.empty())
 	{
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
 
-		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _dim, _in_dim);
+		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), df->arr(), _W->get_data()->arr(), _dim, _in_dim);
 
-		int index = 0;
+		int index = _input_dim;
 
 		for (auto it : _input_layer)
 		{
-			p_delta_map[it->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[it->get_id()], _batch_size, it->get_dim());
-			delta_in->splice(index, p_delta_map[it->get_id()]);
+			_delta_in[it->get_id()] = NeuronOperator::init_auxiliary_parameter(_delta_in[it->get_id()], _batch_size, it->get_dim());
+			delta_in->splice(index, _delta_in[it->get_id()]);
 			index += it->get_dim();
 		}
 
 		delete delta_in;
 	}
-
-	delete delta_out;
 }
 
 void RecurrentLayer::calc_derivative(map<string, Tensor*>& p_derivative)
@@ -110,10 +141,11 @@ void RecurrentLayer::reset()
 	if (_context != nullptr) _context->fill(0);
 }
 
-void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers)
+void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
-	BaseLayer::init(p_input_layers);
+	BaseLayer::init(p_input_layers, p_output_layers);
 
+	_input_layer.push_back(this);
 	_in_dim += _dim;
 
 	if (_W == nullptr) {
@@ -121,6 +153,8 @@ void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers)
 		_initializer->init(_W->get_data());
 	}
 	add_param(_W->get_id(), _W->get_data());
+
+	_output_layer.push_back(this);
 }
 
 json RecurrentLayer::get_json() const

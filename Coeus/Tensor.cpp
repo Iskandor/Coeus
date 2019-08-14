@@ -2,8 +2,12 @@
 #include "RandomGenerator.h"
 #include <cassert>
 #include <iostream>
+#include "TensorPool.h"
 
-Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0) {
+bool Tensor::pooling = true;
+
+Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0), _end(0)
+{
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, const INIT p_init, const float p_value) {
@@ -273,7 +277,18 @@ float Tensor::element_prod() const
 }
 
 float* Tensor::alloc_arr(const int p_size) {
-	return static_cast<float*>(malloc(p_size * sizeof(float)));
+	float* result = nullptr;
+
+	if (pooling)
+	{
+		result = TensorPool::instance().get(p_size);
+	}
+	else
+	{
+		result = static_cast<float*>(malloc(p_size * sizeof(float)));
+	}
+
+	return result;
 }
 
 int* Tensor::alloc_shape(const int p_size) {
@@ -281,7 +296,14 @@ int* Tensor::alloc_shape(const int p_size) {
 }
 
 void Tensor::free_arr() const {
-	free(_arr);
+	if (pooling)
+	{
+		TensorPool::instance().release(_size, _arr);
+	}
+	else
+	{
+		free(_arr);
+	}
 }
 
 void Tensor::free_shape() const {

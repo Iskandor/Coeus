@@ -30,18 +30,16 @@ Tensor LinearActivation::derivative(Tensor& p_input) {
 	return Tensor(p_input.rank(), shape, arr);
 }
 
-Tensor* LinearActivation::backward(Tensor* p_input)
+Tensor* LinearActivation::backward(Tensor* p_input, Tensor* p_x)
 {
-	float* arr = Tensor::alloc_arr(_output->size());
-	int* shape = Tensor::copy_shape(_output->rank(), _output->shape());
-
-	float* y = &arr[0];
+	IActivationFunction::backward(p_input, p_x);
+	float* y = &_gradient->arr()[0];
 
 	for (int i = 0; i < _output->size(); i++) {
 		*y++ = 1.f;
 	}
 
-	TensorOperator::instance().vv_ewprod(arr, p_input->arr(), arr, _output->size());
+	TensorOperator::instance().vv_ewprod(_gradient->arr(), p_input->arr(), _gradient->arr(), _output->size());
 
-	return new Tensor(_output->rank(), shape, arr);
+	return _gradient;
 }

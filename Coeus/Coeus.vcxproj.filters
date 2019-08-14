@@ -174,9 +174,6 @@
     <ClCompile Include="LSTMLayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="BPTT.cpp">
-      <Filter>Source Files\Algorithm\Supervised</Filter>
-    </ClCompile>
     <ClCompile Include="Encoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -236,9 +233,6 @@
     </ClCompile>
     <ClCompile Include="RMSPropRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
-    </ClCompile>
-    <ClCompile Include="ParamModel.cpp">
-      <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="AdadeltaRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
@@ -351,9 +345,6 @@
     <ClCompile Include="NeuronOperator.cpp">
       <Filter>Source Files\Backend</Filter>
     </ClCompile>
-    <ClCompile Include="Param.cpp">
-      <Filter>Source Files\Backend</Filter>
-    </ClCompile>
     <ClCompile Include="ActivationFunctionFactory.cpp">
       <Filter>Source Files\Network\ActivationFunctions</Filter>
     </ClCompile>
@@ -380,6 +371,15 @@
     </ClCompile>
     <ClCompile Include="ConvOperator.cpp">
       <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorPool.cpp">
+      <Filter>Source Files\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="Param.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamModel.cpp">
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -442,9 +442,6 @@
     </ClInclude>
     <ClInclude Include="LSTMLayer.h">
       <Filter>Header Files\Network\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="BPTT.h">
-      <Filter>Header Files\Algorithm\Supervised</Filter>
     </ClInclude>
     <ClInclude Include="Encoder.h">
       <Filter>Header Files</Filter>
@@ -511,9 +508,6 @@
     </ClInclude>
     <ClInclude Include="RMSPropRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
-    </ClInclude>
-    <ClInclude Include="ParamModel.h">
-      <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="AdadeltaRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>
@@ -650,9 +644,6 @@
     <ClInclude Include="TensorOperatorMKL.h">
       <Filter>Header Files\Backend</Filter>
     </ClInclude>
-    <ClInclude Include="Param.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="ExponentialInterpolation.h">
       <Filter>Header Files\Backend</Filter>
     </ClInclude>
@@ -688,6 +679,15 @@
     </ClInclude>
     <ClInclude Include="ConvOperator.h">
       <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorPool.h">
+      <Filter>Header Files\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="Param.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamModel.h">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

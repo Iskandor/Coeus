@@ -16,8 +16,10 @@ namespace Coeus {
 		virtual float train(vector<Tensor*>* p_input, Tensor* p_target);
 		virtual float train(vector<Tensor*>* p_input, vector<Tensor*>* p_target, bool p_update = true);
 		void reset() const;
+		void set_recurrent_mode(RECURRENT_MODE p_value);
 
 	protected:
+		
 		void init(ICostFunction* p_cost_function, IUpdateRule* p_update_rule);
 		
 		NeuralNetwork*		_network;
@@ -25,6 +27,7 @@ namespace Coeus {
 		IUpdateRule*		_update_rule;
 		NetworkGradient*	_network_gradient;
 		map<string, Tensor> _batch_gradient;
+		RECURRENT_MODE		_recurrent_mode;
 	};
 }
 

@@ -15,6 +15,7 @@ namespace Coeus
 		virtual ~IActivationFunction();
 
 		Tensor* forward(Tensor* p_input) override;
+		Tensor* backward(Tensor* p_input, Tensor* p_x = nullptr) override;
 		virtual Tensor derivative(Tensor& p_input) = 0;
 		virtual json get_json();
 		ACTIVATION get_type() const { return _type; }
@@ -22,6 +23,7 @@ namespace Coeus
 	protected:
 		Tensor*	_input;
 		Tensor*	_output;
+		Tensor* _gradient;
 		ACTIVATION _type;
 
 	};

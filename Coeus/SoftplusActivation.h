@@ -10,7 +10,7 @@ namespace Coeus
 		~SoftplusActivation();
 
 		Tensor derivative(Tensor& p_input) override;
-		Tensor* backward(Tensor* p_input) override;
+		Tensor* backward(Tensor* p_input, Tensor* p_x = nullptr) override;
 		Tensor* forward(Tensor* p_input) override;
 	};
 }

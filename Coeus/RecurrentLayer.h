@@ -19,11 +19,11 @@ public:
 	void activate() override;
 
 	void calc_derivative(map<string, Tensor*>& p_derivative) override;
-	void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
+	void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
 	void override(BaseLayer* p_source) override;
 	void reset() override;
-	void init(vector<BaseLayer*>& p_input_layers) override;
+	void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
 	json get_json() const override;
 
@@ -33,8 +33,8 @@ private:
 
 	NeuronOperator* _y;
 
-	Tensor* _context{};
-	Param* _W{};
+	Tensor* _context;
+	Param* _W;
 
 	TensorInitializer *_initializer;
 };

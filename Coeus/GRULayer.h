@@ -1,50 +1,48 @@
 #pragma once
 #include "BaseLayer.h"
-#include "Coeus.h"
-#include "Param.h"
+#include "TensorInitializer.h"
 #include "IActivationFunction.h"
 #include "NeuronOperator.h"
-#include "TensorInitializer.h"
 
 namespace Coeus
 {
-	class __declspec(dllexport) LSTMLayer : public BaseLayer
+	class __declspec(dllexport) GRULayer : public BaseLayer
 	{
 	public:
-		LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_in_dim = 0);
-		explicit LSTMLayer(json p_data);
-		~LSTMLayer();
-		LSTMLayer* clone() override;
+		GRULayer(const string& p_id, int p_dim, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_in_dim = 0);
+		~GRULayer();
+		BaseLayer* clone() override;
 
 		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
+		void integrate(Tensor* p_input) override;
 		void activate() override;
 
 		void calc_derivative(map<string, Tensor*>& p_derivative) override;
 		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
-
 		void override(BaseLayer* p_source) override;
 		void reset() override;
+
+		
 		json get_json() const override;
 
 	private:
-		explicit LSTMLayer(LSTMLayer* p_source);
 		Tensor* get_dim_tensor() override;
 
-		NeuronOperator* _cec;
-		NeuronOperator* _ig;
-		NeuronOperator* _fg;
-		NeuronOperator* _og;
+		NeuronOperator* _y;
+		NeuronOperator* _h;
+		NeuronOperator* _rg;
+		NeuronOperator* _ug;
 
-		Param*		_Wxc;
-		Param*		_Wxfg;
-		Param*		_Wxig;
-		Param*		_Wxog;
+		Param*		_Why;
+		Param*		_Wxh;
+		Param*		_Wxrg;
+		Param*		_Wxug;
 
-		Tensor*		_context;
+		Tensor*		_reseted_input;
+		Tensor*		_h_input;
 		Tensor*		_state;
 
-		IActivationFunction* _activation_function;
 		TensorInitializer *_initializer;
 	};
 }

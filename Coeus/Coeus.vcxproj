@@ -195,7 +195,6 @@
     <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
     <ClCompile Include="BinaryActivation.cpp" />
-    <ClCompile Include="BPTT.cpp" />
     <ClCompile Include="CoreLayer.cpp" />
     <ClCompile Include="CountModule.cpp" />
     <ClCompile Include="CrossEntropyCost.cpp" />
@@ -233,6 +232,7 @@
     <ClCompile Include="Tensor.cpp" />
     <ClCompile Include="TensorInitializer.cpp" />
     <ClCompile Include="TensorOperatorMKL.cpp" />
+    <ClCompile Include="TensorPool.cpp" />
     <ClCompile Include="WarmStartup.cpp" />
     <ClCompile Include="LinearActivation.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -286,7 +286,6 @@
     <ClInclude Include="base64.h" />
     <ClInclude Include="BaseLayer.h" />
     <ClInclude Include="BinaryActivation.h" />
-    <ClInclude Include="BPTT.h" />
     <ClInclude Include="Coeus.h" />
     <ClInclude Include="CoreLayer.h" />
     <ClInclude Include="CountModule.h" />
@@ -331,6 +330,7 @@
     <ClInclude Include="TensorInitializer.h" />
     <ClInclude Include="TensorOperator.h" />
     <ClInclude Include="TensorOperatorMKL.h" />
+    <ClInclude Include="TensorPool.h" />
     <ClInclude Include="WarmStartup.h" />
     <ClInclude Include="LinearActivation.h" />
     <ClInclude Include="Logger.h" />

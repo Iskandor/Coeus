@@ -12,24 +12,33 @@ SoftmaxActivation::~SoftmaxActivation()
 {
 }
 
-Tensor* SoftmaxActivation::backward(Tensor* p_input)
+Tensor* SoftmaxActivation::backward(Tensor* p_input, Tensor* p_x)
 {
+	IActivationFunction::backward(p_input, p_x);
 	float* deriv = Tensor::alloc_arr(_output->size() * _output->size());
-	float* arr = Tensor::alloc_arr(_output->size() * _output->size());
-	int* shape = Tensor::copy_shape(_output->rank(), _output->shape());
 
-
-	for (int i = 0; i < _output->size(); i++) {
-		for (int j = 0; j < _output->size(); j++) {
-			deriv[i * _output->size() + j] = (*_output)[i] * (Tensor::kronecker_delta(i, j) - (*_output)[j]);
+	if (p_x == nullptr)
+	{
+		for (int i = 0; i < _output->size(); i++) {
+			for (int j = 0; j < _output->size(); j++) {
+				deriv[i * _output->size() + j] = (*_output)[i] * (Tensor::kronecker_delta(i, j) - (*_output)[j]);
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < p_x->size(); i++) {
+			for (int j = 0; j < p_x->size(); j++) {
+				deriv[i * p_x->size() + j] = (*p_x)[i] * (Tensor::kronecker_delta(i, j) - (*p_x)[j]);
+			}
 		}
 	}
 
-	TensorOperator::instance().vM_prod(p_input->arr(), deriv, arr, _output->size(), _output->size());
+	TensorOperator::instance().vM_prod(p_input->arr(), deriv, _gradient->arr(), _output->size(), _output->size());
 
 	delete[] deriv;
 
-	return new Tensor(_output->rank(), shape, arr);
+	return _gradient;
 }
 
 Tensor* SoftmaxActivation::forward(Tensor* p_input)
