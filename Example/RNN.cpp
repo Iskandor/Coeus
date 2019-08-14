@@ -45,10 +45,10 @@ void RNN::run_add_problem()
 	network.init();
 
 	BackProp algorithm(&network);
-	algorithm.set_recurrent_mode(RTRL);
-	algorithm.init(new QuadraticCost(), 0.01f, 0.9f, true);
-	//ADAM algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.1f, 0.9f, true);
+	//Nadam algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 0.01f);
+	algorithm.set_recurrent_mode(RTRL);
 
 	int epochs = 0;
 	int correct = 0;
@@ -106,32 +106,35 @@ void RNN::run_sin_prediction()
 	for(int i = 0; i < 359; i++)
 	{
 		Tensor* ti = new Tensor({ 1 }, Tensor::ZERO);
-		ti->set(0, sin(i* (2 * PI / 360)));
+		ti->set(0, sin(i * (2 * PI / 360)));
 
 		Tensor* tt = new Tensor({ 1 }, Tensor::ZERO);
-		tt->set(0, sin((i + 1) * (2 * PI / 360)));
+		tt->set(0, sin((i + 10) * (2 * PI / 360)));
 
 		input.push_back(ti);
 		target.push_back(tt);
 	}
 
 	NeuralNetwork network;
-	network.add_layer(new RecurrentLayer("hidden0", 16, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 1));
+	network.add_layer(new RecurrentLayer("hidden0", 4, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 1));
+	network.add_layer(new RecurrentLayer("hidden1", 2, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
 	network.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
-	network.add_connection("hidden0", "output");
-	network.init();
-
-	const int epochs = 2000;
+	network.add_connection("hidden0", "hidden1");
+	network.add_connection("hidden1", "output");
+	network.init();	
 
 	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 1e-4f);
+	algorithm.init(new QuadraticCost(), 1e-3f);
+	//algorithm.set_recurrent_mode(RTRL);
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), 1e-4f, 0.996f, true);
 
-	for(int e = 0; e < epochs; e++)
+	float error = 1;
+
+	while(error > 1e-2)
 	{
 		algorithm.reset();
-		float error = 0;
+		error = 0;
 		
 		for(int i = 0; i < input.size(); i++)
 		{

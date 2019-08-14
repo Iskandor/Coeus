@@ -10,16 +10,18 @@ NetworkGradient::NetworkGradient(NeuralNetwork* p_network)
 	_gradient = _network->get_empty_params();
 	_calculation_graph = _network->_backward_graph;
 	_recurrent_mode = NONE;
+
+	for(auto it : _network->_layers)
+	{
+		if (it.second->is_recurrent())
+		{
+			_recurrent_mode = BPTT;
+		}
+	}
 }
 
 NetworkGradient::~NetworkGradient()
 {
-	for (auto& it : _delta)
-	{
-		delete it.second;
-		it.second = nullptr;
-	}
-
 	for (auto& it : _derivative)
 	{
 		delete it.second;
@@ -29,11 +31,12 @@ NetworkGradient::~NetworkGradient()
 
 void NetworkGradient::calc_gradient(Tensor* p_value) {
 
-	calc_loss(p_value);
+	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
+	output_layer->set_delta_out(p_value);
 
 	for (auto& it : _calculation_graph)
 	{
-		it->calc_gradient(_gradient, _delta, _derivative);
+		it->calc_gradient(_gradient, _derivative);
 	}
 }
 
@@ -80,11 +83,12 @@ void NetworkGradient::calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss)
 		}
 	}
 
-	calc_loss(p_loss);
+	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
+	output_layer->set_delta_out(p_loss);
 
 	for (auto& it : _calculation_graph)
 	{
-		it->calc_gradient(_gradient, _delta, _derivative);
+		it->calc_gradient(_gradient, _derivative);
 	}
 }
 
@@ -115,29 +119,6 @@ void NetworkGradient::set_recurrent_mode(const RECURRENT_MODE p_value)
 	for (const auto& it : _network->_layers)
 	{
 		it.second->set_mode(p_value);
-	}
-}
-
-void NetworkGradient::calc_loss(Tensor* p_value)
-{
-	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
-
-	output_layer->set_delta_out(p_value);
-	if (p_value != nullptr)
-	{
-		if (p_value->rank() == 1)
-		{
-			_delta[_network->_output_layer] = NeuronOperator::init_auxiliary_parameter(_delta[_network->_output_layer], 1, output_layer->get_dim());
-		}
-		if (p_value->rank() == 2)
-		{
-			_delta[_network->_output_layer] = NeuronOperator::init_auxiliary_parameter(_delta[_network->_output_layer], p_value->shape(0), output_layer->get_dim());
-		}
-		_delta[_network->_output_layer]->override(p_value);		
-	}
-	else
-	{
-		_delta[_network->_output_layer] = new Tensor(_network->get_output()->rank(), Tensor::copy_shape(_network->get_output()->rank(), _network->get_output()->shape()), Tensor::ONES);
 	}
 }
 

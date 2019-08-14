@@ -16,11 +16,11 @@ namespace Coeus
 		~LSTMLayer();
 		LSTMLayer* clone() override;
 
-		void init(vector<BaseLayer*>& p_input_layers) override;
+		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 		void activate() override;
 
 		void calc_derivative(map<string, Tensor*>& p_derivative) override;
-		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map) override;
+		void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
 
 		void override(BaseLayer* p_source) override;
@@ -43,7 +43,6 @@ namespace Coeus
 
 		Tensor*		_context;
 		Tensor*		_state;
-		Tensor*		_state_error;
 
 		IActivationFunction* _activation_function;
 		TensorInitializer *_initializer;

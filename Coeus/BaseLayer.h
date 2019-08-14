@@ -36,7 +36,7 @@ namespace Coeus
 		virtual void activate() = 0;
 
 		virtual void calc_derivative(map<string, Tensor*>& p_derivative) = 0;
-		virtual void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map);
+		virtual void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map);
 
 		virtual void override(BaseLayer* p_source) = 0;
 		virtual void reset() = 0;
@@ -81,6 +81,7 @@ namespace Coeus
 		Tensor*		_output;
 
 		Tensor*				 _delta_out;
+		map<string, Tensor*> _delta;
 		map<string, Tensor*> _delta_in;
 
 		bool		_is_recurrent;

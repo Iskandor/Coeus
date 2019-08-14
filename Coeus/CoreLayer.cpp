@@ -56,24 +56,26 @@ void CoreLayer::activate()
 	}
 }
 
-void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
-	Tensor*	 delta_out;
+	BaseLayer::calc_gradient(p_gradient_map, p_derivative_map);
 
-	if (_mode == NONE)
+	Tensor*	df = nullptr;
+
+	if (_mode == NONE || _mode == RTRL)
 	{
-		delta_out = _y->get_function()->backward(p_delta_map[_id]);
-		TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, false);
-		TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, false);
+		df = _y->get_function()->backward(_delta_out);
+		TensorOperator::instance().full_w_gradient(_batch_size, _input->arr(), df->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, false);
+		TensorOperator::instance().full_b_gradient(_batch_size, df->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, false);
 	}
 
 	if (_mode == BPTT)
 	{
 		map<string, Tensor*> values = _bptt_values.top();
 
-		delta_out = _y->get_function()->backward(p_delta_map[_id], values[_y->get_id()]);
-		TensorOperator::instance().full_w_gradient(_batch_size, values["input"]->arr(), delta_out->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, true);
-		TensorOperator::instance().full_b_gradient(_batch_size, delta_out->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, true);
+		df = _y->get_function()->backward(_delta_out, values[_y->get_id()]);
+		TensorOperator::instance().full_w_gradient(_batch_size, values["input"]->arr(), df->arr(), p_gradient_map[_W->get_id()].arr(), _dim, _in_dim, true);
+		TensorOperator::instance().full_b_gradient(_batch_size, df->arr(), p_gradient_map[_y->get_bias()->get_id()].arr(), _dim, true);
 
 		_bptt_values.pop();
 
@@ -89,14 +91,14 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	{
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
 
-		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), delta_out->arr(), _W->get_data()->arr(), _dim, _in_dim);
+		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), df->arr(), _W->get_data()->arr(), _dim, _in_dim);
 
-		int index = 0;
+		int index = _input_dim;
 
 		for (auto it : _input_layer)
 		{
-			p_delta_map[it->get_id()] = NeuronOperator::init_auxiliary_parameter(p_delta_map[it->get_id()], _batch_size, it->get_dim());
-			delta_in->splice(index, p_delta_map[it->get_id()]);
+			_delta_in[it->get_id()] = NeuronOperator::init_auxiliary_parameter(_delta_in[it->get_id()], _batch_size, it->get_dim());
+			delta_in->splice(index, _delta_in[it->get_id()]);
 			index += it->get_dim();
 		}
 
@@ -114,9 +116,9 @@ void CoreLayer::override(BaseLayer * p_source)
 
 }
 
-void CoreLayer::init(vector<BaseLayer*>& p_input_layers)
+void CoreLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
-	BaseLayer::init(p_input_layers);
+	BaseLayer::init(p_input_layers, p_output_layers);
 
 	if (_W == nullptr)
 	{

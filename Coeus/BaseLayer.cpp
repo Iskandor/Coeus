@@ -63,6 +63,11 @@ BaseLayer::~BaseLayer()
 		delete it.second;
 	}
 
+	for (const auto& it : _delta)
+	{
+		delete it.second;
+	}
+
 	delete _delta_out;
 }
 
@@ -114,7 +119,7 @@ void BaseLayer::integrate(Tensor* p_input)
 	_input->push_back(p_input);
 }
 
-void BaseLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+void BaseLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
 	if (_output_layer.size() == 1)
 	{
@@ -124,9 +129,13 @@ void BaseLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 	if (_output_layer.size() > 1)
 	{
 		_delta_out = NeuronOperator::init_auxiliary_parameter(_delta_out, _batch_size, _dim);
+		_delta_out->fill(0);
 		for (BaseLayer* it : _output_layer)
 		{
-			TensorOperator::instance().vv_add(_delta_out->arr(), it->get_delta_in(_id)->arr(), _delta_out->arr(), _delta_out->size());
+			if (it->get_delta_in(_id) != nullptr)
+			{
+				TensorOperator::instance().vv_add(_delta_out->arr(), it->get_delta_in(_id)->arr(), _delta_out->arr(), _delta_out->size());
+			}			
 		}
 	}
 }

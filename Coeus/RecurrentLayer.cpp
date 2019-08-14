@@ -74,9 +74,9 @@ void RecurrentLayer::activate()
 	}
 }
 
-void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
-	BaseLayer::calc_gradient(p_gradient_map, p_delta_map, p_derivative_map);
+	BaseLayer::calc_gradient(p_gradient_map, p_derivative_map);
 
 	Tensor*	df = nullptr;
 
@@ -153,6 +153,8 @@ void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>
 		_initializer->init(_W->get_data());
 	}
 	add_param(_W->get_id(), _W->get_data());
+
+	_output_layer.push_back(this);
 }
 
 json RecurrentLayer::get_json() const

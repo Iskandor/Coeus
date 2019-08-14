@@ -8,6 +8,7 @@ using namespace Coeus;
 GRULayer::GRULayer(const string& p_id, const int p_dim, const ACTIVATION p_activation, TensorInitializer* p_initializer, const int p_in_dim) : BaseLayer(p_id, p_dim, {p_in_dim})
 {
 	_type = GRU;
+	_is_recurrent = true;
 
 	_initializer = p_initializer;
 
@@ -128,7 +129,7 @@ void GRULayer::calc_derivative(map<string, Tensor*>& p_derivative)
 
 }
 
-void GRULayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_delta_map, map<string, Tensor*>& p_derivative_map)
+void GRULayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
 }
 

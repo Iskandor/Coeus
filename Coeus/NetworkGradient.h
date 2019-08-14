@@ -22,9 +22,9 @@ public:
 
 	void reset();
 	void set_recurrent_mode(RECURRENT_MODE p_value);
+	RECURRENT_MODE get_recurrent_mode() const { return _recurrent_mode; }
 
 private:
-	void calc_loss(Tensor* p_value);
 	void calc_derivative();
 	void unfold_layer(const string& p_layer);
 
@@ -32,7 +32,6 @@ private:
 	NeuralNetwork*	_network;
 
 	map<string, Tensor>		_gradient;
-	map<string, Tensor*>	_delta;
 	map<string, Tensor*>	_derivative;
 	list<BaseLayer*> _calculation_graph;
 };
