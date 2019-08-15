@@ -381,6 +381,12 @@
     <ClCompile Include="ParamModel.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
+    <ClCompile Include="ReinforceRule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Reinforce.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -688,6 +694,12 @@
     </ClInclude>
     <ClInclude Include="ParamModel.h">
       <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinforceRule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Reinforce.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -47,14 +47,19 @@ float Actor::train(Tensor* p_state0, const int p_action, const float p_td_error)
 
 		for(int i = 0; i < target.size(); i++)
 		{
+			float delta = 0;
 			if (i != p_action)
 			{
-				target[i] = target[i] - _beta  * p_td_error * target[i];
+				delta = -_beta  * p_td_error * target[i];
 			}
 			else
 			{
-				target[i] = target[i] + _beta * p_td_error * (1 - target[i]);				
+				delta = _beta * p_td_error * (1 - target[i]);
 			}
+
+			//cout << i << " " << delta << " " << p_action << endl;
+
+			target[i] += delta;
 		}
 
 		_gradient_algorithm->train(p_state0, &target);

@@ -14,16 +14,18 @@ KLDivergence::~KLDivergence()
 
 float KLDivergence::cost(Tensor * p_prediction, Tensor * p_target)
 {
-	float r = 0;
+	float entropy = 0;
+	float cross_entropy = 0;
 
 	for (int i = 0; i < p_prediction->size(); i++) {
-		float e = p_target->at(i);
-		float a = p_prediction->at(i);
+		float p = p_target->at(i);
+		float q = p_prediction->at(i);
 
-		r += e * log(e) - e * log(a);
+		entropy += p * log(p);
+		cross_entropy += p * log(q);
 	}
 
-	return r;
+	return entropy - cross_entropy;
 }
 
 Tensor KLDivergence::cost_deriv(Tensor * p_prediction, Tensor * p_target)
