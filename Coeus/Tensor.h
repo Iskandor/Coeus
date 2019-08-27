@@ -74,6 +74,7 @@ public:
 	void padding(int p_padding);
 	void reshape(initializer_list<int> p_shape);
 	Tensor slice(int p_index) const;
+	void replicate(int p_n);
 
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_z, int p_y, int p_x, int p_h, int p_w);

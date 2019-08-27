@@ -7,11 +7,23 @@
 #include "RandomGenerator.h"
 
 MazeTask::MazeTask() {
-    int topology[] = {0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0,
+	/*
+	int topology[] = {	0, 0, 0,
+						0, 2, 0,
+						0, 0, 0};
+						*/
+	/*
+	int topology[] = {	0, 0, 0, 0,
+						0, 2, 0, 0,
+						0, 0, 0, 0,
+						0, 0, 0, 0 };
+						*/
+
+    int topology[] = {0, 2, 0, 0, 0,
+                      0, 2, 0, 2, 0,
 					  0, 0, 0, 2, 0,
-					  0, 2, 0, 0, 0,
-					  0, 0, 0, 0, 0};
+					  0, 2, 0, 2, 0,
+					  0, 0, 0, 2, 0};
 
     maze = new Maze(topology, 5, 5, 24);
 }

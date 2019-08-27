@@ -26,6 +26,7 @@ public:
     vector<int> choice(vector<int>* p_array, int p_num = 1);
 	vector<int> choice(int p_size, int p_sample);
     int choice(const float* p_prob, int p_size);
+	void softmax(float* p_prob, const float* p_values, int p_size, float p_T) const;
 
 private:
     RandomGenerator();

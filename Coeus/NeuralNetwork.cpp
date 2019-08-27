@@ -122,8 +122,6 @@ void NeuralNetwork::init()
 		}
 	}
 
-
-
 	create_directed_graph();
 
 	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {

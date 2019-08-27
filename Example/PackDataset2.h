@@ -5,6 +5,7 @@
 #include <vector>
 #include "Tensor.h"
 #include "CisLoader.h"
+#include "PackDefinition.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ using namespace std;
 struct PackDataRow2
 {
 	int player_id;
+	int pack_id;
 	float brutto;
 	int target;
 	bool bought;
@@ -44,6 +46,7 @@ struct PackDataRow2
 struct PackDataSequence2
 {
 	int player_id;
+	vector<int>		 pack_id;
 	vector<Tensor*>  input;
 	Tensor*			target;
 };
@@ -69,18 +72,21 @@ public:
 	pair<vector<Tensor*>, vector<Tensor*>> to_vector();
 
 	vector<PackDataSequence2> create_sequence_test(int p_player);
+	vector<PackDataSequence2> get_alt_sequence(int p_player);
 
 	void split(int p_batch);
-	void split2(int p_batch);
 	int get_input_dim() const { return _input_dim; }
+
+	string print();
 
 private:
 	void parse_line(string& p_line);
 	Tensor* encode_row(PackDataRow2& p_row);
 	void create_sequence(vector<PackDataRow2>& p_sequence);
-	void create_sequence2(vector<PackDataRow2>& p_sequence);
-	void create_sequence_prob(vector<PackDataRow2>& p_sequence);
+	void create_sequence_solid(vector<PackDataRow2>& p_sequence, bool p_test = false);
 	void create_sequence_test(vector<PackDataRow2>& p_sequence);
+	void create_sequence2(vector<PackDataRow2>& p_sequence);
+	vector<PackDataRow2> get_sequence(int p_player, bool p_test = true);
 	
 	bool has_target(vector<PackDataRow2>& p_row) const;
 
@@ -91,12 +97,11 @@ private:
 	template<typename T>
 	void add_data(T* p_value, int p_size, vector<float> &p_data) const;
 	
-	template<typename T>
-	int* to_binary(T p_value, int p_size = 0) const;
+	int* to_binary(int p_value, int p_size = 0) const;
 
 	int get_endian() const;
 
-	map<int, vector<PackDataRow2>> *_data_tree;
+	map<int, vector<PackDataRow2>> _data_tree;
 	vector<PackDataSequence2> _raw_data;
 	vector<PackDataSequence3> _raw_data2;
 	vector<PackDataSequence2> _batch_data;
@@ -107,8 +112,8 @@ private:
 	CisLoader _cis_gender;
 	CisLoader _cis_country;
 	CisLoader _cis_region;
+	PackDefinition _pack_definition;
 
-	int _order;
 	int _player_id;
 	int _input_dim;
 };
@@ -129,34 +134,4 @@ void PackDataset2::add_data(T* p_value, int p_size, vector<float>& p_data) const
 	{
 		p_data.push_back(p_value[i]);
 	}
-}
-
-template <typename T>
-int* PackDataset2::to_binary(T p_value, int p_size) const
-{
-	const int size = p_size == 0 ? sizeof(T) * 8 : p_size;
-	int* binary = new int[size];
-	char data[sizeof(T)];
-	memcpy(data, &p_value, sizeof p_value);
-
-	int limit = p_size == 0 ? sizeof(T) : p_size / 8;
-
-	for (int i = 0; i < limit; i++)
-	{
-		const bitset<8> set(data[i]);
-		for(int j = 0; j < 8; j++)
-		{
-			if (get_endian() == BIG_ENDIAN)
-			{
-				binary[i * 8 + j] = set[j];
-			}
-			if (get_endian() == LITTLE_ENDIAN)
-			{
-				binary[i * 8 + j] = set[7 - j];
-			}
-			
-		}
-	}
-
-	return binary;
 }

@@ -2,6 +2,7 @@
 #include "NeuralNetwork.h"
 #include "GradientAlgorithm.h"
 #include "ReinforceRule.h"
+#include "ADAMRule.h"
 
 namespace Coeus
 {
@@ -16,9 +17,11 @@ namespace Coeus
 	private:
 		NeuralNetwork* _network;
 		NetworkGradient* _network_gradient;
-		ReinforceRule* _update_rule;
+		//ReinforceRule* _update_rule;
+		ADAMRule* _update_rule;
 
 		float _alpha;
+		int _t;
 	};
 }
 

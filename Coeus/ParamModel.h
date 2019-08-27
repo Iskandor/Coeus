@@ -27,6 +27,8 @@ class __declspec(dllexport) ParamModel
 			return output;
 		}
 
+		void DEBUG_compare(ParamModel* p_model);
+
 	protected:
 		Tensor* add_param(const string& p_id, Tensor* p_param);
 		void add_param(ParamModel* p_model);
@@ -34,7 +36,7 @@ class __declspec(dllexport) ParamModel
 		map<string, Tensor*> _params;
 
 	private:
-		int _size;
+		int _size{};
 };
 }
 

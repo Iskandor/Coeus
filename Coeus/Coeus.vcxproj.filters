@@ -387,6 +387,12 @@
     <ClCompile Include="Reinforce.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GRULayer.cpp">
+      <Filter>Source Files\Network\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoDifferentiator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -699,6 +705,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Reinforce.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GRULayer.h">
+      <Filter>Header Files\Network\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoDifferentiator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

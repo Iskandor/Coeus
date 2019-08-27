@@ -104,6 +104,28 @@ void TensorOperatorMKL::lstm_w_gradient(int p_batch, float* p_gradient, float* p
 	float* ex = &p_error[0];
 	float* dx = &p_derivative[0];
 
+	/*
+	memset(p_grad, 0, sizeof(float) * p_rows * p_cols);
+
+	float *dx = &p_delta1[0];
+
+	for (int b = 0; b < p_batch; b++)
+	{
+		float* gx = &p_grad[0];
+
+		for (int i = 0; i < p_rows; i++)
+		{
+			float *x = &p_x0[b * p_cols];
+
+			for (int j = 0; j < p_cols; j++)
+			{
+				*gx++ += *dx * *x++;
+			}
+			dx++;
+		}
+	}
+	 */
+
 	for (int b = 0; b < p_batch; b++)
 	{
 		float *gx = &p_gradient[0];
@@ -118,6 +140,32 @@ void TensorOperatorMKL::lstm_w_gradient(int p_batch, float* p_gradient, float* p
 			ex++;
 		}
 	}
+
+	/*
+	float* deriv = new float[p_batch * p_cols];
+	V_reduce(deriv, p_derivative, p_batch, p_rows, p_cols, 1);
+
+	float* grad = new float[p_cols * p_rows];
+	memset(grad, 0, sizeof(float) * p_cols * p_rows);
+	ex = &p_error[0];
+
+	for (int b = 0; b < p_batch; b++)
+	{
+		float *gx = &grad[0];
+
+		for (int i = 0; i < p_rows; i++)
+		{
+			float* dx = &deriv[b * p_cols];
+			for (int j = 0; j < p_cols; j++)
+			{
+				*gx++ += *ex * *dx++;
+			}
+			ex++;
+		}
+	}
+	*/
+
+	//MM_prod(p_derivative, false, p_error, true, grad, p_rows, p_batch, p_cols, false);
 }
 
 void TensorOperatorMKL::gru_state(int p_batch, float* p_state, float* p_zg, float* p_hcan, int p_size)
@@ -204,24 +252,43 @@ void TensorOperatorMKL::M_reduce(float* p_x, float* p_A, bool p_row_major, const
 	}
 }
 
-void TensorOperatorMKL::V_reduce(float* p_A, float* p_V, const int p_batch, const int p_rows, const int p_cols)
+void TensorOperatorMKL::V_reduce(float* p_A, float* p_V, const int p_batch, const int p_rows, const int p_cols, int p_axis)
 {
 	float *vx = &p_V[0];
 
-	memset(p_A, 0, sizeof(int) * p_cols * p_rows);
-
-	for (int i = 0; i < p_batch; i++)
+	if (p_axis == 0)
 	{
-		float *ax = &p_A[0];
+		memset(p_A, 0, sizeof(int) * p_cols * p_rows);
 
-		for (int j = 0; j < p_rows; j++)
+		for (int i = 0; i < p_batch; i++)
 		{
-			for (int k = 0; k < p_cols; k++)
+			float *ax = &p_A[0];
+
+			for (int j = 0; j < p_rows; j++)
 			{
-				*ax++ += *vx++;
+				for (int k = 0; k < p_cols; k++)
+				{
+					*ax++ += *vx++;
+				}
 			}
 		}
 	}
+	if (p_axis == 1)
+	{
+		memset(p_A, 0, sizeof(int) * p_cols * p_batch);
+
+		for (int i = 0; i < p_batch; i++)
+		{
+			for (int j = 0; j < p_rows; j++)
+			{
+				for (int k = 0; k < p_cols; k++)
+				{
+					p_A[i * p_cols + k] += *vx++;
+				}
+			}
+		}
+	}
+
 }
 
 void TensorOperatorMKL::vv_add(float* p_x, float* p_y, float* p_z, const int p_size)

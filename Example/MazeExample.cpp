@@ -24,6 +24,7 @@
 #include "Logger.h"
 #include "KLDivergence.h"
 #include "CrossEntropyCost.h"
+#include "Reinforce.h"
 
 using namespace Coeus;
 
@@ -303,14 +304,14 @@ void MazeExample::example_actor_critic(int p_hidden) {
 
 	//TD critic(&network_critic, RMSPROP_RULE, 1e-3f, 0.9f);
 	ADAM optimizer_c(&network_critic);
-	optimizer_c.init(new QuadraticCost(), 1e-3f);
+	optimizer_c.init(new QuadraticCost(), 2e-3f);
 	TD critic(&network_critic, &optimizer_c, 0.9);
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), 25));
-	network_actor.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
-	network_actor.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(UNIFORM, -0.1, 0.1), 25));
+	network_actor.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
@@ -318,27 +319,29 @@ void MazeExample::example_actor_critic(int p_hidden) {
 
 	//Actor actor(&network_actor, ADAM_RULE, 1e-4);
 	ADAM optimizer_a(&network_actor);
-	optimizer_a.init(new QuadraticCost(), 1e-3f);
-	Actor actor(&network_actor, &optimizer_a, 1e-6f);
+	optimizer_a.init(new QuadraticCost(), 1e-4f);
+	Reinforce actor(&network_actor, 1e-3f);
 
 	vector<float> sensors;
 	Tensor state0, state1;
 	float value0, value1;
 	float reward = 0;
-	int epochs = 10000;
+	int epochs = 5000;
 	float td_error = 0;
 
 	int wins = 0, loses = 0;
 
 	//EGreedyExploration exploration(1, new LinearInterpolation(1, 0.1, epochs));
 	//BoltzmanExploration exploration(10, new LinearInterpolation(10, 0.1, epochs));
-	BoltzmanExploration exploration(1);
+	//BoltzmanExploration exploration(1);
 
 	CountModule count_module(25);
 
 	Logger::instance().init("log.log");
 	float cum_i_reward = 0;
 	float cum_e_reward = 0;
+
+	Tensor prob({ 4 }, Tensor::ZERO);
 
 	for (int e = 0; e < epochs; e++) {
 		cout << "Epoch " << e << endl;
@@ -350,7 +353,8 @@ void MazeExample::example_actor_critic(int p_hidden) {
 		while (!task.isFinished()) {
 			network_actor.activate(&state0);
 
-			const int action0 = exploration.get_action(network_actor.get_output());//RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
+			//RandomGenerator::get_instance().softmax(prob.arr(), network_actor.get_output()->arr(), 4, 1);
+			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4); // exploration.get_action(network_actor.get_output());
 			maze->performAction(action0);
 
 			sensors = maze->getSensors();
@@ -360,12 +364,16 @@ void MazeExample::example_actor_critic(int p_hidden) {
 			cum_i_reward += count_module.get_reward_u(&state1);
 			cum_e_reward += task.getReward();
 
-			reward = task.getReward(); // +count_module.get_reward_u(&state1);
+			reward = task.getReward() + count_module.get_reward_u(&state1);
 			td_error = critic.train(&state0, &state1, reward);
 
-			cout << *network_actor.get_output() << " " << action0 << " " << td_error << endl;
+			//cout << *network_actor.get_output() << " " << action0 << " " << td_error << endl;
 			
 			actor.train(&state0, action0, td_error);
+
+			//network_actor.activate(&state0);
+			//RandomGenerator::get_instance().softmax(prob.arr(), network_actor.get_output()->arr(), 4, 1);
+			//cout << prob << " " << action0 << " " << td_error << endl;
 
 			state0.override(&state1);
 		}

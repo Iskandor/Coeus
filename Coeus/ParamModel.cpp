@@ -1,4 +1,5 @@
 #include "ParamModel.h"
+#include "TensorOperator.h"
 
 using namespace Coeus;
 
@@ -12,6 +13,25 @@ ParamModel::~ParamModel()
 int ParamModel::get_params_size() const
 {
 	return _size;
+}
+
+void ParamModel::DEBUG_compare(ParamModel* p_model)
+{
+	map<string, Tensor*> diff;
+
+	for (auto& param : p_model->_params)
+	{
+		diff[param.first] = new Tensor(*param.second);
+		TensorOperator::instance().vv_sub(_params[param.first]->arr(), param.second->arr(), diff[param.first]->arr(), param.second->size());
+	}
+
+	for(const auto& it : diff)
+	{
+		if (it.second->at(it.second->max_value_index()) != 0)
+		{
+			cout << it.first.c_str() << endl;
+		}
+	}
 }
 
 Tensor* ParamModel::add_param(const string& p_id, Tensor* p_param)

@@ -65,6 +65,7 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_targ
 	float error = 0;
 	float alpha = 0;
 
+	if (_recurrent_mode != NONE) _network_gradient->set_recurrent_mode(_recurrent_mode);
 	_network_gradient->reset();
 	for(int i = 0; i < p_input->size(); i++)
 	{
@@ -81,6 +82,7 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_targ
 			}
 		}
 	}
+	if (_recurrent_mode != NONE) _network_gradient->set_recurrent_mode(NONE);
 
 	if (p_update)
 	{

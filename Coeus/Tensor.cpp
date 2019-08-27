@@ -605,6 +605,31 @@ Tensor Tensor::slice(const int p_index) const
 	return Tensor(rank, shape, arr);
 }
 
+void Tensor::replicate(const int p_n)
+{
+	float* arr = alloc_arr(_size * p_n);
+	float* ax = &arr[0];
+	float* sx = &_arr[0];
+
+	for(int i = 0; i < _shape[0]; i++)
+	{
+		for(int j = 0; j < _shape[1]; j++)
+		{
+			for(int k = 0; k < p_n; k++)
+			{
+				*ax++ = *sx;
+			}
+			sx++;
+		}
+	}
+
+	free_arr();
+	_arr = arr;
+	_size *= p_n;
+	_shape[1] *= p_n;
+
+}
+
 void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x, const int p_h, const int p_w)
 {
 #ifdef _DEBUG

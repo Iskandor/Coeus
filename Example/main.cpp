@@ -10,6 +10,7 @@
 #include "ConvLayer.h"
 #include "PoolingLayer.h"
 #include "TensorOperator.h"
+#include "IOUtils.h"
 
 
 using namespace std;
@@ -20,27 +21,26 @@ int main()
 	//model.run();
 	//model.run_iris();
 
-	RNN model;
+	//RNN model;
 	//model.run_pack();
-	model.run_pack2();
+	//model.run_pack2();
 	//model.test_pack();
 	//model.test_pack_cm();
 	//model.test_pack_alt();
 	//model.run_add_problem();
-	model.run_sin_prediction();
+	//model.run_sin_prediction();
 	//model.run_add_problem_gru();
 
 	/*
-	Tensor m({ 1,5,5 }, Tensor::RANDOM, 1);
-	Tensor n({ 5,5 }, Tensor::RANDOM, 1);
+	Tensor m({ 3,5,4 }, Tensor::VALUE, 2);
+	Tensor n({ 3,4 }, Tensor::RANDOM, 1);
+
+	cout << m << endl;
+
+	//n.replicate(3);
+	TensorOperator::instance().V_reduce(n.arr(), m.arr(), 3, 5, 4, 1);
 
 	cout << n << endl;
-
-	cout << m << endl;
-
-	Tensor::add_subregion(&m, 0, 1, 1, 2, 2, &n, 1, 1, 4, 1);
-
-	cout << m << endl;
 	*/
 
 	//CNN model;
@@ -48,10 +48,10 @@ int main()
 	//model.run_mnist();
 	//model.test();
 	
-	//MazeExample example;
+	MazeExample example;
 	//example.example_q(64, 1e-3, 0, true);
 	//example.example_sarsa(64, 1e-3, 0, true);
-	//example.example_actor_critic(64);
+	example.example_actor_critic(64);
 	//example.example_deep_q(64, 1e-3, 0, true);
 	//example.example_icm(64);
 	//example.example_selector(64);

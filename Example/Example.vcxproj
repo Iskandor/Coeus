@@ -178,6 +178,7 @@
     <ClCompile Include="MazeTask.cpp" />
     <ClCompile Include="PackDataset.cpp" />
     <ClCompile Include="PackDataset2.cpp" />
+    <ClCompile Include="PackDefinition.cpp" />
     <ClCompile Include="RNN.cpp" />
     <ClCompile Include="rk4.cpp" />
   </ItemGroup>
@@ -202,6 +203,7 @@
     <ClInclude Include="mnist_utils.hpp" />
     <ClInclude Include="PackDataset.h" />
     <ClInclude Include="PackDataset2.h" />
+    <ClInclude Include="PackDefinition.h" />
     <ClInclude Include="rk4.hpp" />
     <ClInclude Include="UBALTest.h" />
   </ItemGroup>

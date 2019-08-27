@@ -58,7 +58,7 @@ public:
 
 private:
 	void parse_line(string& p_line);
-	void create_sequence(vector<PackDataRow>& p_sequence);
+	void create_sequence(vector<PackDataRow>& p_sequence);	
 	void create_sequence_prob(vector<PackDataRow>& p_sequence);
 	void create_sequence_test(vector<PackDataRow>& p_sequence);
 	

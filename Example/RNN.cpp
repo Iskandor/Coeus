@@ -17,6 +17,7 @@
 #include "PowerSign.h"
 #include "PackDataset2.h"
 #include "CrossEntropyCost.h"
+#include "RandomGenerator.h"
 
 
 RNN::RNN()
@@ -42,11 +43,11 @@ void RNN::run_add_problem()
 	network.add_connection("hidden0", "output");
 	network.init();
 
-	BackProp algorithm(&network);
+	//BackProp algorithm(&network);
 
-	algorithm.init(new QuadraticCost(), 0.1f, 0.9f, true);
-	//Nadam algorithm(&network);
-	//algorithm.init(new QuadraticCost(), 0.01f);
+	//algorithm.init(new QuadraticCost(), 0.1f, 0.9f, true);
+	Nadam algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.01f);
 	algorithm.set_recurrent_mode(RTRL);
 
 	int epochs = 0;
@@ -95,12 +96,11 @@ void RNN::run_add_problem()
 	cout << epochs << endl;
 
 	test_add_problem(network);
-	/*
-	IOUtils::save_network(network, "test.net");
-	NeuralNetwork test(IOUtils::load_network("test.net"));
+
+	IOUtils::save_network(network, "addnet.net");
+	NeuralNetwork test(IOUtils::load_network("addnet.net"));
 
 	test_add_problem(test);
-	*/
 }
 
 void RNN::run_sin_prediction()
@@ -269,8 +269,6 @@ void RNN::test_add_problem(NeuralNetwork& p_network) const
 
 void RNN::run_pack()
 {
-	Logger::instance().init("log.log");
-	Logger::instance().log("Start");
 	cout << "Loading config..." << endl;
 	json config = load_config("config.json");
 	cout << config << endl;
@@ -279,9 +277,6 @@ void RNN::run_pack()
 	PackDataset2 dataset;
 	dataset.load_data("./data/" + config["dataset"].get<string>() + ".csv", false, false);
 	dataset.split(config["batch"].get<int>());
-	//PackDataset validset;
-	//validset.load_data("./data/pack_data_test.csv", false, true);
-
 
 	NeuralNetwork* network;
 
@@ -289,50 +284,36 @@ void RNN::run_pack()
 	{
 		network = new NeuralNetwork();
 		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), dataset.get_input_dim()));
-		network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
-		//network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(LECUN_UNIFORM)));
 		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
-		network->add_connection("hidden0", "hidden1");
-		//network->add_connection("hidden1", "hidden2");
-		network->add_connection("hidden1", "output");
+		network->add_connection("hidden0", "output");
 		network->init();
 	}
 	else
 	{
+		json data = IOUtils::load_network(config["network"].get<string>());
 		network = new NeuralNetwork(IOUtils::load_network(config["network"].get<string>()));
 	}
 
 	Nadam algorithm(network);
 	algorithm.init(new QuadraticCost(), config["alpha"].get<float>());
-	//BackProp algorithm(&network);
-	//algorithm.init(new QuadraticCost(), config["alpha"].get<float>(), 0.9, true);
-	//PowerSign algorithm(&network);
-	//algorithm.init(new QuadraticCost());
+	algorithm.set_recurrent_mode(RTRL);
 
 	int epoch = 0;
-	float last_error = -1;
+	float last_mcc = -1;
 
-	float tp = 0;
-	float fp = 0;
-	float tn = 0;
-	float fn = 0;
-	float precision = 0;
-	float accuracy = 0;
-	float fn_ratio = 1;
 	float mcc = 0;
-	const float bound = 0.999;
 	const int size = dataset.data()->size();
 
 	cout << size << " sequences" << endl;
 	cout << "Training..." << endl;
+	
+	vector<PackDataSequence2>* test = dataset.data();
 
+	Logger::instance().init("log.log");
 	while (mcc < 1) {
-		//pair<vector<Tensor*>, vector<Tensor*>> data = dataset.to_vector();
 		vector<PackDataSequence2>* train = dataset.permute(true);
-		vector<PackDataSequence2>* test = dataset.data();
 
 		auto start = chrono::high_resolution_clock::now();
-		//const float error = algorithm.train(&data.first, &data.second, config["batch"].get<int>());
 		float error = 0;
 
 		for (auto sequence : *train)
@@ -344,49 +325,12 @@ void RNN::run_pack()
 
 		if (epoch % config["evaluate"].get<int>() == 0)
 		{
-			tp = 0;
-			fp = 0;
-			tn = 0;
-			fn = 0;
-
-			for (auto sequence : *test)
+			mcc = test_performance(network, test);
+			if (mcc > last_mcc)
 			{
-				network->activate(&sequence.input);
-				const int prediction = network->get_output()->at(0) > 0.5 ? 1 : 0;
-
-				if ((*sequence.target)[0] == 1 && prediction == 1) tp++;
-				if ((*sequence.target)[0] == 1 && prediction == 0) fn++;
-				if ((*sequence.target)[0] == 0 && prediction == 1) fp++;
-				if ((*sequence.target)[0] == 0 && prediction == 0) tn++;
-			}
-
-			precision = (fp + tp) == 0 ? 0 : (float)tp / (fp + tp);
-			accuracy = (float)(tp + tn) / dataset.data()->size();
-			fn_ratio = (fn + tp) == 0 ? 1 : (float)fn / (fn + tp);
-
-			tp /= 1e4;
-			tn /= 1e4;
-			fp /= 1e4;
-			fn /= 1e4;
-
-			float nom = (tp * tn - fp * fn);
-			float den = (tp + fp)*(tp + fn)*(tn + fp)*(tn + fn);
-
-			if (den == 0) den = 1;
-
-			mcc = nom / sqrt(den);
-
-			tp *= 1e4;
-			tn *= 1e4;
-			fp *= 1e4;
-			fn *= 1e4;
-
-			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , MCC: " << mcc << " , precision: " << precision << " , accuracy: " << accuracy << " , fn_ratio: " << fn_ratio << endl;
-
-			if (last_error == -1 || error < last_error)
-			{
+				cout << "Saving..." << endl;
 				IOUtils::save_network(*network, "predictor.net");
-				last_error = error;
+				last_mcc = mcc;
 			}
 		}
 
@@ -396,8 +340,7 @@ void RNN::run_pack()
 		cout << "Time: " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 		epoch++;
 	}
-
-	Logger::instance().log("Finish");
+	
 	Logger::instance().close();
 
 	IOUtils::save_network(*network, "predictor.net");
@@ -442,13 +385,14 @@ void RNN::run_pack2()
 
 	Nadam algorithm(network);
 	algorithm.init(new QuadraticCost(), config["alpha"].get<float>());
+	algorithm.set_recurrent_mode(RTRL);
 	//BackProp algorithm(&network);
 	//algorithm.init(new QuadraticCost(), config["alpha"].get<float>(), 0.9, true);
 	//PowerSign algorithm(&network);
 	//algorithm.init(new QuadraticCost());
 
 	int epoch = 0;
-	float last_error = -1;
+	float last_mcc = -1;
 
 	float tp = 0;
 	float fp = 0;
@@ -489,9 +433,10 @@ void RNN::run_pack2()
 			fp = 0;
 			tn = 0;
 			fn = 0;
-
+			
 			for (auto sequence : *test)
 			{
+				network->reset();
 				for (int i = 0; i < sequence.input.size(); i++)
 				{
 					network->activate(sequence.input[i]);
@@ -510,7 +455,7 @@ void RNN::run_pack2()
 			}
 
 			precision = (fp + tp) == 0 ? 0 : (float)tp / (fp + tp);
-			accuracy = (float)(tp + tn) / dataset.data()->size();
+			accuracy = (float)(tp + tn) / (tp + tn + fp + fn);
 			fn_ratio = (fn + tp) == 0 ? 1 : (float)fn / (fn + tp);
 
 			tp /= 1e4;
@@ -532,10 +477,10 @@ void RNN::run_pack2()
 
 			cout << tn << " , " << fp << " , " << fn << " , " << tp << " , MCC: " << mcc << " , precision: " << precision << " , accuracy: " << accuracy << " , fn_ratio: " << fn_ratio << endl;
 
-			if (last_error == -1 || error < last_error)
+			if (mcc > last_mcc)
 			{
 				IOUtils::save_network(*network, "predictor.net");
-				last_error = error;
+				last_mcc = mcc;
 			}
 		}
 
@@ -554,66 +499,26 @@ void RNN::run_pack2()
 	delete network;
 }
 
-void RNN::test_pack_cm() const
+void RNN::test_pack_cm()
 {
 	cout << "Loading dataset..." << endl;
 	PackDataset2 dataset;
-	dataset.load_data("./data/pack_data_test.csv", false, true);
-	//dataset.load_data("./data/pack_data_train4500.csv", false, false);
+	dataset.load_data("./data/pack_data_test10k_8.csv", false, true);
+	//dataset.load_data("./data/pack_data_train10k.csv", false, false);
 
 	cout << "Loading network..." << endl;
 	NeuralNetwork network(IOUtils::load_network("predictor.net"));
 
 	cout << "Testing..." << endl;
 	vector<PackDataSequence2>* test = dataset.data();
-
-	int tp = 0;
-	int fp = 0;
-	int tn = 0;
-	int fn = 0;
-
-	for (auto sequence : *test)
-	{
-		network.activate(&sequence.input);
-		const float output = network.get_output()->at(0);
-		const int prediction = output > 0.5 ? 1 : 0;
-
-		if ((*sequence.target)[0] == 1 && prediction == 1) {
-			//cout << "TP " << network.get_output()->at(0) << endl;
-			tp++;
-		}
-		if ((*sequence.target)[0] == 1 && prediction == 0) {
-			//cout << "FN " << output << endl;
-			fn++;
-		}
-		if ((*sequence.target)[0] == 0 && prediction == 1) {
-			//cout << "FP " << output << endl;
-			fp++;
-		}
-		if ((*sequence.target)[0] == 0 && prediction == 0) {
-			tn++;
-		}
-	}
-
-	cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;
-
-	float den = 1;
-
-	if ((tp + fp) != 0 && (tp + fn) != 0 && (tn + fp) != 0 && (tn + fn) != 0)
-	{
-		den = sqrt((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn));
-	}
-
-	const float mcc = (tp * tn - fp * fn) / den;
-
-	cout << mcc << endl;
+	test_performance(&network, test);
 }
 
 void RNN::test_pack_alt() const
 {
 	cout << "Loading dataset..." << endl;
 	PackDataset2 dataset;
-	dataset.load_data("./data/pack_data_test.csv", false, true);
+	dataset.load_data("./data/pack_data_test10k_8.csv", false, true);
 
 	cout << "Loading network..." << endl;
 	NeuralNetwork network(IOUtils::load_network("predictor.net"));
@@ -621,37 +526,40 @@ void RNN::test_pack_alt() const
 	cout << "Testing..." << endl;
 	vector<PackDataSequence2>* test = dataset.data();
 
-	int tp = 0;
-	int fp = 0;
-	int tn = 0;
-	int fn = 0;
+	Logger::instance().init("probabilities.txt");
 
 	for (auto sequence : *test)
 	{
-		network.activate(&sequence.input);
-		const int prediction = network.get_output()->at(0) > 0.5 ? 1 : 0;
+		vector<PackDataSequence2> alt_sequence = dataset.get_alt_sequence(sequence.player_id);
 
-		if ((*sequence.target)[0] == 1 && prediction == 1) {
-			tp++;
+		float* prob = new float[alt_sequence.size()];
+		float* values = new float[alt_sequence.size()];
+		int index = 0;
+		int* pack_id = new int[alt_sequence.size()];
+
+		for(auto as : alt_sequence)
+		{
+			network.activate(&as.input);
+			values[index] = network.get_output()->at(0);
+			pack_id[index] = as.pack_id[as.pack_id.size() - 1];
+			index++;
 		}
-		if ((*sequence.target)[0] == 1 && prediction == 0) {
-			vector<PackDataSequence2> d = dataset.create_sequence_test(sequence.player_id);
 
-			for (int i = 0; i < d.size(); i++)
-			{
-				network.activate(&d[i].input);
-				const int response = network.get_output()->at(0) > 0.5 ? 1 : 0;
+		RandomGenerator::get_instance().softmax(prob, values, alt_sequence.size(), 1);
 
-				cout << i << " " << response << " " << network.get_output()->at(0) << endl;
-			}
-
-			fn++;
+		for(int i = 0; i < index; i++)
+		{
+			string s = to_string(sequence.player_id) + "," + to_string(sequence.pack_id[sequence.pack_id.size() - 1]) + "," + to_string(pack_id[i]) + "," + to_string(prob[i]);
+			Logger::instance().log(s);
 		}
-		if ((*sequence.target)[0] == 0 && prediction == 1) fp++;
-		if ((*sequence.target)[0] == 0 && prediction == 0) tn++;
+
+		delete[] prob;
+		delete[] values;
+		delete[] pack_id;
 	}
 
-	cout << tn << " , " << fp << " , " << fn << " , " << tp << " , " << endl;
+	
+	Logger::instance().close();
 }
 
 json RNN::load_config(const string& p_filename) const
@@ -672,4 +580,48 @@ json RNN::load_config(const string& p_filename) const
 	file.close();
 
 	return json(data);
+}
+
+float RNN::test_performance(NeuralNetwork* p_network, vector<PackDataSequence2>* p_dataset)
+{
+	float tp = 0;
+	float fp = 0;
+	float tn = 0;
+	float fn = 0;
+	
+	for (auto sequence : *p_dataset)
+	{
+		p_network->activate(&sequence.input);
+		const int prediction = p_network->get_output()->at(0) > 0.5 ? 1 : 0;
+
+		if ((*sequence.target)[0] == 1 && prediction == 1) tp++;
+		if ((*sequence.target)[0] == 1 && prediction == 0) fn++;
+		if ((*sequence.target)[0] == 0 && prediction == 1) fp++;
+		if ((*sequence.target)[0] == 0 && prediction == 0) tn++;
+	}
+
+	float precision = (fp + tp) == 0 ? 0 : (float)tp / (fp + tp);
+	float accuracy = (float)(tp + tn) / (tp + tn + fp + fn);
+	float fn_ratio = (fn + tp) == 0 ? 1 : (float)fn / (fn + tp);
+
+	tp /= 1e4;
+	tn /= 1e4;
+	fp /= 1e4;
+	fn /= 1e4;
+
+	float nom = (tp * tn - fp * fn);
+	float den = (tp + fp)*(tp + fn)*(tn + fp)*(tn + fn);
+
+	if (den == 0) den = 1;
+
+	float mcc = nom / sqrt(den);
+
+	tp *= 1e4;
+	tn *= 1e4;
+	fp *= 1e4;
+	fn *= 1e4;
+
+	cout << tn << " , " << fp << " , " << fn << " , " << tp << " , MCC: " << mcc << " , precision: " << precision << " , accuracy: " << accuracy << " , fn_ratio: " << fn_ratio << endl;
+
+	return mcc;
 }

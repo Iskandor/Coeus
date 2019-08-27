@@ -21,7 +21,7 @@ public:
 
 	virtual void v_reduce(float* p_x, float* p_y, int p_size) = 0;
 	virtual void M_reduce(float* p_x, float* p_A, bool p_row_major, int p_rows, int p_cols, bool p_accumulate) = 0;
-	virtual void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols) = 0;
+	virtual void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols, int p_axis) = 0;
 
 	virtual void full_int_s(float* p_net, float* p_x, float* p_w, int p_rows, int p_cols) = 0;
 	virtual void full_int_b(int p_batch, float* p_net, float* p_x, float* p_w, int p_rows, int p_cols) = 0;
