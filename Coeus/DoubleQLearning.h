@@ -7,21 +7,24 @@ namespace Coeus
 	class __declspec(dllexport) DoubleQLearning
 	{
 	public:
-		DoubleQLearning(NeuralNetwork* p_network_a, GradientAlgorithm* p_gradient_algorithm_a, NeuralNetwork* p_network_b, GradientAlgorithm* p_gradient_algorithm_b, const float p_gamma);
+		DoubleQLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda = 0);
 		~DoubleQLearning();
 
-		float train(Tensor* p_state0, int p_action0, Tensor* p_state1, float p_reward);
+		float train(Tensor* p_state0, int p_action0, Tensor* p_state1, float p_reward) const;
+		Tensor* get_output() const;
 
 	protected:
-		float calc_max_qa(Tensor* p_state, NeuralNetwork* p_network) const;
+		float calc_max_qa(Tensor* p_state, NeuralNetwork* p_network, int p_index) const;
 
-		NeuralNetwork* _network_a;
-		GradientAlgorithm* _gradient_algorithm_a;
-		NeuralNetwork* _network_b;
-		GradientAlgorithm* _gradient_algorithm_b;
+		NeuralNetwork* _network;
+		NetworkGradient* _network_gradient;
+		IUpdateRule* _update_rule;
+
+		float _alpha;
 		float _gamma;
 
-		Tensor _target;
+		int _action_count;
+		Tensor* _output;
 	};
 }
 

@@ -294,9 +294,6 @@
     <ClCompile Include="PowerSign.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
-    <ClCompile Include="QLearningRule.cpp">
-      <Filter>Source Files\Algorithm\RL\Rules</Filter>
-    </ClCompile>
     <ClCompile Include="GradientAlgorithm.cpp">
       <Filter>Source Files\Algorithm\Supervised</Filter>
     </ClCompile>
@@ -571,9 +568,6 @@
     </ClInclude>
     <ClInclude Include="PowerSign.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>
-    </ClInclude>
-    <ClInclude Include="QLearningRule.h">
-      <Filter>Header Files\Algorithm\RL\Rules</Filter>
     </ClInclude>
     <ClInclude Include="GradientAlgorithm.h">
       <Filter>Header Files\Algorithm\Supervised</Filter>

@@ -51,7 +51,8 @@ int main()
 	MazeExample example;
 	//example.example_q(64, 1e-3, 0, true);
 	//example.example_sarsa(64, 1e-3, 0, true);
-	example.example_actor_critic(64);
+	example.example_double_q(128, 1e-3);
+	//example.example_actor_critic(64);
 	//example.example_deep_q(64, 1e-3, 0, true);
 	//example.example_icm(64);
 	//example.example_selector(64);

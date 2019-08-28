@@ -12,7 +12,7 @@ public:
 	~MazeExample();
 
 	int example_q(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
-	void example_double_q();
+	void example_double_q(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
 	int example_sarsa(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
 	void example_actor_critic(int p_hidden);
 	int example_deep_q(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
