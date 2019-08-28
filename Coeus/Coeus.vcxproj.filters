@@ -186,9 +186,6 @@
     <ClCompile Include="DoubleQLearning.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
-    <ClCompile Include="Actor.cpp">
-      <Filter>Source Files\Algorithm\RL</Filter>
-    </ClCompile>
     <ClCompile Include="DeepQLearning.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
@@ -291,9 +288,6 @@
     <ClCompile Include="GeneralTDRule.cpp">
       <Filter>Source Files\Algorithm\RL\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="ActorRule.cpp">
-      <Filter>Source Files\Algorithm\RL\Rules</Filter>
-    </ClCompile>
     <ClCompile Include="PowerSignRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
     </ClCompile>
@@ -381,17 +375,14 @@
     <ClCompile Include="ParamModel.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="ReinforceRule.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Reinforce.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GRULayer.cpp">
       <Filter>Source Files\Network\Layer</Filter>
     </ClCompile>
     <ClCompile Include="AutoDifferentiator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,9 +456,6 @@
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
     <ClInclude Include="DoubleQLearning.h">
-      <Filter>Header Files\Algorithm\RL</Filter>
-    </ClInclude>
-    <ClInclude Include="Actor.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
     <ClInclude Include="ReplayBuffer.h">
@@ -576,9 +564,6 @@
       <Filter>Header Files\Algorithm</Filter>
     </ClInclude>
     <ClInclude Include="GeneralTDRule.h">
-      <Filter>Header Files\Algorithm\RL\Rules</Filter>
-    </ClInclude>
-    <ClInclude Include="ActorRule.h">
       <Filter>Header Files\Algorithm\RL\Rules</Filter>
     </ClInclude>
     <ClInclude Include="PowerSignRule.h">
@@ -701,17 +686,14 @@
     <ClInclude Include="ParamModel.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="ReinforceRule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Reinforce.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GRULayer.h">
       <Filter>Header Files\Network\Layer</Filter>
     </ClInclude>
     <ClInclude Include="AutoDifferentiator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

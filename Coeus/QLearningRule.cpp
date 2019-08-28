@@ -12,7 +12,7 @@ QLearningRule::QLearningRule(NetworkGradient* p_network_gradient, const float p_
 		_e_traces = p_network_gradient->get_network()->get_empty_params();
 	}
 
-	_rule = new ADAMRule(p_network_gradient, p_alpha, 0.9, 0.999, 1e-8);
+	_rule = new ADAMRule(p_network_gradient, p_alpha, 0.9f, 0.999f, 1e-8f);
 }
 
 
@@ -64,11 +64,6 @@ void QLearningRule::calc_update(map<string, Tensor>* p_gradient, const float p_d
 IUpdateRule* QLearningRule::clone(NetworkGradient* p_network_gradient)
 {
 	return new QLearningRule(p_network_gradient, _alpha, _gamma, _lambda);
-}
-
-void QLearningRule::reset()
-{
-	_rule->reset();
 }
 
 void QLearningRule::reset_traces()

@@ -20,17 +20,6 @@ IUpdateRule* NadamRule::clone(NetworkGradient* p_network_gradient)
 	return new NadamRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
 }
 
-void NadamRule::reset()
-{
-	for (auto key = _update.begin(); key != _update.end(); ++key)
-	{
-		_m[key->first].fill(0);
-		_v[key->first].fill(0);
-		_m_mean[key->first].fill(0);
-		_v_mean[key->first].fill(0);
-	}
-}
-
 void NadamRule::update_momentum(const string& p_id, Tensor & p_gradient)
 {
 	float* gx = &p_gradient.arr()[0];

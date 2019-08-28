@@ -15,7 +15,6 @@ namespace Coeus {
 
 		virtual void calc_update(map<string, Tensor>* p_gradient, float p_alpha = 0);
 		virtual IUpdateRule* clone(NetworkGradient* p_network_gradient) = 0;
-		virtual void reset() = 0;
 
 		map<string, Tensor>* get_update() { return &_update; }
 

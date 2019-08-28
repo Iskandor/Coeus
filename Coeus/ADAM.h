@@ -10,12 +10,6 @@ namespace Coeus {
 		~ADAM();
 
 		void init(ICostFunction* p_cost_function, float p_alpha, float p_beta1 = 0.9, float p_beta2 = 0.999, float p_epsilon = 1e-8);
-
-		float train(Tensor* p_input, Tensor* p_target) override;
-		float train(vector<Tensor*>* p_input, Tensor* p_target) override;
-
-	private:
-		int _t;
 	};
 }
 

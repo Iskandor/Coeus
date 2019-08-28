@@ -24,7 +24,7 @@
 #include "Logger.h"
 #include "KLDivergence.h"
 #include "CrossEntropyCost.h"
-#include "Reinforce.h"
+#include "Actor.h"
 
 using namespace Coeus;
 
@@ -317,10 +317,7 @@ void MazeExample::example_actor_critic(int p_hidden) {
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	//Actor actor(&network_actor, ADAM_RULE, 1e-4);
-	ADAM optimizer_a(&network_actor);
-	optimizer_a.init(new QuadraticCost(), 1e-4f);
-	Reinforce actor(&network_actor, 1e-3f);
+	Actor actor(&network_actor, ADAM_RULE, 1e-3f);
 
 	vector<float> sensors;
 	Tensor state0, state1;
@@ -364,7 +361,7 @@ void MazeExample::example_actor_critic(int p_hidden) {
 			cum_i_reward += count_module.get_reward_u(&state1);
 			cum_e_reward += task.getReward();
 
-			reward = task.getReward() + count_module.get_reward_u(&state1);
+			reward = task.getReward(); // +count_module.get_reward_u(&state1);
 			td_error = critic.train(&state0, &state1, reward);
 
 			//cout << *network_actor.get_output() << " " << action0 << " " << td_error << endl;
@@ -508,9 +505,7 @@ void MazeExample::example_icm(int p_hidden) {
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	ADAM optimizer_a(&network_actor);
-	optimizer_a.init(new CrossEntropyCost(), 1e-3f);
-	Actor actor(&network_actor, &optimizer_a, 0.1f);
+	Actor actor(&network_actor, ADAM_RULE, 0.1f);
 
 	NeuralNetwork network_model;
 
@@ -656,9 +651,7 @@ void MazeExample::example_selector(int p_hidden)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	ADAM optimizer_a(&network_actor);
-	optimizer_a.init(new CrossEntropyCost(), 1e-3f);
-	Actor actor(&network_actor, &optimizer_a, 0.001f);
+	Actor actor(&network_actor, ADAM_RULE, 0.001f);
 
 	NeuralNetwork network_predictor;
 
@@ -683,9 +676,7 @@ void MazeExample::example_selector(int p_hidden)
 	network_selector.add_connection("hidden1", "output");
 	network_selector.init();
 
-	ADAM optimizer_s(&network_selector);
-	optimizer_s.init(new CrossEntropyCost(), 1e-3f);
-	Actor selector(&network_selector, &optimizer_s, 0.01f);
+	Actor selector(&network_selector, ADAM_RULE, 0.01f);
 
 	vector<float> sensors;
 	Tensor state0, state1;

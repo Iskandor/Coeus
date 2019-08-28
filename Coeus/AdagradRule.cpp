@@ -28,10 +28,3 @@ IUpdateRule* AdagradRule::clone(NetworkGradient* p_network_gradient)
 {
 	return new AdagradRule(p_network_gradient, _alpha, _epsilon);
 }
-
-void AdagradRule::reset()
-{
-	for (auto it = _update.begin(); it != _update.end(); ++it) {
-		_G[it->first].fill(0);
-	}
-}

@@ -32,7 +32,3 @@ IUpdateRule* PowerSignRule::clone(NetworkGradient* p_network_gradient)
 {
 	return new PowerSignRule(p_network_gradient, _alpha);
 }
-
-void PowerSignRule::reset()
-{
-}

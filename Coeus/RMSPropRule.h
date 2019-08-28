@@ -10,7 +10,6 @@ namespace Coeus {
 
 		void calc_update(map<string, Tensor>* p_gradient, float p_alpha = 0) override;
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
-		void reset() override;
 
 	private:
 		float _decay;

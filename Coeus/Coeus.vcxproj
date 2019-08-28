@@ -170,8 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActivationFunctionFactory.cpp" />
-    <ClCompile Include="Actor.cpp" />
-    <ClCompile Include="ActorRule.cpp" />
     <ClCompile Include="Adadelta.cpp" />
     <ClCompile Include="AdadeltaRule.cpp" />
     <ClCompile Include="Adagrad.cpp" />
@@ -226,8 +224,7 @@
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="GeneralTDRule.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
-    <ClCompile Include="Reinforce.cpp" />
-    <ClCompile Include="ReinforceRule.cpp" />
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="RuleFactory.cpp" />
     <ClCompile Include="OpenMPBatchModule.cpp" />
     <ClCompile Include="PowerSign.cpp" />
@@ -263,8 +260,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivationFunctionFactory.h" />
-    <ClInclude Include="Actor.h" />
-    <ClInclude Include="ActorRule.h" />
     <ClInclude Include="Adadelta.h" />
     <ClInclude Include="AdadeltaRule.h" />
     <ClInclude Include="Adagrad.h" />
@@ -328,8 +323,7 @@
     <ClInclude Include="GeneralTDRule.h" />
     <ClInclude Include="QLearningRule.h" />
     <ClInclude Include="RandomGenerator.h" />
-    <ClInclude Include="Reinforce.h" />
-    <ClInclude Include="ReinforceRule.h" />
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="RuleFactory.h" />
     <ClInclude Include="OpenMPBatchModule.h" />
     <ClInclude Include="PowerSign.h" />
