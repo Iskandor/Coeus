@@ -3,22 +3,12 @@
 
 using namespace Coeus;
 
-SARSA::SARSA(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, float p_gamma, float p_alpha):
+SARSA::SARSA(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda):
 	_alpha(p_alpha), _gamma(p_gamma)
 {
 	_network = p_network;
-	_network_gradient = nullptr;
-	_update_rule = nullptr;
-	_optimizer = p_optimizer;
-}
-
-
-SARSA::SARSA(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda):
-	_gamma(p_gamma)
-{
-	_network = p_network;
 	_network_gradient = new NetworkGradient(p_network);
-	_update_rule = new GeneralTDRule(_network_gradient, RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha), p_alpha, p_gamma, p_lambda);
+	_update_rule = RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha);
 }
 
 SARSA::~SARSA()
@@ -27,40 +17,19 @@ SARSA::~SARSA()
 	delete _update_rule;
 }
 
-
 float SARSA::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const int p_action1, const float p_reward, const bool p_final) const
 {
-	_network->activate(p_state0);
-	const float Qs0a0 = _network->get_output()->at(p_action0);
 	_network->activate(p_state1);
 	const float Qs1a1 = p_final ? 0 : _network->get_output()->at(p_action1);
-
+	_network->activate(p_state0);
+	const float Qs0a0 = _network->get_output()->at(p_action0);
 	const float delta = p_reward + _gamma * Qs1a1 - Qs0a0;
+	Tensor loss({ _network->get_output_dim() }, Tensor::ZERO);
+	loss[p_action0] = Qs0a0 - delta;
 
-	if (_update_rule != nullptr)
-	{
-		Tensor mask = Tensor::Zero({ _network->get_output()->size() });
-		mask[p_action0] = 1;
+	_network_gradient->calc_gradient(&loss);
+	_update_rule->calc_update(_network_gradient->get_gradient(), _alpha);
+	_network->update(_update_rule->get_update());
 
-		_network_gradient->calc_gradient(&mask);
-		_update_rule->calc_update(_network_gradient->get_gradient(), delta, 0);
-		_network->update(_update_rule->get_update());
-	}
-	if (_optimizer != nullptr)
-	{
-		Tensor target = *_network->get_output();
-		target[p_action0] += _alpha * delta;
-
-		_optimizer->train(p_state0, &target);
-	}
-
-	return delta;
+	return Qs0a0;
 }
-
-void SARSA::reset_traces() const
-{
-	_update_rule->reset_traces();
-}
-
-
-

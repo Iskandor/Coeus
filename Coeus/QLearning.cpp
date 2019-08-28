@@ -5,23 +5,12 @@
 
 using namespace Coeus;
 
-QLearning::QLearning(NeuralNetwork* p_network, GradientAlgorithm* p_optimizer, float p_gamma, float p_alpha):
+QLearning::QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, const float p_alpha, const float p_gamma, const float p_lambda):
 	_alpha(p_alpha), _gamma(p_gamma)
 {
 	_network = p_network;
-	_network_gradient = nullptr;
-	_update_rule = nullptr;
-	_optimizer = p_optimizer;
-
-}
-
-QLearning::QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, const float p_alpha, const float p_gamma, const float p_lambda):
-	_alpha(0), _gamma(p_gamma)
-{
-	_network = p_network;
 	_network_gradient = new NetworkGradient(p_network);
-	_update_rule = new GeneralTDRule(_network_gradient, RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha), p_alpha, p_gamma, p_lambda);
-	_optimizer = nullptr;
+	_update_rule = RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha);
 }
 
 
@@ -39,29 +28,14 @@ float QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, 
 	const float Qs0a = _network->get_output()->at(p_action0);
 	const float delta = p_reward + _gamma * maxQs1a - Qs0a;
 
-	if (_update_rule != nullptr)
-	{
-		Tensor mask = Tensor::Zero({ _network->get_output()->size() });
-		mask[p_action0] = 1;
+	Tensor loss({ _network->get_output_dim() }, Tensor::ZERO);
+	loss[p_action0] = Qs0a - delta;
 
-		_network_gradient->calc_gradient(&mask);
-		_update_rule->calc_update(_network_gradient->get_gradient(), delta, 0);
-		_network->update(_update_rule->get_update());
-	}
-	if (_optimizer != nullptr)
-	{
-		Tensor target = *_network->get_output();
-		target[p_action0] += _alpha * delta;
+	_network_gradient->calc_gradient(&loss);
+	_update_rule->calc_update(_network_gradient->get_gradient(), _alpha);
+	_network->update(_update_rule->get_update());
 
-		_optimizer->train(p_state0, &target);
-	}
-
-	return delta;
-}
-
-void QLearning::reset_traces() const
-{
-	_update_rule->reset_traces();
+	return Qs0a;
 }
 
 float QLearning::calc_max_qa(Tensor* p_state) const

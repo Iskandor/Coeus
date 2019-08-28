@@ -51,20 +51,12 @@ int MazeExample::example_q(int p_hidden, float p_alpha, float p_lambda,  const b
 	network.add_connection("hidden1", "output");
 	network.init();
 
-	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), p_alpha, 0.9, true);
-	ADAM optimizer(&network);
-	//RMSProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), p_alpha);
-	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
-	//CountModule curiosity(maze->mazeX() * maze->mazeY());
-	//QLearning agent(&network, ADAM_RULE, p_alpha, 0.9, p_lambda);
-	QLearning agent(&network, &optimizer, 0.9f);
+	QLearning agent(&network, ADAM_RULE, 1e-3f, 0.9f);
 
 	vector<float> sensors;
 	Tensor state0, state1;
 	float reward = 0;
-	const int epochs = 10000;
+	const int epochs = 4000;
 
 	EGreedyExploration exploration(0.3, new ExponentialInterpolation(0.3, 0.1, epochs));
 	//BoltzmanExploration exploration(10, new ExponentialInterpolation(10, 0.1, epochs));
@@ -220,23 +212,15 @@ int MazeExample::example_sarsa(int p_hidden, float p_alpha, float p_lambda, cons
 	network.add_connection("hidden1", "output");
 	network.init();
 
-	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), p_alpha, 0.9, true);
-	ADAM optimizer(&network);
-	//RMSProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), p_alpha);
-	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
-	//CountModule curiosity(maze->mazeX() * maze->mazeY());
-	//QLearning agent(&network, ADAM_RULE, p_alpha, 0.9, p_lambda);
-	SARSA agent(&network, &optimizer, 0.9f);
+	SARSA agent(&network, ADAM_RULE, 1e-3f, 0.9f);
 
 	vector<float> sensors;
 	Tensor state0, state1;
 	float reward = 0;
 	const int epochs = 10000;
 
-	//EGreedyExploration exploration(1, new LinearInterpolation(1, 0.1, epochs));
-	BoltzmanExploration exploration(10, new LinearInterpolation(10, 0.1, epochs));
+	EGreedyExploration exploration(0.5, new LinearInterpolation(0.5, 0.1, epochs));
+	//BoltzmanExploration exploration(10, new LinearInterpolation(10, 0.1, epochs));
 
 	int wins = 0, loses = 0;
 
@@ -294,18 +278,15 @@ void MazeExample::example_actor_critic(int p_hidden) {
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), 25));
-	network_critic.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(UNIFORM, -0.1, 0.1), 25));
+	network_critic.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
 	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
 
-	//TD critic(&network_critic, RMSPROP_RULE, 1e-3f, 0.9f);
-	ADAM optimizer_c(&network_critic);
-	optimizer_c.init(new QuadraticCost(), 2e-3f);
-	TD critic(&network_critic, &optimizer_c, 0.9);
+	TD critic(&network_critic, ADAM_RULE, 1e-3f, 0.9f);
 
 	NeuralNetwork network_actor;
 
@@ -323,15 +304,11 @@ void MazeExample::example_actor_critic(int p_hidden) {
 	Tensor state0, state1;
 	float value0, value1;
 	float reward = 0;
-	int epochs = 5000;
+	int epochs = 1000;
 	float td_error = 0;
 
 	int wins = 0, loses = 0;
-
-	//EGreedyExploration exploration(1, new LinearInterpolation(1, 0.1, epochs));
-	//BoltzmanExploration exploration(10, new LinearInterpolation(10, 0.1, epochs));
-	//BoltzmanExploration exploration(1);
-
+	
 	CountModule count_module(25);
 
 	Logger::instance().init("log.log");
@@ -350,8 +327,7 @@ void MazeExample::example_actor_critic(int p_hidden) {
 		while (!task.isFinished()) {
 			network_actor.activate(&state0);
 
-			//RandomGenerator::get_instance().softmax(prob.arr(), network_actor.get_output()->arr(), 4, 1);
-			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4); // exploration.get_action(network_actor.get_output());
+			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
 			maze->performAction(action0);
 
 			sensors = maze->getSensors();
@@ -361,7 +337,7 @@ void MazeExample::example_actor_critic(int p_hidden) {
 			cum_i_reward += count_module.get_reward_u(&state1);
 			cum_e_reward += task.getReward();
 
-			reward = task.getReward(); // +count_module.get_reward_u(&state1);
+			reward = task.getReward() + count_module.get_reward_u(&state1);
 			td_error = critic.train(&state0, &state1, reward);
 
 			//cout << *network_actor.get_output() << " " << action0 << " " << td_error << endl;
@@ -377,14 +353,14 @@ void MazeExample::example_actor_critic(int p_hidden) {
 
 		cout << task.getEnvironment()->moves() << endl;
 
+		//test_v(&network_critic);
+
 		if (task.isWinner()) {
 			wins++;
 		}
 		else {
 			loses++;
 		}
-
-		//exploration.update(e);
 
 		Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
 		cum_i_reward = 0;
@@ -492,9 +468,7 @@ void MazeExample::example_icm(int p_hidden) {
 	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
 
-	ADAM optimizer_c(&network_critic);
-	optimizer_c.init(new QuadraticCost(), 1e-3f);
-	TD critic(&network_critic, &optimizer_c, 0.9);
+	TD critic(&network_critic, ADAM_RULE, 1e-3f, 0.9);
 
 	NeuralNetwork network_actor;
 
@@ -637,9 +611,7 @@ void MazeExample::example_selector(int p_hidden)
 	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
 
-	ADAM optimizer_c(&network_critic);
-	optimizer_c.init(new QuadraticCost(), 1e-3f);
-	TD critic(&network_critic, &optimizer_c, 0.9);
+	TD critic(&network_critic, ADAM_RULE, 1e-3f, 0.9f);
 
 	NeuralNetwork network_actor;
 
