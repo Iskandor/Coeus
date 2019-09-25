@@ -29,7 +29,7 @@ DoubleQLearning::~DoubleQLearning()
 	delete _update_rule_b;
 }
 
-float DoubleQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward) const
+float DoubleQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, bool p_finished) const
 {
 	float Qs0a = 0;
 	float maxQs1a = 0;
@@ -41,7 +41,7 @@ float DoubleQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_st
 		Qs0a = _network_a->get_output()->at(p_action0);		
 		maxQs1a = _network_b->get_output()->at(calc_max_qa_index(p_state1, _network_a));
 
-		const float delta = p_reward + _gamma * maxQs1a - Qs0a;
+		const float delta = p_finished ? p_reward - Qs0a : p_reward + _gamma * maxQs1a - Qs0a;
 		loss[p_action0] = Qs0a - delta;
 
 		_network_a->activate(p_state0);
@@ -56,7 +56,7 @@ float DoubleQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_st
 		Qs0a = _network_b->get_output()->at(p_action0);
 		maxQs1a = _network_a->get_output()->at(calc_max_qa_index(p_state1, _network_b));
 
-		const float delta = p_reward + _gamma * maxQs1a - Qs0a;
+		const float delta = p_finished ? p_reward - Qs0a : p_reward + _gamma * maxQs1a - Qs0a;
 		loss[p_action0] = Qs0a - delta;
 
 		_network_b->activate(p_state0);

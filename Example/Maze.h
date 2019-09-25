@@ -14,7 +14,7 @@ using namespace std;
 
 class Maze : public Environment {
 public:
-    Maze(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal);
+    Maze(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic = false);
     ~Maze();
 
     vector<float> getSensors() override;
@@ -68,7 +68,7 @@ private:
     bool _kill;
 
 	int _a;
-
+	bool _stochastic;
 };
 
 #endif //NEURONET_MAZE_H

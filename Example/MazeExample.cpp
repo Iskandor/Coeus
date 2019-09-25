@@ -113,11 +113,13 @@ void MazeExample::example_double_q(int p_hidden, float p_alpha, float p_lambda, 
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
+	float limit = 0.01f;
+
 	NeuralNetwork networkA;
 
-	networkA.add_layer(new CoreLayer("hidden0", p_hidden, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1), 16));
-	networkA.add_layer(new CoreLayer("hidden1", p_hidden / 2, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
-	networkA.add_layer(new CoreLayer("output", 4, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	networkA.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	networkA.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
+	networkA.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	networkA.add_connection("hidden0", "hidden1");
 	networkA.add_connection("hidden1", "output");
@@ -125,22 +127,22 @@ void MazeExample::example_double_q(int p_hidden, float p_alpha, float p_lambda, 
 
 	NeuralNetwork networkB;
 
-	networkB.add_layer(new CoreLayer("hidden0", p_hidden, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1), 16));
-	networkB.add_layer(new CoreLayer("hidden1", p_hidden / 2, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
-	networkB.add_layer(new CoreLayer("output", 4, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	networkB.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	networkB.add_layer(new CoreLayer("hidden1", p_hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
+	networkB.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	networkB.add_connection("hidden0", "hidden1");
 	networkB.add_connection("hidden1", "output");
 	networkB.init();
 
-	DoubleQLearning agent(&networkA, &networkB, ADAM_RULE, 1e-4f, 0.9f);
+	DoubleQLearning agent(&networkA, &networkB, ADAM_RULE, 1e-3f, 0.99f);
 
 	vector<float> sensors;
 	Tensor state0, state1;
 	float reward = 0;
-	const int epochs = 1000;
+	const int epochs = 50000;
 
-	EGreedyExploration exploration(0.3, new ExponentialInterpolation(0.3, 0.1, epochs));
+	EGreedyExploration exploration(0.9, new ExponentialInterpolation(0.9, 0.1, epochs));
 	//BoltzmanExploration exploration(0.1, new ExponentialInterpolation(0.1, 0.1, epochs));
 
 	int wins = 0, loses = 0;
@@ -162,7 +164,7 @@ void MazeExample::example_double_q(int p_hidden, float p_alpha, float p_lambda, 
 			state1 = encode_state(&sensors);
 			reward = task.getReward();
 
-			agent.train(&state0, action0, &state1, reward);
+			agent.train(&state0, action0, &state1, reward, task.isFinished());
 			state0.override(&state1);
 		}
 

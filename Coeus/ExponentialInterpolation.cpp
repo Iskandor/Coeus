@@ -14,7 +14,12 @@ ExponentialInterpolation::~ExponentialInterpolation()
 
 float ExponentialInterpolation::interpolate(const int p_t)
 {
-	const float t = static_cast<float>(p_t) / _interval;
+	float t = 1;
+
+	if (p_t <= _interval) {
+		t = static_cast<float>(p_t) / _interval;
+	}
+
 	return _point1 * pow(_point2 / _point1, t);
 }
 

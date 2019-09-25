@@ -11,6 +11,11 @@ LinearInterpolation::~LinearInterpolation()
 
 float LinearInterpolation::interpolate(const int p_t)
 {
-	const float t = static_cast<float>(p_t) / _interval;
+	float t = 1;
+
+	if (p_t <= _interval) {
+		t = static_cast<float>(p_t) / _interval;
+	}
+
 	return (1 - t) * _point1 + t * _point2;
 }

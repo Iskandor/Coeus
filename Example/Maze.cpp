@@ -6,11 +6,12 @@
 #include "Maze.h"
 #include "RandomGenerator.h"
 
-Maze::Maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal) {
+Maze::Maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic) {
     for (int i = 0; i < p_mazeX * p_mazeY; i++) {
         _mazeTable.push_back(p_topology[i]);
     }
 
+	_stochastic = p_stochastic;
     _goal = p_goal;
 
     _mazeX = p_mazeX;
@@ -76,6 +77,17 @@ int Maze::moveInDir(int p_x, int p_y) const
 
 void Maze::performAction(float p_action) {
     //cout << _actions[p_action].Id() << endl;
+	if (_stochastic) {
+		if (RandomGenerator::get_instance().random() >= 0.8f && RandomGenerator::get_instance().random() < 0.9f) {
+			p_action++;
+			if (p_action == 4) p_action = 0;
+		}
+		if (RandomGenerator::get_instance().random() >= 0.9f && RandomGenerator::get_instance().random() < 1.0f) {
+			p_action--;
+			if (p_action < 0) p_action = 3;
+		}
+	}
+
     int newPos = moveInDir(_actions[(int)p_action].X(), _actions[(int)p_action].Y());
 	_a++;
 
