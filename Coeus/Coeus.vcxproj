@@ -185,6 +185,7 @@
     <ClCompile Include="BackProp.cpp" />
     <ClCompile Include="BackPropRule.cpp" />
     <ClCompile Include="BoltzmanExploration.cpp" />
+    <ClCompile Include="CACLA.cpp" />
     <ClCompile Include="ConvLayer.cpp" />
     <ClCompile Include="ConvOperator.cpp" />
     <ClCompile Include="EGreedyExploration.cpp" />
@@ -210,7 +211,7 @@
     <ClCompile Include="IActivationFunction.cpp" />
     <ClCompile Include="IBatchModule.cpp" />
     <ClCompile Include="ICM.cpp" />
-    <ClCompile Include="ICuriosityModule.cpp" />
+    <ClCompile Include="IMotivationModule.cpp" />
     <ClCompile Include="IDGen.cpp" />
     <ClCompile Include="ILearningRateModule.cpp" />
     <ClCompile Include="IOUtils.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="BackPropRule.h" />
     <ClInclude Include="BoltzmanExploration.h" />
     <ClInclude Include="BufferItems.h" />
+    <ClInclude Include="CACLA.h" />
     <ClInclude Include="ConvLayer.h" />
     <ClInclude Include="ConvOperator.h" />
     <ClInclude Include="EGreedyExploration.h" />
@@ -303,7 +305,7 @@
     <ClInclude Include="IBatchModule.h" />
     <ClInclude Include="ICM.h" />
     <ClInclude Include="ICostFunction.h" />
-    <ClInclude Include="ICuriosityModule.h" />
+    <ClInclude Include="IMotivationModule.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IInterpolation.h" />
     <ClInclude Include="ILearningRateModule.h" />

@@ -297,6 +297,7 @@ public:
 boost::shared_ptr<Environment> ClientReal::make(const std::string& env_id)
 {
 	Json::Value req;
+
 	req["env_id"] = env_id;
 	Json::Value ans = POST("/v1/envs/", req.toStyledString());
 	std::string instance_id = require(ans, "instance_id");

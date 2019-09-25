@@ -164,9 +164,9 @@
   <ItemGroup>
     <ClCompile Include="AddProblemDataset.cpp" />
     <ClCompile Include="CartPole.cpp" />
-    <ClCompile Include="CartPoleTask.cpp" />
     <ClCompile Include="CisLoader.cpp" />
     <ClCompile Include="CNN.cpp" />
+    <ClCompile Include="ContinuousTest.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FFN.cpp" />
     <ClCompile Include="IrisDataset.cpp" />
@@ -181,14 +181,15 @@
     <ClCompile Include="PackDefinition.cpp" />
     <ClCompile Include="RNN.cpp" />
     <ClCompile Include="rk4.cpp" />
+    <ClCompile Include="SimpleContinuousEnv.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Coeus\AddProblemDataset.h" />
     <ClInclude Include="..\Coeus\RNN.h" />
     <ClInclude Include="CartPole.h" />
-    <ClInclude Include="CartPoleTask.h" />
     <ClInclude Include="CisLoader.h" />
     <ClInclude Include="CNN.h" />
+    <ClInclude Include="ContinuousTest.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FFN.h" />
     <ClInclude Include="IrisDataset.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="PackDataset2.h" />
     <ClInclude Include="PackDefinition.h" />
     <ClInclude Include="rk4.hpp" />
+    <ClInclude Include="SimpleContinuousEnv.h" />
     <ClInclude Include="UBALTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

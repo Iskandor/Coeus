@@ -18,7 +18,10 @@
     <ClInclude Include="gym.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rl_agent.h">
+    <ClInclude Include="CartPoleAgent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrozenLakeAgent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -26,11 +29,17 @@
     <ClCompile Include="gym_binding.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="random_agent.cpp">
+    <ClCompile Include="gym_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rl_agent.cpp">
+    <ClCompile Include="CartPoleAgent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FrozenLakeAgent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

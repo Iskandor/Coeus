@@ -54,9 +54,6 @@
     <ClCompile Include="CartPole.cpp">
       <Filter>Source Files\RL</Filter>
     </ClCompile>
-    <ClCompile Include="CartPoleTask.cpp">
-      <Filter>Source Files\RL</Filter>
-    </ClCompile>
     <ClCompile Include="Environment.cpp">
       <Filter>Source Files\RL</Filter>
     </ClCompile>
@@ -96,6 +93,12 @@
     <ClCompile Include="PackDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleContinuousEnv.cpp">
+      <Filter>Source Files\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="ContinuousTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFN.h">
@@ -105,9 +108,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CartPole.h">
-      <Filter>Header Files\RL</Filter>
-    </ClInclude>
-    <ClInclude Include="CartPoleTask.h">
       <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="Environment.h">
@@ -165,6 +165,12 @@
       <Filter>Header Files\RNN</Filter>
     </ClInclude>
     <ClInclude Include="PackDefinition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleContinuousEnv.h">
+      <Filter>Header Files\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="ContinuousTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

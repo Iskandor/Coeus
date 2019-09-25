@@ -380,10 +380,10 @@ void MazeExample::example_actor_critic(int p_hidden) {
 			state1 = encode_state(&sensors);
 			count_module.update(&state1);
 
-			cum_i_reward += count_module.get_reward_u(&state1);
+			cum_i_reward += count_module.uncertainty_motivation();
 			cum_e_reward += task.getReward();
 
-			reward = task.getReward() + count_module.get_reward_u(&state1);
+			reward = task.getReward() + count_module.uncertainty_motivation();
 			td_error = critic.train(&state0, &state1, reward);
 
 			//cout << *network_actor.get_output() << " " << action0 << " " << td_error << endl;
@@ -746,11 +746,11 @@ void MazeExample::example_selector(int p_hidden)
 
 			if (selection == 0)
 			{
-				ir = count_module.get_reward_u(&state1);
+				ir = count_module.uncertainty_motivation();
 			}
 			else
 			{
-				ir = count_module.get_reward_f(&state1);
+				ir = count_module.familiarity_motivation();
 				//cout << ir << endl;
 			}
 

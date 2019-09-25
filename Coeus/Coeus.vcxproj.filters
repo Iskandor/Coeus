@@ -276,9 +276,6 @@
     <ClCompile Include="QLearning.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
-    <ClCompile Include="ICuriosityModule.cpp">
-      <Filter>Source Files\Algorithm\IM</Filter>
-    </ClCompile>
     <ClCompile Include="CountModule.cpp">
       <Filter>Source Files\Algorithm\IM</Filter>
     </ClCompile>
@@ -380,6 +377,12 @@
     </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="CACLA.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="IMotivationModule.cpp">
+      <Filter>Source Files\Algorithm\IM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -551,9 +554,6 @@
     <ClInclude Include="QLearning.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
-    <ClInclude Include="ICuriosityModule.h">
-      <Filter>Header Files\Algorithm\IM</Filter>
-    </ClInclude>
     <ClInclude Include="CountModule.h">
       <Filter>Header Files\Algorithm\IM</Filter>
     </ClInclude>
@@ -688,6 +688,12 @@
     </ClInclude>
     <ClInclude Include="Actor.h">
       <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="CACLA.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="IMotivationModule.h">
+      <Filter>Header Files\Algorithm\IM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

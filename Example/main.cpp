@@ -11,6 +11,7 @@
 #include "PoolingLayer.h"
 #include "TensorOperator.h"
 #include "IOUtils.h"
+#include "ContinuousTest.h"
 
 
 using namespace std;
@@ -48,14 +49,19 @@ int main()
 	//model.run_mnist();
 	//model.test();
 	
-	MazeExample example;
+	//MazeExample example;
 	//example.example_q(64, 1e-3, 0, true);
 	//example.example_sarsa(64, 1e-3, 0, true);
-	example.example_double_q(128, 1e-3);
+	//example.example_double_q(128, 1e-3);
 	//example.example_actor_critic(64);
 	//example.example_deep_q(64, 1e-3, 0, true);
 	//example.example_icm(64);
 	//example.example_selector(64);
+
+	ContinuousTest test;
+
+	//test.run(32);
+	test.run_cart_pole(20000);
 
 	/*
 	IrisTest iris;

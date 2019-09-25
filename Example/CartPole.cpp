@@ -54,98 +54,73 @@ float *derivs(float t, int n, float sensors[], float params[]) {
     return result;
 }
 
-CartPole::CartPole(bool p_randomInit, float p_poleLength) : Environment() {
-    _randomInit = p_randomInit;
-    _indim = 1;
-    _outdim = 4;
-    L = p_poleLength;
-
-    _params[0] = _action;
-    _params[1] = MP;
-    _params[2] = MC;
-    _params[3] = L;
-    _params[4] = G;
-    _sensors = vector<float>(4);
+CartPole::CartPole() {
 }
 
-CartPole::~CartPole() {
+CartPole::~CartPole() = default;
 
+vector<float> CartPole::get_state() const
+{
+	vector<float> result(STATE);
+
+	result[0] = _x;
+	result[1] = _x_dot;
+	result[2] = _theta;
+	result[3] = _theta_dot;
+
+	return result;
 }
 
-vector<float> CartPole::getSensors() {
-    return vector<float>(_sensors);
+void CartPole::perform_action(const float p_action)
+{
+	const float force = _force_mag * p_action;
+	const float costheta = cos(_theta);
+	const float sintheta = sin(_theta);
+	const float temp = (force + _polemass_length * _theta_dot * _theta_dot * sintheta) / _total_mass;
+	const float thetaacc = (_gravity * sintheta - costheta * temp) / (_length * (4.0 / 3.0 - _masspole * costheta * costheta / _total_mass));
+	const float _xacc = temp - _polemass_length * thetaacc * costheta / _total_mass;
+
+	_x = _x + _tau * _x_dot;
+	_x_dot = _x_dot + _tau * _xacc;
+	_theta = _theta + _tau * _theta_dot;
+	_theta_dot = _theta_dot + _tau * thetaacc;
 }
 
-void CartPole::performAction(float p_action) {
-    _action = p_action;
-    step();
-}
 
 void CartPole::reset() {
-    if (_randomInit) {
-        _angle = RandomGenerator::get_instance().random(-0.2f, 0.2f);
-        _pos = RandomGenerator::get_instance().random(-0.5f, 0.5f);
-    }
-    else {
-        _angle = -0.2;
-        _pos = 0.2;
-    }
-
-    _t = 0;
-    _sensors[0] = _pos;
-    _sensors[1] = 0.0;
-    _sensors[2] = _angle;
-    _sensors[3] = 0.0;
+	_x = RandomGenerator::get_instance().random(-0.05f, 0.05f);
+	_x_dot = RandomGenerator::get_instance().random(-0.05f, 0.05f);
+	_theta = RandomGenerator::get_instance().random(-0.05f, 0.05f);
+	_theta_dot = RandomGenerator::get_instance().random(-0.05f, 0.05f);
 }
 
-string CartPole::toString() {
+string CartPole::to_string() const
+{	
     string s;
-
-    s += to_string(_sensors[0]);
+    s += std::to_string(_x);
     s += '\n';
-    s += to_string(_sensors[1]);
+    s += std::to_string(_x_dot);
     s += '\n';
-    s += to_string(_sensors[2]);
+    s += std::to_string(_theta);
     s += '\n';
-    s += to_string(_sensors[3]);
+    s += std::to_string(_theta_dot);
     s += '\n';
     return s;
 }
 
-void CartPole::step() {
-    _params[0] = _action;
-    //cout << toString() << endl;
-    //cout << _action << endl;
-    //float* new_state = RK4::rk4vec(0, _outdim, _sensors.data(), _params, DT, derivs);
-    //_sensors = vector<float>(new_state, new_state + _outdim);
-    step2();
-    _pos = _sensors[0];
-    _angle = _sensors[2];
-    //delete[] new_state;
+bool CartPole::is_finished() const
+{
+	bool done = false;
+	
+	done |= _x < -_x_threshold;
+	done |= _x > _x_threshold;
+	done |= _theta < -_theta_threshold_radians;
+	done |= _theta > _theta_threshold_radians;
+
+	return done;
 }
 
-void CartPole::step2() {
-    float F = _action * 1;
-
-    float s = _sensors[0];
-    float ds = _sensors[1];
-    float theta = _sensors[2];
-    float dtheta = _sensors[3];
-
-    float sin_theta = (float)sin(theta);
-    float cos_theta = (float)cos(theta);
-
-    float temp = (F + MP * L * dtheta * dtheta * sin_theta) / (MP + MC);
-    float thetaAcc = (G * sin_theta - cos_theta * temp) / (L * (4.0 / 3.0 - MP * cos_theta * cos_theta / (MP + MC)));
-    float sAcc = temp - MP * L * thetaAcc * cos_theta / (MP + MC);
-
-    s += DT * ds;
-    ds += DT * sAcc;
-    theta += DT * dtheta;
-    dtheta += DT * thetaAcc;
-
-    _sensors[0] = s;
-    _sensors[1] = ds;
-    _sensors[2] = theta;
-    _sensors[3] = dtheta;
+float CartPole::get_reward()
+{
+	return 1.0;
 }

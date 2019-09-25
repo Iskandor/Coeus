@@ -1,5 +1,6 @@
 #include "gym.h"
-#include "rl_agent.h"
+#include "FrozenLakeAgent.h"
+#include "CartPoleAgent.h"
 
 static
 void run_single_environment(const boost::shared_ptr<Gym::Client>& client, const std::string& env_id, int episodes_to_run)
@@ -33,9 +34,10 @@ int main(int argc, char** argv)
 		const boost::shared_ptr<Gym::Client> client = Gym::client_create("127.0.0.1", 5000);
 		//run_single_environment(client, "FrozenLake-v0", 3);
 
-		rl_agent agent;
-
-		agent.run(client, "FrozenLake-v0", 1000);
+		//FrozenLakeAgent agent;
+		//agent.run(client, "FrozenLake-v0", 2000);
+		CartPoleAgent agent;
+		agent.run(client, "CartPole-v0", 2000);
 
 	} catch (const std::exception& e) {
 		fprintf(stderr, "ERROR: %s\n", e.what());
