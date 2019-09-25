@@ -16,9 +16,9 @@ MazeTask::MazeTask() {
 						
 
 	int topology[] = {	0, 0, 0, 0,
-						0, 2, 0, 0,
-						0, 0, 2, 0,
-						0, 0, 0, 0 };
+						0, 2, 0, 2,
+						0, 0, 0, 2,
+						2, 0, 0, 0 };
 						
 	/*
     int topology[] = {0, 0, 0, 0, 0,
@@ -29,7 +29,7 @@ MazeTask::MazeTask() {
 					  */
 	
 	//maze = new Maze(topology, 3, 3, 8);
-    maze = new Maze(topology, 4, 4, 15);
+    maze = new Maze(topology, 4, 4, 15, false);
 	//maze = new Maze(topology, 5, 5, 24);
 }
 
