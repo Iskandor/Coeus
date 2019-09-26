@@ -21,5 +21,6 @@ namespace Coeus
 		IUpdateRule* _update_rule;
 
 		float _alpha;
+		float _var;
 	};
 }

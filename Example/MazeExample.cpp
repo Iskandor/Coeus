@@ -391,7 +391,7 @@ void MazeExample::example_actor_critic(int p_hidden) {
 			cum_e_reward += task.getReward();
 
 			reward = task.getReward() + count_module.uncertainty_motivation();
-			td_error = critic.train(&state0, &state1, reward);
+			td_error = critic.train(&state0, &state1, reward, task.isFinished());
 
 			//cout << *network_actor.get_output() << " " << action0 << " " << td_error << endl;
 			
@@ -591,7 +591,7 @@ void MazeExample::example_icm(int p_hidden) {
 
 			reward = task.getReward() + ir;
 			//cout << reward << endl;
-			td_error = critic.train(&state0, &state1, reward);
+			td_error = critic.train(&state0, &state1, reward, task.isFinished());
 			icm.train(&state0, &action, &state1);
 			//icm.add(&state0, &action, &state1);
 			actor.train(&state0, action0, td_error);
@@ -766,7 +766,7 @@ void MazeExample::example_selector(int p_hidden)
 			cum_i_reward += ir;
 			cum_e_reward += task.getReward();
 
-			td_error = critic.train(&state0, &state1, r);
+			td_error = critic.train(&state0, &state1, r, task.isFinished());
 			actor.train(&state0, action0, td_error);
 
 			state0.override(&state1);

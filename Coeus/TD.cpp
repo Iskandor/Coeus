@@ -17,14 +17,14 @@ TD::~TD()
 	delete _update_rule;
 }
 
-float TD::train(Tensor* p_state0, Tensor* p_state1, const float p_reward) const
+float TD::train(Tensor* p_state0, Tensor* p_state1, const float p_reward, bool p_finished) const
 {
 	_network->activate(p_state1);
 	const float Vs1 = _network->get_output()->at(0);
 	_network->activate(p_state0);
 	const float Vs0 = _network->get_output()->at(0);
 
-	const float delta = p_reward + _gamma * Vs1 - Vs0;
+	const float delta = p_finished ? p_reward - Vs0 : p_reward + _gamma * Vs1 - Vs0;
 
 	Tensor loss({ 1 }, Tensor::VALUE, Vs0 - delta);
 

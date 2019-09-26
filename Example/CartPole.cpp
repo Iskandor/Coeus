@@ -98,13 +98,14 @@ string CartPole::to_string() const
 {	
     string s;
     s += std::to_string(_x);
-    s += '\n';
+    s += ' ';
     s += std::to_string(_x_dot);
-    s += '\n';
+    s += ' ';
     s += std::to_string(_theta);
-    s += '\n';
+    s += ' ';
     s += std::to_string(_theta_dot);
     s += '\n';
+
     return s;
 }
 

@@ -9,6 +9,7 @@ CACLA::CACLA(NeuralNetwork* p_network, GRADIENT_RULE p_rule, float p_alpha)
 {
 	_network = p_network;
 	_alpha = p_alpha;
+	_var = 1;
 	_network_gradient = new NetworkGradient(p_network);
 	_update_rule = RuleFactory::create_rule(p_rule, _network_gradient, p_alpha);
 }
@@ -22,8 +23,11 @@ CACLA::~CACLA()
 
 void CACLA::train(Tensor* p_state, Tensor* p_action, float p_delta)
 {
+	//_var = (1 - 1e-3) * _var + 1e-3 * p_delta * p_delta;
+
 	if (p_delta > 0)
 	{		
+		//int v = ceil(p_delta / sqrt(_var));
 		_network->activate(p_state);
 
 		Tensor loss = _mse.cost_deriv(_network->get_output(), p_action);
@@ -41,7 +45,9 @@ Tensor CACLA::get_action(Tensor* p_state, float p_sigma) const
 
 	for(int i = 0; i < _network->get_output_dim(); i++)
 	{
-		output[i] = RandomGenerator::get_instance().normal_random(_network->get_output()->at(i), p_sigma);
+		float rand = RandomGenerator::get_instance().normal_random(0, p_sigma);
+		output[i] = _network->get_output()->at(i) + rand;
+		//output[i] = RandomGenerator::get_instance().normal_random(0, p_sigma);
 	}
 
 	return output;

@@ -69,7 +69,7 @@ void ContinuousTest::run(int p_hidden)
 			//Encoder::pop_code(state1, _environment.get_state(), 0, 10);
 			state1[0] = _environment.get_state();
 
-			delta = critic.train(&state0, &state1, reward);
+			delta = critic.train(&state0, &state1, reward, _environment.is_finished());
 			actor.train(&state0, &action, delta);
 
 			state0 = state1;
@@ -86,17 +86,24 @@ void ContinuousTest::run(int p_hidden)
 
 void ContinuousTest::run_cart_pole(const int p_episodes)
 {
+	int hidden = 20;
+	float limit = 0.01f;
+
 	NeuralNetwork network_critic;
-	network_critic.add_layer(new CoreLayer("hidden0", 64, TANH, new TensorInitializer(UNIFORM, -0.01, 0.01), CartPole::STATE));
-	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -0.01, 0.01)));
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(UNIFORM, -limit, limit), CartPole::STATE));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	// feed-forward connections
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
 
-	TD critic(&network_critic, ADAM_RULE, 1e-4f, 0.99);
+	TD critic(&network_critic, ADAM_RULE, 1e-4f, 0.8);
 
 	NeuralNetwork network_actor;
-	network_actor.add_layer(new CoreLayer("hidden0", 128, TANH, new TensorInitializer(UNIFORM, -0.01, 0.01), CartPole::STATE));
-	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(UNIFORM, -0.01, 0.01)));
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(UNIFORM, -limit, limit), CartPole::STATE));
+	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(UNIFORM, -limit, limit)));
+	// feed-forward connections
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
 
@@ -123,17 +130,16 @@ void ContinuousTest::run_cart_pole(const int p_episodes)
 		const float sigma = interpolation.interpolate(e);
 
 		while (true) {
-			network_critic.activate(&state0);
-			network_actor.activate(&state0);
 			action = actor.get_action(&state0, sigma);
 
 			_cart_pole.perform_action(action[0]);
+			//cout << network_actor.get_output()->at(0) << " " << action[0] << " " << _cart_pole.to_string();
 			copy_state(_cart_pole.get_state(), state1);
 
 			total_reward += _cart_pole.get_reward();
 			total_steps += 1;
 
-			float delta = critic.train(&state0, &state1, _cart_pole.get_reward());
+			float delta = critic.train(&state0, &state1, _cart_pole.get_reward(), _cart_pole.is_finished());
 			actor.train(&state0, &action, delta);
 
 			state0 = state1;
@@ -152,6 +158,11 @@ void ContinuousTest::run_cart_pole(const int p_episodes)
 		printf("CartPole episode %i finished in %i steps with reward %0.2f\n", e, total_steps, total_reward);
 		printf("%i / %i\n", win, lost);
 	}
+}
+
+void ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_network)
+{
+
 }
 
 void ContinuousTest::test_critic(NeuralNetwork& p_network)
