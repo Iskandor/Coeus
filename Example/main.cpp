@@ -61,7 +61,7 @@ int main()
 	ContinuousTest test;
 
 	//test.run(32);
-	test.run_cart_pole(30000);
+	test.run_cart_pole(300000);
 
 	/*
 	IrisTest iris;
