@@ -59,13 +59,13 @@ CartPole::CartPole() {
 
 CartPole::~CartPole() = default;
 
-vector<float> CartPole::get_state() const
+vector<float> CartPole::get_state(bool p_norm) const
 {
 	vector<float> result(STATE);
 
-	result[0] = _x;
+	result[0] = p_norm ? _x / _x_threshold : _x;
 	result[1] = _x_dot;
-	result[2] = _theta;
+	result[2] = p_norm ? _theta / _theta_threshold_radians : _theta;
 	result[3] = _theta_dot;
 
 	return result;
@@ -123,5 +123,9 @@ bool CartPole::is_finished() const
 
 float CartPole::get_reward()
 {
-	return 1.0;
+	float reward = 0;
+
+	if (is_finished()) reward = -1.0;
+
+	return reward;
 }

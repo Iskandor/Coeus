@@ -18,7 +18,7 @@ public:
     CartPole();
     ~CartPole();
 
-    vector<float> get_state() const;
+    vector<float> get_state(bool p_norm = false) const;
     void perform_action(float p_action);
     void reset();
 
@@ -40,7 +40,7 @@ private:
 	float _force_mag = 10.0;
 	float _tau = 0.02;
 
-	float _theta_threshold_radians = 12 * 2 * Coeus::PI / 360;
+	float _theta_threshold_radians = 12 * Coeus::PI / 180;
 	float _x_threshold = 2.4;
 
 	float _x;

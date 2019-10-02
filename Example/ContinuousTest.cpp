@@ -86,18 +86,18 @@ void ContinuousTest::run(int p_hidden)
 
 void ContinuousTest::run_cart_pole(const int p_episodes)
 {
-	int hidden = 20;
+	int hidden = 64;
 	float limit = 0.1f;
 
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(UNIFORM, -limit, limit), CartPole::STATE));
-	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
 
-	TD critic(&network_critic, NADAM_RULE, 1e-4f, 0.95);
+	TD critic(&network_critic, BACKPROP_RULE, 1e-2f, 0.95);
 
 	NeuralNetwork network_actor;
 
@@ -107,7 +107,7 @@ void ContinuousTest::run_cart_pole(const int p_episodes)
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
 
-	CACLA actor(&network_actor, NADAM_RULE, 1e-4f);
+	CACLA actor(&network_actor, BACKPROP_RULE, 1e-3f);
 	
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
@@ -122,19 +122,20 @@ void ContinuousTest::run_cart_pole(const int p_episodes)
 		//printf("CartPole episode %i...\n", e);
 		_cart_pole.reset();
 
-		copy_state(_cart_pole.get_state(), state0);
+		copy_state(_cart_pole.get_state(true), state0);
 
 		float total_reward = 0;
 		int total_steps = 0;
 
-		const float sigma = 0.1; //interpolation.interpolate(e);
+		const float sigma = 1; //interpolation.interpolate(e);
 
 		while (true) {
 			action = actor.get_action(&state0, sigma);
 
 			_cart_pole.perform_action(action[0]);
 			//cout << network_actor.get_output()->at(0) << " " << action[0] << " " << _cart_pole.to_string();
-			copy_state(_cart_pole.get_state(), state1);
+			//cout << state0 << endl;
+			copy_state(_cart_pole.get_state(true), state1);
 
 			total_reward += _cart_pole.get_reward();
 			total_steps += 1;
@@ -144,19 +145,20 @@ void ContinuousTest::run_cart_pole(const int p_episodes)
 
 			state0 = state1;
 
-			if (_cart_pole.is_finished()) break;
-		}
+			if (e % 1000 == 0) {
+				//cout << network_critic.get_output()->at(0) << " " << delta << endl;
+			}
 
-		/*
-		network_critic.reset();
-		network_actor.reset();
-		*/
+			if (_cart_pole.is_finished()) {				
+				break;
+			}
+		}		
 
 		if (total_steps >= 100) win++;
 		else lost++;
 
 		if (e % 1000 == 0) {
-			test_cart_pole(network_actor, 6000);
+			test_cart_pole(network_actor, network_critic, 6000);
 		}
 
 		//printf("CartPole episode %i finished in %i steps with reward %0.2f\n", e, total_steps, total_reward);
@@ -166,14 +168,14 @@ void ContinuousTest::run_cart_pole(const int p_episodes)
 	
 }
 
-void ContinuousTest::test_cart_pole(NeuralNetwork& p_network, int p_episodes)
+void ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralNetwork& p_critic, int p_episodes)
 {
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
 	Tensor state1({ CartPole::STATE }, Tensor::ZERO);
 
 	_cart_pole.reset();
-	copy_state(_cart_pole.get_state(), state0);
+	copy_state(_cart_pole.get_state(true), state0);
 
 	float total_reward = 0;
 	int total_steps = 0;
@@ -183,12 +185,14 @@ void ContinuousTest::test_cart_pole(NeuralNetwork& p_network, int p_episodes)
 	for (int e = 0; e < p_episodes; ++e) {
 
 
-		p_network.activate(&state0);
+		p_actor.activate(&state0);
+		p_critic.activate(&state0);
 
-		action[0] = p_network.get_output()->at(0);
+		action[0] = p_actor.get_output()->at(0);
+		//cout << p_critic.get_output()->at(0) << " state: " << state0 << endl;
 
 		_cart_pole.perform_action(action[0]);
-		copy_state(_cart_pole.get_state(), state1);
+		copy_state(_cart_pole.get_state(true), state1);
 
 		total_reward += _cart_pole.get_reward();
 		total_steps += 1;

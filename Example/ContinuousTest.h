@@ -11,7 +11,7 @@ public:
 
 	void run(int p_hidden);
 	void run_cart_pole(int p_episodes);
-	void test_cart_pole(Coeus::NeuralNetwork& p_network, int p_episodes);
+	void test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralNetwork& p_critic, int p_episodes);
 
 private:
 	SimpleContinuousEnv _environment;
