@@ -384,6 +384,9 @@
     <ClCompile Include="IMotivationModule.cpp">
       <Filter>Source Files\Algorithm\IM</Filter>
     </ClCompile>
+    <ClCompile Include="IActorCritic.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -694,6 +697,9 @@
     </ClInclude>
     <ClInclude Include="IMotivationModule.h">
       <Filter>Header Files\Algorithm\IM</Filter>
+    </ClInclude>
+    <ClInclude Include="IActorCritic.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

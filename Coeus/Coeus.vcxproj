@@ -209,6 +209,7 @@
     <ClCompile Include="GRULayer.cpp" />
     <ClCompile Include="HellingerDistance.cpp" />
     <ClCompile Include="IActivationFunction.cpp" />
+    <ClCompile Include="IActorCritic.cpp" />
     <ClCompile Include="IBatchModule.cpp" />
     <ClCompile Include="ICM.cpp" />
     <ClCompile Include="IMotivationModule.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="GRULayer.h" />
     <ClInclude Include="HellingerDistance.h" />
     <ClInclude Include="IActivationFunction.h" />
+    <ClInclude Include="IActorCritic.h" />
     <ClInclude Include="IBatchModule.h" />
     <ClInclude Include="ICM.h" />
     <ClInclude Include="ICostFunction.h" />

@@ -123,7 +123,7 @@ bool CartPole::is_finished() const
 
 float CartPole::get_reward()
 {
-	float reward = 0;
+	float reward = 1;
 
 	if (is_finished()) reward = -1.0;
 
