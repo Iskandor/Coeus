@@ -296,6 +296,18 @@ void TensorOperatorMKL::vv_add(float* p_x, float* p_y, float* p_z, const int p_s
 	vsAdd(p_size, p_x, p_y, p_z);
 }
 
+void TensorOperatorMKL::vv_add(float * p_x, float p_ax, float * p_y, float p_ay, float * p_z, int p_size)
+{
+	if (p_ax == 1 && p_ay == 1) {
+		vsAdd(p_size, p_x, p_y, p_z);
+	}
+	else {
+		for (int i = 0; i < p_size; i++) {
+			(*p_z++) = *p_x++ * p_ax + *p_y++ * p_ay;
+		}
+	}
+}
+
 void TensorOperatorMKL::vv_sub(float* p_x, float* p_y, float* p_z, int p_size)
 {
 	vsSub(p_size, p_x, p_y, p_z);

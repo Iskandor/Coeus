@@ -87,7 +87,7 @@ void ContinuousTest::run(int p_hidden)
 void ContinuousTest::run_cart_pole(const int p_episodes)
 {
 	int hidden = 128;
-	float limit = 0.01f;
+	float limit = 0.001f;
 
 	NeuralNetwork network_critic;
 

@@ -8,6 +8,7 @@ public:
 	ITensorOperator& operator=(ITensorOperator &&) = delete;
 
 	virtual void vv_add(float* p_x, float* p_y, float* p_z, int p_size) = 0;
+	virtual void vv_add(float* p_x, float p_ax, float* p_y, float p_ay, float* p_z, int p_size) = 0;
 	virtual void vv_sub(float* p_x, float* p_y, float* p_z, int p_size) = 0;
 	virtual void vv_ewprod(float* p_x, float* p_y, float* p_z, int p_size) = 0;
 	virtual void vv_ewdiv(float* p_x, float* p_y, float* p_z, int p_size) = 0;

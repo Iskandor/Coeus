@@ -10,6 +10,7 @@ namespace Coeus
 		virtual ~TensorOperatorMKL() = default;
 
 		void vv_add(float* p_x, float* p_y, float* p_z, int p_size) override;
+		void vv_add(float* p_x, float p_ax, float* p_y, float p_ay, float* p_z, int p_size) override;
 		void vv_sub(float* p_x, float* p_y, float* p_z, int p_size) override;
 		void vv_ewprod(float* p_x, float* p_y, float* p_z, int p_size) override;
 		void vv_ewdiv(float* p_x, float* p_y, float* p_z, int p_size) override;
