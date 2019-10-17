@@ -22,7 +22,7 @@ namespace Coeus {
 		Tensor* get_output() const { return _forward_model->get_output(); }
 
 	private:
-		ReplayBuffer<PredictionItem>* _buffer;
+		ReplayBuffer<TransitionItem>* _buffer;
 		int		_sample;
 		Tensor* _input;
 		Tensor* _target;

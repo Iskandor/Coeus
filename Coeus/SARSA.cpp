@@ -20,10 +20,10 @@ SARSA::~SARSA()
 float SARSA::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const int p_action1, const float p_reward, const bool p_final) const
 {
 	_network->activate(p_state1);
-	const float Qs1a1 = p_final ? 0 : _network->get_output()->at(p_action1);
+	const float Qs1a1 = _network->get_output()->at(p_action1);
 	_network->activate(p_state0);
 	const float Qs0a0 = _network->get_output()->at(p_action0);
-	const float delta = p_reward + _gamma * Qs1a1 - Qs0a0;
+	const float delta = p_final ? p_reward : p_reward + _gamma * Qs1a1 - Qs0a0;
 	Tensor loss({ _network->get_output_dim() }, Tensor::ZERO);
 	loss[p_action0] = Qs0a0 - delta;
 

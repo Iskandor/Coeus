@@ -21,7 +21,7 @@ void EGreedyExploration::update(const int p_t)
 	if (_interpolation != nullptr)
 	{
 		_epsilon = _interpolation->interpolate(p_t);
-		cout << _epsilon << endl;
+		//cout << _epsilon << endl;
 	}
 }
 

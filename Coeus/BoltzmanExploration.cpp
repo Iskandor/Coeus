@@ -46,6 +46,6 @@ void BoltzmanExploration::update(int p_t)
 	if (_interpolation != nullptr)
 	{
 		_T = _interpolation->interpolate(p_t);
-		cout << _T << endl;
+		//cout << _T << endl;
 	}
 }

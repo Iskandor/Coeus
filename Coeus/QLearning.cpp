@@ -20,13 +20,15 @@ QLearning::~QLearning()
 	delete _update_rule;
 }
 
-float QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward) const
+float QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, const bool p_final) const
 {
 	const float maxQs1a = calc_max_qa(p_state1);
 
 	_network->activate(p_state0);
 	const float Qs0a = _network->get_output()->at(p_action0);
-	const float delta = p_reward + _gamma * maxQs1a - Qs0a;
+	float delta = p_reward;
+	
+	if (!p_final) delta += _gamma * maxQs1a - Qs0a;
 
 	Tensor loss({ _network->get_output_dim() }, Tensor::ZERO);
 	loss[p_action0] = Qs0a - delta;

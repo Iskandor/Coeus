@@ -12,7 +12,7 @@ ICM::ICM(NeuralNetwork* p_forward_model, GradientAlgorithm* p_forward_algorithm,
 
 	if (p_size > 0)
 	{
-		_buffer = new ReplayBuffer<PredictionItem>(p_size);
+		_buffer = new ReplayBuffer<TransitionItem>(p_size);
 	}
 
 	_input = nullptr;
@@ -52,7 +52,7 @@ void ICM::add(Tensor* p_state0, Tensor* p_action, Tensor* p_state1) const
 {
 	if (_buffer != nullptr)
 	{
-		_buffer->add_item(new PredictionItem(p_state0, p_action, p_state1));
+		_buffer->add_item(new TransitionItem(p_state0, p_action, p_state1));
 	}
 
 }
@@ -73,7 +73,7 @@ float ICM::train(const int p_sample)
 			_target = new Tensor({ p_sample, _forward_model->get_output_dim() }, Tensor::ZERO);
 		}
 
-		vector<PredictionItem*>* sample = _buffer->get_sample(p_sample);
+		vector<TransitionItem*>* sample = _buffer->get_sample(p_sample);
 
 		_input->reset_index();
 		_target->reset_index();
