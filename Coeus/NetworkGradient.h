@@ -14,8 +14,8 @@ public:
 
 	void activate(Tensor* p_input);
 	void activate(vector<Tensor*>* p_input);
-	void calc_gradient(Tensor* p_value = nullptr);
-	void calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss = nullptr);
+	virtual void calc_gradient(Tensor* p_loss = nullptr);
+	virtual void calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss = nullptr);
 
 	NeuralNetwork* get_network() const { return _network; }
 	map<string, Tensor>* get_gradient() { return &_gradient; }
@@ -24,7 +24,7 @@ public:
 	void set_recurrent_mode(RECURRENT_MODE p_value);
 	RECURRENT_MODE get_recurrent_mode() const { return _recurrent_mode; }
 
-private:
+protected:
 	void calc_derivative();
 	void unfold_layer(const string& p_layer);
 

@@ -1,4 +1,3 @@
-
 #include "FFN.h"
 #include "IrisTest.h"
 #include "RNN.h"
@@ -13,13 +12,12 @@
 #include "IOUtils.h"
 #include "ContinuousTest.h"
 
-
 using namespace std;
 
 int main()
-{	
-	//FFN model;
-	//model.run();
+{
+	FFN model;
+	model.run();
 	//model.run_iris();
 
 	//RNN model;
@@ -32,36 +30,25 @@ int main()
 	//model.run_sin_prediction();
 	//model.run_add_problem_gru();
 
-	/*
-	Tensor m({ 3,5,4 }, Tensor::VALUE, 2);
-	Tensor n({ 3,4 }, Tensor::RANDOM, 1);
-
-	cout << m << endl;
-
-	//n.replicate(3);
-	TensorOperator::instance().V_reduce(n.arr(), m.arr(), 3, 5, 4, 1);
-
-	cout << n << endl;
-	*/
-
 	//CNN model;
 	//model.run();
 	//model.run_mnist();
 	//model.test();
 	
 	//MazeExample example;
-	//example.example_q(64, 1e-3, 0, true);
-	//example.example_sarsa(64, 1e-3, 0, true);
-	//example.example_double_q(64, 1e-3);
-	//example.example_actor_critic(64);
+	//example.example_q(15000);
+	//example.example_sarsa(30000);
+	//example.example_double_q(15000);
+	//example.example_actor_critic(1000);
+
 	//example.example_deep_q(64, 1e-3, 0, true);
 	//example.example_icm(64);
 	//example.example_selector(64);
 
-	ContinuousTest test;
+	//ContinuousTest test;
 
 	//test.run(32);
-	test.run_cart_pole(50000);
+	//test.run_cart_pole(50000);
 
 	/*
 	IrisTest iris;

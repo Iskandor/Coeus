@@ -313,6 +313,18 @@ void TensorOperatorMKL::vv_sub(float* p_x, float* p_y, float* p_z, int p_size)
 	vsSub(p_size, p_x, p_y, p_z);
 }
 
+void TensorOperatorMKL::vv_sub(float* p_x, float p_ax, float* p_y, float p_ay, float* p_z, int p_size)
+{
+	if (p_ax == 1 && p_ay == 1) {
+		vsSub(p_size, p_x, p_y, p_z);
+	}
+	else {
+		for (int i = 0; i < p_size; i++) {
+			(*p_z++) = *p_x++ * p_ax - *p_y++ * p_ay;
+		}
+	}
+}
+
 void TensorOperatorMKL::vv_ewprod(float* p_x, float* p_y, float* p_z, const int p_size)
 {
 	vsMul(p_size, p_x, p_y, p_z);
@@ -381,4 +393,32 @@ void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Bt
 		1, p_A, lda,
 		p_B, ldb,
 		p_accumulate ? 1 : 0, p_C, p_cols);
+}
+
+void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float p_alpha, float* p_C, float p_beta, int p_rows, int p_common, int p_cols)
+{
+	const CBLAS_TRANSPOSE Atrans = p_Atrans ? CblasTrans : CblasNoTrans;
+	const CBLAS_TRANSPOSE Btrans = p_Btrans ? CblasTrans : CblasNoTrans;
+
+	const int lda = p_Atrans ? p_rows : p_common;
+	const int ldb = p_Btrans ? p_common : p_cols;
+
+	cblas_sgemm(CblasRowMajor, Atrans, Btrans,
+		p_rows, p_cols, p_common,
+		p_alpha, p_A, lda,
+		p_B, ldb,
+		p_beta, p_C, p_cols);
+}
+
+void TensorOperatorMKL::inv_M(float* p_A, float* p_Ai, int p_rows, int p_cols)
+{
+	int *ipiv = new int[p_rows];
+
+	memcpy(p_Ai, p_A, sizeof(float) * p_rows * p_cols);
+	
+	LAPACKE_sgetrf(LAPACK_ROW_MAJOR, p_rows, p_cols, p_Ai, p_cols, ipiv);
+
+	LAPACKE_sgetri(LAPACK_ROW_MAJOR, p_rows, p_Ai, p_cols, ipiv);
+
+	delete[] ipiv;
 }

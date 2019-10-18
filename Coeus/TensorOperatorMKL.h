@@ -12,6 +12,7 @@ namespace Coeus
 		void vv_add(float* p_x, float* p_y, float* p_z, int p_size) override;
 		void vv_add(float* p_x, float p_ax, float* p_y, float p_ay, float* p_z, int p_size) override;
 		void vv_sub(float* p_x, float* p_y, float* p_z, int p_size) override;
+		void vv_sub(float* p_x, float p_ax, float* p_y, float p_ay, float* p_z, int p_size) override;
 		void vv_ewprod(float* p_x, float* p_y, float* p_z, int p_size) override;
 		void vv_ewdiv(float* p_x, float* p_y, float* p_z, int p_size) override;
 		void vc_prod(float* p_x, float p_y, float* p_z, int p_size) override;
@@ -21,7 +22,10 @@ namespace Coeus
 
 		void vM_prod(float* p_x, float* p_A, float* p_y, int p_rows, int p_cols) override;
 		void MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float* p_C, int p_rows, int p_common, int p_cols, bool p_accumulate) override;
+		void MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float p_alpha, float* p_C, float p_beta, int p_rows, int p_common, int p_cols) override;
 
+		void inv_M(float* p_A, float* p_Ai, int p_rows, int p_cols) override;
+		
 		void full_int_s(float* p_net, float* p_x, float* p_w, int p_rows, int p_cols) override;
 		void full_int_b(int p_batch, float* p_net, float* p_x, float* p_w, int p_rows, int p_cols) override;
 		void full_bias_s(float* p_net, float* p_bias, int p_rows) override;
@@ -39,8 +43,6 @@ namespace Coeus
 
 		void v_reduce(float* p_x, float* p_y, int p_size) override;
 		void M_reduce(float* p_x, float* p_A, bool p_row_major, int p_rows, int p_cols, bool p_accumulate) override;
-		void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols, int p_axis) override;
-
-
+		void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols, int p_axis) override;		
 	};
 }

@@ -387,6 +387,12 @@
     <ClCompile Include="IActorCritic.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
+    <ClCompile Include="NaturalGradient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GAE.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -699,6 +705,12 @@
       <Filter>Header Files\Algorithm\IM</Filter>
     </ClInclude>
     <ClInclude Include="IActorCritic.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="NaturalGradient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GAE.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>

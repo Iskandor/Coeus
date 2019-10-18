@@ -12,6 +12,7 @@ namespace Coeus {
 class __declspec(dllexport) NeuralNetwork : public ParamModel
 {
 	friend class NetworkGradient;
+	friend class NaturalGradient;
 public:
 	NeuralNetwork();
 	explicit NeuralNetwork(json p_data);

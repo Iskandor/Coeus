@@ -161,7 +161,11 @@ void BaseLayer::set_delta_out(Tensor* p_value)
 	}
 	else
 	{
-		_delta_out = new Tensor(_output->rank(), Tensor::copy_shape(_output->rank(), _output->shape()), Tensor::ONES);
+		if (_delta_out == nullptr)
+		{
+			_delta_out = new Tensor(_output->rank(), Tensor::copy_shape(_output->rank(), _output->shape()), Tensor::ONES);
+		}
+		
 	}
 }
 

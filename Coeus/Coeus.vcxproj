@@ -191,6 +191,7 @@
     <ClCompile Include="EGreedyExploration.cpp" />
     <ClCompile Include="ExponentialDecay.cpp" />
     <ClCompile Include="ExponentialInterpolation.cpp" />
+    <ClCompile Include="GAE.cpp" />
     <ClCompile Include="GradientAccumulator.cpp" />
     <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="IUpdateRule.cpp" />
     <ClCompile Include="KLDivergence.cpp" />
     <ClCompile Include="LinearInterpolation.cpp" />
+    <ClCompile Include="NaturalGradient.cpp" />
     <ClCompile Include="NeuronOperator.cpp" />
     <ClCompile Include="Param.cpp" />
     <ClCompile Include="PoolingLayer.cpp" />
@@ -283,6 +285,7 @@
     <ClInclude Include="EGreedyExploration.h" />
     <ClInclude Include="ExponentialDecay.h" />
     <ClInclude Include="ExponentialInterpolation.h" />
+    <ClInclude Include="GAE.h" />
     <ClInclude Include="GradientAccumulator.h" />
     <ClInclude Include="GradientAlgorithm.h" />
     <ClInclude Include="base64.h" />
@@ -318,6 +321,7 @@
     <ClInclude Include="IUpdateRule.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="KLDivergence.h" />
+    <ClInclude Include="NaturalGradient.h" />
     <ClInclude Include="NeuronOperator.h" />
     <ClInclude Include="Param.h" />
     <ClInclude Include="LinearInterpolation.h" />

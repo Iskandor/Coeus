@@ -128,7 +128,7 @@ void CNN::run_mnist()
 			error += optimizer.train(_train_input[s], _train_target[s]);
 		}
 		auto finish = chrono::high_resolution_clock::now();
-		cout << "MNIST 60: " << (finish - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
+		cout << "MNIST 6000: " << (finish - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 		cout << error << endl;
 	}
 }

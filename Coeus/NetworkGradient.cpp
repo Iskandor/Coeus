@@ -29,10 +29,10 @@ NetworkGradient::~NetworkGradient()
 	}
 }
 
-void NetworkGradient::calc_gradient(Tensor* p_value) {
+void NetworkGradient::calc_gradient(Tensor* p_loss) {
 
 	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
-	output_layer->set_delta_out(p_value);
+	output_layer->set_delta_out(p_loss);
 
 	for (auto& it : _calculation_graph)
 	{
@@ -83,13 +83,7 @@ void NetworkGradient::calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss)
 		}
 	}
 
-	BaseLayer* output_layer = _network->_layers[_network->_output_layer];
-	output_layer->set_delta_out(p_loss);
-
-	for (auto& it : _calculation_graph)
-	{
-		it->calc_gradient(_gradient, _derivative);
-	}
+	calc_gradient(p_loss);
 }
 
 void NetworkGradient::reset()

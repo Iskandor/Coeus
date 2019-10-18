@@ -71,6 +71,7 @@ void FFN::run() {
 	BackProp optimizer(&network);
 
 	optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
+	//optimizer.init(new QuadraticCost(), 0.5f);
 
 	const auto start = chrono::system_clock::now();
 
