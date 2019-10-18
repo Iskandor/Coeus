@@ -1,7 +1,10 @@
 #pragma once
 #include "Tensor.h"
-#include <vector>
 #include "NeuralNetwork.h"
+
+#include <vector>
+#include <windows.h>
+#include <tchar.h>
 
 using namespace Coeus;
 
@@ -11,22 +14,28 @@ public:
 	MazeExample();
 	~MazeExample();
 
-	int example_q(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
-	void example_double_q(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
-	int example_sarsa(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
-	void example_actor_critic(int p_hidden);
+	int example_q(int p_epochs, bool p_verbose = true);
+	void example_double_q(int p_epochs, bool p_verbose = true);
+	int example_sarsa(int p_epochs, bool p_verbose = true);
+	void example_actor_critic(int p_epochs, bool p_verbose = true);
 	int example_deep_q(int p_hidden, float p_alpha, float p_lambda = 0, bool p_verbose = true);
 	void example_icm(int p_hidden);
-
-
 	void example_selector(int p_hidden);
 
 private:
+	HANDLE _hConsole_c;
+
 	int test_q(NeuralNetwork* p_network, bool p_verbose = true) const;
 	void test_v(NeuralNetwork* p_network, bool p_verbose = true) const;
+	void test_policy(NeuralNetwork& p_network);
 
 	static Tensor encode_state(vector<float> *p_sensors);
 	static int choose_action(Tensor* p_input, float epsilon);
 	static void binary_encoding(float p_value, Tensor* p_vector);
+
+	void console_print(string &p_s, int p_x, int p_y);	
+	void console_clear();
+	TCHAR console_wait();
+	string string_format(const std::string fmt_str, ...);
 };
 

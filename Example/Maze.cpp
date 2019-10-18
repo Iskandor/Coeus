@@ -124,11 +124,14 @@ string Maze::toString() {
             if (_actor == index) {
                 s += "@";
             }
+			else if (index == 0) {
+				s += "S";
+			}
             else if (_goal == index) {
-                s += "*";
+                s += "G";
             }
             else if (_mazeTable[index] == 0) {
-                s += " ";
+                s += "#";
             }
             else if (_mazeTable[index] == 1) {
                 s += "#";
@@ -137,8 +140,39 @@ string Maze::toString() {
                 s += "O";
             }
         }
-        s += '\n';
+        s += "\n";
     }
 
     return s;
+}
+
+string Maze::toString(int p_row)
+{
+	string s;
+
+	int index;
+
+	for (int j = 0; j < _mazeX; j++) {
+		index = p_row * _mazeX + j;
+		if (_actor == index) {
+			s += "@";
+		}
+		else if (index == 0) {
+			s += "S";
+		}
+		else if (_goal == index) {
+			s += "G";
+		}
+		else if (_mazeTable[index] == 0) {
+			s += "#";
+		}
+		else if (_mazeTable[index] == 1) {
+			s += "#";
+		}
+		else if (_mazeTable[index] == 2) {
+			s += "O";
+		}
+	}
+
+	return s;
 }

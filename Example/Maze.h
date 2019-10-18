@@ -22,6 +22,7 @@ public:
     void reset() override;
 
     string toString();
+	string toString(int p_row);
 
     int actor() const {
         return _actor;
