@@ -16,7 +16,6 @@ namespace Coeus {
 		map<string, Tensor> _fim;
 		map<string, Tensor> _inv_fim;
 		map<string, Tensor> _cache;
-		int					_fim_n;
 		float				_epsilon;
 	};
 }

@@ -12,7 +12,7 @@ NeuronOperator::NeuronOperator(const int p_dim, const ACTIVATION p_activation)
 {
 	_id = IDGen::instance().next();
 	_dim = p_dim;
-	_bias = new Param(IDGen::instance().next(), new Tensor({ p_dim, 1 }, Tensor::ZERO));
+	_bias = new Param(IDGen::instance().next(), new Tensor({ 1, p_dim }, Tensor::ZERO));
 	add_param(_bias->get_id(), _bias->get_data());
 
 	_activation_function = ActivationFunctionFactory::create_function(p_activation);

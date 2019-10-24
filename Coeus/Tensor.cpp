@@ -154,6 +154,16 @@ Tensor Tensor::T()
 	return result;
 }
 
+Tensor Tensor::vec() const
+{
+	Tensor result = *this;
+	result._rank = 1;
+	const int shape = result._shape[0] * result._shape[1];
+	result.free_shape();
+	result.init_shape({shape});
+	return result;
+}
+
 Tensor& Tensor::operator+=(const Tensor& p_rhs)
 {
 	check_size_eq(p_rhs._size);
@@ -198,18 +208,25 @@ Tensor Tensor::operator*=(const Tensor& p_rhs) const
 	
 	if (_rank == 1 && p_rhs._rank == 1)
 	{
-		rows = _shape[0];
-		common_l = 1;
-		cols = p_rhs._shape[0];
+		rows = _transpose ? 1 : _shape[0];
+		common_l = _transpose ? _shape[0] : 1;
+		cols = p_rhs._transpose ? p_rhs._shape[0] : 1;
+		common_r = p_rhs._transpose ? 1 : p_rhs._shape[0];
+#ifdef _DEBUG
+		if (common_l != common_r)
+		{
+			assert(("Invalid tensor product (common_l != common_r)", 0));
+		}
+#endif		
 		result = Zero({ rows, cols });
-		TensorOperator::instance().MM_prod(_arr, false, p_rhs._arr, true, result._arr, rows, common_l, cols);
+		TensorOperator::instance().MM_prod(_arr, _transpose, p_rhs._arr, p_rhs._transpose, result._arr, rows, common_l, cols);
 	}
 	if (_rank == 1 && p_rhs._rank == 2)
 	{
 		rows = _transpose ? 1 : _shape[0];
 		common_l = _transpose ? _shape[0] : 1;
-		cols = p_rhs._transpose ? p_rhs._shape[1] : p_rhs._shape[0];
-		common_r = p_rhs._transpose ? p_rhs._shape[0] : p_rhs._shape[1];
+		cols = p_rhs._transpose ? p_rhs._shape[0] : p_rhs._shape[1];
+		common_r = p_rhs._transpose ? p_rhs._shape[1] : p_rhs._shape[0];
 #ifdef _DEBUG
 		if (common_l != common_r)
 		{
@@ -223,8 +240,8 @@ Tensor Tensor::operator*=(const Tensor& p_rhs) const
 	{
 		rows = _transpose ? _shape[1] : _shape[0];
 		common_l = _transpose ? _shape[0] : _shape[1];
-		cols = p_rhs._transpose ? 1 : p_rhs._shape[0];
-		common_r = p_rhs._transpose ? p_rhs._shape[0] : 1;
+		cols = p_rhs._transpose ? p_rhs._shape[0] : 1;
+		common_r = p_rhs._transpose ? 1 : p_rhs._shape[0];
 #ifdef _DEBUG
 		if (common_l != common_r)
 		{
@@ -238,8 +255,8 @@ Tensor Tensor::operator*=(const Tensor& p_rhs) const
 	{
 		rows = _transpose ? _shape[1] : _shape[0];
 		common_l = _transpose ? _shape[0] : _shape[1];
-		cols = p_rhs._transpose ? p_rhs._shape[1] : p_rhs._shape[0];
-		common_r = p_rhs._transpose ? p_rhs._shape[0] : p_rhs._shape[1];
+		cols = p_rhs._transpose ? p_rhs._shape[0] : p_rhs._shape[1];
+		common_r = p_rhs._transpose ? p_rhs._shape[1] : p_rhs._shape[0];
 #ifdef _DEBUG
 		if (common_l != common_r)
 		{
@@ -304,6 +321,12 @@ Tensor Tensor::operator-(const float p_rhs) const
 }
 
 Tensor Tensor::operator*(const Tensor& p_rhs) const
+{
+	Tensor result = *this;
+	return result *= p_rhs;
+}
+
+Tensor Tensor::operator*(const float p_rhs) const
 {
 	Tensor result = *this;
 	return result *= p_rhs;

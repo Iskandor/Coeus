@@ -34,6 +34,7 @@ public:
 	Tensor& operator = (const Tensor& p_copy);
 	float& operator []( int p_index) const;
 	Tensor T();
+	Tensor vec() const;
 
 	Tensor& operator += (const Tensor& p_rhs);
 	Tensor& operator += (float p_rhs);
@@ -48,6 +49,7 @@ public:
 	Tensor operator - (const Tensor& p_rhs) const;
 	Tensor operator - (float p_rhs) const;
 	Tensor operator * (const Tensor& p_rhs) const;
+	Tensor operator * (float p_rhs) const;
 
 	void get_row(Tensor& p_tensor, int p_row) const;
 	void set_row(Tensor& p_tensor, int p_row) const;

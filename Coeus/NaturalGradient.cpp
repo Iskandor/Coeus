@@ -1,5 +1,5 @@
 /*
- * Natural Gradient algorithm
+ * Natural gradient algorithm
  * https://wiseodd.github.io/techblog/2018/03/14/natural-gradient/
  */
 #include "NaturalGradient.h"
@@ -8,15 +8,16 @@
 using namespace Coeus;
 
 NaturalGradient::NaturalGradient(NeuralNetwork* p_network) : NetworkGradient(p_network),
-    _fim_n(1),
-	_epsilon(1e-8f)
+	_epsilon(1e-2f)
 {
-	for (auto it = p_network->_params.begin(); it != p_network->_params.end(); ++it)
+	for (auto& _param : p_network->_params)
 	{
-		_fim[it->first] = Tensor({it->second->shape(0), it->second->shape(0)}, Tensor::ZERO);
-		_inv_fim[it->first] = Tensor({it->second->shape(0), it->second->shape(0)}, Tensor::ONES);
-		_cache[it->first] = Tensor({it->second->shape(0), it->second->shape(0)}, Tensor::ZERO);
+		const int row = _param.second->shape(0) * _param.second->shape(1);
+		_fim[_param.first] = Tensor({ row, row }, Tensor::ONES);
+		_inv_fim[_param.first] = Tensor({ row, row }, Tensor::ZERO);
 	}
+
+	_cache = p_network->get_empty_params();
 }
 
 
@@ -30,30 +31,29 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 
 	for (auto& it : _calculation_graph)
 	{
-		it->calc_gradient(_gradient, _derivative);
+		it->calc_gradient(_cache, _derivative);
 	}
-
-	_fim_n++;
-
+	
 	for (auto& it : _gradient)
 	{
-		//_invFisherMatrix[connectionId] = (1 + _epsilon) * _invFisherMatrix[connectionId] - _epsilon * _invFisherMatrix[connectionId] * _regGradient[connectionId] * _regGradient[connectionId].T() * _invFisherMatrix[connectionId];
-		const int rows = it.second.shape(0);
-		const int cols = it.second.shape(1);
+		const int size = it.second.shape(0) * it.second.shape(1);
+
+		Tensor temp = _fim[it.first];
 		
 		// estimate Fisher information matrix (FIM)
-		TensorOperator::instance().MM_prod(it.second.arr(), false, it.second.arr(), true, static_cast<float>(_fim_n - 1) / _fim_n, _fim[it.first].arr(), 1.f / _fim_n, rows, cols, rows);
-
-		// estimate inverse FIM
-		TensorOperator::instance().MM_prod(_inv_fim[it.first].arr(), false, _fim[it.first].arr(), false, _cache[it.first].arr(), rows, rows, rows, false);
-		TensorOperator::instance().MM_prod(_cache[it.first].arr(), false, _inv_fim[it.first].arr(), false, _cache[it.first].arr(), rows, rows, rows, false);
-		TensorOperator::instance().vv_sub(_inv_fim[it.first].arr(), (1 + _epsilon), _cache[it.first].arr(), _epsilon, _inv_fim[it.first].arr(), rows * rows);
+		TensorOperator::instance().MM_prod(_cache[it.first].arr(), false, _cache[it.first].arr(), true, temp.arr(), size, 1, size);
+		TensorOperator::instance().vv_sub(temp.arr(), _fim[it.first].arr(), temp.arr(), size * size);
+		TensorOperator::instance().vv_add(_fim[it.first].arr(), 1, temp.arr(), _epsilon, _fim[it.first].arr(), size * size);		
 
 		// calculate inverse FIM
-		//TensorOperator::instance().inv_M(_fim[it.first].arr(), _inv_fim[it.first].arr(), rows, rows);
-		//cout << _inv_fim[it.first] << endl;
+		TensorOperator::instance().inv_M(_fim[it.first].arr(), _inv_fim[it.first].arr(), size, size);
+		
 		// use FIM inverse to calculate natural gradient
-		TensorOperator::instance().MM_prod(_inv_fim[it.first].arr(), false, it.second.arr(), false, it.second.arr(), rows, rows, cols, false);
+		TensorOperator::instance().MM_prod(_inv_fim[it.first].arr(), false, _cache[it.first].arr(), false, it.second.arr(), size, size, 1);
+	}
+	if (_epsilon > 1e-8)
+	{
+		_epsilon *= 0.995;
 	}	
 }
 
