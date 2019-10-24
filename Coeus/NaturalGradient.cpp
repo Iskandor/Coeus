@@ -33,7 +33,7 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 	{
 		it->calc_gradient(_cache, _derivative);
 	}
-	
+
 	for (auto& it : _gradient)
 	{
 		const int size = it.second.shape(0) * it.second.shape(1);
@@ -55,9 +55,4 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 	{
 		_epsilon *= 0.995;
 	}	
-}
-
-void NaturalGradient::calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss)
-{
-	
 }

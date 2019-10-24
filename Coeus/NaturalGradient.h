@@ -9,7 +9,6 @@ namespace Coeus {
 		~NaturalGradient();
 
 		void calc_gradient(Tensor* p_loss = nullptr) override;
-		void calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss = nullptr) override;
 
 	private:
 

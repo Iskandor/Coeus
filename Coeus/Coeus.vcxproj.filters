@@ -85,9 +85,6 @@
     <Filter Include="Source Files\Algorithm\RL\Rules">
       <UniqueIdentifier>{cbf11517-0a20-4432-81a7-0157f2ff597c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Algorithm\RL\Rules">
-      <UniqueIdentifier>{072be60b-4087-422e-a35c-da5c11e6d567}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Algorithm\Modules\LRM">
       <UniqueIdentifier>{b0d7efab-4296-4270-af61-ea23e797b286}</UniqueIdentifier>
     </Filter>
@@ -281,9 +278,6 @@
     </ClCompile>
     <ClCompile Include="RuleFactory.cpp">
       <Filter>Source Files\Algorithm</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneralTDRule.cpp">
-      <Filter>Source Files\Algorithm\RL\Rules</Filter>
     </ClCompile>
     <ClCompile Include="PowerSignRule.cpp">
       <Filter>Source Files\Algorithm\Supervised\Rules</Filter>
@@ -568,9 +562,6 @@
     </ClInclude>
     <ClInclude Include="RuleFactory.h">
       <Filter>Header Files\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneralTDRule.h">
-      <Filter>Header Files\Algorithm\RL\Rules</Filter>
     </ClInclude>
     <ClInclude Include="PowerSignRule.h">
       <Filter>Header Files\Algorithm\Supervised\Rules</Filter>

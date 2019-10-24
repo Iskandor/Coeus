@@ -226,7 +226,6 @@
     <ClCompile Include="Param.cpp" />
     <ClCompile Include="PoolingLayer.cpp" />
     <ClCompile Include="QLearning.cpp" />
-    <ClCompile Include="GeneralTDRule.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="RuleFactory.cpp" />
@@ -327,7 +326,6 @@
     <ClInclude Include="LinearInterpolation.h" />
     <ClInclude Include="PoolingLayer.h" />
     <ClInclude Include="QLearning.h" />
-    <ClInclude Include="GeneralTDRule.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="RuleFactory.h" />
