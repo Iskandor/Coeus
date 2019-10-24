@@ -3,14 +3,16 @@
 #include <cassert>
 #include <iostream>
 #include "TensorPool.h"
+#include "TensorOperator.h"
 
 bool Tensor::pooling = true;
 
-Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0), _end(0)
+Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0), _end(0), _transpose(false)
 {
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, const INIT p_init, const float p_value) {
+	_transpose = false;
 	init_shape(p_shape);
 	_arr = alloc_arr(_size);
 	_end = 0;
@@ -18,6 +20,7 @@ Tensor::Tensor(const initializer_list<int> p_shape, const INIT p_init, const flo
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, float* p_data) {
+	_transpose = false;
 	init_shape(p_shape);
 	_arr = p_data;
 	_end = 0;
@@ -25,6 +28,7 @@ Tensor::Tensor(const initializer_list<int> p_shape, float* p_data) {
 
 Tensor::Tensor(const initializer_list<int> p_shape, const vector<uint8_t>& p_data)
 {
+	_transpose = false;
 	init_shape(p_shape);
 	_arr = alloc_arr(_size);
 	_end = 0;
@@ -36,12 +40,14 @@ Tensor::Tensor(const initializer_list<int> p_shape, const vector<uint8_t>& p_dat
 }
 
 Tensor::Tensor(const int p_rank, int* p_shape, float* p_data) {
+	_transpose = false;
 	init_shape(p_rank, p_shape, false);
 	_arr = p_data;
 	_end = 0;
 }
 
 Tensor::Tensor(const int p_rank, int* p_shape, const INIT p_init, const float p_value) {
+	_transpose = false;
 	init_shape(p_rank, p_shape, true);
 	_arr = alloc_arr(_size);
 	_end = 0;
@@ -49,6 +55,7 @@ Tensor::Tensor(const int p_rank, int* p_shape, const INIT p_init, const float p_
 }
 
 Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<float> p_inputs) {
+	_transpose = false;
 	init_shape(p_shape);
 	_arr = alloc_arr(_size);
 	_end = 0;
@@ -62,6 +69,7 @@ Tensor::Tensor(const initializer_list<int> p_shape, initializer_list<float> p_in
 }
 
 Tensor::Tensor(const Tensor& p_copy) {
+	_transpose = p_copy._transpose;;
 	_rank = p_copy._rank;
 	_shape = alloc_shape(_rank);
 	_size = p_copy._size;
@@ -108,6 +116,7 @@ Tensor Tensor::Random(const initializer_list<int> p_shape, const float p_limit) 
 }
 
 Tensor& Tensor::operator=(const Tensor& p_copy) {
+	_transpose = p_copy._transpose;
 	if (_rank != p_copy._rank) {
 		if (_shape != nullptr) {
 			free_shape();
@@ -137,6 +146,169 @@ Tensor& Tensor::operator=(const Tensor& p_copy) {
 float& Tensor::operator[](const int p_index) const {
 	return _arr[p_index];
 }
+
+Tensor Tensor::T()
+{
+	Tensor result = *this;
+	result._transpose = !_transpose;
+	return result;
+}
+
+Tensor& Tensor::operator+=(const Tensor& p_rhs)
+{
+	check_size_eq(p_rhs._size);
+
+	TensorOperator::instance().vv_add(_arr, p_rhs._arr, _arr, _size);
+	return *this;
+}
+
+Tensor& Tensor::operator+=(const float p_rhs)
+{
+	float* x = &_arr[0];
+
+	for (int i = 0; i < _size; i++)
+	{
+		*x++ += p_rhs;
+	}
+	
+	return *this;
+}
+
+Tensor& Tensor::operator-=(const Tensor& p_rhs)
+{
+	check_size_eq(p_rhs._size);
+
+	TensorOperator::instance().vv_sub(_arr, p_rhs._arr, _arr, _size);
+	return *this;
+}
+
+Tensor& Tensor::operator-=(const float p_rhs)
+{
+	*this += -p_rhs;
+	return *this;
+}
+
+Tensor Tensor::operator*=(const Tensor& p_rhs) const
+{	
+	Tensor result;
+	int rows;
+	int cols;
+	int common_l;
+	int common_r;
+	
+	if (_rank == 1 && p_rhs._rank == 1)
+	{
+		rows = _shape[0];
+		common_l = 1;
+		cols = p_rhs._shape[0];
+		result = Zero({ rows, cols });
+		TensorOperator::instance().MM_prod(_arr, false, p_rhs._arr, true, result._arr, rows, common_l, cols);
+	}
+	if (_rank == 1 && p_rhs._rank == 2)
+	{
+		rows = _transpose ? 1 : _shape[0];
+		common_l = _transpose ? _shape[0] : 1;
+		cols = p_rhs._transpose ? p_rhs._shape[1] : p_rhs._shape[0];
+		common_r = p_rhs._transpose ? p_rhs._shape[0] : p_rhs._shape[1];
+#ifdef _DEBUG
+		if (common_l != common_r)
+		{
+			assert(("Invalid tensor product (common_l != common_r)", 0));
+		}
+#endif
+		result = Zero({ rows, cols });
+		TensorOperator::instance().MM_prod(_arr, _transpose, p_rhs._arr, p_rhs._transpose, result._arr, rows, common_l, cols);
+	}
+	if (_rank == 2 && p_rhs._rank == 1)
+	{
+		rows = _transpose ? _shape[1] : _shape[0];
+		common_l = _transpose ? _shape[0] : _shape[1];
+		cols = p_rhs._transpose ? 1 : p_rhs._shape[0];
+		common_r = p_rhs._transpose ? p_rhs._shape[0] : 1;
+#ifdef _DEBUG
+		if (common_l != common_r)
+		{
+			assert(("Invalid tensor product (common_l != common_r)", 0));
+		}		
+#endif
+		result = Zero({ rows, cols });
+		TensorOperator::instance().MM_prod(_arr, _transpose, p_rhs._arr, p_rhs._transpose, result._arr, rows, common_l, cols);
+	}
+	if (_rank == 2 && p_rhs._rank == 2)
+	{
+		rows = _transpose ? _shape[1] : _shape[0];
+		common_l = _transpose ? _shape[0] : _shape[1];
+		cols = p_rhs._transpose ? p_rhs._shape[1] : p_rhs._shape[0];
+		common_r = p_rhs._transpose ? p_rhs._shape[0] : p_rhs._shape[1];
+#ifdef _DEBUG
+		if (common_l != common_r)
+		{
+			assert(("Invalid tensor product (common_l != common_r)", 0));
+		}
+#endif
+		result = Zero({rows, cols});
+		TensorOperator::instance().MM_prod(_arr, _transpose, p_rhs._arr, p_rhs._transpose, result._arr, rows, common_l, cols);
+	}
+	if (_rank > 2 || p_rhs._rank > 2)
+	{
+#ifdef _DEBUG
+		assert(("Invalid tensor product (_rank > 2)", 0));
+#endif		
+	}
+
+	return result;
+}
+
+Tensor& Tensor::operator*=(const float p_rhs)
+{
+	float* x = &_arr[0];
+
+	for (int i = 0; i < _size; i++)
+	{
+		*x++ *= p_rhs;
+	}
+
+	return *this;
+}
+
+Tensor& Tensor::operator/=(const float p_rhs)
+{
+	*this *= 1.f / p_rhs;
+	return *this;
+}
+
+Tensor Tensor::operator+(const Tensor& p_rhs) const
+{
+	check_size_eq(_size);
+	Tensor result = *this;
+	return result += p_rhs;
+}
+
+Tensor Tensor::operator+(const float p_rhs) const
+{
+	Tensor result = *this;
+	return result += p_rhs;
+}
+
+Tensor Tensor::operator-(const Tensor& p_rhs) const
+{
+	check_size_eq(_size);
+	Tensor result = *this;
+	return result -= p_rhs;
+}
+
+Tensor Tensor::operator-(const float p_rhs) const
+{
+	Tensor result = *this;
+	return result -= p_rhs;
+}
+
+Tensor Tensor::operator*(const Tensor& p_rhs) const
+{
+	Tensor result = *this;
+	return result *= p_rhs;
+}
+
 
 void Tensor::get_row(Tensor& p_tensor, const int p_row) const
 {
@@ -812,8 +984,9 @@ void Tensor::fill(const INIT p_init, const float p_value) const {
 			if (_rank == 1) {
 				fill(VALUE, 1);
 			}
-			if (_rank == 2) {
+			if (_rank == 2) {				
 				if (_shape[0] == _shape[1]) {
+					fill(0);
 					for (int i = 0; i < _shape[0]; i++) _arr[i * _shape[1] + i] = 1;
 				}
 				else

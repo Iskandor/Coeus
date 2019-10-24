@@ -2,10 +2,7 @@
 #include <mkl_cblas.h>
 #include <mkl.h>
 #include <cstring>
-#include "Tensor.h"
 #include <iostream>
-
-using namespace Coeus;
 
 void TensorOperatorMKL::full_int_s(float* p_net, float* p_x, float* p_w, const int p_rows, const int p_cols)
 {
@@ -15,7 +12,7 @@ void TensorOperatorMKL::full_int_s(float* p_net, float* p_x, float* p_w, const i
 
 void TensorOperatorMKL::full_int_b(const int p_batch, float* p_net, float* p_x, float* p_w, const int p_rows, const int p_cols)
 {
-	MM_prod(p_x, false, p_w, true, p_net, p_batch, p_cols, p_rows, false);
+	MM_prod(p_x, false, p_w, true, p_net, p_batch, p_cols, p_rows);
 }
 
 void TensorOperatorMKL::full_bias_s(float* p_net, float* p_bias, const int p_rows)
@@ -182,12 +179,12 @@ void TensorOperatorMKL::gru_state(int p_batch, float* p_state, float* p_zg, floa
 
 void TensorOperatorMKL::full_delta(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
 {
-	MM_prod(p_delta1, false, p_w, false, p_delta0, p_batch, p_rows, p_cols, false);
+	MM_prod(p_delta1, false, p_w, false, p_delta0, p_batch, p_rows, p_cols);
 }
 
 void TensorOperatorMKL::full_w_gradient(const int p_batch, float* p_x0, float* p_delta1, float* p_grad, const int p_rows, const int p_cols, bool p_accumulate)
 {
-	MM_prod(p_delta1, true, p_x0, false, p_grad, p_rows, p_batch, p_cols, p_accumulate);
+	MM_prod(p_delta1, true, p_x0, false, 1, p_grad, p_accumulate ? 1 : 0, p_rows, p_batch, p_cols);
 }
 
 void TensorOperatorMKL::full_b_gradient(const int p_batch, float* p_delta1, float* p_grad, const int p_rows, bool p_accumulate)
@@ -380,7 +377,7 @@ void TensorOperatorMKL::vM_prod(float* p_x, float* p_A, float* p_y, int p_rows, 
 	cblas_sgemv(CblasRowMajor, CblasNoTrans, p_rows, p_cols, 1, p_A, p_cols, p_x, 1, 0, p_y, 1);
 }
 
-void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float* p_C, int p_rows, int p_common, int p_cols, bool p_accumulate)
+void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float* p_C, int p_rows, int p_common, int p_cols)
 {
 	const CBLAS_TRANSPOSE Atrans = p_Atrans ? CblasTrans : CblasNoTrans;
 	const CBLAS_TRANSPOSE Btrans = p_Btrans ? CblasTrans : CblasNoTrans;
@@ -392,7 +389,7 @@ void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Bt
 		p_rows, p_cols, p_common,
 		1, p_A, lda,
 		p_B, ldb,
-		p_accumulate ? 1 : 0, p_C, p_cols);
+		0, p_C, p_cols);
 }
 
 void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float p_alpha, float* p_C, float p_beta, int p_rows, int p_common, int p_cols)
