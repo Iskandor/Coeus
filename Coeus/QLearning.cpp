@@ -1,6 +1,5 @@
 #include "QLearning.h"
 #include "NetworkGradient.h"
-#include "GeneralTDRule.h"
 #include "RuleFactory.h"
 
 using namespace Coeus;

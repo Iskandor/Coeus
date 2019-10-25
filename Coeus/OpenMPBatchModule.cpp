@@ -61,7 +61,7 @@ void OpenMPBatchModule::run_batch(int p_b, int p_batch, vector<Tensor*>* p_input
 		#pragma omp for nowait
 		for (int i = 0; i < _batch_size; i++)
 		{
-			for (auto it = _network_gradient[i]->get_gradient()->begin(); it != _network_gradient[i]->get_gradient()->end(); ++it) {
+			for (auto it = _network_gradient[i]->get_gradient().begin(); it != _network_gradient[i]->get_gradient().end(); ++it) {
 				#pragma omp critical
 				TensorOperator::instance().vv_add(_gradient[it->first].arr(), it->second.arr(), _gradient[it->first].arr(), _gradient[it->first].size());
 			}

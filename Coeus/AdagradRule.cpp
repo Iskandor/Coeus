@@ -10,9 +10,9 @@ AdagradRule::AdagradRule(NetworkGradient* p_network_gradient, const float p_alph
 AdagradRule::~AdagradRule()
 = default;
 
-void AdagradRule::calc_update(map<string, Tensor>* p_gradient, const float p_alpha ) {
+void AdagradRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha ) {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
-	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
+	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
 
 		Tensor* G = &_G[it->first];
 		Tensor* update = &_update[it->first];

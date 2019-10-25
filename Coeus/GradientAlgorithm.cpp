@@ -1,6 +1,7 @@
 #include "GradientAlgorithm.h"
 #include <chrono>
 #include "TensorOperator.h"
+#include "NaturalGradient.h"
 
 using namespace Coeus;
 
@@ -76,7 +77,7 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_targ
 			error += _cost_function->cost(_network->get_output(), (*p_target)[i]);
 			_network_gradient->calc_gradient(&dloss);
 
-			for(auto it = _network_gradient->get_gradient()->begin(); it != _network_gradient->get_gradient()->end(); ++it)
+			for(auto it = _network_gradient->get_gradient().begin(); it != _network_gradient->get_gradient().end(); ++it)
 			{
 				TensorOperator::instance().vv_add(it->second.arr(), _batch_gradient[it->first].arr(), _batch_gradient[it->first].arr(), it->second.size());
 			}
@@ -86,7 +87,7 @@ float GradientAlgorithm::train(vector<Tensor*>* p_input, vector<Tensor*>* p_targ
 
 	if (p_update)
 	{
-		_update_rule->calc_update(&_batch_gradient, alpha);
+		_update_rule->calc_update(_batch_gradient, alpha);
 		_network->update(_update_rule->get_update());
 		for (auto& it : _batch_gradient)
 		{

@@ -20,7 +20,7 @@ IUpdateRule* ADAMRule::clone(NetworkGradient* p_network_gradient)
 	return new ADAMRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
 }
 
-void ADAMRule::calc_update(map<string, Tensor>* p_gradient, float p_alpha) {
+void ADAMRule::calc_update(map<string, Tensor>& p_gradient, float p_alpha) {
 	
 	if (p_alpha > 0)
 	{
@@ -34,8 +34,8 @@ void ADAMRule::calc_update(map<string, Tensor>* p_gradient, float p_alpha) {
 		_denb2 = 1 - pow(_beta2, _t);
 	}
 	
-	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
-		Tensor* g = &(*p_gradient)[it->first];
+	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
+		Tensor* g = &(p_gradient)[it->first];
 		Tensor* m = &_m[it->first];
 		Tensor* v = &_v[it->first];
 		Tensor* m_mean = &_m_mean[it->first];

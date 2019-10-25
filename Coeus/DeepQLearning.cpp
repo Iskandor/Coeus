@@ -21,7 +21,8 @@ DeepQLearning::~DeepQLearning()
 }
 
 float DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, const bool p_final) const {
-	_replay_buffer->add_item(new DQItem(p_state0, p_action0, p_state1, p_reward, p_final));
+	Tensor action({ 1 }, Tensor::VALUE, p_action0);
+	_replay_buffer->add_item(new DQItem(p_state0, &action, p_state1, p_reward, p_final));
 
 	float error = 0;
 
@@ -40,10 +41,10 @@ float DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_stat
 			Tensor *target = _network->get_output();
 
 			if (sample->at(i)->final) {
-				target->set(sample->at(i)->a, sample->at(i)->r);
+				target->set(sample->at(i)->a[0], sample->at(i)->r);
 			}
 			else {
-				target->set(sample->at(i)->a, sample->at(i)->r + _gamma * maxQs1a);
+				target->set(sample->at(i)->a[0], sample->at(i)->r + _gamma * maxQs1a);
 			}
 
 			_target->push_back(target);

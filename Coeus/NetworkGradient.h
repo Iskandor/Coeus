@@ -10,7 +10,7 @@ class __declspec(dllexport) NetworkGradient
 
 public:
 	NetworkGradient(NeuralNetwork* p_network);
-	~NetworkGradient();
+	virtual ~NetworkGradient();
 
 	void activate(Tensor* p_input);
 	void activate(vector<Tensor*>* p_input);
@@ -18,7 +18,8 @@ public:
 	virtual void calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss = nullptr);
 
 	NeuralNetwork* get_network() const { return _network; }
-	map<string, Tensor>* get_gradient() { return &_gradient; }
+	virtual map<string, Tensor>& get_gradient();
+	map<string, Tensor>& get_regular_gradient() { return _gradient; }
 
 	void reset();
 	void set_recurrent_mode(RECURRENT_MODE p_value);

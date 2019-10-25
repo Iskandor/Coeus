@@ -1,7 +1,3 @@
-/*
- * Natural gradient algorithm
- * https://wiseodd.github.io/techblog/2018/03/14/natural-gradient/
- */
 #include "NaturalGradient.h"
 #include "TensorOperator.h"
 
@@ -17,7 +13,7 @@ NaturalGradient::NaturalGradient(NeuralNetwork* p_network) : NetworkGradient(p_n
 		_inv_fim[_param.first] = Tensor({ row, row }, Tensor::ZERO);
 	}
 
-	_cache = p_network->get_empty_params();
+	_natural_gradient = p_network->get_empty_params();
 }
 
 
@@ -31,7 +27,7 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 
 	for (auto& it : _calculation_graph)
 	{
-		it->calc_gradient(_cache, _derivative);
+		it->calc_gradient(_gradient, _derivative);
 	}
 
 	for (auto& it : _gradient)
@@ -41,7 +37,7 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 		Tensor temp = _fim[it.first];
 		
 		// estimate Fisher information matrix (FIM)
-		TensorOperator::instance().MM_prod(_cache[it.first].arr(), false, _cache[it.first].arr(), true, temp.arr(), size, 1, size);
+		TensorOperator::instance().MM_prod(_gradient[it.first].arr(), false, _gradient[it.first].arr(), true, temp.arr(), size, 1, size);
 		TensorOperator::instance().vv_sub(temp.arr(), _fim[it.first].arr(), temp.arr(), size * size);
 		TensorOperator::instance().vv_add(_fim[it.first].arr(), 1, temp.arr(), _epsilon, _fim[it.first].arr(), size * size);		
 
@@ -49,10 +45,15 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 		TensorOperator::instance().inv_M(_fim[it.first].arr(), _inv_fim[it.first].arr(), size, size);
 		
 		// use FIM inverse to calculate natural gradient
-		TensorOperator::instance().MM_prod(_inv_fim[it.first].arr(), false, _cache[it.first].arr(), false, it.second.arr(), size, size, 1);
+		TensorOperator::instance().MM_prod(_inv_fim[it.first].arr(), false, _natural_gradient[it.first].arr(), false, it.second.arr(), size, size, 1);
 	}
 	if (_epsilon > 1e-8)
 	{
 		_epsilon *= 0.995;
 	}	
+}
+
+map<string, Tensor>& NaturalGradient::get_gradient()
+{
+	return _natural_gradient;
 }

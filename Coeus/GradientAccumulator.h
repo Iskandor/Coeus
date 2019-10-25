@@ -7,7 +7,7 @@ namespace Coeus
 	class __declspec(dllexport) GradientAccumulator
 	{
 	public:
-		explicit GradientAccumulator(map<string, Tensor>* p_gradient);
+		explicit GradientAccumulator(map<string, Tensor>& p_buffer);
 		GradientAccumulator(const GradientAccumulator &p_copy);
 		GradientAccumulator& operator = (const GradientAccumulator& p_copy);
 		~GradientAccumulator();
@@ -18,7 +18,7 @@ namespace Coeus
 		GradientAccumulator& operator += (const GradientAccumulator& p_accumulator);
 
 	private:
-		map<string, Tensor>* _gradient;
+		map<string, Tensor> _gradient;
 	};
 }
 

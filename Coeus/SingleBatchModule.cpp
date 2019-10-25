@@ -27,7 +27,7 @@ void SingleBatchModule::run_batch(const int p_b, const int p_batch, vector<Tenso
 		Tensor dloss = _cost_function->cost_deriv(_network->get_output(), p_target->at(index));
 		_network_gradient->calc_gradient(&dloss);
 
-		for (auto& it : *_network_gradient->get_gradient())
+		for (auto& it : _network_gradient->get_gradient())
 		{
 			TensorOperator::instance().vv_add(_gradient[it.first].arr(), it.second.arr(), _gradient[it.first].arr(), _gradient[it.first].size());
 		}

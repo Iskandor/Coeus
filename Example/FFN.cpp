@@ -71,7 +71,7 @@ void FFN::run() {
 	BackProp optimizer(&network);
 
 	optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
-	//optimizer.init(new QuadraticCost(), 0.5f);
+	//optimizer.init(new QuadraticCost(), 0.1f);
 
 	const auto start = chrono::system_clock::now();
 
@@ -84,7 +84,7 @@ void FFN::run() {
 		}
 
 		//error = optimizer.train(&input, &target);
-		cout << error << endl;
+		cout << "Error: " << error << endl;
 	}
 
 	const auto end = chrono::system_clock::now();

@@ -9,7 +9,7 @@ namespace Coeus {
 		~ADAMRule();
 
 		IUpdateRule* clone(NetworkGradient* p_network_gradient) override;
-		void calc_update(map<string, Tensor>* p_gradient, float p_alpha = 0) override;
+		void calc_update(map<string, Tensor>& p_gradient, float p_alpha = 0) override;
 
 	private:
 		int _t;

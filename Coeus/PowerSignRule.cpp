@@ -10,12 +10,12 @@ PowerSignRule::PowerSignRule(NetworkGradient* p_network_gradient, const float p_
 PowerSignRule::~PowerSignRule()
 = default;
 
-void PowerSignRule::calc_update(map<string, Tensor>* p_gradient, const float p_alpha)
+void PowerSignRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha)
 {
 	const float beta1 = 0.9;
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 
-	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
+	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
 
 		Tensor* m = &_m[it->first];
 		Tensor* g = &it->second;

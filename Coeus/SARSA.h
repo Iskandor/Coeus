@@ -1,6 +1,5 @@
 #pragma once
 #include "NeuralNetwork.h"
-#include "GeneralTDRule.h"
 #include "GradientAlgorithm.h"
 
 namespace Coeus {

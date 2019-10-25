@@ -82,9 +82,6 @@
     <Filter Include="Header Files\Algorithm\Modules">
       <UniqueIdentifier>{1cbd490f-d433-436d-8d25-5935871b6926}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Algorithm\RL\Rules">
-      <UniqueIdentifier>{cbf11517-0a20-4432-81a7-0157f2ff597c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Algorithm\Modules\LRM">
       <UniqueIdentifier>{b0d7efab-4296-4270-af61-ea23e797b286}</UniqueIdentifier>
     </Filter>
@@ -386,6 +383,9 @@
     </ClCompile>
     <ClCompile Include="GAE.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="NAC.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -703,6 +703,9 @@
     </ClInclude>
     <ClInclude Include="GAE.h">
       <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="NAC.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

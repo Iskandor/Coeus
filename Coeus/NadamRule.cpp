@@ -37,11 +37,11 @@ void NadamRule::update_momentum(const string& p_id, Tensor & p_gradient)
 	}
 }
 
-void NadamRule::calc_update(map<string, Tensor>* p_gradient, const float p_alpha)
+void NadamRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha)
 {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 
-	for (auto it = p_gradient->begin(); it != p_gradient->end(); ++it) {
+	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
 
 		update_momentum(it->first, it->second);
 

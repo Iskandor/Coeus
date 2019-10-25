@@ -12,7 +12,7 @@ IUpdateRule::IUpdateRule(NetworkGradient* p_network_gradient, const float p_alph
 IUpdateRule::~IUpdateRule()
 = default;
 
-void IUpdateRule::calc_update(map<string, Tensor>* p_gradient, const float p_alpha)
+void IUpdateRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha)
 {
 	if (p_alpha > 0)
 	{

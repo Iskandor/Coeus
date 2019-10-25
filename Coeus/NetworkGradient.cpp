@@ -86,6 +86,11 @@ void NetworkGradient::calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss)
 	calc_gradient(p_loss);
 }
 
+map<string, Tensor>& NetworkGradient::get_gradient()
+{
+	return _gradient;
+}
+
 void NetworkGradient::reset()
 {
 	_network->reset();
