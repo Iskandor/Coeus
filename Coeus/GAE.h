@@ -17,7 +17,7 @@ namespace Coeus {
 		~GAE();
 
 		void set_sample(vector<DQItem> &p_sample);
-		float get_advantage();
+		vector<float> get_advantages();
 		void train();
 
 

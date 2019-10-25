@@ -14,6 +14,7 @@ namespace Coeus {
 
 		void calc_gradient(Tensor* p_loss = nullptr) override;
 		map<string, Tensor>& get_gradient() override;
+		map<string, Tensor>& get_hessian_inv() { return _inv_fim; }
 
 	private:
 

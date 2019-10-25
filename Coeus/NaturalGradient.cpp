@@ -1,5 +1,6 @@
 #include "NaturalGradient.h"
 #include "TensorOperator.h"
+#include <omp.h>
 
 using namespace Coeus;
 
@@ -30,22 +31,34 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 		it->calc_gradient(_gradient, _derivative);
 	}
 
-	for (auto& it : _gradient)
+#pragma omp parallel 
 	{
-		const int size = it.second.shape(0) * it.second.shape(1);
-
-		Tensor temp = _fim[it.first];
+		size_t cnt = 0;
+		const int ithread = omp_get_thread_num();
+		const int nthreads = omp_get_num_threads();
 		
-		// estimate Fisher information matrix (FIM)
-		TensorOperator::instance().MM_prod(_gradient[it.first].arr(), false, _gradient[it.first].arr(), true, temp.arr(), size, 1, size);
-		TensorOperator::instance().vv_sub(temp.arr(), _fim[it.first].arr(), temp.arr(), size * size);
-		TensorOperator::instance().vv_add(_fim[it.first].arr(), 1, temp.arr(), _epsilon, _fim[it.first].arr(), size * size);		
+		for (auto it = _gradient.begin(); it != _gradient.end(); ++it, cnt++)
+		{
+			if (cnt%nthreads != ithread) continue;
+			
+			const int size = it->second.shape(0) * it->second.shape(1);
 
-		// calculate inverse FIM
-		TensorOperator::instance().inv_M(_fim[it.first].arr(), _inv_fim[it.first].arr(), size, size);
-		
-		// use FIM inverse to calculate natural gradient
-		TensorOperator::instance().MM_prod(_inv_fim[it.first].arr(), false, _natural_gradient[it.first].arr(), false, it.second.arr(), size, size, 1);
+			if (_epsilon > 1e-8)
+			{
+				Tensor temp = _fim[it->first];
+
+				// estimate Fisher information matrix (FIM)
+				TensorOperator::instance().MM_prod(_gradient[it->first].arr(), false, _gradient[it->first].arr(), true, temp.arr(), size, 1, size);
+				TensorOperator::instance().vv_sub(temp.arr(), _fim[it->first].arr(), temp.arr(), size * size);
+				TensorOperator::instance().vv_add(_fim[it->first].arr(), 1, temp.arr(), _epsilon, _fim[it->first].arr(), size * size);
+
+				// calculate inverse FIM
+				TensorOperator::instance().inv_M(_fim[it->first].arr(), _inv_fim[it->first].arr(), size, size);
+			}
+
+			// use FIM inverse to calculate natural gradient
+			TensorOperator::instance().MM_prod(_inv_fim[it->first].arr(), false, it->second.arr(), false, _natural_gradient[it->first].arr(), size, size, 1);
+		}
 	}
 	if (_epsilon > 1e-8)
 	{

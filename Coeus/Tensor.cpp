@@ -332,6 +332,41 @@ Tensor Tensor::operator*(const float p_rhs) const
 	return result *= p_rhs;
 }
 
+float Tensor::dot(const Tensor& p_rhs) const
+{
+	float result = 0;
+
+	TensorOperator::instance().vv_dot(_arr, p_rhs._arr, result, _size);
+	
+	return result;
+}
+
+Tensor& Tensor::pow(const float p_y)
+{
+	float* x = &_arr[0];
+
+	for (int i = 0; i < _size; i++)
+	{
+		*x = std::pow(*x, p_y);
+		x++;
+	}
+
+	return *this;
+}
+
+Tensor& Tensor::sqrt(float p_y)
+{
+	float* x = &_arr[0];
+
+	for (int i = 0; i < _size; i++)
+	{
+		*x = std::sqrt(*x);
+		x++;
+	}
+
+	return *this;
+}
+
 
 void Tensor::get_row(Tensor& p_tensor, const int p_row) const
 {
@@ -1065,4 +1100,10 @@ void Tensor::check_rank_eq(const int p_rank) const
 		assert(("Invalid rank", 0));
 	}
 #endif
+}
+
+Tensor operator*(const float p_lhs, const Tensor& p_rhs)
+{
+	Tensor result = p_rhs;
+	return result *= p_lhs;
 }

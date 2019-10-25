@@ -15,7 +15,8 @@ public:
 	void vv_ewdiv(float* p_x, float* p_y, float* p_z, int p_size) override;
 	void vc_prod(float* p_x, float p_y, float* p_z, int p_size) override;
 	void vc_prod_add(float* p_x, float p_y, float* p_z, int p_size) override;
-
+	void vv_dot(float* p_x, float* p_y, float& p_z, int p_size) override;
+	
 	void Mv_add(float* p_A, float* p_x, float* p_B, int p_rows, int p_cols) override;
 
 	void vM_prod(float* p_x, float* p_A, float* p_y, int p_rows, int p_cols) override;
@@ -41,5 +42,6 @@ public:
 
 	void v_reduce(float* p_x, float* p_y, int p_size) override;
 	void M_reduce(float* p_x, float* p_A, bool p_row_major, int p_rows, int p_cols, bool p_accumulate) override;
-	void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols, int p_axis) override;		
+	void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols, int p_axis) override;
+	
 };

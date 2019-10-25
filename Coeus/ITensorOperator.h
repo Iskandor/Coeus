@@ -15,6 +15,7 @@ public:
 	virtual void vv_ewdiv(float* p_x, float* p_y, float* p_z, int p_size) = 0;
 	virtual void vc_prod(float* p_x, float p_y, float* p_z, int p_size) = 0;
 	virtual void vc_prod_add(float* p_x, float p_y, float* p_z, int p_size) = 0;
+	virtual void vv_dot(float* p_x, float* p_y, float& p_z, int p_size) = 0;
 
 	virtual void Mv_add(float* p_A, float* p_x, float* p_B, int p_rows, int p_cols) = 0;
 

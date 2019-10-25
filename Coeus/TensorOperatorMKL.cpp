@@ -355,6 +355,11 @@ void TensorOperatorMKL::vc_prod_add(float* p_x, const float p_y, float* p_z, con
 	cblas_saxpy(p_size, p_y, p_x, 1, p_z, 1);
 }
 
+void TensorOperatorMKL::vv_dot(float* p_x, float* p_y, float& p_z, const int p_size)
+{
+	p_z = cblas_sdot(p_size, p_x, 1, p_y, 1);
+}
+
 void TensorOperatorMKL::Mv_add(float* p_A, float* p_x, float* p_B, int p_rows, int p_cols)
 {
 	float* a = &p_A[0];

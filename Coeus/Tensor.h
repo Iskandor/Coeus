@@ -50,6 +50,11 @@ public:
 	Tensor operator - (float p_rhs) const;
 	Tensor operator * (const Tensor& p_rhs) const;
 	Tensor operator * (float p_rhs) const;
+	friend Tensor operator * (float p_lhs, const Tensor& p_rhs);
+
+	float dot(const Tensor& p_rhs) const;
+	Tensor& pow (float p_y);
+	Tensor& sqrt(float p_y);
 
 	void get_row(Tensor& p_tensor, int p_row) const;
 	void set_row(Tensor& p_tensor, int p_row) const;
