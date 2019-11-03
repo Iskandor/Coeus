@@ -38,6 +38,11 @@ void NetworkGradient::calc_gradient(Tensor* p_loss) {
 	{
 		it->calc_gradient(_gradient, _derivative);
 	}
+
+	for(auto& it : _network->_input_layer)
+	{
+		_input_gradient[it] = _network->_layers[it]->get_delta_in(it);
+	}
 }
 
 void NetworkGradient::calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss)
@@ -119,6 +124,14 @@ void NetworkGradient::set_recurrent_mode(const RECURRENT_MODE p_value)
 	{
 		it.second->set_mode(p_value);
 	}
+}
+
+Tensor NetworkGradient::get_input_gradient(const int p_batch_size, const int p_column, const int p_size)
+{
+	Tensor result({p_batch_size, p_size}, Tensor::ZERO);
+	Tensor::subregion(&result, _input_gradient[_network->_input_layer[0]], 0, p_column, p_batch_size, p_size);
+
+	return result;
 }
 
 void NetworkGradient::calc_derivative()

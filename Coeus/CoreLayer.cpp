@@ -85,10 +85,9 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 		}
 	}
 
-	Tensor*	 delta_in = nullptr;
-
 	if (!_input_layer.empty())
 	{
+		Tensor*	 delta_in = nullptr;
 		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
 
 		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), df->arr(), _W->get_data()->arr(), _dim, _in_dim);
@@ -104,6 +103,13 @@ void CoreLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, T
 
 		delete delta_in;
 	}
+	else
+	{
+		_delta_in[_id] = NeuronOperator::init_auxiliary_parameter(_delta_in[_id], _batch_size, _in_dim);
+		TensorOperator::instance().full_delta(_batch_size, _delta_in[_id]->arr(), df->arr(), _W->get_data()->arr(), _dim, _in_dim);
+	}
+
+	
 }
 
 void CoreLayer::calc_derivative(map<string, Tensor*>& p_derivative)
@@ -153,6 +159,13 @@ Tensor* CoreLayer::get_dim_tensor()
 CoreLayer::CoreLayer(CoreLayer* p_source) : BaseLayer(p_source)
 {
 	_type = CORE;
+	_id = p_source->_id;
+	_dim = p_source->_dim;
+	_in_dim = p_source->_in_dim;
+	_y = new NeuronOperator(*p_source->_y);
+	add_param(_y);
+	_initializer = new TensorInitializer(*p_source->_initializer);
+	_W = new Param(*p_source->_W);
 }
 
 CoreLayer* CoreLayer::clone()

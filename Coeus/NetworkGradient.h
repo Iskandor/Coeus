@@ -24,6 +24,7 @@ public:
 	void reset();
 	void set_recurrent_mode(RECURRENT_MODE p_value);
 	RECURRENT_MODE get_recurrent_mode() const { return _recurrent_mode; }
+	Tensor get_input_gradient(int p_batch_size, int p_column, int p_size);
 
 protected:
 	void calc_derivative();
@@ -34,7 +35,10 @@ protected:
 
 	map<string, Tensor>		_gradient;
 	map<string, Tensor*>	_derivative;
-	list<BaseLayer*> _calculation_graph;
+	list<BaseLayer*>		_calculation_graph;
+	map<string, Tensor*>	_input_gradient;
+
+	int _batch_size;
 };
 
 }

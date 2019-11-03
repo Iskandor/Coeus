@@ -11,11 +11,12 @@
 #include "TensorOperator.h"
 #include "IOUtils.h"
 #include "ContinuousTest.h"
+#include "ReplayBuffer.h"
 
 using namespace std;
 
 int main()
-{	
+{
 	//FFN model;
 	//model.run();
 	//model.run_iris();
@@ -39,8 +40,9 @@ int main()
 	//example.example_q(15000);
 	//example.example_sarsa(30000);
 	//example.example_double_q(15000);
+	example.example_deep_q(2000);
 	//example.example_actor_critic(1000);
-	example.example_nac(1000);
+	//example.example_nac(1000);
 
 	//example.example_deep_q(64, 1e-3, 0, true);
 	//example.example_icm(64);
@@ -49,7 +51,8 @@ int main()
 	//ContinuousTest test;
 
 	//test.run(32);
-	//test.run_cart_pole(50000);
+	//test.run_cacla(50000);
+	//test.run_ddpg(50000);
 
 	/*
 	IrisTest iris;

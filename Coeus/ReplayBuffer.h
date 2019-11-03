@@ -22,7 +22,7 @@ namespace Coeus {
 			}
 
 			void add_item(T* p_item) {
-				if (_buffer.size() > _size) {
+				if (_buffer.size() == _size) {
 					delete _buffer[0];
 					_buffer.erase(_buffer.begin());
 				}
@@ -36,6 +36,7 @@ namespace Coeus {
 				if (size > _buffer.size()) size = _buffer.size();
 
 				vector<int> index = RandomGenerator::get_instance().choice(_buffer.size(), size);
+				random_shuffle(index.begin(), index.end());
 
 				for (int i = 0; i < index.size(); i++) {
 					_sample.push_back(_buffer[i]);

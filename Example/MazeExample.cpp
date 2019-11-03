@@ -569,39 +569,35 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	test_v(&network_critic);
 }
 
-int MazeExample::example_deep_q(int p_hidden, float p_alpha, float p_lambda, const bool p_verbose) {
+int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 	MazeTask task;
 	Maze* maze = task.getEnvironment();
 
+	int hidden = 64;
+	float limit = 0.01f;
+
 	NeuralNetwork network;
 
-	network.add_layer(new CoreLayer("hidden0", p_hidden, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1), 25));
-	network.add_layer(new CoreLayer("hidden1", p_hidden / 2, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
-	network.add_layer(new CoreLayer("output", 4, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
+	network.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden1", "output");
 	network.init();
 
-	//BackProp optimizer(&network);
-	//optimizer.init(new QuadraticCost(), p_alpha, 0.9, true);
-	ADAM optimizer(&network);
-	//RMSProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), p_alpha);
-	//optimizer.add_learning_rate_module(new WarmStartup(1e-3, 1e-2, 10, 2));
-	//CountModule curiosity(maze->mazeX() * maze->mazeY());
-	//QLearning agent(&network, ADAM_RULE, p_alpha, 0.9, p_lambda);
-	DeepQLearning agent(&network, &optimizer, 0.9f, 128, 32);
+	DeepQLearning agent(&network, ADAM_RULE, 1e-3f, 0.99f, 1000, 64, 100);
 
 	vector<float> sensors;
 	Tensor state0, state1;
 	float reward = 0;
-	const int epochs = 10000;
+	const int epochs = p_epochs;
 
-	EGreedyExploration exploration(0.3, new ExponentialInterpolation(0.3, 0.1, epochs));
-	//BoltzmanExploration exploration(10, new ExponentialInterpolation(10, 0.1, epochs));
+	EGreedyExploration exploration(0.9, new ExponentialInterpolation(0.9, 0.1, epochs));
+	//BoltzmanExploration exploration(1, new ExponentialInterpolation(1, 0.1, epochs));
 
 	int wins = 0, loses = 0;
+	SetConsoleActiveScreenBuffer(_hConsole_c);
 
 	for (int e = 0; e < epochs; e++) {
 		//if (p_verbose) cout << "Epoch " << e << endl;
@@ -619,8 +615,7 @@ int MazeExample::example_deep_q(int p_hidden, float p_alpha, float p_lambda, con
 
 			sensors = maze->getSensors();
 			state1 = encode_state(&sensors);
-			//curiosity.update(&state1);
-			reward = task.getReward(); // +curiosity.get_reward(&state1);
+			reward = task.getReward();
 
 			agent.train(&state0, action0, &state1, reward, task.isFinished());
 			state0.override(&state1);
@@ -641,11 +636,19 @@ int MazeExample::example_deep_q(int p_hidden, float p_alpha, float p_lambda, con
 		//agent.reset_traces();
 		if (p_verbose)
 		{
-			cout << task.getEnvironment()->moves() << endl;
-			cout << wins << " / " << loses << endl;
+			//cout << task.getEnvironment()->moves() << endl;
+			//cout << wins << " / " << loses << endl;
+
+			string s = "Deep Q-Learning Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
+			console_print(s, 0, 0);
+		}
+		if (e % 500 == 0) {
+			//test_policy(network);
 		}
 	}
 
+	test_policy(network);
+	CloseHandle(_hConsole_c);
 	return test_q(&network, true);
 }
 

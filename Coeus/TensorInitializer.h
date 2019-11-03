@@ -7,7 +7,8 @@ namespace Coeus
 	class __declspec(dllexport) TensorInitializer
 	{
 	public:
-		TensorInitializer();
+		TensorInitializer(); 
+		TensorInitializer(TensorInitializer &p_copy);
 		explicit TensorInitializer(INIT p_init, float p_arg1 = 0, float p_arg2 = 0);
 		~TensorInitializer();
 

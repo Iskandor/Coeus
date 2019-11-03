@@ -67,6 +67,8 @@ NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) : ParamModel(p_copy)
 	}
 
 	_param_map.clear();
+
+	init();
 }
 
 
@@ -84,6 +86,8 @@ NeuralNetwork* NeuralNetwork::clone() const
 	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
 		result->add_layer((*it).second->clone());
 	}
+
+	result->_graph = _graph;
 
 	result->init();
 
@@ -116,7 +120,7 @@ void NeuralNetwork::init()
 	}
 
 	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
-		if (_graph.find(it->first) == _graph.end())
+		if (_graph.find(it->first) == _graph.end() || _graph[it->first].size() == 0)
 		{
 			_input_layer.push_back(it->first);
 		}

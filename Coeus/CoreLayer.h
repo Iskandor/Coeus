@@ -33,7 +33,7 @@ namespace Coeus
 		Tensor* get_dim_tensor() override;
 
 		NeuronOperator* _y;
-		Param*			_W;
+		Param*			_W;		
 
 		TensorInitializer *_initializer;
 	};

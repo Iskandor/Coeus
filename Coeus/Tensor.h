@@ -88,6 +88,7 @@ public:
 	static int* copy_shape(int p_rank, const int* p_shape);
 
 	void push_back(Tensor* p_tensor);
+	void push_back(float p_value);
 	void splice(int p_start, Tensor* p_output) const;
 	void reset_index();
 	static Tensor*	concat(vector<Tensor*> &p_input);
@@ -97,6 +98,8 @@ public:
 	void reshape(initializer_list<int> p_shape);
 	Tensor slice(int p_index) const;
 	void replicate(int p_n);
+
+	Tensor avg_sum(int p_dim);
 
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_z, int p_y, int p_x, int p_h, int p_w);

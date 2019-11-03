@@ -10,6 +10,13 @@ TensorInitializer::TensorInitializer()
 	_arg2 = 0;
 }
 
+TensorInitializer::TensorInitializer(TensorInitializer& p_copy)
+{
+	_init = p_copy._init;
+	_arg1 = p_copy._arg1;
+	_arg2 = p_copy._arg2;
+}
+
 
 TensorInitializer::TensorInitializer(const INIT p_init, const float p_arg1, const float p_arg2)
 {

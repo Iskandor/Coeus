@@ -690,6 +690,14 @@ void Tensor::push_back(Tensor* p_tensor)
 	}
 }
 
+void Tensor::push_back(const float p_value)
+{
+	check_size_gt(_end + 1);
+
+	_arr[_end] = p_value;
+	_end++;
+}
+
 void Tensor::splice(const int p_start, Tensor* p_output) const
 {
 	if (_rank == 1)
@@ -858,6 +866,59 @@ void Tensor::replicate(const int p_n)
 	_size *= p_n;
 	_shape[1] *= p_n;
 
+}
+
+Tensor Tensor::avg_sum(const int p_dim)
+{
+	check_rank_gt(1);
+
+	int rank = _rank - 1;
+	int* shape = alloc_shape(rank);
+	float* arr = nullptr;
+
+	if (_rank == 2)
+	{
+		if (p_dim == 0)
+		{
+			shape[0] = _shape[1];
+			arr = alloc_arr(shape[0]);
+			memset(arr, 0, sizeof(int) * shape[0]);
+
+			for(int i = 0; i < _shape[0]; i++)
+			{
+				for (int j = 0; j < _shape[1]; j++)
+				{
+					arr[j] += _arr[i * _shape[1] + j];
+				}
+			}
+
+			for (int j = 0; j < _shape[1]; j++)
+			{
+				arr[j] /= _shape[0];
+			}
+		}
+		if (p_dim == 1)
+		{
+			shape[0] = _shape[0];
+			arr = alloc_arr(shape[0]);
+			memset(arr, 0, sizeof(int) * shape[0]);
+
+			for (int i = 0; i < _shape[1]; i++)
+			{
+				for (int j = 0; j < _shape[0]; j++)
+				{
+					arr[j] += _arr[j * _shape[1] + i];
+				}
+			}
+
+			for (int j = 0; j < _shape[0]; j++)
+			{
+				arr[j] /= _shape[1];
+			}
+		}
+	}
+
+	return Tensor(rank, shape, arr);
 }
 
 void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x, const int p_h, const int p_w)

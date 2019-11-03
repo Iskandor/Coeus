@@ -3,6 +3,7 @@
 //
 
 #include "RandomGenerator.h"
+#include <set>
 
 RandomGenerator::RandomGenerator() {
   _mt.seed(_rd());
@@ -48,14 +49,13 @@ vector<int> RandomGenerator::choice(vector<int> *p_array, const int p_num) {
 }
 
 vector<int> RandomGenerator::choice(const int p_size, const int p_sample) {
-	vector<int> result;
+	set<int> result;
 
-	result.reserve(p_sample);
-	for (int i = 0; i < p_sample; i++) {
-		result.push_back(random(0, p_size - 1));
+	while(result.size() < p_sample) {
+		result.insert(random(0, p_size - 1));
 	}
 
-	return vector<int>(result);
+	return vector<int>(result.begin(), result.end());
 }
 
 

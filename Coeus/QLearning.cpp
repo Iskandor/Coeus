@@ -4,7 +4,7 @@
 
 using namespace Coeus;
 
-QLearning::QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, const float p_alpha, const float p_gamma, const float p_lambda):
+QLearning::QLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, const float p_alpha, const float p_gamma):
 	_alpha(p_alpha), _gamma(p_gamma)
 {
 	_network = p_network;
@@ -19,7 +19,7 @@ QLearning::~QLearning()
 	delete _update_rule;
 }
 
-float QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, const bool p_final) const
+float QLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, const bool p_final)
 {
 	const float maxQs1a = calc_max_qa(p_state1);
 

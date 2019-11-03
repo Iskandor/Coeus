@@ -299,8 +299,17 @@ void TensorOperatorMKL::vv_add(float * p_x, float p_ax, float * p_y, float p_ay,
 		vsAdd(p_size, p_x, p_y, p_z);
 	}
 	else {
-		for (int i = 0; i < p_size; i++) {
-			(*p_z++) = *p_x++ * p_ax + *p_y++ * p_ay;
+		if (p_z == p_x || p_z == p_y)
+		{
+			for (int i = 0; i < p_size; i++) {
+				p_z[i] = p_x[i] * p_ax + p_y[i] * p_ay;
+			}
+		}
+		else
+		{
+			for (int i = 0; i < p_size; i++) {
+				(*p_z++) = *p_x++ * p_ax + *p_y++ * p_ay;
+			}
 		}
 	}
 }
@@ -341,12 +350,24 @@ void TensorOperatorMKL::vv_ewdiv(float* p_x, float* p_y, float* p_z, const int p
 
 void TensorOperatorMKL::vc_prod(float* p_x, const float p_y, float* p_z, const int p_size)
 {
-	float* x = &p_x[0];
-	float* z = &p_z[0];
-
-	for (int i = 0; i < p_size; i++)
+	if (p_x == p_z)
 	{
-		*z++ = *x++ * p_y;
+		float* z = &p_z[0];
+
+		for (int i = 0; i < p_size; i++)
+		{
+			*z++ *= p_y;
+		}
+	}
+	else
+	{
+		float* x = &p_x[0];
+		float* z = &p_z[0];
+
+		for (int i = 0; i < p_size; i++)
+		{
+			*z++ = *x++ * p_y;
+		}
 	}
 }
 

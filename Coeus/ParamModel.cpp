@@ -36,7 +36,15 @@ void ParamModel::DEBUG_compare(ParamModel* p_model)
 
 void ParamModel::polyak_averaging(const float p_polyak, ParamModel* p_model)
 {
-	for (auto it = p_model->_params.begin(); it != p_model->_params.end(); it++) {
+	for (auto it = p_model->_params.begin(); it != p_model->_params.end(); ++it) {
+		TensorOperator::instance().vv_add(_params[it->first]->arr(), p_polyak, it->second->arr(), (1 - p_polyak), _params[it->first]->arr(), _params[it->first]->size());
+	}
+}
+
+void ParamModel::copy_params(ParamModel* p_model)
+{
+	for (auto it = p_model->_params.begin(); it != p_model->_params.end(); ++it) {
+		_params[it->first]->override(it->second);
 	}
 }
 
