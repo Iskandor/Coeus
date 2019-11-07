@@ -63,9 +63,6 @@
     <ClCompile Include="MazeAction.cpp">
       <Filter>Source Files\RL</Filter>
     </ClCompile>
-    <ClCompile Include="MazeTask.cpp">
-      <Filter>Source Files\RL</Filter>
-    </ClCompile>
     <ClCompile Include="rk4.cpp">
       <Filter>Source Files\RL</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="MazeAction.h">
-      <Filter>Header Files\RL</Filter>
-    </ClInclude>
-    <ClInclude Include="MazeTask.h">
       <Filter>Header Files\RL</Filter>
     </ClInclude>
     <ClInclude Include="rk4.hpp">

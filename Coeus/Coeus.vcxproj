@@ -141,6 +141,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>FLAB.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,6 +170,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="A2C.cpp" />
     <ClCompile Include="ActivationFunctionFactory.cpp" />
     <ClCompile Include="Adadelta.cpp" />
     <ClCompile Include="AdadeltaRule.cpp" />
@@ -262,6 +264,7 @@
     <ClCompile Include="TD.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="A2C.h" />
     <ClInclude Include="ActivationFunctionFactory.h" />
     <ClInclude Include="Adadelta.h" />
     <ClInclude Include="AdadeltaRule.h" />
@@ -310,6 +313,7 @@
     <ClInclude Include="IBatchModule.h" />
     <ClInclude Include="ICM.h" />
     <ClInclude Include="ICostFunction.h" />
+    <ClInclude Include="IEnvironment.h" />
     <ClInclude Include="IMotivationModule.h" />
     <ClInclude Include="IDGen.h" />
     <ClInclude Include="IInterpolation.h" />

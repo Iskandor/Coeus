@@ -5,6 +5,7 @@
 #include <vector>
 #include <windows.h>
 #include <tchar.h>
+#include "Maze.h"
 
 using namespace Coeus;
 
@@ -20,10 +21,13 @@ public:
 	void example_actor_critic(int p_epochs, bool p_verbose = true);
 	void example_nac(int p_epochs, bool p_verbose = true);
 	int example_deep_q(int p_epochs, bool p_verbose = true);
+	void example_a2c(int p_epochs, bool p_verbose = true);
 	void example_icm(int p_hidden);
 	void example_selector(int p_hidden);
 
 private:
+	Maze* _maze;
+	
 	HANDLE _hConsole_c;
 
 	int test_q(NeuralNetwork* p_network, bool p_verbose = true) const;

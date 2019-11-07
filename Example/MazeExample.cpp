@@ -2,7 +2,6 @@
 #include "RandomGenerator.h"
 #include <iostream>
 #include "QLearning.h"
-#include "MazeTask.h"
 #include "QuadraticCost.h"
 #include "CoreLayer.h"
 #include "RMSProp.h"
@@ -27,31 +26,38 @@
 #include "Actor.h"
 #include "NaturalGradient.h"
 #include "NAC.h"
+#include "A2C.h"
 
 using namespace Coeus;
 
 MazeExample::MazeExample()
 {
 	_hConsole_c = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+
+	int topology[] = 
+	{ 0, 0, 0, 0,
+	  0, 2, 0, 2,
+	  0, 0, 0, 2,
+	  2, 0, 0, 0 };
+
+	_maze = new Maze(topology, 4, 4, 15, false);
 }
 
 
 MazeExample::~MazeExample()
 {
+	delete _maze;
 }
 
 int MazeExample::example_q(int p_epochs, const bool p_verbose) {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-
 	int hidden = 64;
 	float limit = 0.01f;
 
 	NeuralNetwork network;
 
-	network.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	network.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
-	network.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	network.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden1", "output");
@@ -59,8 +65,8 @@ int MazeExample::example_q(int p_epochs, const bool p_verbose) {
 
 	QLearning agent(&network, ADAM_RULE, 1e-3f, 0.99f);
 
-	vector<float> sensors;
 	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float reward = 0;
 	const int epochs = p_epochs;
 
@@ -73,28 +79,27 @@ int MazeExample::example_q(int p_epochs, const bool p_verbose) {
 	for (int e = 0; e < epochs; e++) {
 		//if (p_verbose) cout << "Epoch " << e << endl;
 
-		task.getEnvironment()->reset();
+		_maze->reset();
 
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+		state0 = _maze->get_state();
 
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
 			network.activate(&state0);
 			const int action0 = exploration.get_action(network.get_output());
-			maze->performAction(action0);
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
 
-			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
-			reward = task.getReward();
+			state1 = _maze->get_state();
+			reward = _maze->get_reward();
 
-			agent.train(&state0, action0, &state1, reward, task.isFinished());
+			agent.train(&state0, action0, &state1, reward, _maze->is_finished());
 			state0.override(&state1);
 		}
 
 		exploration.update(e);
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
@@ -124,17 +129,14 @@ int MazeExample::example_q(int p_epochs, const bool p_verbose) {
 }
 
 void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-
 	int hidden = 64;
 	float limit = 0.01f;
 
 	NeuralNetwork networkA;
 
-	networkA.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	networkA.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	networkA.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
-	networkA.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	networkA.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	networkA.add_connection("hidden0", "hidden1");
 	networkA.add_connection("hidden1", "output");
@@ -142,9 +144,9 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 
 	NeuralNetwork networkB;
 
-	networkB.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	networkB.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	networkB.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
-	networkB.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	networkB.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	networkB.add_connection("hidden0", "hidden1");
 	networkB.add_connection("hidden1", "output");
@@ -152,8 +154,8 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 
 	DoubleQLearning agent(&networkA, &networkB, ADAM_RULE, 1e-3f, 0.99f);
 
-	vector<float> sensors;
 	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float reward = 0;
 	const int epochs = p_epochs;
 
@@ -166,27 +168,26 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 	for (int e = 0; e < epochs; e++) {
 		//if (p_verbose) cout << "Epoch " << e << endl;
 
-		task.getEnvironment()->reset();
+		_maze->reset();
 
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+		state0 = _maze->get_state();
 
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
 			const int action0 = exploration.get_action(agent.get_output(&state0));
-			maze->performAction(action0);
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
 
-			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
-			reward = task.getReward();
+			state1 = _maze->get_state();
+			reward = _maze->get_reward();
 
-			agent.train(&state0, action0, &state1, reward, task.isFinished());
+			agent.train(&state0, action0, &state1, reward, _maze->is_finished());
 			state0.override(&state1);
 		}
 
 		exploration.update(e);
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
@@ -210,12 +211,13 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 
 	int step = 0;
 	
-	task.getEnvironment()->reset();
-	while (!task.isFinished() && step < 20) {
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+	_maze->reset();
+	while (!_maze->is_finished() && step < 20) {
+		state0 = _maze->get_state();
 		const int action_index = choose_action(agent.get_output(&state0), 0);
-		maze->performAction(action_index);
+		action.fill(0);
+		action[action_index] = 1;
+		_maze->do_action(action);
 		step++;
 	}
 
@@ -223,16 +225,16 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 
 	if (p_verbose)
 	{
-		cout << maze->toString() << endl;
-		cout << task.getEnvironment()->moves() << endl;
+		cout << _maze->toString() << endl;
+		cout << _maze->moves() << endl;
 
-		Tensor s = Tensor::Zero({ static_cast<int>(maze->getSensors().size()) });
+		Tensor s = Tensor::Zero({ _maze->STATE_DIM() });
 
-		for (unsigned int i = 0; i < maze->mazeY(); i++)
+		for (unsigned int i = 0; i < _maze->mazeY(); i++)
 		{
-			for (unsigned int j = 0; j < maze->mazeX(); j++)
+			for (unsigned int j = 0; j < _maze->mazeX(); j++)
 			{
-				const int a = i * maze->mazeX() + j;
+				const int a = i * _maze->mazeX() + j;
 				Encoder::one_hot(s, a);
 				//cout << s << endl;
 				//cout << *p_network->get_output() << endl;
@@ -258,11 +260,11 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 			cout << endl;
 		}
 
-		for (unsigned int i = 0; i < maze->mazeY(); i++)
+		for (unsigned int i = 0; i < _maze->mazeY(); i++)
 		{
-			for (unsigned int j = 0; j < maze->mazeX(); j++)
+			for (unsigned int j = 0; j < _maze->mazeX(); j++)
 			{
-				const int a = i * maze->mazeX() + j;
+				const int a = i * _maze->mazeX() + j;
 				Encoder::one_hot(s, a);
 
 				//cout << *agent.get_output(&s) << endl;
@@ -276,17 +278,14 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 }
 
 int MazeExample::example_sarsa(int p_epochs, const bool p_verbose) {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-
 	int hidden = 64;
 	float limit = 0.01f;
 
 	NeuralNetwork network;
 
-	network.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	network.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
-	network.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	network.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden1", "output");
@@ -294,8 +293,8 @@ int MazeExample::example_sarsa(int p_epochs, const bool p_verbose) {
 
 	SARSA agent(&network, ADAM_RULE, 1e-3f, 0.99f);
 
-	vector<float> sensors;
 	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float reward = 0;
 	const int epochs = p_epochs;
 
@@ -308,31 +307,30 @@ int MazeExample::example_sarsa(int p_epochs, const bool p_verbose) {
 	for (int e = 0; e < epochs; e++) {
 		//if (p_verbose) cout << "Epoch " << e << endl;
 
-		task.getEnvironment()->reset();
+		_maze->reset();
 
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+		state0 = _maze->get_state();
 		network.activate(&state0);
 		int action0 = exploration.get_action(network.get_output());
 
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
-			maze->performAction(action0);
-			sensors = maze->getSensors();
-			reward = task.getReward();
-
-			state1 = encode_state(&sensors);
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
+			state1 = _maze->get_state();
+			reward = _maze->get_reward();
+			
 			network.activate(&state1);
 			const int action1 = exploration.get_action(network.get_output());
 
-			agent.train(&state0, action0, &state1, action1, reward, task.isFinished());
+			agent.train(&state0, action0, &state1, action1, reward, _maze->is_finished());
 			state0.override(&state1);
 			action0 = action1;
 		}
 
 		exploration.update(e);
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
@@ -358,15 +356,12 @@ int MazeExample::example_sarsa(int p_epochs, const bool p_verbose) {
 }
 
 void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-
-	int hidden = 64;
-	float limit = 0.01f;
+	const int hidden = 64;
+	const float limit = 0.01f;
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
 	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
@@ -378,9 +373,9 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
-	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
@@ -388,8 +383,8 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 
 	Actor actor(&network_actor, ADAM_RULE, 1e-3f);
 
-	vector<float> sensors;
 	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float value0, value1;
 	float reward = 0;
 	int epochs = p_epochs;
@@ -407,25 +402,23 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
 
-		task.getEnvironment()->reset();
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+		_maze->reset();
+		state0 = _maze->get_state();
 
 		network_critic.activate(&state0);
 
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			network_actor.activate(&state0);
 
-			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
-			maze->performAction(action0);
+			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), _maze->ACTION_DIM());
+			Encoder::one_hot(action, action0);
+			
+			_maze->do_action(action);
+			state1 = _maze->get_state();
+			cum_e_reward += _maze->get_reward();
 
-			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
-
-			cum_e_reward += task.getReward();
-
-			reward = task.getReward();
-			td_error = critic.train(&state0, &state1, reward, task.isFinished());
+			reward = _maze->get_reward();
+			td_error = critic.train(&state0, &state1, reward, _maze->is_finished());
 			actor.train(&state0, action0, td_error);
 
 			state0.override(&state1);
@@ -433,7 +426,7 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 
 		//cout << task.getEnvironment()->moves() << endl;
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
@@ -462,15 +455,12 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 
 void MazeExample::example_nac(int p_epochs, bool p_verbose)
 {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-
 	int hidden = 64;
 	float limit = 0.01f;
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
 	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
@@ -482,9 +472,9 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
-	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
@@ -493,9 +483,8 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	//Actor actor(&network_actor, ADAM_RULE, 1e-3f);
 	NAC agent(network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.1f, network_actor, 1e-3f, 1e-1f);
 
-	vector<float> sensors;
 	Tensor state0, state1;
-	Tensor action({ 4 }, Tensor::ZERO);
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float value0, value1;
 	float reward = 0;
 	int epochs = p_epochs;
@@ -513,27 +502,24 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
 
-		task.getEnvironment()->reset();
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+		_maze->reset();
+		state0 = _maze->get_state();
 
 		network_critic.activate(&state0);
 
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			network_actor.activate(&state0);
 
-			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
-			action.fill(0);
-			action[action0] = 1;
-			maze->performAction(action0);
+			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), _maze->ACTION_DIM());
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
 
-			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
 
-			cum_e_reward += task.getReward();
+			state1 = _maze->get_state();
+			cum_e_reward += _maze->get_reward();
 
-			reward = task.getReward();
-			agent.add_sample(&state0, &action, &state1, reward, task.isFinished());
+			reward = _maze->get_reward();
+			agent.add_sample(&state0, &action, &state1, reward, _maze->is_finished());
 
 			state0.override(&state1);
 		}
@@ -542,7 +528,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 
 		//cout << task.getEnvironment()->moves() << endl;
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
@@ -570,17 +556,14 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 }
 
 int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-
 	int hidden = 64;
 	float limit = 0.01f;
 
 	NeuralNetwork network;
 
-	network.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), 16));
+	network.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
 	network.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
-	network.add_layer(new CoreLayer("output", 4, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	network.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden1", "output");
@@ -588,8 +571,8 @@ int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 
 	DeepQLearning agent(&network, ADAM_RULE, 1e-3f, 0.99f, 1000, 64, 100);
 
-	vector<float> sensors;
 	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float reward = 0;
 	const int epochs = p_epochs;
 
@@ -602,28 +585,26 @@ int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 	for (int e = 0; e < epochs; e++) {
 		//if (p_verbose) cout << "Epoch " << e << endl;
 
-		task.getEnvironment()->reset();
+		_maze->reset();
+		state0 = _maze->get_state();
 
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
-
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
 			network.activate(&state0);
 			const int action0 = exploration.get_action(network.get_output());
-			maze->performAction(action0);
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
 
-			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
-			reward = task.getReward();
+			state1 = _maze->get_state();
+			reward = _maze->get_reward();
 
-			agent.train(&state0, action0, &state1, reward, task.isFinished());
+			agent.train(&state0, action0, &state1, reward, _maze->is_finished());
 			state0.override(&state1);
 		}
 
 		exploration.update(e);
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
@@ -652,13 +633,109 @@ int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 	return test_q(&network, true);
 }
 
-void MazeExample::example_icm(int p_hidden) {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
+void MazeExample::example_a2c(int p_epochs, bool p_verbose)
+{
+	const int env_size = 16;
+	
+	vector<IEnvironment*> maze_array;
+
+	for(int i = 0; i < env_size; i++)
+	{
+		maze_array.push_back(new Maze(*_maze));
+	}
+	
+	int hidden = 64;
+	float limit = 0.01f;
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), maze->mazeY() * maze->mazeX()));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	A2C agent(maze_array, &network_critic, ADAM_RULE, 1e-4f, 0.99f, 0.95f, &network_actor, ADAM_RULE, 1e-3f);
+
+	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
+	float value0, value1;
+	float reward = 0;
+	int epochs = p_epochs;
+	float td_error = 0;
+
+	int wins = 0, loses = 0;
+	SetConsoleActiveScreenBuffer(_hConsole_c);
+
+	//Logger::instance().init("log.log");
+	Tensor prob({ _maze->ACTION_DIM() }, Tensor::ZERO);
+
+	for (int e = 0; e < epochs; e++) {
+		//cout << "Epoch " << e << endl;
+		agent.train(8);
+
+		_maze->reset();
+		state0 = _maze->get_state();
+
+		while (!_maze->is_finished()) {
+			network_actor.activate(&state0);
+
+			const int action0 = network_actor.get_output()->max_value_index();
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
+
+			state1 = _maze->get_state();
+			state0.override(&state1);
+		}
+
+		//cout << task.getEnvironment()->moves() << endl;
+
+		if (_maze->is_winner()) {
+			wins++;
+		}
+		else {
+			loses++;
+		}
+
+		string s = "A2C Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
+		console_print(s, 0, 0);
+
+		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
+		//cout << wins << " / " << loses << endl;
+	}
+
+	test_policy(network_actor);
+	CloseHandle(_hConsole_c);
+
+	for (int i = 0; i < env_size; i++)
+	{
+		delete maze_array[i];
+	}
+
+	//Logger::instance().close();
+
+	test_q(&network_actor);
+	cout << endl;
+	test_v(&network_critic);
+}
+
+void MazeExample::example_icm(int p_hidden) {
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
 	network_critic.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_critic.add_connection("hidden0", "hidden1");
@@ -669,9 +746,9 @@ void MazeExample::example_icm(int p_hidden) {
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), maze->mazeY() * maze->mazeX()));
+	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
 	network_actor.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
-	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
@@ -680,9 +757,9 @@ void MazeExample::example_icm(int p_hidden) {
 
 	NeuralNetwork network_model;
 
-	network_model.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), maze->mazeY() * maze->mazeX() + 4));
+	network_model.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), _maze->STATE_DIM() + _maze->ACTION_DIM()));
 	network_model.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
-	network_model.add_layer(new CoreLayer("output", 25, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_model.add_layer(new CoreLayer("output", _maze->STATE_DIM(), SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_model.add_connection("hidden0", "hidden1");
 	network_model.add_connection("hidden1", "output");
 	network_model.init();
@@ -691,16 +768,14 @@ void MazeExample::example_icm(int p_hidden) {
 	optimizer_m.init(new QuadraticCost(), 1e-3f);
 	ICM icm(&network_model, &optimizer_m);
 
-	vector<float> sensors;
-	Tensor state0, state1, action;
+	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float value0, value1;
 	float reward = 0;
 	int epochs = 2000;
 	float td_error = 0;
 
 	int wins = 0, loses = 0;
-
-	action = Tensor::Zero({ 4 });
 
 	//EGreedyExploration exploration(1, new LinearInterpolation(1, 0.1, epochs));
 	//BoltzmanExploration exploration(10, new LinearInterpolation(10, 0.1, epochs));
@@ -714,28 +789,26 @@ void MazeExample::example_icm(int p_hidden) {
 	for (int e = 0; e < epochs; e++) {
 		cout << "Epoch " << e << endl;
 
-		task.getEnvironment()->reset();
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+		_maze->reset();
+		state0 = _maze->get_state();
 
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			network_actor.activate(&state0);
 
 			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
 			Encoder::one_hot(action, action0);
-			maze->performAction(action0);
+			_maze->do_action(action);
 
-			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
+			state1 = _maze->get_state();
 
 			const float ir = icm.get_intrinsic_reward(&state0, &action, &state1, 1.f);
 
 			cum_i_reward += ir;
-			cum_e_reward += task.getReward();
+			cum_e_reward += _maze->get_reward();
 
-			reward = task.getReward() + ir;
+			reward = _maze->get_reward() + ir;
 			//cout << reward << endl;
-			td_error = critic.train(&state0, &state1, reward, task.isFinished());
+			td_error = critic.train(&state0, &state1, reward, _maze->is_finished());
 			icm.train(&state0, &action, &state1);
 			//icm.add(&state0, &action, &state1);
 			actor.train(&state0, action0, td_error);
@@ -745,16 +818,16 @@ void MazeExample::example_icm(int p_hidden) {
 
 		//icm.train(32);
 
-		cout << task.getEnvironment()->moves() << endl;
+		cout << _maze->moves() << endl;
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
 			loses++;
 		}
 
-		Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
+		Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / _maze->moves()) + ";" + to_string(cum_e_reward / _maze->moves()));
 		cum_i_reward = 0;
 		cum_e_reward = 0;
 
@@ -793,14 +866,9 @@ void MazeExample::example_icm(int p_hidden) {
 
 void MazeExample::example_selector(int p_hidden)
 {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-
 	NeuralNetwork network_critic;
 
-	int env_dim = 25;
-
-	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), env_dim));
+	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
 	network_critic.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
@@ -812,9 +880,9 @@ void MazeExample::example_selector(int p_hidden)
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), env_dim));
+	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
 	network_actor.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
-	network_actor.add_layer(new CoreLayer("output", 4, SOFTMAX, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
@@ -824,7 +892,7 @@ void MazeExample::example_selector(int p_hidden)
 
 	NeuralNetwork network_predictor;
 
-	network_predictor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), env_dim));
+	network_predictor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
 	network_predictor.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_predictor.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
@@ -837,7 +905,7 @@ void MazeExample::example_selector(int p_hidden)
 
 	NeuralNetwork network_selector;
 
-	network_selector.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), env_dim));
+	network_selector.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
 	network_selector.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	network_selector.add_layer(new CoreLayer("output", 2, SOFTMAX, new TensorInitializer(UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
@@ -847,20 +915,20 @@ void MazeExample::example_selector(int p_hidden)
 
 	Actor selector(&network_selector, ADAM_RULE, 0.01f);
 
-	vector<float> sensors;
 	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float value0, value1;
 	int epochs = 1000;
 	float td_error = 0;
 
 	int wins = 0, loses = 0;
 
-	CountModule count_module(env_dim);
+	CountModule count_module(_maze->STATE_DIM());
 
 	Logger::instance().init("log.log");
 
-	Tensor goal = Tensor::Zero({ env_dim });
-	goal[task.getEnvironment()->goal()] = 1;
+	Tensor goal = Tensor::Zero({ _maze->STATE_DIM() });
+	goal[_maze->goal()] = 1;
 	Tensor predictor_target = Tensor::Zero({ 1 });
 	bool goal_reached = false;
 	int selection = 0;
@@ -870,9 +938,8 @@ void MazeExample::example_selector(int p_hidden)
 
 		float cum_i_reward = 0;
 		float cum_e_reward = 0;
-		task.getEnvironment()->reset();
-		sensors = maze->getSensors();
-		state0 = encode_state(&sensors);
+		_maze->reset();
+		state0 = _maze->get_state();
 
 		network_selector.activate(&goal);		
 
@@ -882,15 +949,15 @@ void MazeExample::example_selector(int p_hidden)
 			//goal[RandomGenerator::get_instance().random(0, env_dim - 1)] = 1;
 		}
 
-		while (!task.isFinished()) {
+		while (!_maze->is_finished()) {
 			network_actor.activate(&state0);
 
 			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
 			//cout << action0 << endl;
-			maze->performAction(action0);
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
 
-			sensors = maze->getSensors();
-			state1 = encode_state(&sensors);
+			state1 = _maze->get_state();
 			count_module.update(&state1);
 			
 			float ir = 0;
@@ -905,12 +972,12 @@ void MazeExample::example_selector(int p_hidden)
 				//cout << ir << endl;
 			}
 
-			const float r = task.getReward() + ir;
+			const float r = _maze->get_reward() + ir;
 
 			cum_i_reward += ir;
-			cum_e_reward += task.getReward();
+			cum_e_reward += _maze->get_reward();
 
-			td_error = critic.train(&state0, &state1, r, task.isFinished());
+			td_error = critic.train(&state0, &state1, r, _maze->is_finished());
 			actor.train(&state0, action0, td_error);
 
 			state0.override(&state1);
@@ -919,8 +986,8 @@ void MazeExample::example_selector(int p_hidden)
 
 		Logger::instance().log(
 			to_string(e) + ";" + 
-			to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + 
-			to_string(cum_e_reward / task.getEnvironment()->moves()) + ";" + 
+			to_string(cum_i_reward / _maze->moves()) + ";" +
+			to_string(cum_e_reward / _maze->moves()) + ";" +
 			to_string(network_selector.get_output()->at(0)) + ";" +
 			to_string(network_selector.get_output()->at(1)) + ";"
 		);
@@ -934,10 +1001,10 @@ void MazeExample::example_selector(int p_hidden)
 		predictor.train(&goal, &predictor_target);
 
 		cout << goal_reached << " " << goal.max_value_index() << " " << selection << " " << *network_selector.get_output() << endl;
-		cout << task.getEnvironment()->moves() << endl;
+		cout << _maze->moves() << endl;
 
 
-		if (task.isWinner()) {
+		if (_maze->is_winner()) {
 			wins++;
 		}
 		else {
@@ -954,12 +1021,9 @@ void MazeExample::example_selector(int p_hidden)
 
 int MazeExample::test_q(NeuralNetwork* p_network, const bool p_verbose) const
 {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-	task.getEnvironment()->reset();
+	_maze->reset();
 
-	vector<float> sensors;
-	Tensor action = Tensor::Zero({ 4 });
+	Tensor action = Tensor::Zero({ _maze->ACTION_DIM() });
 	Tensor state;
 
 	int step = 0;
@@ -984,18 +1048,18 @@ int MazeExample::test_q(NeuralNetwork* p_network, const bool p_verbose) const
 		cout << endl;
 
 		char action_label[4] = { 'U','R','D','L' };
-		cout << maze->toString() << endl;
+		cout << _maze->toString() << endl;
 		//cout << task.getEnvironment()->moves() << endl;
 
-		Tensor s = Tensor::Zero({ static_cast<int>(maze->getSensors().size()) });
+		Tensor s = Tensor::Zero({ _maze->STATE_DIM() });
 
 		cout << endl;
 
-		for (unsigned int i = 0; i < maze->mazeY(); i++)
+		for (unsigned int i = 0; i < _maze->mazeY(); i++)
 		{
-			for (unsigned int j = 0; j < maze->mazeX(); j++)
+			for (unsigned int j = 0; j < _maze->mazeX(); j++)
 			{
-				const int a = i * maze->mazeX() + j;
+				const int a = i * _maze->mazeX() + j;
 				Encoder::one_hot(s, a);
 
 				p_network->activate(&s);
@@ -1009,11 +1073,11 @@ int MazeExample::test_q(NeuralNetwork* p_network, const bool p_verbose) const
 
 		cout << endl;
 
-		for (unsigned int i = 0; i < maze->mazeY(); i++)
+		for (unsigned int i = 0; i < _maze->mazeY(); i++)
 		{
-			for (unsigned int j = 0; j < maze->mazeX(); j++)
+			for (unsigned int j = 0; j < _maze->mazeX(); j++)
 			{
-				const int a = i * maze->mazeX() + j;
+				const int a = i * _maze->mazeX() + j;
 				Encoder::one_hot(s, a);
 
 				p_network->activate(&s);
@@ -1028,7 +1092,7 @@ int MazeExample::test_q(NeuralNetwork* p_network, const bool p_verbose) const
 
 	int result = 0;
 
-	if (task.isWinner())
+	if (_maze->is_winner())
 	{
 		result = 1;
 	}
@@ -1038,21 +1102,19 @@ int MazeExample::test_q(NeuralNetwork* p_network, const bool p_verbose) const
 
 void MazeExample::test_v(NeuralNetwork* p_network, bool p_verbose) const
 {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-	task.getEnvironment()->reset();
+	_maze->reset();
 
 	vector<float> sensors;
-	Tensor action = Tensor::Zero({ 4 });
+	Tensor action = Tensor::Zero({ _maze->ACTION_DIM() });
 	Tensor state;
 
-	Tensor s = Tensor::Zero({ static_cast<int>(maze->getSensors().size()) });
+	Tensor s = Tensor::Zero({ _maze->STATE_DIM() });
 
-	for (unsigned int i = 0; i < maze->mazeY(); i++)
+	for (unsigned int i = 0; i < _maze->mazeY(); i++)
 	{
-		for (unsigned int j = 0; j < maze->mazeX(); j++)
+		for (unsigned int j = 0; j < _maze->mazeX(); j++)
 		{
-			const int a = i * maze->mazeX() + j;
+			const int a = i * _maze->mazeX() + j;
 			Encoder::one_hot(s, a);
 
 			p_network->activate(&s);
@@ -1067,12 +1129,10 @@ void MazeExample::test_v(NeuralNetwork* p_network, bool p_verbose) const
 
 void MazeExample::test_policy(NeuralNetwork &p_network)
 {
-	MazeTask task;
-	Maze* maze = task.getEnvironment();
-	task.getEnvironment()->reset();
+	_maze->reset();
 
 	vector<float> sensors;
-	Tensor action = Tensor::Zero({ 4 });
+	Tensor action = Tensor::Zero({ _maze->ACTION_DIM() });
 	Tensor state;
 
 	string action_labels[4] = { "Up","Right","Down","Left" };
@@ -1082,13 +1142,13 @@ void MazeExample::test_policy(NeuralNetwork &p_network)
 	//cout << "--- TEST ---" << endl;
 	console_clear();
 
-	while (!task.isFinished() && step < 10) {
-		for (int i = 0; i < maze->mazeY(); i++) {
-			console_print(maze->toString(i), 0, i + 1);
+	while (!_maze->is_finished() && step < 10) {
+		for (int i = 0; i < _maze->mazeY(); i++) {
+			console_print(_maze->toString(i), 0, i + 1);
 		}
 
-		sensors = maze->getSensors();
-		state = encode_state(&sensors);
+
+		state = _maze->get_state();
 		p_network.activate(&state);
 		string s;
 		for (int i = 0; i < p_network.get_output()->size(); i++) {
@@ -1101,7 +1161,7 @@ void MazeExample::test_policy(NeuralNetwork &p_network)
 
 		const int action_index = choose_action(p_network.get_output(), epsilon);
 		Encoder::one_hot(action, action_index);
-		maze->performAction(action_index);
+		_maze->do_action(action);
 		step++;	
 	}
 

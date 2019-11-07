@@ -29,8 +29,9 @@ class __declspec(dllexport) ParamModel
 
 		void DEBUG_compare(ParamModel* p_model);
 
-		void polyak_averaging(const float p_polyak, ParamModel* p_model);
-		void copy_params(ParamModel* p_model);
+		void polyak_averaging(float p_polyak, ParamModel* p_model);
+		void copy_params(const ParamModel* p_model);
+		void average_params(ParamModel** p_model, int p_size);
 
 	protected:
 		Tensor* add_param(const string& p_id, Tensor* p_param);

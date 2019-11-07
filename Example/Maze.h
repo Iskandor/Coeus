@@ -6,21 +6,30 @@
 #define NEURONET_MAZE_H
 
 #include <vector>
-#include <map>
-#include "Environment.h"
+#include "IEnvironment.h"
 #include "MazeAction.h"
 
 using namespace std;
 
-class Maze : public Environment {
+class Maze : public Coeus::IEnvironment {
 public:
-    Maze(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic = false);
+    Maze();
+	Maze(Maze& p_copy);
+	Maze(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic = false);
     ~Maze();
 
-    vector<float> getSensors() override;
-    void performAction(float p_action) override;
-    void reset() override;
+	Maze& operator = (const Maze& p_copy);
 
+	void init(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic = false);
+
+	Tensor get_state() override;
+	void do_action(Tensor& p_action) override;
+	float get_reward() override;
+	bool is_finished() override;
+	void reset() override;
+
+	bool is_winner() const;
+	
     string toString();
 	string toString(int p_row);
 
@@ -30,14 +39,6 @@ public:
 
     int goal() const {
         return _goal;
-    }
-
-    bool bang() const {
-        return _bang;
-    }
-
-    bool kill() const {
-        return _kill;
     }
 
 	int moves() const {
@@ -57,19 +58,26 @@ public:
 private:
     vector<int> freePos();
     int moveInDir(int p_x, int p_y) const;
-
-    unsigned int _mazeX, _mazeY;
-    vector<int> _initPos;
-    vector<int> _mazeTable;
+	
+    unsigned int _mazeX{}, _mazeY{};
+    vector<int> _init_pos;
+    vector<int> _maze_table;
     vector<MazeAction> _actions;
 
-    int _actor;
-    int _goal;
-    bool _bang;
-    bool _kill;
+    int _actor{};
+    int _goal{};
+    bool _bang{};
+    bool _kill{};
 
-	int _a;
-	bool _stochastic;
+	int _a{};
+	bool _stochastic{};
+
+	int* _topology{};
+
+	const float defautPenalty = 0;
+	const float bangPenalty = 0;
+	const float killPenalty = 0;
+	const float finalReward = 1;
 };
 
 #endif //NEURONET_MAZE_H

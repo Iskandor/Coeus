@@ -5,7 +5,7 @@
 #include "TensorPool.h"
 #include "TensorOperator.h"
 
-bool Tensor::pooling = true;
+bool Tensor::_pooling = true;
 
 Tensor::Tensor(): _arr(nullptr), _rank(0), _shape(nullptr), _size(0), _end(0), _transpose(false)
 {
@@ -509,7 +509,7 @@ float Tensor::element_prod() const
 float* Tensor::alloc_arr(const int p_size) {
 	float* result = nullptr;
 
-	if (pooling)
+	if (_pooling)
 	{
 		result = TensorPool::instance().get(p_size);
 	}
@@ -526,7 +526,7 @@ int* Tensor::alloc_shape(const int p_size) {
 }
 
 void Tensor::free_arr() const {
-	if (pooling)
+	if (_pooling)
 	{
 		TensorPool::instance().release(_size, _arr);
 	}
@@ -538,6 +538,16 @@ void Tensor::free_arr() const {
 
 void Tensor::free_shape() const {
 	free(_shape);
+}
+
+void Tensor::enable_pooling(const bool p_value)
+{
+	_pooling = p_value;
+}
+
+bool Tensor::is_enabled_pooling()
+{
+	return _pooling;
 }
 
 void Tensor::print_vector(ostream &output, const Tensor& p_tensor, bool p_cm)

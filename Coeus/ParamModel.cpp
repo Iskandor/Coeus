@@ -41,10 +41,27 @@ void ParamModel::polyak_averaging(const float p_polyak, ParamModel* p_model)
 	}
 }
 
-void ParamModel::copy_params(ParamModel* p_model)
+void ParamModel::copy_params(const ParamModel* p_model)
 {
 	for (auto it = p_model->_params.begin(); it != p_model->_params.end(); ++it) {
 		_params[it->first]->override(it->second);
+	}
+}
+
+void ParamModel::average_params(ParamModel** p_model, int p_size)
+{
+	map<string, Tensor> result = get_empty_params();
+
+	for(int i = 0; i < p_size; i++)
+	{
+		for (auto it = p_model[i]->_params.begin(); it != p_model[i]->_params.end(); ++it) {
+			result[it->first] += *it->second;
+		}
+	}
+
+	for (auto it = _params.begin(); it != _params.end(); ++it) {
+		result[it->first] *= 1.f / p_size;
+		it->second->override(&result[it->first]);
 	}
 }
 

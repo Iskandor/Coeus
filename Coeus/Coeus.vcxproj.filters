@@ -378,14 +378,17 @@
     <ClCompile Include="IActorCritic.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
-    <ClCompile Include="NaturalGradient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GAE.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
     <ClCompile Include="NAC.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="A2C.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="NaturalGradient.cpp">
+      <Filter>Source Files\Algorithm\Gradient</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -698,14 +701,20 @@
     <ClInclude Include="IActorCritic.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
-    <ClInclude Include="NaturalGradient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GAE.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
+    <ClInclude Include="IEnvironment.h">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="NaturalGradient.h">
+      <Filter>Header Files\Algorithm\Gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="A2C.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
     <ClInclude Include="NAC.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

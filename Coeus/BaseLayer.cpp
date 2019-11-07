@@ -203,6 +203,15 @@ BaseLayer::BaseLayer(BaseLayer* p_source)
 	_batch_size = p_source->_batch_size;
 	_batch = p_source->_batch;
 	_valid = false;
+	if (p_source->_dim_tensor != nullptr)
+		_dim_tensor = new Tensor(*p_source->_dim_tensor);
+	else
+		_dim_tensor = nullptr;
+	
+	if (p_source->_in_dim_tensor != nullptr)
+		_in_dim_tensor = new Tensor(*p_source->_in_dim_tensor);
+	else
+		_in_dim_tensor = nullptr;
 
 	_input = nullptr;
 	_output = nullptr;

@@ -13,7 +13,7 @@ namespace Coeus
 		NAC(NeuralNetwork& p_network_critic, GRADIENT_RULE p_rule_critic, float p_alpha_critic, float p_gamma, float p_lambda, NeuralNetwork& p_network_actor, float p_alpha_actor, float p_delta);
 		~NAC();
 
-		void add_sample(Tensor* p_s0, Tensor* p_a, Tensor* p_s1, float p_r, const bool p_final);
+		void add_sample(Tensor* p_s0, Tensor* p_a, Tensor* p_s1, float p_r, bool p_final);
 		void train();
 
 	private:

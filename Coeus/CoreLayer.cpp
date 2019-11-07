@@ -159,6 +159,7 @@ Tensor* CoreLayer::get_dim_tensor()
 CoreLayer::CoreLayer(CoreLayer* p_source) : BaseLayer(p_source)
 {
 	_type = CORE;
+	_mode = p_source->_mode;
 	_id = p_source->_id;
 	_dim = p_source->_dim;
 	_in_dim = p_source->_in_dim;

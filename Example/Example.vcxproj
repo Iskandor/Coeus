@@ -138,6 +138,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Coeus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -175,7 +176,6 @@
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="MazeAction.cpp" />
     <ClCompile Include="MazeExample.cpp" />
-    <ClCompile Include="MazeTask.cpp" />
     <ClCompile Include="PackDataset.cpp" />
     <ClCompile Include="PackDataset2.cpp" />
     <ClCompile Include="PackDefinition.cpp" />
@@ -197,7 +197,6 @@
     <ClInclude Include="Maze.h" />
     <ClInclude Include="MazeAction.h" />
     <ClInclude Include="MazeExample.h" />
-    <ClInclude Include="MazeTask.h" />
     <ClInclude Include="mnist_reader.hpp" />
     <ClInclude Include="mnist_reader_common.hpp" />
     <ClInclude Include="mnist_reader_less.hpp" />

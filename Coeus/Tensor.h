@@ -145,9 +145,12 @@ public:
 		return output;
 	}
 
-	static bool pooling;
+	static void enable_pooling(bool p_value);
+	static bool is_enabled_pooling();
 
 private:
+	static bool _pooling;
+	
 	static void print_vector(ostream &output, const Tensor &p_tensor, bool p_cm);
 	static void print_matrix(ostream &output, const Tensor &p_tensor, bool p_cm);
 	static void print_volume(ostream &output, const Tensor &p_tensor);
