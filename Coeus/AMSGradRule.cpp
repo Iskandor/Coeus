@@ -33,7 +33,7 @@ void AMSGradRule::update_momentum(const string& p_id, Tensor& p_gradient) {
 
 }
 
-void AMSGradRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha) {
+void AMSGradRule::calc_update(Gradient& p_gradient, const float p_alpha) {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 
 	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {

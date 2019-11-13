@@ -123,9 +123,9 @@ void A2C::train(int p_rollout_size)
 		_actor_d_gradient_array[roll].fill(0);
 	}
 
-	_critic_rule->calc_update(_critic_d_gradient.get_gradient());
+	_critic_rule->calc_update(_critic_d_gradient);
 	_critic->update(_critic_rule->get_update());
-	_actor_rule->calc_update(_actor_d_gradient.get_gradient());
+	_actor_rule->calc_update(_actor_d_gradient);
 	_actor->update(_actor_rule->get_update());
 
 	_critic_d_gradient.fill(0);

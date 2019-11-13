@@ -13,12 +13,12 @@ namespace Coeus {
 
 		virtual void run_batch(int p_b, int p_batch, vector<Tensor*>* p_input, vector<Tensor*>* p_target) = 0;
 		virtual float get_error(vector<Tensor*>* p_input, vector<Tensor*>* p_target) = 0;
-		map<string, Tensor>* get_gradient() { return &_gradient; }
+		Gradient& get_gradient() { return _gradient; }
 		int get_batch_size() const { return _batch_size; }
 
 	protected:
 		int					 _batch_size;
-		map<string, Tensor>  _gradient;
+		Gradient			 _gradient;
 		GradientAccumulator* _gradient_accumulator;
 
 	};

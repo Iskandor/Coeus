@@ -12,7 +12,7 @@ GradientAlgorithm::GradientAlgorithm(NeuralNetwork* p_network)
 	//_network_gradient = new NaturalGradient(_network);
 	_cost_function = nullptr;	
 	_update_rule = nullptr;
-	_batch_gradient = _network->get_empty_params();
+	_batch_gradient.init(_network);
 	_recurrent_mode = NONE;
 }
 

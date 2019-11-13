@@ -9,7 +9,7 @@ namespace Coeus {
 		~AdadeltaRule();
 		IUpdateRule* clone(ParamModel* p_model) override;
 
-		void calc_update(map<string, Tensor>& p_gradient, float p_alpha = 0) override;
+		void calc_update(Gradient& p_gradient, float p_alpha = 0) override;
 
 	private:
 		void update_cache(const string& p_id, Tensor &p_gradient);

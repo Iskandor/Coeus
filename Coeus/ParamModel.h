@@ -15,6 +15,7 @@ class __declspec(dllexport) ParamModel
 
 		int get_params_size() const;
 		map<string, Tensor> get_empty_params() const;
+		vector<string>& ids() { return _ids; }
 
 		friend ostream &operator<<(ostream &output, const ParamModel &p_model) {
 
@@ -38,6 +39,7 @@ class __declspec(dllexport) ParamModel
 		void add_param(ParamModel* p_model);
 
 		map<string, Tensor*> _params;
+		vector<string>		 _ids;
 
 	private:
 		int _size{};

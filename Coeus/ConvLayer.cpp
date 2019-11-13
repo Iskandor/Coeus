@@ -175,7 +175,7 @@ void ConvLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 {
 }
 
-void ConvLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
+void ConvLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
 	BaseLayer::calc_gradient(p_gradient_map, p_derivative_map);
 	Tensor*	 df = _y->get_function()->backward(_delta_out);

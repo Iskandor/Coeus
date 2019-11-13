@@ -16,8 +16,9 @@ namespace Coeus
 		void fill(float p_value);
 
 		Tensor& operator[](const string& p_id);
-		
-		map<string, Tensor>& get_gradient();
+
+		map<string, Tensor>::iterator begin() { return _buffer.begin(); }
+		map<string, Tensor>::iterator end() { return  _buffer.end(); }
 
 		Gradient& operator += (const Gradient& p_rhs);
 

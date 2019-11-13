@@ -74,7 +74,7 @@ void RecurrentLayer::activate()
 	}
 }
 
-void RecurrentLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
+void RecurrentLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
 	BaseLayer::calc_gradient(p_gradient_map, p_derivative_map);
 

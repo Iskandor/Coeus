@@ -119,7 +119,7 @@ void BaseLayer::integrate(Tensor* p_input)
 	_input->push_back(p_input);
 }
 
-void BaseLayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
+void BaseLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
 	if (_output_layer.size() == 1)
 	{

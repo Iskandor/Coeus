@@ -10,7 +10,7 @@ PowerSignRule::PowerSignRule(ParamModel* p_model, const float p_alpha) : IUpdate
 PowerSignRule::~PowerSignRule()
 = default;
 
-void PowerSignRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha)
+void PowerSignRule::calc_update(Gradient& p_gradient, const float p_alpha)
 {
 	const float beta1 = 0.9;
 	IUpdateRule::calc_update(p_gradient, p_alpha);

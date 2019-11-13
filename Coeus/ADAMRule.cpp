@@ -20,7 +20,7 @@ IUpdateRule* ADAMRule::clone(ParamModel* p_model)
 	return new ADAMRule(p_model, _alpha, _beta1, _beta2, _epsilon);
 }
 
-void ADAMRule::calc_update(map<string, Tensor>& p_gradient, float p_alpha) {
+void ADAMRule::calc_update(Gradient& p_gradient, float p_alpha) {
 	
 	if (p_alpha > 0)
 	{

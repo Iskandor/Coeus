@@ -14,7 +14,7 @@ NaturalGradient::NaturalGradient(NeuralNetwork* p_network) : NetworkGradient(p_n
 		_inv_fim[_param.first] = Tensor({ row, row }, Tensor::ZERO);
 	}
 
-	_natural_gradient = p_network->get_empty_params();
+	_natural_gradient.init(p_network);
 }
 
 
@@ -61,7 +61,7 @@ void NaturalGradient::calc_gradient(Tensor* p_loss) {
 	}
 }
 
-map<string, Tensor>& NaturalGradient::get_gradient()
+Gradient& NaturalGradient::get_gradient()
 {
 	return _natural_gradient;
 }

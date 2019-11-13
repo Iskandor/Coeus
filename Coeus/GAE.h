@@ -18,8 +18,8 @@ namespace Coeus {
 
 		void set_sample(vector<DQItem> &p_sample);
 		vector<float> get_advantages();
-		
-		map<string, Tensor>& get_gradient(Tensor* p_state0, float p_advantage) const;
+
+		Gradient& get_gradient(Tensor* p_state0, float p_advantage) const;
 
 
 	private:

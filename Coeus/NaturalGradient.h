@@ -13,14 +13,14 @@ namespace Coeus {
 		virtual ~NaturalGradient();
 
 		void calc_gradient(Tensor* p_loss = nullptr) override;
-		map<string, Tensor>& get_gradient() override;
+		Gradient& get_gradient() override;
 		map<string, Tensor>& get_hessian_inv() { return _inv_fim; }
 
 	private:
 
 		map<string, Tensor> _fim;
 		map<string, Tensor> _inv_fim;
-		map<string, Tensor> _natural_gradient;
+		Gradient			_natural_gradient;
 		float				_epsilon;
 	};
 }

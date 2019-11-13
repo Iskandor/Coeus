@@ -41,7 +41,7 @@ vector<float> GAE::get_advantages()
 	return advantages;
 }
 
-map<string, Tensor>& GAE::get_gradient(Tensor* p_state0, float p_advantage) const
+Gradient& GAE::get_gradient(Tensor* p_state0, float p_advantage) const
 {
 	_network->activate(p_state0);
 	const float Vs0 = _network->get_output()->at(0);

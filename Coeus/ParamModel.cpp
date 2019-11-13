@@ -67,6 +67,7 @@ void ParamModel::average_params(ParamModel** p_model, int p_size)
 
 Tensor* ParamModel::add_param(const string& p_id, Tensor* p_param)
 {
+	_ids.push_back(p_id);
 	_params[p_id] = p_param;
 	_size += p_param->size();
 

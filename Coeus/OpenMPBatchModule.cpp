@@ -19,7 +19,7 @@ OpenMPBatchModule::OpenMPBatchModule(NeuralNetwork* p_network, ICostFunction* p_
 		_network_gradient[i] = new NetworkGradient(_clone_network[i]);
 	}
 
-	_gradient = _network->get_empty_params();
+	_gradient.init(_network);
 }
 
 OpenMPBatchModule::~OpenMPBatchModule()

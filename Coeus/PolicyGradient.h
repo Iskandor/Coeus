@@ -1,7 +1,7 @@
 #pragma once
 #include "NeuralNetwork.h"
 #include "GradientAlgorithm.h"
-#include "ADAMRule.h"
+#include "Gradient.h"
 
 namespace Coeus
 {
@@ -11,7 +11,7 @@ namespace Coeus
 		explicit PolicyGradient(NeuralNetwork* p_network);
 		~PolicyGradient();
 
-		map<string, Tensor>& get_gradient(Tensor* p_state, int p_action, float p_delta) const;
+		Gradient& get_gradient(Tensor* p_state, int p_action, float p_delta) const;
 		
 	private:
 		NeuralNetwork*	_network;

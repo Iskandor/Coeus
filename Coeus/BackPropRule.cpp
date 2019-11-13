@@ -16,7 +16,7 @@ IUpdateRule* BackPropRule::clone(ParamModel* p_model)
 	return new BackPropRule(p_model, _alpha, _momentum, _nesterov);
 }
 
-void BackPropRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha)
+void BackPropRule::calc_update(Gradient& p_gradient, const float p_alpha)
 {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 

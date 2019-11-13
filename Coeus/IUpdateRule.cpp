@@ -12,7 +12,7 @@ IUpdateRule::IUpdateRule(ParamModel* p_model, const float p_alpha):
 IUpdateRule::~IUpdateRule()
 = default;
 
-void IUpdateRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha)
+void IUpdateRule::calc_update(Gradient& p_gradient, const float p_alpha)
 {
 	if (p_alpha > 0)
 	{

@@ -37,11 +37,6 @@ Tensor& Gradient::operator[](const string& p_id)
 	return _buffer[p_id];
 }
 
-map<string, Tensor>& Gradient::get_gradient()
-{
-	return _buffer;
-}
-
 Gradient& Gradient::operator+=(const Gradient& p_rhs)
 {
 	for (auto& it : _buffer)

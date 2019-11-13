@@ -3,7 +3,7 @@
 
 using namespace Coeus;
 
-GradientAccumulator::GradientAccumulator(map<string, Tensor>& p_buffer)
+GradientAccumulator::GradientAccumulator(Gradient& p_buffer)
 {
 	_gradient = p_buffer;
 }
@@ -19,12 +19,9 @@ GradientAccumulator& GradientAccumulator::operator=(const GradientAccumulator& p
 GradientAccumulator::~GradientAccumulator()
 = default;
 
-void GradientAccumulator::clear() const
+void GradientAccumulator::clear()
 {
-	for (auto& it : _gradient)
-	{
-		it.second.fill(0);
-	}
+	_gradient.fill(0);
 }
 
 GradientAccumulator GradientAccumulator::operator+(const GradientAccumulator& p_accumulator) const
@@ -36,10 +33,7 @@ GradientAccumulator GradientAccumulator::operator+(const GradientAccumulator& p_
 
 GradientAccumulator& GradientAccumulator::operator+=(const GradientAccumulator& p_accumulator)
 {
-	for (auto& it : p_accumulator._gradient)
-	{		
-		 TensorOperator::instance().vv_add(_gradient[it.first].arr(), it.second.arr(), _gradient[it.first].arr(), _gradient[it.first].size());
-	}
+	_gradient += p_accumulator._gradient;
 
 	return *this;
 }

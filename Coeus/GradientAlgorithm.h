@@ -26,7 +26,7 @@ namespace Coeus {
 		ICostFunction*		_cost_function;
 		IUpdateRule*		_update_rule;
 		NetworkGradient*	_network_gradient;
-		map<string, Tensor> _batch_gradient;
+		Gradient			_batch_gradient;
 		RECURRENT_MODE		_recurrent_mode;
 	};
 }

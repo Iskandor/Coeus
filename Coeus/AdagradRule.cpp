@@ -10,7 +10,7 @@ AdagradRule::AdagradRule(ParamModel* p_model, const float p_alpha, const float p
 AdagradRule::~AdagradRule()
 = default;
 
-void AdagradRule::calc_update(map<string, Tensor>& p_gradient, const float p_alpha ) {
+void AdagradRule::calc_update(Gradient& p_gradient, const float p_alpha) {
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
 

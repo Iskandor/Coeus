@@ -129,7 +129,7 @@ void GRULayer::calc_derivative(map<string, Tensor*>& p_derivative)
 
 }
 
-void GRULayer::calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map)
+void GRULayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map)
 {
 }
 

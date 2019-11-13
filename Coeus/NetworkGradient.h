@@ -2,6 +2,7 @@
 
 #include "NeuralNetwork.h"
 #include "ICostFunction.h"
+#include "Gradient.h"
 
 namespace Coeus {
 
@@ -18,8 +19,8 @@ public:
 	virtual void calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss = nullptr);
 
 	NeuralNetwork* get_network() const { return _network; }
-	virtual map<string, Tensor>& get_gradient();
-	map<string, Tensor>& get_regular_gradient() { return _gradient; }
+	virtual Gradient& get_gradient();
+	Gradient& get_regular_gradient() { return _gradient; }
 
 	void reset();
 	void set_recurrent_mode(RECURRENT_MODE p_value);
@@ -33,7 +34,7 @@ protected:
 	RECURRENT_MODE	_recurrent_mode;
 	NeuralNetwork*	_network;
 
-	map<string, Tensor>		_gradient;
+	Gradient				_gradient;
 	map<string, Tensor*>	_derivative;
 	list<BaseLayer*>		_calculation_graph;
 	map<string, Tensor*>	_input_gradient;

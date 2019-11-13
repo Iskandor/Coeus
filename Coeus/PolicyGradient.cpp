@@ -15,7 +15,7 @@ PolicyGradient::~PolicyGradient()
 	delete _network_gradient;
 }
 
-map<string, Tensor>& PolicyGradient::get_gradient(Tensor* p_state, const int p_action, const float p_delta) const
+Gradient& PolicyGradient::get_gradient(Tensor* p_state, const int p_action, const float p_delta) const
 {
 	_network->activate(p_state);
 	Tensor loss({ _network->get_output_dim() }, Tensor::ZERO);

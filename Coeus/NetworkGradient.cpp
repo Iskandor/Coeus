@@ -7,7 +7,7 @@ using namespace Coeus;
 NetworkGradient::NetworkGradient(NeuralNetwork* p_network)
 {
 	_network = p_network;
-	_gradient = _network->get_empty_params();
+	_gradient.init(_network);
 	_calculation_graph = _network->_backward_graph;
 	_recurrent_mode = NONE;
 
@@ -91,7 +91,7 @@ void NetworkGradient::calc_gradient(vector<Tensor*>* p_input, Tensor* p_loss)
 	calc_gradient(p_loss);
 }
 
-map<string, Tensor>& NetworkGradient::get_gradient()
+Gradient& NetworkGradient::get_gradient()
 {
 	return _gradient;
 }
@@ -102,10 +102,7 @@ void NetworkGradient::reset()
 
 	if (_recurrent_mode == BPTT)
 	{
-		for (auto& it : _gradient)
-		{
-			it.second.fill(0);
-		}
+		_gradient.fill(0);
 	}
 
 	if (_recurrent_mode == RTRL)

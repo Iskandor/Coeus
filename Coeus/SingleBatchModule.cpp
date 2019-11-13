@@ -8,7 +8,7 @@ SingleBatchModule::SingleBatchModule(NeuralNetwork* p_network, NetworkGradient* 
 	_cost_function(p_cost_function), 
 	_network_gradient(p_network_gradient)
 {
-	_gradient = p_network_gradient->get_network()->get_empty_params();
+	_gradient.init(_network);
 }
 
 SingleBatchModule::~SingleBatchModule()

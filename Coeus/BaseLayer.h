@@ -4,6 +4,7 @@
 #include "ParamModel.h"
 #include "json.hpp"
 #include <stack>
+#include "Gradient.h"
 
 
 using namespace std;
@@ -36,7 +37,7 @@ namespace Coeus
 		virtual void activate() = 0;
 
 		virtual void calc_derivative(map<string, Tensor*>& p_derivative) = 0;
-		virtual void calc_gradient(map<string, Tensor>& p_gradient_map, map<string, Tensor*>& p_derivative_map);
+		virtual void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map);
 
 		virtual void override(BaseLayer* p_source) = 0;
 		virtual void reset() = 0;
