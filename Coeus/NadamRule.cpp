@@ -3,21 +3,21 @@
 using namespace Coeus;
 
 
-NadamRule::NadamRule(NetworkGradient* p_network_gradient, const float p_alpha, const float p_beta1, const float p_beta2,
-                     const float p_epsilon): IUpdateRule(p_network_gradient, p_alpha), _beta1(p_beta1), _beta2(p_beta2), _epsilon(p_epsilon)
+NadamRule::NadamRule(ParamModel* p_model, const float p_alpha, const float p_beta1, const float p_beta2,
+                     const float p_epsilon): IUpdateRule(p_model, p_alpha), _beta1(p_beta1), _beta2(p_beta2), _epsilon(p_epsilon)
 {
-	_m = p_network_gradient->get_network()->get_empty_params();
-	_m_mean = p_network_gradient->get_network()->get_empty_params();
-	_v = p_network_gradient->get_network()->get_empty_params();
-	_v_mean = p_network_gradient->get_network()->get_empty_params();
+	_m = p_model->get_empty_params();
+	_m_mean = p_model->get_empty_params();
+	_v = p_model->get_empty_params();
+	_v_mean = p_model->get_empty_params();
 }
 
 NadamRule::~NadamRule()
 = default;
 
-IUpdateRule* NadamRule::clone(NetworkGradient* p_network_gradient)
+IUpdateRule* NadamRule::clone(ParamModel* p_model)
 {
-	return new NadamRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
+	return new NadamRule(p_model, _alpha, _beta1, _beta2, _epsilon);
 }
 
 void NadamRule::update_momentum(const string& p_id, Tensor & p_gradient)

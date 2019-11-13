@@ -36,7 +36,7 @@ private:
 
 	static Tensor encode_state(vector<float> *p_sensors);
 	static int choose_action(Tensor* p_input, float epsilon);
-	static void binary_encoding(float p_value, Tensor* p_vector);
+	static void binary_encoding(int p_value, Tensor* p_vector);
 
 	void console_print(string &p_s, int p_x, int p_y);	
 	void console_clear();

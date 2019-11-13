@@ -6,19 +6,26 @@
 #include "Maze.h"
 #include "RandomGenerator.h"
 
-Maze::Maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic) : IEnvironment() {
+Maze::Maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic)
+{
+	_topology = nullptr;
 	init(p_topology, p_mazeX, p_mazeY, p_goal, p_stochastic);
 }
 
 Maze::Maze()
-= default;
+{
+	_topology = nullptr;
+}
 
 Maze::Maze(Maze& p_copy) : IEnvironment(p_copy)
 {
 	init(p_copy._topology, p_copy._mazeX, p_copy._mazeY, p_copy._goal, p_copy._stochastic);
 }
 
-Maze::~Maze() = default;
+Maze::~Maze()
+{
+	delete[] _topology;
+}
 
 Maze& Maze::operator=(const Maze& p_copy)
 {

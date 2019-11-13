@@ -7,7 +7,7 @@
 #include "RMSProp.h"
 #include "SARSA.h"
 #include "TD.h"
-#include "Actor.h"
+#include "PolicyGradient.h"
 #include "DoubleQLearning.h"
 #include "DeepQLearning.h"
 #include "ICM.h"
@@ -23,10 +23,11 @@
 #include "Logger.h"
 #include "KLDivergence.h"
 #include "CrossEntropyCost.h"
-#include "Actor.h"
+#include "PolicyGradient.h"
 #include "NaturalGradient.h"
 #include "NAC.h"
 #include "A2C.h"
+#include "ActorCritic.h"
 
 using namespace Coeus;
 
@@ -369,8 +370,6 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
 
-	TD critic(&network_critic, ADAM_RULE, 1e-3f, 0.99f);
-
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
@@ -381,7 +380,7 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	Actor actor(&network_actor, ADAM_RULE, 1e-3f);
+	ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-3f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -418,8 +417,7 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 			cum_e_reward += _maze->get_reward();
 
 			reward = _maze->get_reward();
-			td_error = critic.train(&state0, &state1, reward, _maze->is_finished());
-			actor.train(&state0, action0, td_error);
+			agent.train(&state0, &action, &state1, reward, _maze->is_finished());
 
 			state0.override(&state1);
 		}
@@ -455,7 +453,7 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 
 void MazeExample::example_nac(int p_epochs, bool p_verbose)
 {
-	int hidden = 64;
+	int hidden = 32;
 	float limit = 0.01f;
 
 	NeuralNetwork network_critic;
@@ -468,8 +466,6 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
 
-	//TD critic(&network_critic, ADAM_RULE, 1e-3f, 0.99f);
-
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
@@ -480,8 +476,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	//Actor actor(&network_actor, ADAM_RULE, 1e-3f);
-	NAC agent(network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.1f, network_actor, 1e-3f, 1e-1f);
+	NAC agent(&network_critic, ADAM_RULE, 1e-4f, 0.99f, 0.95f, &network_actor, 1e-4f, 1e-3f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -491,7 +486,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	float td_error = 0;
 
 	int wins = 0, loses = 0;
-	SetConsoleActiveScreenBuffer(_hConsole_c);
+	//SetConsoleActiveScreenBuffer(_hConsole_c);
 
 	//Logger::instance().init("log.log");
 	float cum_i_reward = 0;
@@ -536,7 +531,8 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 		}
 
 		string s = "Actor-Critic Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
-		console_print(s, 0, 0);
+		//console_print(s, 0, 0);
+		cout << s << endl;
 
 		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
 		cum_i_reward = 0;
@@ -545,6 +541,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 		//cout << wins << " / " << loses << endl;
 	}
 
+	SetConsoleActiveScreenBuffer(_hConsole_c);
 	test_policy(network_actor);
 	CloseHandle(_hConsole_c);
 
@@ -667,7 +664,7 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	A2C agent(maze_array, &network_critic, ADAM_RULE, 1e-4f, 0.99f, 0.95f, &network_actor, ADAM_RULE, 1e-3f);
+	A2C agent(maze_array, &network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.95f, &network_actor, ADAM_RULE, 1e-4f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -684,7 +681,7 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 
 	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
-		agent.train(8);
+		agent.train(16);
 
 		_maze->reset();
 		state0 = _maze->get_state();
@@ -753,7 +750,7 @@ void MazeExample::example_icm(int p_hidden) {
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	Actor actor(&network_actor, ADAM_RULE, 0.1f);
+	//PolicyGradient actor(&network_actor, ADAM_RULE, 0.1f);
 
 	NeuralNetwork network_model;
 
@@ -811,7 +808,7 @@ void MazeExample::example_icm(int p_hidden) {
 			td_error = critic.train(&state0, &state1, reward, _maze->is_finished());
 			icm.train(&state0, &action, &state1);
 			//icm.add(&state0, &action, &state1);
-			actor.train(&state0, action0, td_error);
+			//actor.train(&state0, action0, td_error);
 
 			state0.override(&state1);
 		}
@@ -888,7 +885,7 @@ void MazeExample::example_selector(int p_hidden)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	Actor actor(&network_actor, ADAM_RULE, 0.001f);
+	//PolicyGradient actor(&network_actor, ADAM_RULE, 0.001f);
 
 	NeuralNetwork network_predictor;
 
@@ -913,7 +910,7 @@ void MazeExample::example_selector(int p_hidden)
 	network_selector.add_connection("hidden1", "output");
 	network_selector.init();
 
-	Actor selector(&network_selector, ADAM_RULE, 0.01f);
+	//PolicyGradient selector(&network_selector, ADAM_RULE, 0.01f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -978,7 +975,7 @@ void MazeExample::example_selector(int p_hidden)
 			cum_e_reward += _maze->get_reward();
 
 			td_error = critic.train(&state0, &state1, r, _maze->is_finished());
-			actor.train(&state0, action0, td_error);
+			//actor.train(&state0, action0, td_error);
 
 			state0.override(&state1);
 			goal_reached = state0.max_value_index() == goal.max_value_index();
@@ -997,7 +994,7 @@ void MazeExample::example_selector(int p_hidden)
 		const float delta = goal_reached ? 1 : 0 - network_predictor.get_output()->at(0);
 		predictor_target[0] = goal_reached ? 1 : 0;
 
-		selector.train(&goal, selection, delta);
+		//selector.train(&goal, selection, delta);
 		predictor.train(&goal, &predictor_target);
 
 		cout << goal_reached << " " << goal.max_value_index() << " " << selection << " " << *network_selector.get_output() << endl;
@@ -1152,7 +1149,7 @@ void MazeExample::test_policy(NeuralNetwork &p_network)
 		p_network.activate(&state);
 		string s;
 		for (int i = 0; i < p_network.get_output()->size(); i++) {
-			s += string_format("%s: %1.4f ", action_labels[i], (*p_network.get_output())[i]);
+			s += string_format("%s: %1.4f ", action_labels[i].c_str(), (*p_network.get_output())[i]);
 		}
 		s += " -> Step " + to_string(step) + " (" + action_labels[p_network.get_output()->max_value_index()] + ")";
 
@@ -1211,7 +1208,7 @@ int MazeExample::choose_action(Tensor* p_input, const float epsilon) {
 	return action;
 }
 
-void MazeExample::binary_encoding(const float p_value, Tensor* p_vector) {
+void MazeExample::binary_encoding(const int p_value, Tensor* p_vector) {
 	p_vector->fill(0);
 	(*p_vector)[p_value] = 1.f;
 }

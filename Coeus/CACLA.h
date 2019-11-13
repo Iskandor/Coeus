@@ -1,5 +1,6 @@
 #pragma once
 #include "NeuralNetwork.h"
+#include "NetworkGradient.h"
 #include "IUpdateRule.h"
 #include "QuadraticCost.h"
 

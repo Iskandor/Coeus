@@ -69,9 +69,11 @@ void FFN::run() {
 	network.init();
 
 	BackProp optimizer(&network);
+	//ADAM optimizer(&network);
 
+	//optimizer.init(new QuadraticCost(), 0.01f, 0.9f, true);
 	optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
-	//optimizer.init(new QuadraticCost(), 0.1f);
+	//optimizer.init(new QuadraticCost(), 1e-3f);
 
 	const auto start = chrono::system_clock::now();
 

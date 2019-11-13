@@ -2,9 +2,9 @@
 
 using namespace Coeus;
 
-PowerSignRule::PowerSignRule(NetworkGradient* p_network_gradient, const float p_alpha) : IUpdateRule(p_network_gradient, p_alpha)
+PowerSignRule::PowerSignRule(ParamModel* p_model, const float p_alpha) : IUpdateRule(p_model, p_alpha)
 {
-	_m = p_network_gradient->get_network()->get_empty_params();
+	_m = p_model->get_empty_params();
 }
 
 PowerSignRule::~PowerSignRule()
@@ -28,7 +28,7 @@ void PowerSignRule::calc_update(map<string, Tensor>& p_gradient, const float p_a
 	}
 }
 
-IUpdateRule* PowerSignRule::clone(NetworkGradient* p_network_gradient)
+IUpdateRule* PowerSignRule::clone(ParamModel* p_model)
 {
-	return new PowerSignRule(p_network_gradient, _alpha);
+	return new PowerSignRule(p_model, _alpha);
 }

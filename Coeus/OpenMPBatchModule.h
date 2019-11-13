@@ -1,7 +1,9 @@
 #pragma once
 #include "IBatchModule.h"
 #include "NeuralNetwork.h"
+#include "NetworkGradient.h"
 #include "IUpdateRule.h"
+#include "ICostFunction.h"
 
 namespace Coeus
 {

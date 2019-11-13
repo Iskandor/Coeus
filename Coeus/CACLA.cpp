@@ -12,7 +12,7 @@ CACLA::CACLA(NeuralNetwork* p_network, GRADIENT_RULE p_rule, float p_alpha, floa
 	_var(1)
 {
 	_network_gradient = new NetworkGradient(p_network);
-	_update_rule = RuleFactory::create_rule(p_rule, _network_gradient, p_alpha);
+	_update_rule = RuleFactory::create_rule(p_rule, p_network, p_alpha);
 }
 
 

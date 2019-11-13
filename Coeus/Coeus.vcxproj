@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="A2C.cpp" />
     <ClCompile Include="ActivationFunctionFactory.cpp" />
+    <ClCompile Include="ActorCritic.cpp" />
     <ClCompile Include="Adadelta.cpp" />
     <ClCompile Include="AdadeltaRule.cpp" />
     <ClCompile Include="Adagrad.cpp" />
@@ -230,7 +231,7 @@
     <ClCompile Include="PoolingLayer.cpp" />
     <ClCompile Include="QLearning.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
-    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="PolicyGradient.cpp" />
     <ClCompile Include="RuleFactory.cpp" />
     <ClCompile Include="OpenMPBatchModule.cpp" />
     <ClCompile Include="PowerSign.cpp" />
@@ -266,6 +267,7 @@
   <ItemGroup>
     <ClInclude Include="A2C.h" />
     <ClInclude Include="ActivationFunctionFactory.h" />
+    <ClInclude Include="ActorCritic.h" />
     <ClInclude Include="Adadelta.h" />
     <ClInclude Include="AdadeltaRule.h" />
     <ClInclude Include="Adagrad.h" />
@@ -333,7 +335,7 @@
     <ClInclude Include="PoolingLayer.h" />
     <ClInclude Include="QLearning.h" />
     <ClInclude Include="RandomGenerator.h" />
-    <ClInclude Include="Actor.h" />
+    <ClInclude Include="PolicyGradient.h" />
     <ClInclude Include="RuleFactory.h" />
     <ClInclude Include="OpenMPBatchModule.h" />
     <ClInclude Include="PowerSign.h" />

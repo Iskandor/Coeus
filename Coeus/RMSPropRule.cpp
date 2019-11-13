@@ -2,10 +2,10 @@
 
 using namespace Coeus;
 
-RMSPropRule::RMSPropRule(NetworkGradient* p_network_gradient, const float p_alpha, const float p_decay, const float p_epsilon):
-	IUpdateRule(p_network_gradient, p_alpha), _decay(p_decay), _epsilon(p_epsilon)
+RMSPropRule::RMSPropRule(ParamModel* p_model, const float p_alpha, const float p_decay, const float p_epsilon):
+	IUpdateRule(p_model, p_alpha), _decay(p_decay), _epsilon(p_epsilon)
 {
-	_cache = p_network_gradient->get_network()->get_empty_params();
+	_cache = p_model->get_empty_params();
 }
 
 RMSPropRule::~RMSPropRule()
@@ -25,7 +25,7 @@ void RMSPropRule::calc_update(map<string, Tensor>& p_gradient, const float p_alp
 	}
 }
 
-IUpdateRule* RMSPropRule::clone(NetworkGradient* p_network_gradient)
+IUpdateRule* RMSPropRule::clone(ParamModel* p_model)
 {
-	return new RMSPropRule(p_network_gradient, _alpha, _decay, _epsilon);
+	return new RMSPropRule(p_model, _alpha, _decay, _epsilon);
 }

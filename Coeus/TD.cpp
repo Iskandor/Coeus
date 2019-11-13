@@ -8,7 +8,7 @@ TD::TD(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float
 {
 	_network = p_network;
 	_network_gradient = new NetworkGradient(p_network);
-	_update_rule = RuleFactory::create_rule(p_grad_rule, _network_gradient, p_alpha);
+	_update_rule = RuleFactory::create_rule(p_grad_rule, p_network, p_alpha);
 }
 
 TD::~TD()

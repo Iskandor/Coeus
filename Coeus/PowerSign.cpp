@@ -14,5 +14,5 @@ PowerSign::~PowerSign()
 
 void PowerSign::init(ICostFunction* p_cost_function, const float p_alpha)
 {
-	GradientAlgorithm::init(p_cost_function, new PowerSignRule(_network_gradient, p_alpha));
+	GradientAlgorithm::init(p_cost_function, new PowerSignRule(_network, p_alpha));
 }

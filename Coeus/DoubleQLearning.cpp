@@ -11,10 +11,10 @@ DoubleQLearning::DoubleQLearning(NeuralNetwork* p_network_a, NeuralNetwork* p_ne
 {
 	_network_a = p_network_a;
 	_network_gradient_a = new NetworkGradient(p_network_a);
-	_update_rule_a = RuleFactory::create_rule(p_grad_rule, _network_gradient_a, p_alpha);
+	_update_rule_a = RuleFactory::create_rule(p_grad_rule, p_network_a, p_alpha);
 	_network_b = p_network_b;
 	_network_gradient_b = new NetworkGradient(p_network_b);
-	_update_rule_b = RuleFactory::create_rule(p_grad_rule, _network_gradient_b, p_alpha);
+	_update_rule_b = RuleFactory::create_rule(p_grad_rule, p_network_b, p_alpha);
 
 	_action_count = p_network_a->get_output_dim();
 	_output = new Tensor({ _action_count }, Tensor::ZERO);

@@ -2,18 +2,18 @@
 
 using namespace Coeus;
 
-GAE::GAE(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda) :
+GAE::GAE(NeuralNetwork* p_network, float p_gamma, float p_lambda) :
 	_gamma(p_gamma),
 	_lambda(p_lambda),
 	_network(p_network)
 {
-	_value_estimator = new TD(p_network, p_grad_rule, p_alpha, p_gamma);
+	_network_gradient = new NetworkGradient(p_network);
 }
 
 
 GAE::~GAE()
 {
-	delete _value_estimator;
+	delete _network_gradient;
 }
 
 void GAE::set_sample(vector<DQItem> &p_sample) {
@@ -41,9 +41,14 @@ vector<float> GAE::get_advantages()
 	return advantages;
 }
 
+map<string, Tensor>& GAE::get_gradient(Tensor* p_state0, float p_advantage) const
+{
+	_network->activate(p_state0);
+	const float Vs0 = _network->get_output()->at(0);
 
-void GAE::train() {
-	for (int l = 0; l < _sample_buffer.size(); l++) {
-		_value_estimator->train(&_sample_buffer[l].s0, &_sample_buffer[l].s1, _sample_buffer[l].r, _sample_buffer[l].final);
-	}
+	Tensor loss({ 1 }, Tensor::VALUE, Vs0 - p_advantage);
+
+	_network_gradient->calc_gradient(&loss);
+
+	return _network_gradient->get_gradient();
 }

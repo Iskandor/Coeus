@@ -1,21 +1,22 @@
 #include "AdaMaxRule.h"
+#include <algorithm>
 
 using namespace Coeus;
 
-AdaMaxRule::AdaMaxRule(NetworkGradient* p_network_gradient, const float p_alpha, const float p_beta1, const float p_beta2, const float p_epsilon): 
-			IUpdateRule(p_network_gradient, p_alpha), _beta1(p_beta1), _beta2(p_beta2), _epsilon(p_epsilon)
+AdaMaxRule::AdaMaxRule(ParamModel* p_model, const float p_alpha, const float p_beta1, const float p_beta2, const float p_epsilon):
+			IUpdateRule(p_model, p_alpha), _beta1(p_beta1), _beta2(p_beta2), _epsilon(p_epsilon)
 {
-	_m = p_network_gradient->get_network()->get_empty_params();
-	_m_mean = p_network_gradient->get_network()->get_empty_params();
-	_u = p_network_gradient->get_network()->get_empty_params();
+	_m = p_model->get_empty_params();
+	_m_mean = p_model->get_empty_params();
+	_u = p_model->get_empty_params();
 }
 
 AdaMaxRule::~AdaMaxRule()
 = default;
 
-IUpdateRule* AdaMaxRule::clone(NetworkGradient* p_network_gradient)
+IUpdateRule* AdaMaxRule::clone(ParamModel* p_model)
 {
-	return new AdaMaxRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
+	return new AdaMaxRule(p_model, _alpha, _beta1, _beta2, _epsilon);
 }
 
 void AdaMaxRule::update_momentum(const string& p_id, Tensor& p_gradient) {

@@ -2,11 +2,11 @@
 
 using namespace Coeus;
 
-IUpdateRule::IUpdateRule(NetworkGradient* p_network_gradient, const float p_alpha):
+IUpdateRule::IUpdateRule(ParamModel* p_model, const float p_alpha):
 	_alpha(p_alpha),
-	_network_gradient(p_network_gradient)
+	_model(p_model)
 {
-	_update = p_network_gradient->get_network()->get_empty_params();
+	_update = p_model->get_empty_params();
 }
 
 IUpdateRule::~IUpdateRule()

@@ -2,19 +2,19 @@
 
 using namespace Coeus;
 
-AdadeltaRule::AdadeltaRule(NetworkGradient* p_network_gradient, const float p_alpha, const float p_decay, const float p_epsilon): IUpdateRule(p_network_gradient, p_alpha), 
+AdadeltaRule::AdadeltaRule(ParamModel* p_model, const float p_alpha, const float p_decay, const float p_epsilon): IUpdateRule(p_model, p_alpha),
 	_decay(p_decay), _epsilon(p_epsilon)
 {
-	_cache = p_network_gradient->get_network()->get_empty_params();
-	_cache_delta = p_network_gradient->get_network()->get_empty_params();
+	_cache = p_model->get_empty_params();
+	_cache_delta = p_model->get_empty_params();
 }
 
 AdadeltaRule::~AdadeltaRule()
 = default;
 
-IUpdateRule* AdadeltaRule::clone(NetworkGradient* p_network_gradient)
+IUpdateRule* AdadeltaRule::clone(ParamModel* p_model)
 {
-	return new AdadeltaRule(p_network_gradient, _alpha, _decay, _epsilon);
+	return new AdadeltaRule(p_model, _alpha, _decay, _epsilon);
 }
 
 void AdadeltaRule::update_cache(const string& p_id, Tensor& p_gradient) {

@@ -2,7 +2,7 @@
 #include "IEnvironment.h"
 #include "NeuralNetwork.h"
 #include "GAE.h"
-#include "Actor.h"
+#include "PolicyGradient.h"
 
 namespace Coeus
 {
@@ -22,13 +22,18 @@ namespace Coeus
 
 		NeuralNetwork*		_actor;
 		NeuralNetwork**		_actor_array;
-		ParamModel**		_actor_param_array;
-		Actor**				_policy_gradient;
+		map<string, Tensor>	_actor_d_gradient;
+		map<string, Tensor>* _actor_d_gradient_array;
+		PolicyGradient**	_policy_gradient;
+		IUpdateRule*		_actor_rule;
 		
-		NeuralNetwork*	_critic;
-		NeuralNetwork**	_critic_array;
-		ParamModel**	_critic_param_array;
-		GAE**			_advantage_estimation;
+		NeuralNetwork*		_critic;
+		NeuralNetwork**		_critic_array;
+		map<string, Tensor>	_critic_d_gradient;
+		map<string, Tensor>* _critic_d_gradient_array;
+		GAE**				_advantage_estimation;
+		IUpdateRule*		_critic_rule;
+		
 
 		vector<DQItem>* _sample_buffer;
 	};

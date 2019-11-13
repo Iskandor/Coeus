@@ -366,9 +366,6 @@
     <ClCompile Include="AutoDifferentiator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Actor.cpp">
-      <Filter>Source Files\Algorithm\RL</Filter>
-    </ClCompile>
     <ClCompile Include="CACLA.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
@@ -389,6 +386,12 @@
     </ClCompile>
     <ClCompile Include="NaturalGradient.cpp">
       <Filter>Source Files\Algorithm\Gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="PolicyGradient.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorCritic.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -689,9 +692,6 @@
     <ClInclude Include="AutoDifferentiator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actor.h">
-      <Filter>Header Files\Algorithm\RL</Filter>
-    </ClInclude>
     <ClInclude Include="CACLA.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
@@ -714,6 +714,12 @@
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
     <ClInclude Include="NAC.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="PolicyGradient.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorCritic.h">
       <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>

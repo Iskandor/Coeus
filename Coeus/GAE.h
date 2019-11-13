@@ -13,17 +13,18 @@ namespace Coeus {
 	class __declspec(dllexport) GAE
 	{
 	public:
-		GAE(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda);
+		GAE(NeuralNetwork* p_network, float p_gamma, float p_lambda);
 		~GAE();
 
 		void set_sample(vector<DQItem> &p_sample);
 		vector<float> get_advantages();
-		void train();
+		
+		map<string, Tensor>& get_gradient(Tensor* p_state0, float p_advantage) const;
 
 
 	private:
-		NeuralNetwork *_network;
-		TD *_value_estimator;
+		NeuralNetwork*		_network;
+		NetworkGradient*	_network_gradient;
 
 		vector<DQItem> _sample_buffer;
 

@@ -2,22 +2,22 @@
 
 using namespace  Coeus;
 
-ADAMRule::ADAMRule(NetworkGradient* p_network_gradient, float p_alpha, float p_beta1, float p_beta2, float p_epsilon) :
-	IUpdateRule(p_network_gradient, p_alpha), _t(0),
+ADAMRule::ADAMRule(ParamModel* p_model, float p_alpha, float p_beta1, float p_beta2, float p_epsilon) :
+	IUpdateRule(p_model, p_alpha), _t(0),
 	_beta1(p_beta1), _denb1(0), _beta2(p_beta2), _denb2(0), _epsilon(p_epsilon)
 {
-	_m = p_network_gradient->get_network()->get_empty_params();
-	_m_mean = p_network_gradient->get_network()->get_empty_params();
-	_v = p_network_gradient->get_network()->get_empty_params();
-	_v_mean = p_network_gradient->get_network()->get_empty_params();
+	_m = p_model->get_empty_params();
+	_m_mean = p_model->get_empty_params();
+	_v = p_model->get_empty_params();
+	_v_mean = p_model->get_empty_params();
 }
 
 ADAMRule::~ADAMRule()
 = default;
 
-IUpdateRule* ADAMRule::clone(NetworkGradient* p_network_gradient)
+IUpdateRule* ADAMRule::clone(ParamModel* p_model)
 {
-	return new ADAMRule(p_network_gradient, _alpha, _beta1, _beta2, _epsilon);
+	return new ADAMRule(p_model, _alpha, _beta1, _beta2, _epsilon);
 }
 
 void ADAMRule::calc_update(map<string, Tensor>& p_gradient, float p_alpha) {
