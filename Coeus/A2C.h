@@ -3,6 +3,7 @@
 #include "NeuralNetwork.h"
 #include "GAE.h"
 #include "PolicyGradient.h"
+#include "Gradient.h"
 
 namespace Coeus
 {
@@ -14,7 +15,7 @@ namespace Coeus
 			NeuralNetwork* p_actor, GRADIENT_RULE p_actor_update_rule, float p_actor_alpha);
 		~A2C();
 		
-		void train(int p_rollout_size) const;
+		void train(int p_rollout_size);
 
 	private:
 		
@@ -22,15 +23,15 @@ namespace Coeus
 
 		NeuralNetwork*		_actor;
 		NeuralNetwork**		_actor_array;
-		map<string, Tensor>	_actor_d_gradient;
-		map<string, Tensor>* _actor_d_gradient_array;
+		Gradient			_actor_d_gradient;
+		Gradient*			_actor_d_gradient_array;
 		PolicyGradient**	_policy_gradient;
 		IUpdateRule*		_actor_rule;
 		
 		NeuralNetwork*		_critic;
 		NeuralNetwork**		_critic_array;
-		map<string, Tensor>	_critic_d_gradient;
-		map<string, Tensor>* _critic_d_gradient_array;
+		Gradient			_critic_d_gradient;
+		Gradient*			_critic_d_gradient_array;
 		GAE**				_advantage_estimation;
 		IUpdateRule*		_critic_rule;
 		

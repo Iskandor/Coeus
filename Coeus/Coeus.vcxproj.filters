@@ -393,6 +393,9 @@
     <ClCompile Include="ActorCritic.cpp">
       <Filter>Source Files\Algorithm\RL</Filter>
     </ClCompile>
+    <ClCompile Include="Gradient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -721,6 +724,9 @@
     </ClInclude>
     <ClInclude Include="ActorCritic.h">
       <Filter>Header Files\Algorithm\RL</Filter>
+    </ClInclude>
+    <ClInclude Include="Gradient.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -195,6 +195,7 @@
     <ClCompile Include="ExponentialDecay.cpp" />
     <ClCompile Include="ExponentialInterpolation.cpp" />
     <ClCompile Include="GAE.cpp" />
+    <ClCompile Include="Gradient.cpp" />
     <ClCompile Include="GradientAccumulator.cpp" />
     <ClCompile Include="GradientAlgorithm.cpp" />
     <ClCompile Include="BaseLayer.cpp" />
@@ -291,6 +292,7 @@
     <ClInclude Include="ExponentialDecay.h" />
     <ClInclude Include="ExponentialInterpolation.h" />
     <ClInclude Include="GAE.h" />
+    <ClInclude Include="Gradient.h" />
     <ClInclude Include="GradientAccumulator.h" />
     <ClInclude Include="GradientAlgorithm.h" />
     <ClInclude Include="base64.h" />

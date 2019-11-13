@@ -632,7 +632,7 @@ int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 
 void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 {
-	const int env_size = 16;
+	const int env_size = 64;
 	
 	vector<IEnvironment*> maze_array;
 
@@ -664,7 +664,7 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	A2C agent(maze_array, &network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.95f, &network_actor, ADAM_RULE, 1e-4f);
+	A2C agent(maze_array, &network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.95f, &network_actor, ADAM_RULE, 1e-3f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -681,7 +681,7 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 
 	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
-		agent.train(16);
+		agent.train(6);
 
 		_maze->reset();
 		state0 = _maze->get_state();
