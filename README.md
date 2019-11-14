@@ -1,23 +1,38 @@
 # Coeus
 
-C++ Library supporting deep and reinforcement learning algorithms
+Lightweight C++ Library supporting deep and reinforcement learning algorithms
 
 ![](https://raw.githubusercontent.com/Iskandor/Coeus/master/Logo/logo.jpg)
 
-### Features
+### Dependencies
+Intel Math Kernel Library (https://software.intel.com/en-us/mkl)
 
+### Features
+**Neural Networks**
 - Feed-forward neural networks and recurrent neural networks (Elman, Jordna, LSTM)
 - Self-organizing maps (SOM) and recurrent self-organizing maps
 - Convolutional neural networks
-- TD-learning, Q-Learning, SARSA, Double Q-learning, Deep Q-Learning
-- Backend based on MKL libraries
-- Supports parallelization across samples using PPL library / OpenMP library
+
+**Reinforcement learning algorithms**
+- TD-learning
+- Q-Learning
+- SARSA
+- Double Q-learning
+- Deep Q-Learning
+- Actor-Critic algorithms (AC, A2C)
+
+**Continuous reinforcement learning algorithms**
+- CACLA
+ 
+**Other features**
+- BLAS backend
+- Supports parallelization across samples using OpenMP library
 - Simple model building demanding only few lines of code
 
 ### Planned features
 - Residual networks
 - Gated recurrent unit
-- Actor-Critic algorithms (NAC, A3C, DDPG)
+- DDPG, NAC, TRPO, PPO, CACER
 - CUDA support
 - Intrinsic motivation modules
 - ALE interface and examples
