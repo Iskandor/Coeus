@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2C.cpp" />
+    <ClCompile Include="A3C.cpp" />
     <ClCompile Include="ActivationFunctionFactory.cpp" />
     <ClCompile Include="ActorCritic.cpp" />
     <ClCompile Include="Adadelta.cpp" />
@@ -267,6 +268,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A2C.h" />
+    <ClInclude Include="A3C.h" />
     <ClInclude Include="ActivationFunctionFactory.h" />
     <ClInclude Include="ActorCritic.h" />
     <ClInclude Include="Adadelta.h" />

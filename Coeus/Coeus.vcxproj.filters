@@ -396,6 +396,9 @@
     <ClCompile Include="Gradient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="A3C.cpp">
+      <Filter>Source Files\Algorithm\RL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseLayer.h">
@@ -727,6 +730,9 @@
     </ClInclude>
     <ClInclude Include="Gradient.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="A3C.h">
+      <Filter>Header Files\Algorithm\RL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
