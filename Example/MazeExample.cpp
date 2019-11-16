@@ -28,6 +28,7 @@
 #include "NAC.h"
 #include "A2C.h"
 #include "ActorCritic.h"
+#include "DDPG.h"
 
 using namespace Coeus;
 
@@ -552,7 +553,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	test_v(&network_critic);
 }
 
-int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
+void MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 	int hidden = 64;
 	float limit = 0.01f;
 
@@ -627,7 +628,7 @@ int MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 
 	test_policy(network);
 	CloseHandle(_hConsole_c);
-	return test_q(&network, true);
+	test_q(&network, true);
 }
 
 void MazeExample::example_a2c(int p_epochs, bool p_verbose)
@@ -726,6 +727,93 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 	test_q(&network_actor);
 	cout << endl;
 	test_v(&network_critic);
+}
+
+void MazeExample::example_ddpg(int p_epochs, bool p_verbose)
+{
+	int hidden = 64;
+	float limit = 0.01f;
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM() + _maze->ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(UNIFORM, -limit, limit), _maze->STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	DDPG agent(	&network_critic, ADAM_RULE, 1e-3f, 0.99,
+				&network_actor, ADAM_RULE, 1e-4f, 
+				1000, 64);
+
+	Tensor state0, state1;
+	Tensor action0({_maze->ACTION_DIM()}, Tensor::ZERO);
+	float reward = 0;
+	const int epochs = p_epochs;
+
+	int wins = 0, loses = 0;
+	SetConsoleActiveScreenBuffer(_hConsole_c);
+
+	for (int e = 0; e < epochs; e++) {
+		//if (p_verbose) cout << "Epoch " << e << endl;
+
+		_maze->reset();
+
+		state0 = _maze->get_state();
+
+		while (!_maze->is_finished()) {
+			//cout << maze->toString() << endl;
+			network_actor.activate(&state0);
+			const int a = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
+			Encoder::one_hot(action0, a);
+			_maze->do_action(action0);
+
+			state1 = _maze->get_state();
+			reward = _maze->get_reward();
+
+			agent.train(&state0, &action0, &state1, reward, _maze->is_finished());
+			state0.override(&state1);
+		}
+
+		if (_maze->is_winner()) {
+			wins++;
+		}
+		else {
+			loses++;
+		}
+
+		//cout << epsilon << endl;
+		//cout << wins << " " << task.getEnvironment()->moves() << " " << reward << endl;
+
+		//agent.reset_traces();
+		if (p_verbose)
+		{
+			//cout << task.getEnvironment()->moves() << endl;
+			//cout << wins << " / " << loses << endl;
+
+			string s = "DDPG Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
+			console_print(s, 0, 0);
+		}
+		if (e % 500 == 0) {
+			//test_policy(network);
+		}
+	}
+
+	test_policy(network_actor);
+	CloseHandle(_hConsole_c);
+	//test_q(&network, true);
 }
 
 void MazeExample::example_icm(int p_hidden) {

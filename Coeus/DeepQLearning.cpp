@@ -93,10 +93,3 @@ void DeepQLearning::calc_max_qa(const int p_sample)
 		_max_qa[i] = maxQ;
 	}
 }
-
-float DeepQLearning::calc_max_qa(Tensor* p_state) const {
-	
-	const int maxQa = _target_network->get_output()->max_value_index();
-
-	return _target_network->get_output()->at(maxQa);
-}

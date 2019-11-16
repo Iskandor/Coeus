@@ -13,13 +13,14 @@ namespace Coeus
 		virtual float train(Tensor* p_state0, int p_action0, Tensor* p_state1, float p_reward, bool p_final);
 
 	protected:
-		virtual float calc_max_qa(Tensor* p_state) const;
-
 		NeuralNetwork* _network;
 		NetworkGradient* _network_gradient;
 		IUpdateRule* _update_rule;
 
 		float _alpha;
 		float _gamma;
+
+	private:
+		float calc_max_qa(Tensor* p_state) const;
 	};
 }

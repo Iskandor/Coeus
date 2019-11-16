@@ -20,7 +20,10 @@ public:
 	int example_sarsa(int p_epochs, bool p_verbose = true);
 	void example_actor_critic(int p_epochs, bool p_verbose = true);
 	void example_nac(int p_epochs, bool p_verbose = true);
-	int example_deep_q(int p_epochs, bool p_verbose = true);
+	
+	void example_deep_q(int p_epochs, bool p_verbose = true);
+	void example_ddpg(int p_epochs, bool p_verbose = true);
+	
 	void example_a2c(int p_epochs, bool p_verbose = true);
 	void example_icm(int p_hidden);
 	void example_selector(int p_hidden);

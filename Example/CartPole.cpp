@@ -88,6 +88,13 @@ void CartPole::perform_action(const float p_action)
 
 
 void CartPole::reset() {
+	/*
+	_x = 0;
+	_x_dot = 0;
+	_theta = 0;
+	_theta_dot = 0.1f;
+	*/
+
 	_x = RandomGenerator::get_instance().random(-0.05f, 0.05f);
 	_x_dot = RandomGenerator::get_instance().random(-0.05f, 0.05f);
 	_theta = RandomGenerator::get_instance().random(-0.05f, 0.05f);

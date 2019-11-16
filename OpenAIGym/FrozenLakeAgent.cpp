@@ -64,7 +64,7 @@ void FrozenLakeAgent::run(const boost::shared_ptr<Gym::Client>& p_client, const 
 			total_reward += s.reward;
 			total_steps += 1;
 
-			_agent->train(&state0, action[0], &state1, s.reward); // +count_module.uncertainty_motivation());
+			_agent->train(&state0, action[0], &state1, s.reward, s.done); // +count_module.uncertainty_motivation());
 
 			state0 = state1;
 

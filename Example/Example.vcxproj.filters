@@ -96,6 +96,9 @@
     <ClCompile Include="ContinuousTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pendulum.cpp">
+      <Filter>Source Files\RL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFN.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="ContinuousTest.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pendulum.h">
+      <Filter>Header Files\RL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

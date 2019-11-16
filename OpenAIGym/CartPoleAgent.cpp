@@ -72,7 +72,7 @@ void CartPoleAgent::run(const boost::shared_ptr<Gym::Client>& p_client, const st
 			total_reward += s.reward;
 			total_steps += 1;
 
-			float delta = critic.train(&state0, &state1, s.reward);
+			float delta = critic.train(&state0, &state1, s.reward, s.done);
 			actor.train(&state0, &action, delta);
 
 			state0 = state1;

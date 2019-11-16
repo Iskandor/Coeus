@@ -15,9 +15,6 @@ namespace Coeus
 		float train(Tensor* p_state0, int p_action0, Tensor* p_state1, float p_reward, bool p_final) override;
 
 	protected:
-		void calc_max_qa(int p_sample);
-		float calc_max_qa(Tensor* p_state) const override;
-
 		Tensor	_input_s0;
 		Tensor	_input_s1;
 		Tensor	_target;
@@ -29,6 +26,9 @@ namespace Coeus
 		int _target_network_update_t;
 
 		NeuralNetwork* _target_network;
+
+	private:
+		void calc_max_qa(int p_sample);
 	};
 }
 
