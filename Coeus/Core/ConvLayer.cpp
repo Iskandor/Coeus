@@ -2,7 +2,6 @@
 #include "IDGen.h"
 #include "ActivationFunctionFactory.h"
 #include "TensorOperator.h"
-#include <mkl_trans.h>
 #include <chrono>
 
 using namespace Coeus;
@@ -28,7 +27,6 @@ ConvLayer::ConvLayer(const string& p_id, const ACTIVATION p_activation, TensorIn
 ConvLayer::~ConvLayer()
 {
 	delete _y;
-	delete _W;
 	delete _initializer;
 
 	delete _filter_input;

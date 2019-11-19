@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "Maze.h"
-#include "RandomGenerator.h"
+#include <RandomGenerator.h>
 
 Maze::Maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic)
 {

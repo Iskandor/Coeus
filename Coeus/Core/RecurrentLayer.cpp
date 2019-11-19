@@ -42,7 +42,6 @@ RecurrentLayer::RecurrentLayer(const json& p_data) : BaseLayer(p_data)
 RecurrentLayer::~RecurrentLayer()
 {
 	delete _y;
-	delete _W;
 	delete _context;
 	delete _initializer;
 }

@@ -56,6 +56,8 @@ private:
 	string			_output_layer;
 
 	map<string, string> _param_map;
+
+	bool _own_model;
 };
 
 }

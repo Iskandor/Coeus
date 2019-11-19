@@ -34,20 +34,6 @@ namespace Coeus
 		RMSPROP_RULE
 	};
 
-	enum INIT {
-		DEBUG = 0,
-		UNIFORM = 1,
-		LECUN_UNIFORM = 2,
-		GLOROT_UNIFORM = 3,
-		IDENTITY = 4,
-		NORMAL = 5,
-		EXPONENTIAL = 6,
-		HE_UNIFORM = 7,
-		LECUN_NORMAL = 8,
-		GLOROT_NORMAL = 9,
-		HE_NORMAL = 10
-	};
-
 	enum RECURRENT_MODE
 	{
 		NONE = 0,

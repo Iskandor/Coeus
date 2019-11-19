@@ -13,6 +13,8 @@ namespace Coeus
 		NeuronOperator(NeuronOperator& p_copy);
 		~NeuronOperator();
 
+		NeuronOperator* clone(NeuronOperator* p_source);
+
 		virtual void integrate(Tensor* p_input, Tensor* p_weights);
 		virtual void activate();
 		Tensor derivative() const;

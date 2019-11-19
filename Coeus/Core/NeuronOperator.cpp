@@ -52,8 +52,6 @@ NeuronOperator::NeuronOperator(NeuronOperator& p_copy) : ParamModel(p_copy)
 
 NeuronOperator::~NeuronOperator()
 {
-	delete _bias;
-
 	delete _activation_function;
 	delete _net;
 	delete _dnet;

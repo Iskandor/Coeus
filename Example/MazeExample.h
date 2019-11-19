@@ -1,11 +1,10 @@
 #pragma once
-#include "Tensor.h"
-#include "NeuralNetwork.h"
 
-#include <vector>
-#include <windows.h>
-#include <tchar.h>
 #include "Maze.h"
+#include <NeuralNetwork.h>
+#include <vector>
+#include <Windows.h>
+
 
 using namespace Coeus;
 

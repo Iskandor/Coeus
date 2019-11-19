@@ -38,11 +38,6 @@ GRULayer::~GRULayer()
 	delete _rg;
 	delete _ug;
 
-	delete _Why;
-	delete _Wxh;
-	delete _Wxrg;
-	delete _Wxug;
-
 	delete _reseted_input;
 	delete _h_input;
 }

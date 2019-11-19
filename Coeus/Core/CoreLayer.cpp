@@ -36,7 +36,6 @@ CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(p_copy._id, p_copy._dim, { p
 CoreLayer::~CoreLayer()
 {
 	delete _y;
-	delete _W;
 	delete _initializer;
 }
 

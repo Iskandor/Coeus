@@ -6,8 +6,8 @@
 #define NEURONET_CARTPOLE_H
 
 #include <string>
-#include "Coeus.h"
 #include <vector>
+#include <Coeus.h>
 
 using namespace std;
 

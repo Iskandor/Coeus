@@ -1,6 +1,7 @@
 #pragma once
 #include "mnist_reader.hpp"
-#include "NeuralNetwork.h"
+#include <Tensor.h>
+#include <NeuralNetwork.h>
 
 using namespace Coeus;
 

@@ -4,7 +4,7 @@
 
 namespace Coeus
 {
-	class RuleFactory
+	class __declspec(dllexport) RuleFactory
 	{
 	public:
 		RuleFactory();

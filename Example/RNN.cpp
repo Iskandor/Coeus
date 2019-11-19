@@ -37,8 +37,8 @@ void RNN::run_add_problem()
 
 	NeuralNetwork network;
 	//network.add_layer(new RecurrentLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
-	network.add_layer(new LSTMLayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
-	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
+	network.add_layer(new LSTMLayer("hidden0", 4, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -1e-3, 1e-3), 2));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -1e-3, 1e-3)));
 	//network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden0", "output");
 	network.init();
@@ -121,9 +121,9 @@ void RNN::run_sin_prediction()
 	}
 
 	NeuralNetwork network;
-	network.add_layer(new RecurrentLayer("hidden0", 4, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 1));
-	network.add_layer(new RecurrentLayer("hidden1", 2, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
-	network.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
+	network.add_layer(new RecurrentLayer("hidden0", 4, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -1e-3, 1e-3), 1));
+	network.add_layer(new RecurrentLayer("hidden1", 2, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -1e-3, 1e-3)));
+	network.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -1e-3, 1e-3)));
 	network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden1", "output");
 	network.init();	
@@ -187,7 +187,7 @@ void RNN::run_add_problem_gru()
 
 	NeuralNetwork network;
 	//network.add_layer(new GRULayer("hidden0", 4, TANH, new TensorInitializer(UNIFORM, -1e-3, 1e-3), 2));
-	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -1e-3, 1e-3)));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -1e-3, 1e-3)));
 	network.add_connection("hidden0", "output");
 	network.init();
 
@@ -283,8 +283,8 @@ void RNN::run_pack()
 	if (config["network"].get<string>().empty())
 	{
 		network = new NeuralNetwork();
-		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), dataset.get_input_dim()));
-		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
+		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), dataset.get_input_dim()));
+		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 		network->add_connection("hidden0", "output");
 		network->init();
 	}
@@ -369,10 +369,10 @@ void RNN::run_pack2()
 	if (config["network"].get<string>().empty())
 	{
 		network = new NeuralNetwork();
-		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(LECUN_UNIFORM), dataset.get_input_dim()));
-		network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(LECUN_UNIFORM)));
-		network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(LECUN_UNIFORM)));
-		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
+		network->add_layer(new LSTMLayer("hidden0", config["hidden"].get<int>(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), dataset.get_input_dim()));
+		network->add_layer(new LSTMLayer("hidden1", config["hidden"].get<int>() / 4, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+		network->add_layer(new LSTMLayer("hidden2", config["hidden"].get<int>() / 8, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+		network->add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 		network->add_connection("hidden0", "hidden1");
 		network->add_connection("hidden1", "hidden2");
 		network->add_connection("hidden2", "output");

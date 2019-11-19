@@ -1,7 +1,7 @@
 #pragma once
 #include "SimpleContinuousEnv.h"
-#include "NeuralNetwork.h"
 #include "CartPole.h"
+#include <NeuralNetwork.h>
 
 class ContinuousTest
 {

@@ -24,8 +24,8 @@ void ContinuousTest::run(int p_hidden)
 	int input_dim = 1;
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(UNIFORM, -0.1, 0.1), input_dim));
-	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1), input_dim));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
 	// feed-forward connections	
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
@@ -34,8 +34,8 @@ void ContinuousTest::run(int p_hidden)
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(UNIFORM, -0.1, 0.1), input_dim));
-	network_actor.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -0.1, 0.1)));
+	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1), input_dim));
+	network_actor.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
@@ -92,8 +92,8 @@ void ContinuousTest::run_cacla(const int p_episodes)
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(UNIFORM, -limit, limit), CartPole::STATE));
-	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), CartPole::STATE));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
@@ -102,8 +102,8 @@ void ContinuousTest::run_cacla(const int p_episodes)
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(UNIFORM, -limit, limit), CartPole::STATE));
-	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), CartPole::STATE));
+	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
@@ -177,16 +177,16 @@ void ContinuousTest::run_ddpg(int p_episodes)
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(UNIFORM, -limit, limit), CartPole::STATE + CartPole::ACTION));
-	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), CartPole::STATE + CartPole::ACTION));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
 	
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(UNIFORM, -limit, limit), CartPole::STATE));
-	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), CartPole::STATE));
+	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();

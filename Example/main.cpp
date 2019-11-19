@@ -1,17 +1,8 @@
 #include "FFN.h"
-#include "IrisTest.h"
-#include "RNN.h"
-#include "MazeExample.h"
-#include "Encoder.h"
-#include <bitset>
-#include "mnist_reader.hpp"
 #include "CNN.h"
-#include "ConvLayer.h"
-#include "PoolingLayer.h"
-#include "TensorOperator.h"
-#include "IOUtils.h"
+#include "RNN.h"
 #include "ContinuousTest.h"
-#include "ReplayBuffer.h"
+#include "MazeExample.h"
 
 using namespace std;
 

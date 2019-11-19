@@ -67,12 +67,7 @@ LSTMLayer::~LSTMLayer()
 	delete _ig;
 	delete _fg;
 	delete _og;
-
-	delete _Wxc;
-	delete _Wxig;
-	delete _Wxfg;
-	delete _Wxog;
-
+	
 	delete _state;
 	delete _context;
 }

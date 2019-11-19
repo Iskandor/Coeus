@@ -62,8 +62,8 @@ void FFN::run() {
 
 	NeuralNetwork network;
 
-	network.add_layer(new CoreLayer("hidden", 4, SIGMOID, new TensorInitializer(LECUN_UNIFORM), 2));
-	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
+	network.add_layer(new CoreLayer("hidden", 4, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), 2));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network.add_connection("hidden", "output");
 
 	network.init();
@@ -103,13 +103,13 @@ void FFN::run_iris() {
 	_dataset.load_data("./data/iris.data");
 
 	NeuralNetwork network;
-	network.add_layer(new CoreLayer("hidden", 16, SIGMOID, new TensorInitializer(LECUN_UNIFORM), IrisDataset::SIZE));
-	network.add_layer(new CoreLayer("output", IrisDataset::CATEGORIES, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
+	network.add_layer(new CoreLayer("hidden", 16, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), IrisDataset::SIZE));
+	network.add_layer(new CoreLayer("output", IrisDataset::CATEGORIES, SOFTMAX, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network.add_connection("hidden", "output");
 	network.init();
 
 
-	const int epochs = 100;
+	const int epochs = 1000;
 	vector<IrisDatasetItem>* data = nullptr;
 	map<int, Tensor> target;
 

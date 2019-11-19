@@ -11,9 +11,13 @@
 
 using namespace Coeus;
 
-NeuralNetwork::NeuralNetwork() = default;
+NeuralNetwork::NeuralNetwork() :
+	_own_model(true)
+{		
+}
 
-NeuralNetwork::NeuralNetwork(json p_data)
+NeuralNetwork::NeuralNetwork(json p_data) :
+	_own_model(true)
 {
 	for (json::iterator it = p_data["layers"].begin(); it != p_data["layers"].end(); ++it) {
 		add_layer(IOUtils::create_layer(it.value()));
@@ -28,7 +32,8 @@ NeuralNetwork::NeuralNetwork(json p_data)
 	init();
 }
 
-NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) : ParamModel(p_copy)
+NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) :
+	_own_model(false)
 {
 	_param_map.clear();
 
@@ -74,14 +79,21 @@ NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) : ParamModel(p_copy)
 
 NeuralNetwork::~NeuralNetwork()
 {
-	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
-		delete (*it).second;
+	for (const auto& layer : _layers)
+	{
+		delete layer.second;
+	}
+
+	for (const auto& param : _params)
+	{
+		delete param.second;
 	}
 }
 
 NeuralNetwork* NeuralNetwork::clone() const
 {
 	NeuralNetwork* result = new NeuralNetwork();
+	result->_own_model = true;
 
 	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
 		result->add_layer((*it).second->clone());
@@ -120,7 +132,7 @@ void NeuralNetwork::init()
 	}
 
 	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
-		if (_graph.find(it->first) == _graph.end() || _graph[it->first].size() == 0)
+		if (_graph.find(it->first) == _graph.end() || _graph[it->first].empty())
 		{
 			_input_layer.push_back(it->first);
 		}

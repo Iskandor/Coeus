@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include "Encoder.h"
+#include <Encoder.h>
 #include <algorithm>
 #include <random>
 #include <sstream>
