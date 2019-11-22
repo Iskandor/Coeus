@@ -17,8 +17,8 @@ DDPG::DDPG(	NeuralNetwork* p_network_critic, GRADIENT_RULE p_critic_rule, float 
 	_network_actor_gradient = new NetworkGradient(p_network_actor);
 	_network_critic_gradient = new NetworkGradient(p_network_critic);
 
-	_network_actor_target = p_network_actor->clone();
-	_network_critic_target = p_network_critic->clone();
+	_network_actor_target = new NeuralNetwork(*p_network_actor, true);
+	_network_critic_target = new NeuralNetwork(*p_network_critic, true);
 
 	_update_rule_actor = RuleFactory::create_rule(p_actor_rule, _network_actor, p_actor_alpha);
 	_update_rule_critic = RuleFactory::create_rule(p_critic_rule, _network_critic, p_critic_alpha);

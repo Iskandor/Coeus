@@ -30,7 +30,7 @@ namespace Coeus
 		BaseLayer(const string& p_id, int p_dim, initializer_list<int> p_in_dim);
 		BaseLayer(json p_data);
 		virtual ~BaseLayer();
-		virtual BaseLayer* clone() = 0;
+		virtual BaseLayer* copy(bool p_clone) { return nullptr; }
 
 		virtual void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers);
 		virtual void integrate(Tensor* p_input);
@@ -38,12 +38,11 @@ namespace Coeus
 
 		virtual void calc_derivative(map<string, Tensor*>& p_derivative) = 0;
 		virtual void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map);
-
-		virtual void override(BaseLayer* p_source) = 0;
+		
 		virtual void reset() = 0;
 
 		TYPE	get_type() const { return _type; }
-		string	get_id() const { return _id; }
+		string	get_id() const override { return _id; }
 
 		bool is_valid() const { return _valid; }
 		void set_valid(const bool p_val) { _valid = p_val; }
@@ -66,7 +65,6 @@ namespace Coeus
 	protected:
 		
 		int sum_input_dim(initializer_list<int> p_in_dim) const;
-		explicit BaseLayer(BaseLayer* p_source);
 
 		string		_id;
 		TYPE		_type;

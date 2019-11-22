@@ -72,11 +72,6 @@ LSTMLayer::~LSTMLayer()
 	delete _context;
 }
 
-LSTMLayer* LSTMLayer::clone()
-{
-	return new LSTMLayer(this);
-}
-
 void LSTMLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	BaseLayer::init(p_input_layers, p_output_layers);
@@ -235,11 +230,6 @@ void LSTMLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 	TensorOperator::instance().lstm_derivative(_batch_size, p_derivative[_fg->get_bias()->get_id()]->arr(), _fg->get_output()->arr(), _state->arr(), dfg.arr(), bias_input.arr(), _dim, 1);
 }
 
-void LSTMLayer::override(BaseLayer* p_source)
-{
-//#TODO doplnit prepis parametrov LSTM siete
-}
-
 void LSTMLayer::reset()
 {
 	if (_context != nullptr) _context->fill(0);
@@ -263,28 +253,6 @@ json LSTMLayer::get_json() const
 	data["Wxog"] = IOUtils::save_param(_Wxog);
 
 	return data;
-}
-
-LSTMLayer::LSTMLayer(LSTMLayer* p_source) : BaseLayer(p_source)
-{
-	_type = LSTM;
-
-	/*
-	_input_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_input_gate));
-	_output_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_output_gate));
-	_forget_gate = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_forget_gate));
-	_cec = add_group<LSTMCellGroup>(new LSTMCellGroup(p_source->_cec, _input_gate, _output_gate, _forget_gate));
-	_context = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_context));
-
-	_aux_input = add_group<SimpleCellGroup>(new SimpleCellGroup(p_source->_aux_input));
-	_in_input_gate = add_connection(p_source->_in_input_gate->clone());
-	_in_output_gate = add_connection(p_source->_in_output_gate->clone());
-	_in_forget_gate = add_connection(p_source->_in_forget_gate->clone());
-
-	_output_group = _cec;
-
-	_ct_cec = add_connection(p_source->_ct_cec->clone());
-	*/
 }
 
 Tensor* LSTMLayer::get_dim_tensor()

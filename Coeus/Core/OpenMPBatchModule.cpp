@@ -15,7 +15,7 @@ OpenMPBatchModule::OpenMPBatchModule(NeuralNetwork* p_network, ICostFunction* p_
 
 	for (int i = 0; i < p_batch; i++)
 	{
-		_clone_network[i] = p_network->clone();
+		_clone_network[i] = new NeuralNetwork(*p_network);
 		_network_gradient[i] = new NetworkGradient(_clone_network[i]);
 	}
 

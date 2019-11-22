@@ -12,11 +12,6 @@ PoolingLayer::PoolingLayer(const string& p_id, const int p_extent, const int p_s
 PoolingLayer::~PoolingLayer()
 = default;
 
-PoolingLayer* PoolingLayer::clone()
-{
-	return nullptr;
-}
-
 void PoolingLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	int d1 = 0;
@@ -170,10 +165,6 @@ void PoolingLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>&
 
 		delete delta_in;
 	}
-}
-
-void PoolingLayer::override(BaseLayer* p_source)
-{
 }
 
 void PoolingLayer::reset()

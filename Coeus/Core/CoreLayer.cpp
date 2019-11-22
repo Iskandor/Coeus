@@ -22,20 +22,29 @@ CoreLayer::CoreLayer(const json& p_data) : BaseLayer(p_data)
 	_y = new NeuronOperator(p_data["y"]);
 	add_param(_y);
 	_W = IOUtils::load_param(p_data["W"]);
+	add_param(_W);
 	_initializer = nullptr;
 }
 
-CoreLayer::CoreLayer(CoreLayer &p_copy) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
+CoreLayer::CoreLayer(CoreLayer &p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = CORE;
-	_y = new NeuronOperator(*p_copy._y);
-	add_param(_y);
-	_initializer = p_copy._initializer;
-	_W = nullptr;
+	_y = new NeuronOperator(*p_copy._y, p_clone);
+	_initializer = new TensorInitializer(*p_copy._initializer);
+	if (p_clone)
+	{
+		_W = new Param(p_copy._W->get_id(), _params->data[p_copy._W->get_id()]);
+	}
+	else
+	{
+		_W = new Param(p_copy._W->get_id(), p_copy._W->get_data());
+	}
+	
 }
 
 CoreLayer::~CoreLayer()
 {
 	delete _y;
+	delete _W;
 	delete _initializer;
 }
 
@@ -115,12 +124,6 @@ void CoreLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 {
 }
 
-void CoreLayer::override(BaseLayer * p_source)
-{
-	CoreLayer* source = dynamic_cast<CoreLayer*>(p_source);
-
-}
-
 void CoreLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	BaseLayer::init(p_input_layers, p_output_layers);
@@ -129,8 +132,8 @@ void CoreLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_o
 	{
 		_W = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
 		_initializer->init(_W->get_data());
-	}
-	add_param(_W->get_id(), _W->get_data());
+		add_param(_W);
+	}	
 
 	cout << _id << " " << _in_dim << " - " << _dim << endl;
 }
@@ -155,20 +158,7 @@ Tensor* CoreLayer::get_dim_tensor()
 	return _dim_tensor;
 }
 
-CoreLayer::CoreLayer(CoreLayer* p_source) : BaseLayer(p_source)
+CoreLayer* CoreLayer::copy(const bool p_clone)
 {
-	_type = CORE;
-	_mode = p_source->_mode;
-	_id = p_source->_id;
-	_dim = p_source->_dim;
-	_in_dim = p_source->_in_dim;
-	_y = new NeuronOperator(*p_source->_y);
-	add_param(_y);
-	_initializer = new TensorInitializer(*p_source->_initializer);
-	_W = new Param(*p_source->_W);
-}
-
-CoreLayer* CoreLayer::clone()
-{
-	return new CoreLayer(this);
+	return new CoreLayer(*this, p_clone);
 }

@@ -1,13 +1,15 @@
 #include "Param.h"
+#include "IDGen.h"
 
 using namespace Coeus;
 
-Param::Param(const string p_id, Tensor* p_data)
+Param::Param(const string& p_id, Tensor* p_data)
 {
 	_id = p_id;
 	_data = p_data;
 }
 
+/*
 Param::Param(const Param& p_param)
 {
 	_id = p_param._id;
@@ -22,8 +24,20 @@ Param& Param::operator=(const Param& p_param)
 
 	return *this;
 }
+*/
 
 Param::~Param()
+= default;
+
+ParamsContainer::ParamsContainer()
 {
-	delete _data;
+	id = IDGen::instance().next();
+}
+
+ParamsContainer::~ParamsContainer()
+{
+	for(const auto& p : data)
+	{
+		delete p.second;
+	}
 }

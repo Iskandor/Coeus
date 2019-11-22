@@ -14,7 +14,7 @@ DeepQLearning::DeepQLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule
 	_input_s1 = Tensor::Zero({ p_sample, _network->get_input_dim() });
 	_max_qa = Tensor::Zero({ p_sample });
 
-	_target_network = p_network->clone();
+	_target_network = new NeuralNetwork(*p_network, true);
 	_target_network_update = p_target_network_update;
 	_target_network_update_t = 0;
 }

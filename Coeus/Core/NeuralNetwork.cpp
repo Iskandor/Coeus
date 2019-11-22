@@ -7,17 +7,17 @@
 #include "CoreLayer.h"
 #include "RecurrentLayer.h"
 #include "LSTMLayer.h"
+#include "IDGen.h"
+#include "ParamModelStorage.h"
 
 
 using namespace Coeus;
 
-NeuralNetwork::NeuralNetwork() :
-	_own_model(true)
-{		
+NeuralNetwork::NeuralNetwork() : ParamModel()
+{
 }
 
-NeuralNetwork::NeuralNetwork(json p_data) :
-	_own_model(true)
+NeuralNetwork::NeuralNetwork(json p_data)
 {
 	for (json::iterator it = p_data["layers"].begin(); it != p_data["layers"].end(); ++it) {
 		add_layer(IOUtils::create_layer(it.value()));
@@ -32,47 +32,15 @@ NeuralNetwork::NeuralNetwork(json p_data) :
 	init();
 }
 
-NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy) :
-	_own_model(false)
+NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy, const bool p_clone) : ParamModel(p_copy, p_clone)
 {
-	_param_map.clear();
-
-	BaseLayer* layer = nullptr;
-
-	for (auto it = p_copy._layers.begin(); it != p_copy._layers.end(); ++it) {
-		switch ((*it).second->get_type()) {
-
-			case BaseLayer::SOM: 
-
-			break;
-			case BaseLayer::MSOM: 
-
-			break;
-			case BaseLayer::CORE: 
-				layer = add_layer(new CoreLayer(*dynamic_cast<CoreLayer*>((*it).second)));
-			break;
-			case BaseLayer::RECURRENT: 
-				layer = add_layer(new RecurrentLayer(*dynamic_cast<RecurrentLayer*>((*it).second)));
-			break;
-			case BaseLayer::LSTM:
-				layer = add_layer(new LSTMLayer(*dynamic_cast<LSTMLayer*>((*it).second)));
-			break;
-			case BaseLayer::LSOM: 
-			break;
-			default: ;
-		}
-
-		_param_map[(*it).second->get_id()] = layer->get_id();
+	for(auto l : p_copy._layers)
+	{
+		add_layer(l.second->copy(p_clone));
 	}
 
-	for (auto out = p_copy._graph.begin(); out != p_copy._graph.end(); ++out) {
-		for(auto in = out->second.begin(); in != out->second.end(); ++in) {
-			add_connection(_param_map[*in], _param_map[out->first]);
-		}
-	}
-
-	_param_map.clear();
-
+	_graph = p_copy._graph;
+	
 	init();
 }
 
@@ -84,26 +52,7 @@ NeuralNetwork::~NeuralNetwork()
 		delete layer.second;
 	}
 
-	for (const auto& param : _params)
-	{
-		delete param.second;
-	}
-}
-
-NeuralNetwork* NeuralNetwork::clone() const
-{
-	NeuralNetwork* result = new NeuralNetwork();
-	result->_own_model = true;
-
-	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
-		result->add_layer((*it).second->clone());
-	}
-
-	result->_graph = _graph;
-
-	result->init();
-
-	return result;
+	ParamModelStorage::instance().release(_id);	
 }
 
 void NeuralNetwork::init()
@@ -177,34 +126,6 @@ void NeuralNetwork::activate(vector<Tensor*>* p_input)
 	{
 		_layers[_input_layer[0]]->integrate(it);
 		activate();
-	}
-}
-
-void NeuralNetwork::override(NeuralNetwork* p_network) {
-
-	bool param_map_init = true;
-
-	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
-		if (_param_map.count(it->first) == 0) {
-			param_map_init = false;
-			break;
-		}
-	}
-
-	if (!param_map_init) {
-		create_param_map(p_network);
-	}
-
-	for(auto it = _layers.begin(); it != _layers.end(); ++it) {
-		_layers[it->first]->override(p_network->_layers[_param_map[it->first]]);
-	}
-}
-
-void NeuralNetwork::update(map<string, Tensor>* p_update) const
-{
-	for (const auto& param : _params)
-	{
-		TensorOperator::instance().vv_add(param.second->arr(), (*p_update)[param.first].arr(), param.second->arr(), param.second->size());
 	}
 }
 
@@ -331,37 +252,6 @@ void NeuralNetwork::create_directed_graph()
 
 	for (auto it = _forward_graph.rbegin(); it != _forward_graph.rend(); ++it) {
 		_backward_graph.push_back(*it);
-	}
-}
-
-void NeuralNetwork::create_param_map(NeuralNetwork* p_network) {
-	_param_map.clear();
-
-	vector<string> target;
-
-	for (auto it = _forward_graph.begin(); it != _forward_graph.end(); ++it) {
-		target.push_back((*it)->get_id());
-	}
-
-	vector<string> source;
-
-	for (auto it = p_network->_forward_graph.begin(); it != p_network->_forward_graph.end(); ++it) {
-		source.push_back((*it)->get_id());
-	}
-
-	if (target.size() == source.size()) {
-		for (int i = 0; i < source.size(); i++) {
-			_param_map[target[i]] = source[i];
-		}
-	}
-	else {
-		//TODO warning inequal sizes
-	}
-
-	for(auto it = _graph.begin(); it != _graph.end(); ++it) {
-		for(auto c = (*it).second.begin(); c != (*it).second.end(); ++c) {
-			_param_map[(*c + "_" + (*it).first)] = _param_map[(*c)] + "_" + _param_map[(*it).first];
-		}
 	}
 }
 

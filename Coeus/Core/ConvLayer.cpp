@@ -34,11 +34,6 @@ ConvLayer::~ConvLayer()
 	delete _padded_input;
 }
 
-ConvLayer* ConvLayer::clone()
-{
-	return nullptr;
-}
-
 void ConvLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	int d1 = 0;
@@ -215,10 +210,6 @@ void ConvLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_
 
 		delete delta_in;
 	}
-}
-
-void ConvLayer::override(BaseLayer* p_source)
-{
 }
 
 void ConvLayer::reset()

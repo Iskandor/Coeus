@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "Tensor.h"
-#include "Coeus.h"
+#include <map>
 
 using namespace std;
 
@@ -10,9 +10,9 @@ namespace Coeus
 	class __declspec(dllexport) Param
 	{
 	public:
-		Param(string p_id, Tensor* p_data);
-		Param(const Param&);
-		Param& operator=(const Param &);
+		Param(const string& p_id, Tensor* p_data);
+		//Param(const Param&);
+		//Param& operator=(const Param &);
 		~Param();
 
 		string get_id() const { return _id; }
@@ -21,5 +21,15 @@ namespace Coeus
 	private:
 		string	_id;
 		Tensor*	_data;
+	};
+
+	class __declspec(dllexport) ParamsContainer
+	{
+	public:
+		ParamsContainer();
+		~ParamsContainer();
+
+		string					id;
+		map<string, Tensor*>	data;
 	};
 }

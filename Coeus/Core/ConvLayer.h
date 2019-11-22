@@ -11,7 +11,6 @@ namespace Coeus
 	public:
 		ConvLayer(const string& p_id, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_filters, int p_extent, int p_stride, int p_padding = 0, initializer_list<int> p_in_dim = {0});
 		~ConvLayer();
-		ConvLayer* clone() override;
 
 		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
@@ -21,7 +20,6 @@ namespace Coeus
 		void calc_derivative(map<string, Tensor*>& p_derivative) override;
 		void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
-		void override(BaseLayer* p_source) override;
 		void reset() override;
 
 		

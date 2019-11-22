@@ -14,21 +14,18 @@ public:
 	RecurrentLayer(RecurrentLayer& p_copy);
 	explicit RecurrentLayer(const json& p_data);
 	~RecurrentLayer();
-	RecurrentLayer* clone() override;
 
 	void activate() override;
 
 	void calc_derivative(map<string, Tensor*>& p_derivative) override;
 	void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
-	void override(BaseLayer* p_source) override;
 	void reset() override;
 	void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
 	json get_json() const override;
 
 private:
-	explicit RecurrentLayer(RecurrentLayer* p_source);
 	Tensor* get_dim_tensor() override;
 
 	NeuronOperator* _y;

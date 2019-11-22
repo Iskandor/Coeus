@@ -61,6 +61,7 @@ set(INCLUDE_FILES
 	OpenMPBatchModule.h
 	Param.h
 	ParamModel.h
+	ParamModelStorage.h
 	PoolingLayer.h
 	PowerSign.h
 	PowerSignRule.h
@@ -134,6 +135,7 @@ set(SOURCE_FILES
 	OpenMPBatchModule.cpp
 	Param.cpp
 	ParamModel.cpp
+	ParamModelStorage.cpp
 	PoolingLayer.cpp
 	PowerSign.cpp
 	PowerSignRule.cpp

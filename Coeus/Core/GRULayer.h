@@ -11,7 +11,6 @@ namespace Coeus
 	public:
 		GRULayer(const string& p_id, int p_dim, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_in_dim = 0);
 		~GRULayer();
-		BaseLayer* clone() override;
 
 		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 		void integrate(Tensor* p_input) override;
@@ -20,7 +19,6 @@ namespace Coeus
 		void calc_derivative(map<string, Tensor*>& p_derivative) override;
 		void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
-		void override(BaseLayer* p_source) override;
 		void reset() override;
 
 		

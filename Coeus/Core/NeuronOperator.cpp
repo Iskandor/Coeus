@@ -36,12 +36,18 @@ NeuronOperator::NeuronOperator(json p_data)
 	_output = nullptr;
 }
 
-NeuronOperator::NeuronOperator(NeuronOperator& p_copy) : ParamModel(p_copy)
+NeuronOperator::NeuronOperator(NeuronOperator& p_copy, const bool p_clone): ParamModel(p_copy)
 {
 	_id = p_copy._id;
 	_dim = p_copy._dim;
-	_bias = new Param(*p_copy._bias);
-	add_param(_bias->get_id(), _bias->get_data());
+	if (p_clone)
+	{
+		_bias = new Param(p_copy._bias->get_id(), _params->data[p_copy._bias->get_id()]);
+	}
+	else
+	{
+		_bias = new Param(p_copy._bias->get_id(), p_copy._bias->get_data());
+	}	
 
 	_activation_function = ActivationFunctionFactory::create_function(p_copy._activation_function->get_type());
 	_net = nullptr;
@@ -56,6 +62,7 @@ NeuronOperator::~NeuronOperator()
 	delete _net;
 	delete _dnet;
 	delete _int;
+	delete _bias;
 }
 
 void NeuronOperator::integrate(Tensor* p_input, Tensor* p_weights)

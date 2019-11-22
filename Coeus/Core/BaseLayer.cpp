@@ -193,30 +193,6 @@ vector<string> BaseLayer::unfold_layer()
 	return vector<string>(result);
 }
 
-BaseLayer::BaseLayer(BaseLayer* p_source)                                     
-{
-	_id = p_source->_id;
-	_dim = p_source->_dim;
-	_type = p_source->_type;
-	_in_dim = p_source->_in_dim;
-	_input_dim = p_source->_input_dim;
-	_batch_size = p_source->_batch_size;
-	_batch = p_source->_batch;
-	_valid = false;
-	if (p_source->_dim_tensor != nullptr)
-		_dim_tensor = new Tensor(*p_source->_dim_tensor);
-	else
-		_dim_tensor = nullptr;
-	
-	if (p_source->_in_dim_tensor != nullptr)
-		_in_dim_tensor = new Tensor(*p_source->_in_dim_tensor);
-	else
-		_in_dim_tensor = nullptr;
-
-	_input = nullptr;
-	_output = nullptr;
-}
-
 int BaseLayer::sum_input_dim(initializer_list<int> p_in_dim) const
 {
 	int result = 0;

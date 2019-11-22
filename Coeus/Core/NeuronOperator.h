@@ -10,7 +10,7 @@ namespace Coeus
 	public:
 		NeuronOperator(int p_dim, ACTIVATION p_activation);
 		explicit NeuronOperator(json p_data);
-		NeuronOperator(NeuronOperator& p_copy);
+		NeuronOperator(NeuronOperator& p_copy, bool p_clone = false);
 		~NeuronOperator();
 
 		NeuronOperator* clone(NeuronOperator* p_source);
@@ -22,7 +22,7 @@ namespace Coeus
 		IActivationFunction* get_function() const { return _activation_function; }
 		Tensor* get_output() const { return _output; }
 		Param*	get_bias() const { return _bias; }
-		string	get_id() const { return _id; }
+		string	get_id() const override { return _id; }
 
 		json get_json() const;
 

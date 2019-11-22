@@ -58,6 +58,13 @@ endif(BUILD_EXAMPLES)
 
 add_library(Coeus SHARED ${COEUS_TARGETS})
 
+if(BUILD_EXAMPLES)
+set_target_properties(Coeus PROPERTIES
+                      RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/Example/Debug"
+                      RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}/Example/Release"
+)
+endif(BUILD_EXAMPLES)
+
 target_link_libraries(Coeus PRIVATE
 	${MKL_LIBRARIES}
 	)

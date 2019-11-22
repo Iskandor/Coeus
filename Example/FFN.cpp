@@ -68,6 +68,18 @@ void FFN::run() {
 
 	network.init();
 
+	NeuralNetwork network_c(network, false);
+
+	for (int i = 0; i < 4; i++) {
+		network_c.activate(o_input[i]);
+		cout << *network_c.get_output() << endl;
+	}
+	for (int i = 0; i < 4; i++) {
+		network.activate(o_input[i]);
+		cout << *network.get_output() << endl;
+	}
+
+
 	BackProp optimizer(&network);
 	//ADAM optimizer(&network);
 
@@ -93,6 +105,10 @@ void FFN::run() {
 	chrono::duration<float> elapsed_seconds = end - start;
 	cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
+	for (int i = 0; i < 4; i++) {
+		network_c.activate(o_input[i]);
+		cout << *network_c.get_output() << endl;
+	}
 	for (int i = 0; i < 4; i++) {
 		network.activate(o_input[i]);
 		cout << *network.get_output() << endl;

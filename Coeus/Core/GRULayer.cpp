@@ -42,11 +42,6 @@ GRULayer::~GRULayer()
 	delete _h_input;
 }
 
-BaseLayer* GRULayer::clone()
-{
-	return nullptr;
-}
-
 void GRULayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	BaseLayer::init(p_input_layers, p_output_layers);
@@ -125,10 +120,6 @@ void GRULayer::calc_derivative(map<string, Tensor*>& p_derivative)
 }
 
 void GRULayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map)
-{
-}
-
-void GRULayer::override(BaseLayer* p_source)
 {
 }
 

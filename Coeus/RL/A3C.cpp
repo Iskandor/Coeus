@@ -33,11 +33,11 @@ A3C::A3C(std::vector<IEnvironment*>& p_env_array, int p_t_max,
 	
 	for (int i = 0; i < env_size; i++)
 	{
-		_critic_array[i] = _critic->clone();
+		_critic_array[i] = new NeuralNetwork(*_critic);
 		_critic_d_gradient_array[i].init(_critic);
 		_advantage_estimation[i] = new GAE(_critic_array[i], p_gamma, p_lambda);
 
-		_actor_array[i] = _actor->clone();
+		_actor_array[i] = new NeuralNetwork(*_actor);
 		_actor_d_gradient_array[i].init(_actor);
 		_policy_gradient[i] = new PolicyGradient(_actor_array[i]);
 		

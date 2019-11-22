@@ -46,11 +46,6 @@ RecurrentLayer::~RecurrentLayer()
 	delete _initializer;
 }
 
-RecurrentLayer* RecurrentLayer::clone()
-{
-	return new RecurrentLayer(this);
-}
-
 void RecurrentLayer::activate()
 {
 	_context = NeuronOperator::init_auxiliary_parameter(_context, _batch_size, _dim);
@@ -127,14 +122,6 @@ void RecurrentLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 {
 }
 
-
-void RecurrentLayer::override(BaseLayer * p_source)
-{
-	const RecurrentLayer *source = dynamic_cast<RecurrentLayer*>(p_source);
-	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
-	_W->get_data()->override(source->_W->get_data());
-}
-
 void RecurrentLayer::reset()
 {
 	if (_context != nullptr) _context->fill(0);
@@ -164,11 +151,6 @@ json RecurrentLayer::get_json() const
 	data["y"] = _y->get_json();
 
 	return data;
-}
-
-RecurrentLayer::RecurrentLayer(RecurrentLayer* p_source) : BaseLayer(p_source)
-{
-	_type = RECURRENT;
 }
 
 Tensor* RecurrentLayer::get_dim_tensor()
