@@ -29,16 +29,17 @@ CoreLayer::CoreLayer(const json& p_data) : BaseLayer(p_data)
 CoreLayer::CoreLayer(CoreLayer &p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = CORE;
 	_y = new NeuronOperator(*p_copy._y, p_clone);
-	_initializer = new TensorInitializer(*p_copy._initializer);
+	add_param(_y);
 	if (p_clone)
 	{
-		_W = new Param(p_copy._W->get_id(), _params->data[p_copy._W->get_id()]);
+		_W = new Param(IDGen::instance().next(), new Tensor(*p_copy._W->get_data()));
 	}
 	else
 	{
 		_W = new Param(p_copy._W->get_id(), p_copy._W->get_data());
 	}
-	
+	add_param(_W);
+	_initializer = new TensorInitializer(*p_copy._initializer);
 }
 
 CoreLayer::~CoreLayer()

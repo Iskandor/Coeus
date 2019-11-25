@@ -13,7 +13,7 @@ NeuronOperator::NeuronOperator(const int p_dim, const ACTIVATION p_activation)
 	_id = IDGen::instance().next();
 	_dim = p_dim;
 	_bias = new Param(IDGen::instance().next(), new Tensor({ 1, p_dim }, Tensor::ZERO));
-	add_param(_bias->get_id(), _bias->get_data());
+	add_param(_bias);
 
 	_activation_function = ActivationFunctionFactory::create_function(p_activation);
 	_net = nullptr;
@@ -28,7 +28,7 @@ NeuronOperator::NeuronOperator(json p_data)
 	_dim = p_data["dim"].get<int>();
 	_activation_function = IOUtils::init_activation_function(p_data["f"]);
 	_bias = IOUtils::load_param(p_data["b"]);
-	add_param(_bias->get_id(), _bias->get_data());
+	add_param(_bias);
 
 	_net = nullptr;
 	_dnet = nullptr;
@@ -36,18 +36,19 @@ NeuronOperator::NeuronOperator(json p_data)
 	_output = nullptr;
 }
 
-NeuronOperator::NeuronOperator(NeuronOperator& p_copy, const bool p_clone): ParamModel(p_copy)
+NeuronOperator::NeuronOperator(NeuronOperator& p_copy, const bool p_clone): ParamModel()
 {
 	_id = p_copy._id;
 	_dim = p_copy._dim;
 	if (p_clone)
 	{
-		_bias = new Param(p_copy._bias->get_id(), _params->data[p_copy._bias->get_id()]);
+		_bias = new Param(IDGen::instance().next(), new Tensor(*p_copy._bias->get_data()));
 	}
 	else
 	{
 		_bias = new Param(p_copy._bias->get_id(), p_copy._bias->get_data());
-	}	
+	}
+	add_param(_bias);
 
 	_activation_function = ActivationFunctionFactory::create_function(p_copy._activation_function->get_type());
 	_net = nullptr;

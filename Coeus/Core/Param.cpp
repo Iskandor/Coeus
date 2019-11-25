@@ -28,16 +28,3 @@ Param& Param::operator=(const Param& p_param)
 
 Param::~Param()
 = default;
-
-ParamsContainer::ParamsContainer()
-{
-	id = IDGen::instance().next();
-}
-
-ParamsContainer::~ParamsContainer()
-{
-	for(const auto& p : data)
-	{
-		delete p.second;
-	}
-}

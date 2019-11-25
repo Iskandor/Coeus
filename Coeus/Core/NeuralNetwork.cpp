@@ -15,6 +15,7 @@ using namespace Coeus;
 
 NeuralNetwork::NeuralNetwork() : ParamModel()
 {
+	ParamModelStorage::instance().bind(_id, _id);
 }
 
 NeuralNetwork::NeuralNetwork(json p_data)
@@ -32,8 +33,17 @@ NeuralNetwork::NeuralNetwork(json p_data)
 	init();
 }
 
-NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy, const bool p_clone) : ParamModel(p_copy, p_clone)
+NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy, const bool p_clone) : ParamModel()
 {
+	if (p_clone)
+	{
+		ParamModelStorage::instance().bind(_id, _id);
+	}
+	else
+	{
+		ParamModelStorage::instance().bind(p_copy._id, _id);
+	}
+
 	for(auto l : p_copy._layers)
 	{
 		add_layer(l.second->copy(p_clone));
@@ -47,12 +57,12 @@ NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy, const bool p_clone) : ParamM
 
 NeuralNetwork::~NeuralNetwork()
 {
+	ParamModelStorage::instance().release(this);
+
 	for (const auto& layer : _layers)
 	{
 		delete layer.second;
 	}
-
-	ParamModelStorage::instance().release(_id);	
 }
 
 void NeuralNetwork::init()
@@ -107,8 +117,10 @@ void NeuralNetwork::init()
 		}
 
 		_layers[(*layer)->get_id()]->init(input,output);
-		add_param(_layers[(*layer)->get_id()]);
+		add_param(_layers[(*layer)->get_id()]);		
 	}
+
+	ParamModelStorage::instance().add(_id, this);
 }
 
 void NeuralNetwork::activate(Tensor* p_input)

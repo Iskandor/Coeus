@@ -41,7 +41,7 @@ protected:
 	void activate();	
 	void create_directed_graph();
 
-private:	
+private:
 	map<string, BaseLayer*> _layers;
 	map<string, vector<string>> _graph;
 	list<BaseLayer*> _forward_graph;

@@ -7,7 +7,7 @@ using namespace Coeus;
 NaturalGradient::NaturalGradient(NeuralNetwork* p_network) : NetworkGradient(p_network),
 	_epsilon(1e-5f)
 {
-	for (auto& _param : p_network->_params->data)
+	for (auto& _param : p_network->_params)
 	{
 		const int row = _param.second->shape(0) * _param.second->shape(1);
 		_fim[_param.first] = Tensor({ row, row }, Tensor::ONES);

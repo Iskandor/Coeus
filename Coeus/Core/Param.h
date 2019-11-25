@@ -22,14 +22,4 @@ namespace Coeus
 		string	_id;
 		Tensor*	_data;
 	};
-
-	class __declspec(dllexport) ParamsContainer
-	{
-	public:
-		ParamsContainer();
-		~ParamsContainer();
-
-		string					id;
-		map<string, Tensor*>	data;
-	};
 }

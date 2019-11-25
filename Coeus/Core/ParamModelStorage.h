@@ -11,18 +11,16 @@ namespace Coeus
 	{
 	public:
 		static ParamModelStorage& instance();
-		ParamsContainer* create(string& p_parent);
-		ParamsContainer* bind(string& p_parent, string& p_child);
-		ParamsContainer* get(string& p_parent);
-		void add(string& p_parent, ParamsContainer* p_model);
-		void release(string& p_parent);
+		void bind(string& p_parent, string& p_child);
+		void add(string& p_parent, ParamModel* p_model);
+		void release(ParamModel* p_model);
 	private:
 		ParamModelStorage();
 		~ParamModelStorage();
 
 		string find_model(string& p_parent);
 
-		map<string, vector<string>>			_keys;
-		map<string, ParamsContainer*>	_storage;
+		map<string, vector<string>>	_keys;
+		map<string, Tensor*>		_storage;
 	};
 }

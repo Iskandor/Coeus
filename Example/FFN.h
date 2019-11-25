@@ -14,7 +14,6 @@ public:
 	void run_iris();
 
 private:
-	NeuralNetwork _network;
 	IrisDataset _dataset;
 };
 

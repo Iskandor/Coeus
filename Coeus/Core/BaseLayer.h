@@ -42,7 +42,7 @@ namespace Coeus
 		virtual void reset() = 0;
 
 		TYPE	get_type() const { return _type; }
-		string	get_id() const override { return _id; }
+		string	get_id() const { return _id; }
 
 		bool is_valid() const { return _valid; }
 		void set_valid(const bool p_val) { _valid = p_val; }

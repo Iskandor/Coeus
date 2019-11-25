@@ -1,5 +1,6 @@
 #include "ParamModelStorage.h"
 #include <algorithm>
+#include <cassert>
 
 using namespace Coeus;
 
@@ -9,58 +10,44 @@ ParamModelStorage& ParamModelStorage::instance()
 	return instance;
 }
 
-ParamsContainer* ParamModelStorage::create(string& p_parent)
+void ParamModelStorage::bind(string& p_parent, string& p_child)
 {
-	const auto model = new ParamsContainer();
-
-	_storage[model->id] = model;
-	_keys[model->id].push_back(p_parent);
-
-	return model;
+	_keys[p_parent].push_back(p_child);
 }
 
-ParamsContainer* ParamModelStorage::bind(string& p_parent, string& p_child)
+void ParamModelStorage::add(string& p_parent, ParamModel* p_model)
 {
-	const string model_id = find_model(p_parent);
-	ParamsContainer* result = nullptr;
+	bool bond = true;
 
-	if (!model_id.empty())
+	for (auto k : _keys)
 	{
-		result = _storage[model_id];
-		_keys[model_id].push_back(p_child);
+		if (p_parent == k.first) bond = false;
 	}
 
-	return result;
+	if (!bond)
+	{
+		for (auto p : p_model->_params)
+		{
+			_storage[p.first] = p.second;
+		}
+	}
 }
 
-ParamsContainer* ParamModelStorage::get(string& p_parent)
+void ParamModelStorage::release(ParamModel* p_model)
 {
-	ParamsContainer* result = nullptr;
-	const string model_id = find_model(p_parent);
-
-	result = _storage[model_id];
-
-	return result;
-}
-
-void ParamModelStorage::add(string& p_parent, ParamsContainer* p_model)
-{
-	_storage[p_model->id] = p_model;
-	_keys[p_model->id].push_back(p_parent);
-}
-
-void ParamModelStorage::release(string& p_parent)
-{
-	const string model_id = find_model(p_parent);
+	const string model_id = find_model(p_model->_id);
 
 	if (!model_id.empty())
 	{	
-		_keys[model_id].erase(std::remove(_keys[model_id].begin(), _keys[model_id].end(), p_parent), _keys[model_id].end());
+		_keys[model_id].erase(std::remove(_keys[model_id].begin(), _keys[model_id].end(), p_model->_id), _keys[model_id].end());
 
 		if (_keys[model_id].empty())
 		{
-			delete _storage[model_id];
-			_storage[model_id] = nullptr;
+			for (auto p : p_model->_params)
+			{
+				delete p.second;
+				_storage.erase(p.first);
+			}
 		}
 	}
 }
@@ -71,10 +58,9 @@ ParamModelStorage::ParamModelStorage()
 
 ParamModelStorage::~ParamModelStorage()
 {
-	// this is security fallback, _storage should be full of nullptrs
-	for(const auto& model : _storage)
+	if (!_storage.empty())
 	{
-		delete model.second;
+		assert(0, "ParamModelStorage: Memory leak");
 	}
 }
 
