@@ -17,14 +17,7 @@ void ParamModelStorage::bind(string& p_parent, string& p_child)
 
 void ParamModelStorage::add(string& p_parent, ParamModel* p_model)
 {
-	bool bond = true;
-
-	for (const auto& k : _keys)
-	{
-		if (p_parent == k.first) bond = false;
-	}
-
-	if (!bond)
+	if (!is_bound(p_parent))
 	{
 		for (auto p : p_model->_params)
 		{
@@ -52,15 +45,27 @@ void ParamModelStorage::release(ParamModel* p_model)
 	}
 }
 
+bool ParamModelStorage::is_bound(string& p_key)
+{
+	bool is_bound = true;
+
+	for (const auto& k : _keys)
+	{
+		if (p_key == k.first) is_bound = false;
+	}
+
+	return is_bound;
+}
+
 ParamModelStorage::ParamModelStorage()
 = default;
 
 
 ParamModelStorage::~ParamModelStorage()
 {
-	if (!_storage.empty())
+	for(const auto& p : _storage)
 	{
-		assert(0, "ParamModelStorage: Memory leak");
+		delete p.second;
 	}
 }
 

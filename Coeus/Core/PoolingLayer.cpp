@@ -182,6 +182,10 @@ void PoolingLayer::reset()
 {
 }
 
+void PoolingLayer::copy_params(BaseLayer* p_source)
+{
+}
+
 Tensor* PoolingLayer::get_dim_tensor()
 {
 	return _dim_tensor;

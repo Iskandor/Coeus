@@ -252,6 +252,13 @@ void ConvLayer::reset()
 {
 }
 
+void ConvLayer::copy_params(BaseLayer* p_source)
+{
+	const auto source = dynamic_cast<ConvLayer*>(p_source);
+	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
+	_W->get_data()->override(source->_W->get_data());
+}
+
 json ConvLayer::get_json() const
 {
 	json data = BaseLayer::get_json();

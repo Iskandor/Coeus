@@ -149,6 +149,19 @@ void NeuralNetwork::reset()
 	}
 }
 
+void NeuralNetwork::copy_params(const NeuralNetwork* p_model)
+{
+	if (ParamModelStorage::instance().is_bound(_id))
+	{
+		assert(0, "NeuralNetwork::copy_params : This model is bound");
+	}
+
+	for (const auto& layer : p_model->_layers)
+	{
+		_layers[layer.first]->copy_params(layer.second);
+	}
+}
+
 vector<Tensor*> NeuralNetwork::get_input() {
 	vector<Tensor*> result;
 

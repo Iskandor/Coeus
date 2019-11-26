@@ -40,6 +40,7 @@ namespace Coeus
 		virtual void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map);
 		
 		virtual void reset() = 0;
+		virtual void copy_params(BaseLayer* p_source) = 0;
 
 		TYPE	get_type() const { return _type; }
 		string	get_id() const { return _id; }

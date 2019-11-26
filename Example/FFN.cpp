@@ -68,7 +68,7 @@ void FFN::run() {
 
 	network.init();
 
-	NeuralNetwork network_c(network);
+	NeuralNetwork network_c(network, true);
 
 	for (int i = 0; i < 4; i++) {
 		network_c.activate(o_input[i]);
@@ -104,7 +104,7 @@ void FFN::run() {
 	const auto end = chrono::system_clock::now();
 	chrono::duration<float> elapsed_seconds = end - start;
 	cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-
+		
 	for (int i = 0; i < 4; i++) {
 		network_c.activate(o_input[i]);
 		cout << *network_c.get_output() << endl;

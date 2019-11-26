@@ -45,13 +45,6 @@ void ParamModel::polyak_averaging(const float p_polyak, ParamModel* p_model)
 	}
 }
 
-void ParamModel::copy_params(const ParamModel* p_model)
-{
-	for (auto it = p_model->_params.begin(); it != p_model->_params.end(); ++it) {
-		_params[it->first]->override(it->second);
-	}
-}
-
 void ParamModel::average_params(ParamModel** p_model, int p_size) const
 {
 	map<string, Tensor> result = get_empty_params();

@@ -145,6 +145,13 @@ void RecurrentLayer::reset()
 	if (_context != nullptr) _context->fill(0);
 }
 
+void RecurrentLayer::copy_params(BaseLayer* p_source)
+{
+	const auto source = dynamic_cast<RecurrentLayer*>(p_source);
+	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
+	_W->get_data()->override(source->_W->get_data());
+}
+
 void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
 	BaseLayer::init(p_input_layers, p_output_layers);

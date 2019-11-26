@@ -78,9 +78,6 @@ void A2C::train(int p_rollout_size)
 		_sample_buffer[i].clear();
 
 		state0 = _env_array[i]->get_state();
-
-		_critic_array[i]->copy_params(_critic);
-		_actor_array[i]->copy_params(_actor);
 		
 		for(int roll = 0; roll < p_rollout_size; roll++)
 		{

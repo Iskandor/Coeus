@@ -289,6 +289,20 @@ void LSTMLayer::reset()
 	if (_state != nullptr) _state->fill(0);
 }
 
+void LSTMLayer::copy_params(BaseLayer* p_source)
+{
+	const auto source = dynamic_cast<LSTMLayer*>(p_source);
+	_cec->get_bias()->get_data()->override(source->_cec->get_bias()->get_data());
+	_ig->get_bias()->get_data()->override(source->_ig->get_bias()->get_data());
+	_fg->get_bias()->get_data()->override(source->_fg->get_bias()->get_data());
+	_og->get_bias()->get_data()->override(source->_og->get_bias()->get_data());
+	
+	_Wxc->get_data()->override(source->_Wxc->get_data());
+	_Wxig->get_data()->override(source->_Wxig->get_data());
+	_Wxfg->get_data()->override(source->_Wxfg->get_data());
+	_Wxog->get_data()->override(source->_Wxog->get_data());
+}
+
 json LSTMLayer::get_json() const
 {
 	json data = BaseLayer::get_json();

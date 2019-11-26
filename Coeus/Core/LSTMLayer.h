@@ -23,13 +23,13 @@ namespace Coeus
 		void calc_derivative(map<string, Tensor*>& p_derivative) override;
 		void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
-
 		void reset() override;
+		void copy_params(BaseLayer* p_source) override;
 		json get_json() const override;
 
 	private:
 		Tensor* get_dim_tensor() override;
-
+		
 		NeuronOperator* _cec;
 		NeuronOperator* _ig;
 		NeuronOperator* _fg;

@@ -14,6 +14,7 @@ namespace Coeus
 		void bind(string& p_parent, string& p_child);
 		void add(string& p_parent, ParamModel* p_model);
 		void release(ParamModel* p_model);
+		bool is_bound(string& p_key);
 	private:
 		ParamModelStorage();
 		~ParamModelStorage();

@@ -121,6 +121,17 @@ void CoreLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_
 	
 }
 
+void CoreLayer::reset()
+{
+}
+
+void CoreLayer::copy_params(BaseLayer* p_source)
+{
+	const auto source = dynamic_cast<CoreLayer*>(p_source);
+	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
+	_W->get_data()->override(source->_W->get_data());
+}
+
 void CoreLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 {
 }
