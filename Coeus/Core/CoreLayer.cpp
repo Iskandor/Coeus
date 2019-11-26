@@ -101,7 +101,7 @@ void CoreLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_
 
 		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), df->arr(), _W->get_data()->arr(), _dim, _in_dim);
 
-		int index = _input_dim;
+		int index = 0;
 
 		for (auto it : _input_layer)
 		{

@@ -14,6 +14,14 @@ Gradient::Gradient(map<string, Tensor>& p_buffer)
 	}
 }
 
+Gradient::Gradient(Gradient& p_copy)
+{
+	for (auto& it : p_copy._buffer)
+	{
+		_buffer[it.first] = it.second;
+	}
+}
+
 
 Gradient::~Gradient()
 {
@@ -35,6 +43,15 @@ void Gradient::fill(const float p_value)
 Tensor& Gradient::operator[](const string& p_id)
 {
 	return _buffer[p_id];
+}
+
+Gradient& Gradient::operator=(const Gradient& p_copy)
+{
+	for (auto& it : p_copy._buffer)
+	{
+		_buffer[it.first] = it.second;
+	}
+	return *this;
 }
 
 Gradient& Gradient::operator+=(const Gradient& p_rhs)
