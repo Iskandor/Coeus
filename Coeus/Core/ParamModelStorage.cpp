@@ -19,7 +19,7 @@ void ParamModelStorage::add(string& p_parent, ParamModel* p_model)
 {
 	bool bond = true;
 
-	for (auto k : _keys)
+	for (const auto& k : _keys)
 	{
 		if (p_parent == k.first) bond = false;
 	}
@@ -43,7 +43,7 @@ void ParamModelStorage::release(ParamModel* p_model)
 
 		if (_keys[model_id].empty())
 		{
-			for (auto p : p_model->_params)
+			for (const auto& p : p_model->_params)
 			{
 				delete p.second;
 				_storage.erase(p.first);

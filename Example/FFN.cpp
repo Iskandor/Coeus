@@ -68,7 +68,7 @@ void FFN::run() {
 
 	network.init();
 
-	NeuralNetwork network_c(network, true);
+	NeuralNetwork network_c(network);
 
 	for (int i = 0; i < 4; i++) {
 		network_c.activate(o_input[i]);

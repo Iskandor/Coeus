@@ -13,7 +13,9 @@ namespace Coeus
 	public:
 		LSTMLayer(const string& p_id, int p_dim, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_in_dim = 0);
 		explicit LSTMLayer(json p_data);
+		LSTMLayer(LSTMLayer &p_copy, bool p_clone);
 		~LSTMLayer();
+		LSTMLayer* copy(bool p_clone) override;
 
 		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 		void activate() override;

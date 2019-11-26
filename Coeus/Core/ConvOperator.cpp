@@ -7,6 +7,10 @@ ConvOperator::ConvOperator(const int p_dim, const ACTIVATION p_activation) : Neu
 {
 }
 
+ConvOperator::ConvOperator(ConvOperator& p_copy, const bool p_clone) : NeuronOperator(p_copy, p_clone)
+{
+}
+
 ConvOperator::~ConvOperator()
 = default;
 

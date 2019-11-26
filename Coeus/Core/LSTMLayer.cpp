@@ -56,9 +56,59 @@ LSTMLayer::LSTMLayer(json p_data) : BaseLayer(p_data)
 	_Wxig = IOUtils::load_param(p_data["Wxig"]);
 	_Wxfg = IOUtils::load_param(p_data["Wxfg"]);
 	_Wxog = IOUtils::load_param(p_data["Wxog"]);
+	add_param(_Wxc);
+	add_param(_Wxig);
+	add_param(_Wxfg);
+	add_param(_Wxog);
 
 	_state = nullptr;
 	_context = nullptr;
+}
+
+LSTMLayer::LSTMLayer(LSTMLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim })
+{
+	_type = LSTM;
+	_is_recurrent = true;
+
+	_activation_function = ActivationFunctionFactory::create_function(p_copy._activation_function->get_type());
+	_initializer = new TensorInitializer(*p_copy._initializer);
+
+	_cec = new NeuronOperator(*p_copy._cec, p_clone);
+	add_param(_cec);
+	_ig = new NeuronOperator(*p_copy._ig, p_clone);
+	add_param(_ig);
+	_fg = new NeuronOperator(*p_copy._fg, p_clone);
+	add_param(_fg);
+	_og = new NeuronOperator(*p_copy._og, p_clone);
+	add_param(_og);
+
+	if (p_clone)
+	{
+		_Wxc = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxc->get_data()));
+		_Wxig = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxig->get_data()));
+		_Wxfg = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxfg->get_data()));
+		_Wxog = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxog->get_data()));
+	}
+	else
+	{
+		_Wxc = new Param(p_copy._Wxc->get_id(), p_copy._Wxc->get_data());
+		_Wxig = new Param(p_copy._Wxig->get_id(), p_copy._Wxig->get_data());
+		_Wxfg = new Param(p_copy._Wxfg->get_id(), p_copy._Wxfg->get_data());
+		_Wxog = new Param(p_copy._Wxog->get_id(), p_copy._Wxog->get_data());
+	}
+	add_param(_Wxc);
+	add_param(_Wxig);
+	add_param(_Wxfg);
+	add_param(_Wxog);
+	
+
+	_state = nullptr;
+	_context = nullptr;
+}
+
+LSTMLayer* LSTMLayer::copy(const bool p_clone)
+{
+	return new LSTMLayer(*this, p_clone);
 }
 
 LSTMLayer::~LSTMLayer()
@@ -81,26 +131,29 @@ void LSTMLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_o
 	if (_Wxc == nullptr) {
 		_Wxc = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
 		_initializer->init(_Wxc->get_data());
+		add_param(_Wxc);
 	}
-	add_param(_Wxc->get_id(), _Wxc->get_data());
+	
 
 	if (_Wxig == nullptr) {
 		_Wxig = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
 		_initializer->init(_Wxig->get_data());
+		add_param(_Wxig);
 	}
-	add_param(_Wxig->get_id(), _Wxig->get_data());
+	
 
 	if (_Wxfg == nullptr) {
 		_Wxfg = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
 		_initializer->init(_Wxfg->get_data());
+		add_param(_Wxfg);
 	}
-	add_param(_Wxfg->get_id(), _Wxfg->get_data());
+	
 
 	if (_Wxog == nullptr) {
 		_Wxog = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
 		_initializer->init(_Wxog->get_data());
-	}
-	add_param(_Wxog->get_id(), _Wxog->get_data());
+		add_param(_Wxog);
+	}	
 
 	cout << _id << " " << (_input_dim > 0 ? _input_dim : _in_dim - _dim) << " - " << _dim << endl;
 }

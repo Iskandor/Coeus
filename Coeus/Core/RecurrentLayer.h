@@ -11,9 +11,10 @@ class __declspec(dllexport) RecurrentLayer : public BaseLayer
 {
 public:
 	RecurrentLayer(const string& p_id, int p_dim, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_in_dim = 0);
-	RecurrentLayer(RecurrentLayer& p_copy);
+	RecurrentLayer(RecurrentLayer& p_copy, bool p_clone);
 	explicit RecurrentLayer(const json& p_data);
 	~RecurrentLayer();
+	RecurrentLayer* copy(bool p_clone) override;
 
 	void activate() override;
 
@@ -28,6 +29,7 @@ public:
 private:
 	Tensor* get_dim_tensor() override;
 
+	
 	NeuronOperator* _y;
 
 	Tensor* _context;

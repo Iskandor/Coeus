@@ -9,8 +9,19 @@ PoolingLayer::PoolingLayer(const string& p_id, const int p_extent, const int p_s
 	_stride = p_stride;
 }
 
+PoolingLayer::PoolingLayer(PoolingLayer& p_copy, bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim })
+{
+	_extent = p_copy._extent;
+	_stride = p_copy._stride;
+}
+
 PoolingLayer::~PoolingLayer()
 = default;
+
+PoolingLayer* PoolingLayer::copy(const bool p_clone)
+{
+	return new PoolingLayer(*this, p_clone);
+}
 
 void PoolingLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {

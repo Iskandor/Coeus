@@ -7,6 +7,7 @@ namespace Coeus
 	{
 	public:
 		ConvOperator(int p_dim, ACTIVATION p_activation);
+		ConvOperator(ConvOperator& p_copy, bool p_clone);
 		~ConvOperator();
 
 		void integrate(Tensor* p_dim_tensor, int p_rows, int p_cols, Tensor* p_input, Tensor* p_weights);

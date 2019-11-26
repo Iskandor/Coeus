@@ -10,10 +10,8 @@ namespace Coeus
 	public:
 		NeuronOperator(int p_dim, ACTIVATION p_activation);
 		explicit NeuronOperator(json p_data);
-		NeuronOperator(NeuronOperator& p_copy, bool p_clone = false);
+		NeuronOperator(NeuronOperator& p_copy, bool p_clone);
 		~NeuronOperator();
-
-		NeuronOperator* clone(NeuronOperator* p_source);
 
 		virtual void integrate(Tensor* p_input, Tensor* p_weights);
 		virtual void activate();

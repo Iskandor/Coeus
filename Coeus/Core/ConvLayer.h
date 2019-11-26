@@ -10,7 +10,9 @@ namespace Coeus
 	{
 	public:
 		ConvLayer(const string& p_id, ACTIVATION p_activation, TensorInitializer* p_initializer, int p_filters, int p_extent, int p_stride, int p_padding = 0, initializer_list<int> p_in_dim = {0});
+		ConvLayer(ConvLayer &p_copy, bool p_clone);
 		~ConvLayer();
+		ConvLayer* copy(bool p_clone) override;
 
 		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
@@ -30,7 +32,7 @@ namespace Coeus
 
 		void im2col(Tensor* p_image, Tensor* column) const;
 		void col2im(Tensor* column, Tensor* p_image) const;
-
+		
 	private:
 		int _filters;
 		int _extent;

@@ -19,12 +19,23 @@ RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVA
 	_context = nullptr;	
 }
 
-RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
+RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = RECURRENT;
 	_is_recurrent = true;
-	_y = new NeuronOperator(*p_copy._y);
-	_W = new Param(*p_copy._W);
-	_initializer = p_copy._initializer;
+	_y = new NeuronOperator(*p_copy._y, p_clone);
+	add_param(_y);
+
+	if (p_clone)
+	{
+		_W = new Param(IDGen::instance().next(), new Tensor(*p_copy._W->get_data()));
+	}
+	else
+	{
+		_W = new Param(p_copy._W->get_id(), p_copy._W->get_data());
+	}
+	add_param(_W);
+	
+	_initializer = new TensorInitializer(*p_copy._initializer);
 	_context = nullptr;
 }
 
@@ -35,6 +46,7 @@ RecurrentLayer::RecurrentLayer(const json& p_data) : BaseLayer(p_data)
 	_y = new NeuronOperator(p_data["y"]);
 	add_param(_y);
 	_W = IOUtils::load_param(p_data["W"]);
+	add_param(_W);
 	_initializer = nullptr;
 	_context = nullptr;
 }
@@ -42,8 +54,14 @@ RecurrentLayer::RecurrentLayer(const json& p_data) : BaseLayer(p_data)
 RecurrentLayer::~RecurrentLayer()
 {
 	delete _y;
+	delete _W;
 	delete _context;
 	delete _initializer;
+}
+
+RecurrentLayer* RecurrentLayer::copy(const bool p_clone)
+{
+	return new RecurrentLayer(*this, p_clone);
 }
 
 void RecurrentLayer::activate()
@@ -137,8 +155,8 @@ void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>
 	if (_W == nullptr) {
 		_W = new Param(IDGen::instance().next(), new Tensor({ _dim, _in_dim }, Tensor::ZERO));
 		_initializer->init(_W->get_data());
+		add_param(_W->get_id(), _W->get_data());
 	}
-	add_param(_W->get_id(), _W->get_data());
 
 	_output_layer.push_back(this);
 }

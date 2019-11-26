@@ -24,14 +24,47 @@ ConvLayer::ConvLayer(const string& p_id, const ACTIVATION p_activation, TensorIn
 	_W = nullptr;
 }
 
+ConvLayer::ConvLayer(ConvLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim })
+{
+	_type = CONV;
+	_filters = p_copy._filters;
+	_extent = p_copy._extent;
+	_stride = p_copy._stride;
+	_padding = p_copy._padding;
+
+	_initializer = new TensorInitializer(*p_copy._initializer);
+	_filter_input = nullptr;
+	_column_input = nullptr;
+	_padded_input = nullptr;
+
+	_y = new ConvOperator(*p_copy._y, p_clone);
+	add_param(_y);
+
+	if (p_clone)
+	{
+		_W = new Param(IDGen::instance().next(), new Tensor(*p_copy._W->get_data()));
+	}
+	else
+	{
+		_W = new Param(p_copy._W->get_id(), p_copy._W->get_data());
+	}
+	add_param(_W);
+}
+
 ConvLayer::~ConvLayer()
 {
 	delete _y;
+	delete _W;
 	delete _initializer;
 
 	delete _filter_input;
 	delete _column_input;
 	delete _padded_input;
+}
+
+ConvLayer* ConvLayer::copy(const bool p_clone)
+{
+	return new ConvLayer(*this, p_clone);
 }
 
 void ConvLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
@@ -89,9 +122,12 @@ void ConvLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_o
 		}
 	}
 
-	_W = new Param(IDGen::instance().next(), new Tensor({d1 * _extent * _extent, _filters }, Tensor::ZERO));
-	_initializer->init(_W->get_data());
-	add_param(_W->get_id(), _W->get_data());
+	if (_W == nullptr)
+	{
+		_W = new Param(IDGen::instance().next(), new Tensor({ d1 * _extent * _extent, _filters }, Tensor::ZERO));
+		_initializer->init(_W->get_data());
+		add_param(_W->get_id(), _W->get_data());
+	}
 
 	int d2 = _filters;
 	int h2 = (h1 - _extent + 2 * _padding) / _stride + 1;

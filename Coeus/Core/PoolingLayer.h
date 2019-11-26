@@ -7,7 +7,9 @@ namespace Coeus
 	{
 	public:
 		PoolingLayer(const string& p_id, int p_extent, int p_stride, initializer_list<int> p_in_dim = { 0 });
+		PoolingLayer(PoolingLayer &p_copy, bool p_clone);
 		~PoolingLayer();
+		PoolingLayer* copy(bool p_clone) override;
 
 		void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
@@ -21,6 +23,7 @@ namespace Coeus
 		Tensor* get_dim_tensor() override;
 		json get_json() const override;
 
+		
 	private:
 		int _extent;
 		int _stride;

@@ -30,7 +30,7 @@ namespace Coeus
 		BaseLayer(const string& p_id, int p_dim, initializer_list<int> p_in_dim);
 		BaseLayer(json p_data);
 		virtual ~BaseLayer();
-		virtual BaseLayer* copy(bool p_clone) { return nullptr; }
+		virtual BaseLayer* copy(bool p_clone) = 0;
 
 		virtual void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers);
 		virtual void integrate(Tensor* p_input);
