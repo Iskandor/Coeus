@@ -29,10 +29,12 @@ CoreLayer::CoreLayer(const json& p_data) : BaseLayer(p_data)
 CoreLayer::CoreLayer(CoreLayer &p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
 	_type = CORE;
 	_y = new NeuronOperator(*p_copy._y, p_clone);
-	add_param(_y);
+	add_param(_y);	
 	if (p_clone)
 	{
 		_W = new Param(IDGen::instance().next(), new Tensor(*p_copy._W->get_data()));
+		_param_map[_W->get_id()] = p_copy._W->get_id();
+		_param_map[_y->get_bias()->get_id()] = p_copy._y->get_bias()->get_id();
 	}
 	else
 	{
@@ -123,13 +125,6 @@ void CoreLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_
 
 void CoreLayer::reset()
 {
-}
-
-void CoreLayer::copy_params(BaseLayer* p_source)
-{
-	const auto source = dynamic_cast<CoreLayer*>(p_source);
-	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
-	_W->get_data()->override(source->_W->get_data());
 }
 
 void CoreLayer::calc_derivative(map<string, Tensor*>& p_derivative)

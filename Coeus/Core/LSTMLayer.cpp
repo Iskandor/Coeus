@@ -74,20 +74,29 @@ LSTMLayer::LSTMLayer(LSTMLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._
 	_initializer = new TensorInitializer(*p_copy._initializer);
 
 	_cec = new NeuronOperator(*p_copy._cec, p_clone);
-	add_param(_cec);
+	add_param(_cec);	
 	_ig = new NeuronOperator(*p_copy._ig, p_clone);
-	add_param(_ig);
+	add_param(_ig);	
 	_fg = new NeuronOperator(*p_copy._fg, p_clone);
-	add_param(_fg);
+	add_param(_fg);	
 	_og = new NeuronOperator(*p_copy._og, p_clone);
-	add_param(_og);
+	add_param(_og);	
 
 	if (p_clone)
 	{
 		_Wxc = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxc->get_data()));
+		_param_map[_Wxc->get_id()] = p_copy._Wxc->get_id();
 		_Wxig = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxig->get_data()));
+		_param_map[_Wxig->get_id()] = p_copy._Wxig->get_id();
 		_Wxfg = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxfg->get_data()));
+		_param_map[_Wxfg->get_id()] = p_copy._Wxfg->get_id();
 		_Wxog = new Param(IDGen::instance().next(), new Tensor(*p_copy._Wxog->get_data()));
+		_param_map[_Wxog->get_id()] = p_copy._Wxog->get_id();
+
+		_param_map[_cec->get_bias()->get_id()] = p_copy._cec->get_bias()->get_id();
+		_param_map[_ig->get_bias()->get_id()] = p_copy._ig->get_bias()->get_id();
+		_param_map[_fg->get_bias()->get_id()] = p_copy._fg->get_bias()->get_id();
+		_param_map[_og->get_bias()->get_id()] = p_copy._og->get_bias()->get_id();
 	}
 	else
 	{
@@ -287,20 +296,6 @@ void LSTMLayer::reset()
 {
 	if (_context != nullptr) _context->fill(0);
 	if (_state != nullptr) _state->fill(0);
-}
-
-void LSTMLayer::copy_params(BaseLayer* p_source)
-{
-	const auto source = dynamic_cast<LSTMLayer*>(p_source);
-	_cec->get_bias()->get_data()->override(source->_cec->get_bias()->get_data());
-	_ig->get_bias()->get_data()->override(source->_ig->get_bias()->get_data());
-	_fg->get_bias()->get_data()->override(source->_fg->get_bias()->get_data());
-	_og->get_bias()->get_data()->override(source->_og->get_bias()->get_data());
-	
-	_Wxc->get_data()->override(source->_Wxc->get_data());
-	_Wxig->get_data()->override(source->_Wxig->get_data());
-	_Wxfg->get_data()->override(source->_Wxfg->get_data());
-	_Wxog->get_data()->override(source->_Wxog->get_data());
 }
 
 json LSTMLayer::get_json() const

@@ -149,6 +149,7 @@ void NeuralNetwork::reset()
 	}
 }
 
+/*
 void NeuralNetwork::copy_params(const NeuralNetwork* p_model)
 {
 	if (ParamModelStorage::instance().is_bound(_id))
@@ -161,6 +162,7 @@ void NeuralNetwork::copy_params(const NeuralNetwork* p_model)
 		_layers[layer.first]->copy_params(layer.second);
 	}
 }
+*/
 
 vector<Tensor*> NeuralNetwork::get_input() {
 	vector<Tensor*> result;

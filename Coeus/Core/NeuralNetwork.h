@@ -23,7 +23,7 @@ public:
 	virtual void activate(Tensor* p_input);
 	virtual void activate(vector<Tensor*>* p_input);
 	void reset();
-	void copy_params(const NeuralNetwork* p_model);
+	//void copy_params(const NeuralNetwork* p_model);
 
 	BaseLayer*	add_layer(BaseLayer* p_layer);
 	BaseLayer*	get_layer(const string& p_layer);

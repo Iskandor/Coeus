@@ -22,7 +22,6 @@ public:
 	void calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map) override;
 
 	void reset() override;
-	void copy_params(BaseLayer* p_source) override;
 	void init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers) override;
 
 	json get_json() const override;

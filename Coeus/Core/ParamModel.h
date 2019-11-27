@@ -30,7 +30,8 @@ class __declspec(dllexport) ParamModel
 
 		void DEBUG_compare(ParamModel* p_model);
 
-		void polyak_averaging(float p_polyak, ParamModel* p_model);
+		void copy_params(ParamModel* p_model);
+		void polyak_averaging(float p_alpha, ParamModel* p_model);
 		
 		void average_params(ParamModel** p_model, int p_size) const;
 	
@@ -42,6 +43,7 @@ class __declspec(dllexport) ParamModel
 	protected:
 		string				 _id;
 		map<string, Tensor*> _params;
+		map<string, string>	 _param_map;
 
 	private:
 		int		_size;

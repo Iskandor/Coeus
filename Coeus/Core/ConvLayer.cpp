@@ -38,11 +38,13 @@ ConvLayer::ConvLayer(ConvLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._
 	_padded_input = nullptr;
 
 	_y = new ConvOperator(*p_copy._y, p_clone);
-	add_param(_y);
+	add_param(_y);	
 
 	if (p_clone)
 	{
 		_W = new Param(IDGen::instance().next(), new Tensor(*p_copy._W->get_data()));
+		_param_map[_W->get_id()] = p_copy._W->get_id();
+		_param_map[_y->get_bias()->get_id()] = p_copy._y->get_bias()->get_id();
 	}
 	else
 	{
@@ -250,13 +252,6 @@ void ConvLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_
 
 void ConvLayer::reset()
 {
-}
-
-void ConvLayer::copy_params(BaseLayer* p_source)
-{
-	const auto source = dynamic_cast<ConvLayer*>(p_source);
-	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
-	_W->get_data()->override(source->_W->get_data());
 }
 
 json ConvLayer::get_json() const

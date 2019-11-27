@@ -2,6 +2,7 @@
 #include "TensorOperator.h"
 #include "IDGen.h"
 #include "ParamModelStorage.h"
+#include <cassert>
 
 using namespace Coeus;
 
@@ -11,8 +12,7 @@ ParamModel::ParamModel(): _size(0)
 }
 
 ParamModel::~ParamModel()
-{
-}
+= default;
 
 int ParamModel::get_params_size() const
 {
@@ -38,10 +38,31 @@ void ParamModel::DEBUG_compare(ParamModel* p_model)
 	}
 }
 
-void ParamModel::polyak_averaging(const float p_polyak, ParamModel* p_model)
+void ParamModel::copy_params(ParamModel* p_model)
 {
-	for (auto it = p_model->_params.begin(); it != p_model->_params.end(); ++it) {
-		TensorOperator::instance().vv_add(_params[it->first]->arr(), p_polyak, it->second->arr(), (1 - p_polyak), _params[it->first]->arr(), _params[it->first]->size());
+	if (_param_map.empty())
+	{
+		assert(0, "There exists no mapping between models");
+	}
+	else
+	{
+		for (const auto &p : _params) {
+			p.second->override(p_model->_params[_param_map[p.first]]);
+		}
+	}
+}
+
+void ParamModel::polyak_averaging(const float p_alpha, ParamModel* p_model)
+{
+	if (_param_map.empty())
+	{
+		assert(0, "There exists no mapping between models");
+	}
+	else
+	{
+		for (const auto &p : _params) {
+			TensorOperator::instance().vv_add(p.second->arr(), p_alpha, p_model->_params[_param_map[p.first]]->arr(), (1 - p_alpha), p.second->arr(), p.second->size());
+		}
 	}
 }
 
@@ -81,6 +102,11 @@ void ParamModel::add_param(ParamModel* p_model)
 	{
 		add_param(param.first, param.second);
 	}
+	for(auto& param : p_model->_param_map)
+	{
+		_param_map[param.first] = param.second;
+	}
+	
 }
 
 void ParamModel::update(map<string, Tensor>* p_update) const

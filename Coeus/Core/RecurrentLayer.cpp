@@ -28,6 +28,8 @@ RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy, const bool p_clone) : Bas
 	if (p_clone)
 	{
 		_W = new Param(IDGen::instance().next(), new Tensor(*p_copy._W->get_data()));
+		_param_map[_y->get_bias()->get_id()] = p_copy._y->get_bias()->get_id();
+		_param_map[_W->get_id()] = p_copy._W->get_id();
 	}
 	else
 	{
@@ -143,13 +145,6 @@ void RecurrentLayer::calc_derivative(map<string, Tensor*>& p_derivative)
 void RecurrentLayer::reset()
 {
 	if (_context != nullptr) _context->fill(0);
-}
-
-void RecurrentLayer::copy_params(BaseLayer* p_source)
-{
-	const auto source = dynamic_cast<RecurrentLayer*>(p_source);
-	_y->get_bias()->get_data()->override(source->_y->get_bias()->get_data());
-	_W->get_data()->override(source->_W->get_data());
 }
 
 void RecurrentLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
