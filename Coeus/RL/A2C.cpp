@@ -62,7 +62,7 @@ A2C::~A2C()
 	delete[] _sample_buffer;
 }
 
-void A2C::train(int p_rollout_size)
+void A2C::train(int p_t_max, int p_T_max)
 {
 	const size_t env_size = _env_array.size();
 
@@ -81,7 +81,7 @@ void A2C::train(int p_rollout_size)
 
 		state0 = _env_array[i]->get_state();
 		
-		for(int roll = 0; roll < p_rollout_size; roll++)
+		for(int roll = 0; roll < p_t_max; roll++)
 		{
 			if (_env_array[i]->is_finished())
 			{				

@@ -13,11 +13,11 @@ namespace Coeus
 		A2C(vector<IEnvironment*> &p_env_array,
 			NeuralNetwork* p_critic, GRADIENT_RULE p_critic_update_rule, float p_critic_alpha, float p_gamma,
 			NeuralNetwork* p_actor, GRADIENT_RULE p_actor_update_rule, float p_actor_alpha);
-		~A2C();
+		virtual ~A2C();
 		
-		void train(int p_rollout_size);
+		virtual void train(int p_t_max, int p_T_max = 0);
 
-	private:
+	protected:
 		
 		vector<IEnvironment*> _env_array;
 
@@ -35,7 +35,7 @@ namespace Coeus
 		NetworkGradient**	_critic_gradient_array;
 		IUpdateRule*		_critic_rule;
 		
-		float _gamma;
+		float			_gamma;
 		vector<DQItem>* _sample_buffer;
 	};
 }

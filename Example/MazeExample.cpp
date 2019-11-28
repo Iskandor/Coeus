@@ -666,7 +666,6 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 	network_actor.init();
 
 	A2C agent(maze_array, &network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 5e-4f);
-	//A3C agent(maze_array, 20, &network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.95f, &network_actor, ADAM_RULE, 1e-4f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -709,6 +708,104 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 		}
 
 		string s = "A2C Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
+		console_print(s, 0, 0);
+
+		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
+		//cout << wins << " / " << loses << endl;
+	}
+
+	test_policy(network_actor);
+	CloseHandle(_hConsole_c);
+
+	for (int i = 0; i < env_size; i++)
+	{
+		delete maze_array[i];
+	}
+
+	//Logger::instance().close();
+
+	test_q(&network_actor);
+	cout << endl;
+	test_v(&network_critic);
+}
+
+void MazeExample::example_a3c(int p_epochs, bool p_verbose)
+{
+	const int env_size = 8;
+
+	vector<IEnvironment*> maze_array;
+
+	for (int i = 0; i < env_size; i++)
+	{
+		maze_array.push_back(new Maze(*_maze));
+	}
+
+	int hidden = 64;
+	float limit = 0.01f;
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze->STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze->STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	A3C agent(maze_array, &network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 5e-4f);
+
+	Tensor state0, state1;
+	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
+	float value0, value1;
+	float reward = 0;
+	int epochs = p_epochs;
+	float td_error = 0;
+
+	int wins = 0, loses = 0;
+	SetConsoleActiveScreenBuffer(_hConsole_c);
+
+	//Logger::instance().init("log.log");
+	Tensor prob({ _maze->ACTION_DIM() }, Tensor::ZERO);
+
+	for (int e = 0; e < epochs; e++) {
+		//cout << "Epoch " << e << endl;
+		agent.train(16, 10);
+
+		_maze->reset();
+		state0 = _maze->get_state();
+
+		while (!_maze->is_finished()) {
+			network_actor.activate(&state0);
+
+			const int action0 = network_actor.get_output()->max_value_index();
+			Encoder::one_hot(action, action0);
+			_maze->do_action(action);
+
+			state1 = _maze->get_state();
+			state0.override(&state1);
+		}
+
+		//cout << task.getEnvironment()->moves() << endl;
+
+		if (_maze->is_winner()) {
+			wins++;
+		}
+		else {
+			loses++;
+		}
+
+		string s = "A3C Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
 		console_print(s, 0, 0);
 
 		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
