@@ -7,6 +7,7 @@
 #include "BackPropRule.h"
 #include "NadamRule.h"
 #include "RMSPropRule.h"
+#include "RAdamRule.h"
 
 using namespace Coeus;
 
@@ -46,6 +47,9 @@ IUpdateRule* RuleFactory::create_rule(GRADIENT_RULE p_rule, ParamModel* p_model,
 		break;
 	case RMSPROP_RULE:
 		result = new RMSPropRule(p_model, p_alpha);
+		break;
+	case RADAM_RULE:
+		result = new RADAMRule(p_model, p_alpha);
 		break;
 	default: ;
 	}

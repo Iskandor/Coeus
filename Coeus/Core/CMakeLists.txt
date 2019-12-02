@@ -66,6 +66,8 @@ set(INCLUDE_FILES
 	PowerSign.h
 	PowerSignRule.h
 	QuadraticCost.h
+	RAdam.h
+	RAdamRule.h
 	RecurrentLayer.h
 	ReluActivation.h
 	ReplayBuffer.h
@@ -140,6 +142,8 @@ set(SOURCE_FILES
 	PowerSign.cpp
 	PowerSignRule.cpp
 	QuadraticCost.cpp
+	RAdam.cpp
+	RAdamRule.cpp
 	RecurrentLayer.cpp
 	ReluActivation.cpp
 	RMSProp.cpp
