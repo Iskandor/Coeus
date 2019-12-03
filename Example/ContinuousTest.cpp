@@ -19,96 +19,101 @@ ContinuousTest::~ContinuousTest()
 {
 }
 
-void ContinuousTest::run(int p_hidden)
+void ContinuousTest::run(int p_episodes)
 {
-	int input_dim = 1;
+	int hidden = 32;
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1), input_dim));
-	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM() + _environment.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections	
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
 
-	TD critic(&network_critic, ADAM_RULE, 1e-2f, 0.9f);
+	//TD critic(&network_critic, RADAM_RULE, 1e-3f, 0.99f);
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1), input_dim));
-	network_actor.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("output", _environment.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
 
-	CACLA actor(&network_actor, ADAM_RULE, 1e-2f);
-
-	float reward = 0;
-	float delta = 0;
-	Tensor action({ 1 }, Tensor::ZERO);
-	Tensor state0({ input_dim }, Tensor::ZERO);
-	Tensor state1({ input_dim }, Tensor::ZERO);
-	int epoch = 1000;
-	int win = 0;
-	int lose = 0;
+	//CACLA actor(&network_actor, RADAM_RULE, 1e-3f);
+	DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-3f, 1000, 8);
 
 	
+	float reward = 0;
+	float delta = 0;
+	Tensor action({ _environment.ACTION_DIM() }, Tensor::ZERO);
+	Tensor state0;
+	Tensor state1;
 
-	for(int e = 0; e < epoch; e++)
+	for(int e = 0; e < p_episodes; e++)
 	{
-		int path = 0;
-		_environment.reset();		
-		//Encoder::pop_code(state0, _environment.get_state(), 0, 10);
-		state0[0] = _environment.get_state();
+		float total_reward = 0;
+		_environment.reset();
+		state0 = _environment.get_state();
 
 		while (!_environment.is_finished())
-		{
-			//cout << _environment.get_state() << endl;
-			action = actor.get_action(&state0, 0.1f);
+		{			
+			action = agent.get_action(&state0, 1.0f);
 
-			_environment.perform_action(action[0]);
+			_environment.do_action(action);
 			reward = _environment.get_reward();
-			//Encoder::pop_code(state1, _environment.get_state(), 0, 10);
-			state1[0] = _environment.get_state();
+			total_reward += reward;
+			state1 = _environment.get_state();
 
-			delta = critic.train(&state0, &state1, reward, _environment.is_finished());
-			actor.train(&state0, &action, delta);
+			//cout << _environment.get_state() << " " << reward << endl;
+			agent.train(&state0, &action, &state1, reward, _environment.is_finished());
 
 			state0 = state1;
-			path++;
 		}
-
-		if (_environment.is_winner()) win++;
-		else lose++;
-
-		cout << win << " / " << lose << "(" << path << ")" << endl;
+		printf("SimpleEnv episode %i total reward %0.4f\n", e, total_reward);
 	}
 
+	Tensor input({ _environment.STATE_DIM() + _environment.ACTION_DIM() }, Tensor::ZERO);
+
+	for(int i = 0; i < 21; i++)
+	{
+		state0[0] = i * 0.5f;
+
+		network_actor.activate(&state0);
+		input.reset_index();
+		input.push_back(&state0);
+		input.push_back(network_actor.get_output());
+		network_critic.activate(&input);
+		
+		reward = _environment.get_reward(state0);
+		printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
+	}
 }
 
 void ContinuousTest::run_cacla(const int p_episodes)
 {
-	int hidden = 128;
-	float limit = 0.001f;
+	int hidden = 512;
+	//float limit = 0.001f;
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), CartPole::STATE));
-	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
 
-	TD critic(&network_critic, ADAM_RULE, 1e-4f, 0.99);
+	TD critic(&network_critic, RADAM_RULE, 1e-3f, 0.99);
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), CartPole::STATE));
-	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
+	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
 
-	CACLA actor(&network_actor, ADAM_RULE, 1e-4f);
+	CACLA actor(&network_actor, RADAM_RULE, 1e-4f);
 	
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
@@ -278,7 +283,7 @@ int ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralN
 		p_critic.activate(&critic_input);
 
 		_cart_pole.perform_action(action[0]);
-		cout << p_actor.get_output()->at(0) << " " << p_critic.get_output()->at(0) << " state: " << state0 << " reward: " << _cart_pole.get_reward() << endl;
+		//cout << p_actor.get_output()->at(0) << " " << p_critic.get_output()->at(0) << " state: " << state0 << " reward: " << _cart_pole.get_reward() << endl;
 		
 		copy_state(_cart_pole.get_state(true), state0);
 
