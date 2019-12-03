@@ -26,6 +26,8 @@ void A3C::train(int p_t_max, int p_T_max)
 	const bool is_pooling = Tensor::is_enabled_pooling();
 	if (is_pooling) Tensor::enable_pooling(false);
 
+	int t_global = 0;
+	
 	#pragma omp parallel for
 	for (int i = 0; i < env_size; i++)
 	{
@@ -34,7 +36,7 @@ void A3C::train(int p_t_max, int p_T_max)
 		Tensor state1;
 		Tensor action({ _env_array[i]->ACTION_DIM() }, Tensor::ZERO);
 
-		for(int t = 0; t < p_T_max; t++)
+		while(t_global < p_T_max)
 		{
 			_sample_buffer[i].clear();
 
@@ -92,6 +94,7 @@ void A3C::train(int p_t_max, int p_T_max)
 			_critic->update(_critic_rule->get_update());
 			_actor_rule->calc_update(_actor_d_gradient_array[i]);
 			_actor->update(_actor_rule->get_update());
+			t_global++;
 			omp_unset_lock(&writelock);
 
 			_critic_d_gradient_array[i].fill(0);
