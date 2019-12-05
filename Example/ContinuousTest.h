@@ -9,7 +9,8 @@ public:
 	ContinuousTest();
 	~ContinuousTest();
 
-	void run(int p_episodes);
+	void run_simple_ddpg(int p_episodes);
+	void run_simple_cacla(int p_episodes);
 	void run_cacla(int p_episodes);
 	void run_ddpg(int p_episodes);
 	int test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralNetwork& p_critic, int p_episodes);

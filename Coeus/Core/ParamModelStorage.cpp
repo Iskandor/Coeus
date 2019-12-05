@@ -63,6 +63,7 @@ ParamModelStorage::ParamModelStorage()
 
 ParamModelStorage::~ParamModelStorage()
 {
+	Tensor::enable_pooling(false);
 	for(const auto& p : _storage)
 	{
 		delete p.second;

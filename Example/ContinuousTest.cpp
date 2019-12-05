@@ -19,9 +19,9 @@ ContinuousTest::~ContinuousTest()
 {
 }
 
-void ContinuousTest::run(int p_episodes)
+void ContinuousTest::run_simple_ddpg(int p_episodes)
 {
-	int hidden = 32;
+	int hidden = 128;
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM() + _environment.ACTION_DIM()));
@@ -29,9 +29,7 @@ void ContinuousTest::run(int p_episodes)
 	// feed-forward connections	
 	network_critic.add_connection("hidden0", "output");
 	network_critic.init();
-
-	//TD critic(&network_critic, RADAM_RULE, 1e-3f, 0.99f);
-
+	
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
@@ -40,8 +38,7 @@ void ContinuousTest::run(int p_episodes)
 	network_actor.add_connection("hidden0", "output");
 	network_actor.init();
 
-	//CACLA actor(&network_actor, RADAM_RULE, 1e-3f);
-	DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-3f, 1000, 8);
+	DDPG agent(&network_critic, RADAM_RULE, 1e-4f, 0.99f, &network_actor, RADAM_RULE, 1e-3f, 10000, 64);
 
 	
 	float reward = 0;
@@ -49,16 +46,17 @@ void ContinuousTest::run(int p_episodes)
 	Tensor action({ _environment.ACTION_DIM() }, Tensor::ZERO);
 	Tensor state0;
 	Tensor state1;
-
+	float total_reward = 0;
+	
 	for(int e = 0; e < p_episodes; e++)
 	{
-		float total_reward = 0;
+		total_reward = 0;
 		_environment.reset();
 		state0 = _environment.get_state();
 
 		while (!_environment.is_finished())
 		{			
-			action = agent.get_action(&state0, 1.0f);
+			action = agent.get_action(&state0, 1.f);
 
 			_environment.do_action(action);
 			reward = _environment.get_reward();
@@ -70,24 +68,129 @@ void ContinuousTest::run(int p_episodes)
 
 			state0 = state1;
 		}
-		printf("SimpleEnv episode %i total reward %0.4f\n", e, total_reward);
+		printf("DDPG SimpleEnv episode %i total reward %0.4f\n", e, total_reward);
 	}
 
 	Tensor input({ _environment.STATE_DIM() + _environment.ACTION_DIM() }, Tensor::ZERO);
 
 	for(int i = 0; i < 21; i++)
 	{
-		state0[0] = i * 0.5f;
+		state0[0] = i * 0.5f ;
 
 		network_actor.activate(&state0);
 		input.reset_index();
 		input.push_back(&state0);
-		input.push_back(network_actor.get_output());
+		input.push_back(network_actor.get_output()->at(0));
 		network_critic.activate(&input);
 		
 		reward = _environment.get_reward(state0);
 		printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
+
+		/*
+		input.reset_index();
+		input.push_back(&state0);
+		input.push_back(-network_actor.get_output()->at(0));
+		network_critic.activate(&input);
+		printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, -(*network_actor.get_output())[0]);
+		*/
 	}
+
+	int step = 0;
+	total_reward = 0;
+	_environment.reset();
+	state0 = _environment.get_state();
+	while (!_environment.is_finished())
+	{
+		step++;
+		action = agent.get_action(&state0, 0.f);
+		_environment.do_action(action);
+		reward = _environment.get_reward();
+		total_reward += reward;
+		state0 = _environment.get_state();
+	}
+	printf("DDPG SimpleEnv steps %i total reward %0.4f\n", step, total_reward);
+}
+
+void ContinuousTest::run_simple_cacla(int p_episodes)
+{
+	int hidden = 128;
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections	
+	network_critic.add_connection("hidden0", "output");
+	network_critic.init();
+
+	TD critic(&network_critic, RADAM_RULE, 1e-4f, 0.99f);
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("output", _environment.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "output");
+	network_actor.init();
+
+	CACLA actor(&network_actor, RADAM_RULE, 1e-3f);
+
+
+	float reward = 0;
+	float delta = 0;
+	Tensor action({ _environment.ACTION_DIM() }, Tensor::ZERO);
+	Tensor state0;
+	Tensor state1;
+	float total_reward = 0;
+
+	for (int e = 0; e < p_episodes; e++)
+	{
+		total_reward = 0;
+		_environment.reset();
+		state0 = _environment.get_state();
+
+		while (!_environment.is_finished())
+		{
+			action = actor.get_action(&state0, 1.f);
+
+			_environment.do_action(action);
+			reward = _environment.get_reward();
+			total_reward += reward;
+			state1 = _environment.get_state();
+
+			//cout << _environment.get_state() << " " << reward << endl;
+			delta = critic.train(&state0, &state1, reward, _environment.is_finished());
+			actor.train(&state0, &action, delta);
+
+			state0 = state1;
+		}
+		printf("CACLA SimpleEnv episode %i total reward %0.4f\n", e, total_reward);
+	}
+
+	for (int i = 0; i < 21; i++)
+	{
+		state0[0] = i * 0.5f;
+
+		network_actor.activate(&state0);
+		network_critic.activate(&state0);
+
+		reward = _environment.get_reward(state0);
+		printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
+	}
+
+	int step = 0;
+	total_reward = 0;
+	_environment.reset();
+	state0 = _environment.get_state();
+	while (!_environment.is_finished())
+	{
+		step++;
+		action = actor.get_action(&state0, 0.f);
+		_environment.do_action(action);
+		reward = _environment.get_reward();
+		total_reward += reward;
+		state0 = _environment.get_state();
+	}
+	printf("CACLA SimpleEnv steps %i total reward %0.4f\n", step, total_reward);
 }
 
 void ContinuousTest::run_cacla(const int p_episodes)

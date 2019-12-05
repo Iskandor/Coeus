@@ -46,9 +46,8 @@ Tensor CACLA::get_action(Tensor* p_state, float p_sigma) const
 
 	for(int i = 0; i < _network->get_output_dim(); i++)
 	{
-		float rand = RandomGenerator::get_instance().normal_random(0, p_sigma);
+		const float rand = p_sigma > 0.f ? RandomGenerator::get_instance().normal_random(0, p_sigma) : 0.f;
 		output[i] = _network->get_output()->at(i) + rand;
-		//output[i] = RandomGenerator::get_instance().normal_random(0, p_sigma);
 	}
 
 	return output;

@@ -28,6 +28,7 @@ DDPG::DDPG(	NeuralNetwork* p_network_critic, GRADIENT_RULE p_critic_rule, float 
 	_target = new Tensor({ p_sample_size, p_network_critic->get_output_dim() }, Tensor::ZERO);
 	_actor_input = new Tensor({ p_sample_size, p_network_actor->get_input_dim() }, Tensor::ZERO);
 	_critic_input = new Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
+	_critic_input2 = new Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
 
 	_ou_state = new Tensor({p_network_actor->get_output_dim()}, Tensor::ZERO);
 
@@ -47,6 +48,7 @@ DDPG::~DDPG()
 	delete _actor_input;
 	delete _target;
 	delete _critic_input;
+	delete _critic_input2;
 	delete _ou_state;
 }
 
@@ -61,47 +63,77 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 
 		_actor_input->reset_index();
 		_critic_input->reset_index();
+		_critic_input2->reset_index();
 		_target->reset_index();
 
 		for (auto& s : *sample)
 		{
-			const float maxQs1a = calc_max_qa(&s->s1);
-		
 			_actor_input->push_back(&s->s0);
 			_critic_input->push_back(&s->s0);
 			_critic_input->push_back(&s->a);
+			_network_actor->activate(&s->s0);
+			_critic_input2->push_back(&s->s0);
+			_critic_input2->push_back(_network_actor->get_output());
 
+			/*
+			cout << s->s0 << " ";
+			cout << s->a << " ";
+			cout << s->s1 << " ";
+			cout << s->r << " ";
+			cout << endl;
+			*/
+		}
 
+		_network_critic->activate(_critic_input);
+
+		for (size_t i = 0; i < sample->size(); i++)
+		{
+			DCQItem* s = (*sample)[i];
 			if (s->final) {
 				_target->push_back(s->r);
 			}
 			else {
-				_target->push_back(s->r + _gamma * maxQs1a);
+				const float maxQs1a = calc_max_qa(&s->s1);
+				_target->push_back(s->r + _gamma * maxQs1a - _network_critic->get_output()->at(i));
 			}
 		}
+		
+		Tensor critic_loss = *_network_critic->get_output() - *_target;
 
-		QuadraticCost mse;
-		_network_critic->activate(_critic_input);
-		Tensor critic_loss = mse.cost_deriv(_network_critic->get_output(), _target);
+		//cout << *_network_critic->get_output() << " " << critic_loss << endl;
 		_network_critic_gradient->calc_gradient(&critic_loss);
 		_update_rule_critic->calc_update(_network_critic_gradient->get_gradient());
-		_network_critic->update(_update_rule_critic->get_update());
 
+		_network_critic->activate(_critic_input2);
+		_network_critic_gradient->calc_gradient();
 		_network_actor->activate(_actor_input);
-		Tensor actor_loss = -_network_critic_gradient->get_input_gradient(_sample_size, 4, 1);
+		
+		Tensor actor_loss = -_network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
+		//Tensor actor_loss = -(*_network_critic->get_output());
+		
+		//cout << *_network_critic->get_output() << " " << actor_loss << endl;
+		/*
+		for (size_t i = 0; i < sample->size(); i++)
+		{
+			cout << _critic_input2->at(i * 2) << " " << _network_critic->get_output()->at(i) << " " << actor_loss[i] << endl;
+		}
+		*/
+		
 		_network_actor_gradient->calc_gradient(&actor_loss);
 		_update_rule_actor->calc_update(_network_actor_gradient->get_gradient());
+
+		_network_critic->update(_update_rule_critic->get_update());
 		_network_actor->update(_update_rule_actor->get_update());
 
-		_network_critic_target->polyak_averaging(0.95, _network_critic);
-		_network_actor_target->polyak_averaging(0.95, _network_actor);
+		_network_critic_target->polyak_averaging(0.99, _network_critic);
+		_network_actor_target->polyak_averaging(0.99, _network_actor);
 	}
 
 
 	return error;
 }
 
-Tensor DDPG::get_action(Tensor* p_state, const float p_step)
+Tensor DDPG::get_action(Tensor* p_state, const float p_sigma)
 {
 	/*
 	ou_process();
@@ -117,7 +149,7 @@ Tensor DDPG::get_action(Tensor* p_state, const float p_step)
 
 	for (int i = 0; i < _network_actor->get_output_dim(); i++)
 	{
-		const float rand = RandomGenerator::get_instance().normal_random(0, 1);
+		const float rand = p_sigma > 0 ? RandomGenerator::get_instance().normal_random(0, p_sigma) : 0;
 		output[i] = _network_actor->get_output()->at(i) + rand;
 	}
 
@@ -141,7 +173,7 @@ void DDPG::ou_process() const
 float DDPG::calc_max_qa(Tensor* p_state) const {
 	_network_actor_target->activate(p_state);
 
-	Tensor i({ _network_critic->get_input_dim() }, Tensor::ZERO);
+	Tensor i({ _network_critic_target->get_input_dim() }, Tensor::ZERO);
 	i.push_back(p_state);
 	i.push_back(_network_actor_target->get_output());
 

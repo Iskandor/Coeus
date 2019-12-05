@@ -21,7 +21,7 @@ Tensor SimpleContinuousEnv::get_state()
 
 void SimpleContinuousEnv::do_action(Tensor& p_action)
 {
-	_position += p_action[0] * 0.1f;
+	_position += p_action[0] * 0.1;
 
 	if (_position < 0) _position = 0;
 	if (_position > 10) _position = 10;

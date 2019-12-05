@@ -15,7 +15,7 @@ public:
 	virtual ~DDPG();
 
 	float train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p_reward, bool p_final) const;
-	Tensor get_action(Tensor* p_state, float p_step);
+	Tensor get_action(Tensor* p_state, float p_sigma);
 	void reset() const;
 
 private:	
@@ -39,6 +39,7 @@ private:
 	int _sample_size;
 
 	Tensor* _critic_input;
+	Tensor* _critic_input2;
 	Tensor* _actor_input;
 	Tensor* _target;
 
