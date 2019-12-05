@@ -16,11 +16,8 @@ public:
 
 	float train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p_reward, bool p_final) const;
 	Tensor get_action(Tensor* p_state, float p_sigma);
-	void reset() const;
 
 private:	
-	void ou_process() const;
-
 	float calc_max_qa(Tensor* p_state) const;
 
 	NeuralNetwork* _network_actor;
@@ -42,15 +39,6 @@ private:
 	Tensor* _critic_input2;
 	Tensor* _actor_input;
 	Tensor* _target;
-
-	float _mu;
-	float _theta;
-	float _sigma;
-	float _min_sigma;
-	float _max_sigma;
-	int _decay_period;
-
-	Tensor* _ou_state;
 };
 }
 

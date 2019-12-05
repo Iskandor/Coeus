@@ -21,24 +21,28 @@ ContinuousTest::~ContinuousTest()
 
 void ContinuousTest::run_simple_ddpg(int p_episodes)
 {
-	int hidden = 128;
+	int hidden = 32;
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM() + _environment.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM() + _environment.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections	
-	network_critic.add_connection("hidden0", "output");
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
 	
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", _environment.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
-	network_actor.add_connection("hidden0", "output");
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, RADAM_RULE, 1e-4f, 0.99f, &network_actor, RADAM_RULE, 1e-3f, 10000, 64);
+	DDPG agent(&network_critic, RADAM_RULE, 1e-4f, 0.99f, &network_actor, RADAM_RULE, 1e-3f, 10000, 512);
 
 	
 	float reward = 0;
@@ -47,6 +51,8 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 	Tensor state0;
 	Tensor state1;
 	float total_reward = 0;
+	
+	Tensor input({ _environment.STATE_DIM() + _environment.ACTION_DIM() }, Tensor::ZERO);
 	
 	for(int e = 0; e < p_episodes; e++)
 	{
@@ -63,36 +69,28 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 			total_reward += reward;
 			state1 = _environment.get_state();
 
-			//cout << _environment.get_state() << " " << reward << endl;
 			agent.train(&state0, &action, &state1, reward, _environment.is_finished());
 
 			state0 = state1;
 		}
 		printf("DDPG SimpleEnv episode %i total reward %0.4f\n", e, total_reward);
-	}
 
-	Tensor input({ _environment.STATE_DIM() + _environment.ACTION_DIM() }, Tensor::ZERO);
+		if (e % 100 == 0)
+		{
+			for (int i = 0; i < 21; i++)
+			{
+				state0[0] = i * 0.5f;
 
-	for(int i = 0; i < 21; i++)
-	{
-		state0[0] = i * 0.5f ;
+				network_actor.activate(&state0);
+				input.reset_index();
+				input.push_back(&state0);
+				input.push_back(network_actor.get_output()->at(0));
+				network_critic.activate(&input);
 
-		network_actor.activate(&state0);
-		input.reset_index();
-		input.push_back(&state0);
-		input.push_back(network_actor.get_output()->at(0));
-		network_critic.activate(&input);
-		
-		reward = _environment.get_reward(state0);
-		printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
-
-		/*
-		input.reset_index();
-		input.push_back(&state0);
-		input.push_back(-network_actor.get_output()->at(0));
-		network_critic.activate(&input);
-		printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, -(*network_actor.get_output())[0]);
-		*/
+				reward = _environment.get_reward(state0);
+				printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
+			}
+		}
 	}
 
 	int step = 0;
@@ -313,7 +311,6 @@ void ContinuousTest::run_ddpg(int p_episodes)
 	for (int e = 0; e < p_episodes; ++e) {
 		//printf("CartPole episode %i...\n", e);
 		_cart_pole.reset();
-		agent.reset();
 
 		copy_state(_cart_pole.get_state(true), state0);
 

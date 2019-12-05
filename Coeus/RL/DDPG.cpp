@@ -29,15 +29,6 @@ DDPG::DDPG(	NeuralNetwork* p_network_critic, GRADIENT_RULE p_critic_rule, float 
 	_actor_input = new Tensor({ p_sample_size, p_network_actor->get_input_dim() }, Tensor::ZERO);
 	_critic_input = new Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
 	_critic_input2 = new Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
-
-	_ou_state = new Tensor({p_network_actor->get_output_dim()}, Tensor::ZERO);
-
-	_mu = 0.0f;
-	_theta = 0.15f;
-	_min_sigma = 0.3f;
-	_max_sigma = 0.3f;
-	_decay_period = 1e5;
-	_sigma = _max_sigma;
 }
 
 DDPG::~DDPG()
@@ -49,7 +40,6 @@ DDPG::~DDPG()
 	delete _target;
 	delete _critic_input;
 	delete _critic_input2;
-	delete _ou_state;
 }
 
 float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, bool p_final) const
@@ -74,14 +64,6 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 			_network_actor->activate(&s->s0);
 			_critic_input2->push_back(&s->s0);
 			_critic_input2->push_back(_network_actor->get_output());
-
-			/*
-			cout << s->s0 << " ";
-			cout << s->a << " ";
-			cout << s->s1 << " ";
-			cout << s->r << " ";
-			cout << endl;
-			*/
 		}
 
 		_network_critic->activate(_critic_input);
@@ -99,8 +81,7 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 		}
 		
 		Tensor critic_loss = *_network_critic->get_output() - *_target;
-
-		//cout << *_network_critic->get_output() << " " << critic_loss << endl;
+		
 		_network_critic_gradient->calc_gradient(&critic_loss);
 		_update_rule_critic->calc_update(_network_critic_gradient->get_gradient());
 
@@ -109,15 +90,6 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 		_network_actor->activate(_actor_input);
 		
 		Tensor actor_loss = -_network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
-		//Tensor actor_loss = -(*_network_critic->get_output());
-		
-		//cout << *_network_critic->get_output() << " " << actor_loss << endl;
-		/*
-		for (size_t i = 0; i < sample->size(); i++)
-		{
-			cout << _critic_input2->at(i * 2) << " " << _network_critic->get_output()->at(i) << " " << actor_loss[i] << endl;
-		}
-		*/
 		
 		_network_actor_gradient->calc_gradient(&actor_loss);
 		_update_rule_actor->calc_update(_network_actor_gradient->get_gradient());
@@ -135,15 +107,6 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 
 Tensor DDPG::get_action(Tensor* p_state, const float p_sigma)
 {
-	/*
-	ou_process();
-	_sigma = _max_sigma - (_max_sigma - _min_sigma) * min(1.0f, p_step / _decay_period);
-
-	Tensor output({ _network_actor->get_output_dim() }, Tensor::ZERO);
-	_network_actor->activate(p_state);
-
-	TensorOperator::instance().vv_add(_network_actor->get_output()->arr(), _ou_state->arr(), output.arr(), output.size());
-	*/
 	Tensor output({ _network_actor->get_output_dim() }, Tensor::ZERO);
 	_network_actor->activate(p_state);
 
@@ -154,20 +117,6 @@ Tensor DDPG::get_action(Tensor* p_state, const float p_sigma)
 	}
 
 	return output;
-}
-
-void DDPG::reset() const
-{
-	_ou_state->fill(0);
-	TensorOperator::instance().vc_prod(_ou_state->arr(), _mu, _ou_state->arr(), _ou_state->size());
-}
-
-void DDPG::ou_process() const
-{
-	for(int i = 0; i < _ou_state->size(); i++)
-	{
-		(*_ou_state)[i] += _theta * (_mu - (*_ou_state)[i]) + RandomGenerator::get_instance().normal_random(0, _sigma);
-	}
 }
 
 float DDPG::calc_max_qa(Tensor* p_state) const {
