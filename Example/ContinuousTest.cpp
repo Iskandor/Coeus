@@ -24,7 +24,7 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 	int hidden = 32;
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM() + _environment.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM() + _environment.ACTION_DIM()));
 	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections	
@@ -34,7 +34,7 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 	
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
 	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", _environment.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
@@ -42,7 +42,7 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, RADAM_RULE, 1e-4f, 0.99f, &network_actor, RADAM_RULE, 1e-3f, 10000, 512);
+	DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-4f, 10000, 256);
 
 	
 	float reward = 0;
@@ -90,6 +90,7 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 				reward = _environment.get_reward(state0);
 				printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
 			}
+			system("pause");
 		}
 	}
 
@@ -111,23 +112,27 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 
 void ContinuousTest::run_simple_cacla(int p_episodes)
 {
-	int hidden = 128;
+	int hidden = 32;
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections	
-	network_critic.add_connection("hidden0", "output");
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
 
-	TD critic(&network_critic, RADAM_RULE, 1e-4f, 0.99f);
+	TD critic(&network_critic, RADAM_RULE, 1e-3f, 0.99f);
 
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", _environment.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
-	network_actor.add_connection("hidden0", "output");
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
 	CACLA actor(&network_actor, RADAM_RULE, 1e-3f);

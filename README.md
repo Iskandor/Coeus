@@ -23,6 +23,7 @@ Intel Math Kernel Library (https://software.intel.com/en-us/mkl)
 
 **Continuous reinforcement learning algorithms**
 - CACLA
+- DDPG
  
 **Other features**
 - BLAS backend
@@ -62,7 +63,7 @@ Intel Math Kernel Library (https://software.intel.com/en-us/mkl)
 ```
 
 ### Planned features
-- DDPG, NAC, TRPO, PPO, CACER
+- NAC, TRPO, PPO, CACER
 - Residual networks
 - Gated recurrent unit
 - CUDA support
