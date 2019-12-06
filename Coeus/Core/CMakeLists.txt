@@ -50,6 +50,7 @@ set(INCLUDE_FILES
 	KLDivergence.h
 	LinearActivation.h
 	Logger.h
+	LookAhead.h
 	LSTMLayer.h
 	Metrics.h
 	Nadam.h
@@ -126,6 +127,7 @@ set(SOURCE_FILES
 	KLDivergence.cpp
 	LinearActivation.cpp
 	Logger.cpp
+	LookAhead.cpp
 	LSTMLayer.cpp
 	Metrics.cpp
 	Nadam.cpp

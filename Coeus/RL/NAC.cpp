@@ -13,11 +13,18 @@ NAC::NAC(NeuralNetwork* p_network_critic, GRADIENT_RULE p_rule_critic, float p_a
 	_critic = new GAE(p_network_critic, p_gamma, p_lambda);
 
 	_network_actor = p_network_actor;
-	_gradient_actor = new NaturalGradient(_network_actor);
+	_network_critic = p_network_critic;
+	_gradient_actor = new PolicyGradient(_network_actor);
 	_rule_actor = RuleFactory::create_rule(BACKPROP_RULE, p_network_actor, p_alpha_actor);
-	_actor_loss = Tensor::Zero({_network_actor->get_output_dim()});
-	_gradient_estimate = _network_actor->get_empty_params();
+	_rule_critic = RuleFactory::create_rule(p_rule_critic, p_network_critic, p_alpha_critic);
 	_update = _network_actor->get_empty_params();
+
+	for (auto& param : p_network_actor->get_empty_params())
+	{
+		const int row = param.second.shape(0) * param.second.shape(1);
+		_fim[param.first] = Tensor({ row, row }, Tensor::ONES);
+		_inv_fim[param.first] = Tensor({ row, row }, Tensor::ZERO);
+	}
 }
 
 NAC::~NAC()
@@ -25,6 +32,7 @@ NAC::~NAC()
 	delete _critic;
 	delete _gradient_actor;
 	delete _rule_actor;
+	delete _rule_critic;
 }
 
 void NAC::add_sample(Tensor* p_s0, Tensor* p_a, Tensor* p_s1, float p_r, const bool p_final)
@@ -34,50 +42,53 @@ void NAC::add_sample(Tensor* p_s0, Tensor* p_a, Tensor* p_s1, float p_r, const b
 
 void NAC::train()
 {
-	NaturalGradient* gradient = static_cast<NaturalGradient*>(_gradient_actor);
-	//map<string, Tensor> gradient_estimate = _network_actor->get_empty_params();
-	
 	_critic->set_sample(_sample_buffer);
 	vector<float> advantage = _critic->get_advantages();
 
 	for(int i = 0; i < _sample_buffer.size(); i++)
 	{
 		_network_actor->activate(&_sample_buffer[i].s0);
-		//cout << _sample_buffer[i].s0 << endl;
 		cout << *_network_actor->get_output() << endl;
 		
-		_actor_loss.fill(0);
-		_actor_loss[_sample_buffer[i].a.max_value_index()] = -advantage[i] / _network_actor->get_output()->at(_sample_buffer[i].a.max_value_index());
+		Gradient actor_grad = _gradient_actor->get_gradient(&_sample_buffer[i].s0, _sample_buffer[i].a.max_value_index(), advantage[i]);
 
-		gradient->calc_gradient(&_actor_loss);
+		for (auto& g : actor_grad)
+		{
+			_fim[g.first] += g.second.vec() * g.second.vec().T();
+			//_fim[g.first] /= i+1;
+			_inv_fim[g.first] = _fim[g.first].inv();
+			//Tensor temp = g.second;
 
-		for (const auto& g : gradient->get_regular_gradient()) {
-			_gradient_estimate[g.first] += (1.f / _sample_buffer.size()) *  g.second;
+			/*
+			TensorOperator::instance().vv_sub(g.second.arr(), _gradient_estimate[g.first].arr(), temp.arr(), rows * cols);
+			TensorOperator::instance().vv_add(_gradient_estimate[g.first].arr(), 1, temp.arr(), _epsilon, _gradient_estimate[g.first].arr(), rows * cols);
+
+			float c = sqrt(2 * _delta / g.second.vec().dot(gradient->get_hessian_inv()[g.first] * g.second.vec()));
+			cout << c << endl;
+			_update[g.first] += c * gradient->get_hessian_inv()[g.first] * g.second.vec();
+
+			float c = sqrt(2 * _delta / g.second.vec().dot(gradient->get_hessian_inv()[g.first] * g.second.vec()));
+			_update[g.first] = c * gradient->get_hessian_inv()[g.first] * g.second.vec();
+			_update[g.first].reshape({ rows, cols });
+			*/
+			const float c = advantage[i] == 0 ? 1 : sqrt(2 * _delta / g.second.vec().dot(_inv_fim[g.first] * g.second.vec()));
+			//cout << g.first << " " << c << endl;
+			_update[g.first] += c * _inv_fim[g.first] * g.second.vec();
 		}
+
+		Gradient critic_grad = _critic->get_gradient(&_sample_buffer[i].s0, advantage[i]);
+		_rule_critic->calc_update(critic_grad);
+		_network_critic->update(_rule_critic->get_update());
 	}
-	
-	for(const auto& g : gradient->get_regular_gradient())
+
+	for (auto& g : _network_actor->get_empty_params())
 	{
-		//Tensor temp = g.second;
 		const int rows = g.second.shape(0);
 		const int cols = g.second.shape(1);
 
-		/*
-		TensorOperator::instance().vv_sub(g.second.arr(), _gradient_estimate[g.first].arr(), temp.arr(), rows * cols);
-		TensorOperator::instance().vv_add(_gradient_estimate[g.first].arr(), 1, temp.arr(), _epsilon, _gradient_estimate[g.first].arr(), rows * cols);
-		*/
-		float c = sqrt(2 * _delta / _gradient_estimate[g.first].vec().dot(gradient->get_hessian_inv()[g.first] * _gradient_estimate[g.first].vec()));
-		_update[g.first] = c * gradient->get_hessian_inv()[g.first] * _gradient_estimate[g.first].vec();
-		_update[g.first].reshape({rows, cols});
-
-		/*
-		float c = sqrt(2 * _delta / g.second.vec().dot(gradient->get_hessian_inv()[g.first] * g.second.vec()));
-		_update[g.first] = c * gradient->get_hessian_inv()[g.first] * g.second.vec();
 		_update[g.first].reshape({ rows, cols });
-		*/
 	}
 	
-	//_critic->train();
 	_network_actor->update(&_update);	
 	_sample_buffer.clear();
 }

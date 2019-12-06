@@ -4,6 +4,7 @@
  */
 #pragma once
 #include "GAE.h"
+#include "PolicyGradient.h"
 
 namespace Coeus
 {
@@ -18,10 +19,12 @@ namespace Coeus
 
 	private:
 		NeuralNetwork*		_network_actor;
-		NetworkGradient*	_gradient_actor;
+		NeuralNetwork*		_network_critic;
+		PolicyGradient*		_gradient_actor;
 		IUpdateRule*		_rule_actor;
-		Tensor				_actor_loss;
-		map<string, Tensor> _gradient_estimate;
+		IUpdateRule*		_rule_critic;
+		map<string, Tensor> _fim;
+		map<string, Tensor> _inv_fim;
 		map<string, Tensor> _update;
 		
 		GAE* _critic;

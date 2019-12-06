@@ -34,3 +34,33 @@ float TD::train(Tensor* p_state0, Tensor* p_state1, const float p_reward, bool p
 
 	return delta;
 }
+
+Tensor TD::train(vector<DQItem*>* p_sample) const
+{
+	Tensor state0({static_cast<int>(p_sample->size()), _network->get_input_dim() }, Tensor::ZERO);
+	Tensor state1({ static_cast<int>(p_sample->size()), _network->get_input_dim() }, Tensor::ZERO);
+	Tensor delta({ static_cast<int>(p_sample->size())}, Tensor::ZERO);
+
+	for (auto& s : *p_sample)
+	{
+		state0.push_back(&s->s0);
+		state1.push_back(&s->s1);
+	}
+
+	_network->activate(&state1);
+	Tensor Vs1 = *_network->get_output();
+	_network->activate(&state0);
+	Tensor Vs0 = *_network->get_output();
+
+	for (size_t i = 0; i < p_sample->size(); i++)
+	{
+		delta[i] = p_sample->at(i)->final ? p_sample->at(i)->r - Vs0[i] : p_sample->at(i)->r + _gamma * Vs1[i] - Vs0[i];
+	}
+
+	Tensor loss = Vs0 - delta;
+	_network_gradient->calc_gradient(&loss);
+	_update_rule->calc_update(_network_gradient->get_gradient(), _alpha);
+	_network->update(_update_rule->get_update());
+
+	return delta;
+}

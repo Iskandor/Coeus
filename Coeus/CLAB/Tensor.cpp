@@ -164,6 +164,22 @@ Tensor Tensor::vec() const
 	return result;
 }
 
+Tensor Tensor::inv() const
+{
+	Tensor result(_rank, copy_shape(_rank, _shape), alloc_arr(_size));
+	result.fill(0);
+
+	TensorOperator::instance().inv_M(_arr, result._arr, _shape[0], _shape[1]);
+
+	/*
+	Tensor control = *this * result;
+
+	cout << control << endl;
+	*/
+	
+	return result;
+}
+
 Tensor& Tensor::operator+=(const Tensor& p_rhs)
 {
 	check_size_eq(p_rhs._size);
@@ -428,6 +444,17 @@ int Tensor::max_value_index() const {
 	}
 
 	return max;
+}
+
+int Tensor::count_value(float p_value) const
+{
+	int result = 0;
+	
+	for (int i = 0; i < _size; i++) {
+		if (_arr[i] == p_value) result++;
+	}
+	
+	return result;
 }
 
 void Tensor::override(Tensor* p_tensor) const {

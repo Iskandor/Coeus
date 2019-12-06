@@ -16,6 +16,9 @@ class __declspec(dllexport) ParamModel
 
 		int get_params_size() const;
 		map<string, Tensor> get_empty_params() const;
+		map<string, Tensor> get_params() const;
+
+		Tensor* operator[] (const string& p_id);
 
 		friend ostream &operator<<(ostream &output, const ParamModel &p_model) {
 
@@ -39,6 +42,7 @@ class __declspec(dllexport) ParamModel
 		void	add_param(Param* p_param);
 		void	add_param(ParamModel* p_model);
 		void	update(map<string, Tensor> *p_update) const;
+		void	override(map<string, Tensor> *p_source);
 
 	protected:
 		string				 _id;

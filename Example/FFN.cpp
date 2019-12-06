@@ -18,6 +18,8 @@
 #include "PowerSign.h"
 #include "RecurrentLayer.h"
 #include "KLDivergence.h"
+#include "RAdam.h"
+#include "LookAhead.h"
 
 FFN::FFN()
 {
@@ -68,24 +70,18 @@ void FFN::run() {
 
 	network.init();
 
-	NeuralNetwork network_c(network, true);
-
-	for (int i = 0; i < 4; i++) {
-		network_c.activate(o_input[i]);
-		cout << *network_c.get_output() << endl;
-	}
 	for (int i = 0; i < 4; i++) {
 		network.activate(o_input[i]);
 		cout << *network.get_output() << endl;
 	}
 
-
-	BackProp optimizer(&network);
-	//ADAM optimizer(&network);
+	
+	//BackProp optimizer(&network);
+	RADAM optimizer(&network);
 
 	//optimizer.init(new QuadraticCost(), 0.01f, 0.9f, true);
-	optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
-	//optimizer.init(new QuadraticCost(), 1e-3f);
+	//optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
+	optimizer.init(new QuadraticCost(), 1e-1f);
 
 	const auto start = chrono::system_clock::now();
 
@@ -104,11 +100,7 @@ void FFN::run() {
 	const auto end = chrono::system_clock::now();
 	chrono::duration<float> elapsed_seconds = end - start;
 	cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-		
-	for (int i = 0; i < 4; i++) {
-		network_c.activate(o_input[i]);
-		cout << *network_c.get_output() << endl;
-	}
+
 	for (int i = 0; i < 4; i++) {
 		network.activate(o_input[i]);
 		cout << *network.get_output() << endl;

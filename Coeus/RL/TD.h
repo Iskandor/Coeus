@@ -1,6 +1,7 @@
 #pragma once
 #include "NeuralNetwork.h"
 #include "GradientAlgorithm.h"
+#include "BufferItems.h"
 
 namespace Coeus
 {
@@ -12,11 +13,12 @@ namespace Coeus
 		~TD();
 
 		float train(Tensor* p_state0, Tensor* p_state1, float p_reward, bool p_finished) const;
+		Tensor train(vector<DQItem*>* p_sample) const;
 
 	private:
-		NeuralNetwork* _network;
-		NetworkGradient* _network_gradient;
-		IUpdateRule* _update_rule;
+		NeuralNetwork*		_network;
+		NetworkGradient*	_network_gradient;
+		IUpdateRule*		_update_rule;
 
 		float _alpha;
 		float _gamma;

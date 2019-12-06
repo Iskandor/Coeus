@@ -18,6 +18,7 @@
 #include "PackDataset2.h"
 #include "CrossEntropyCost.h"
 #include "RandomGenerator.h"
+#include "RAdam.h"
 
 
 RNN::RNN()
@@ -46,8 +47,9 @@ void RNN::run_add_problem()
 	//BackProp algorithm(&network);
 
 	//algorithm.init(new QuadraticCost(), 0.1f, 0.9f, true);
-	Nadam algorithm(&network);
-	algorithm.init(new QuadraticCost(), 0.01f);
+	//Nadam algorithm(&network);
+	RADAM algorithm(&network);
+	algorithm.init(new QuadraticCost(), 0.1f);
 	algorithm.set_recurrent_mode(RTRL);
 
 	int epochs = 0;

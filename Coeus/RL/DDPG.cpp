@@ -23,7 +23,7 @@ DDPG::DDPG(	NeuralNetwork* p_network_critic, GRADIENT_RULE p_critic_rule, float 
 	_update_rule_actor = RuleFactory::create_rule(p_actor_rule, _network_actor, p_actor_alpha);
 	_update_rule_critic = RuleFactory::create_rule(p_critic_rule, _network_critic, p_critic_alpha);
 
-	_buffer = new ReplayBuffer<DCQItem>(p_buffer_size);
+	_buffer = new ReplayBuffer<DQItem>(p_buffer_size);
 
 	_target = new Tensor({ p_sample_size, p_network_critic->get_output_dim() }, Tensor::ZERO);
 	_actor_input = new Tensor({ p_sample_size, p_network_actor->get_input_dim() }, Tensor::ZERO);
@@ -42,14 +42,12 @@ DDPG::~DDPG()
 	delete _critic_input2;
 }
 
-float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, bool p_final) const
+void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, bool p_final) const
 {
-	_buffer->add_item(new DCQItem(p_state0, p_action0, p_state1, p_reward, p_final));
-
-	float error = 0;
+	_buffer->add_item(new DQItem(p_state0, p_action0, p_state1, p_reward, p_final));
 
 	if (_buffer->get_size() >= _sample_size) {
-		vector<DCQItem*>* sample = _buffer->get_sample(_sample_size);
+		vector<DQItem*>* sample = _buffer->get_sample(_sample_size);
 
 		_actor_input->reset_index();
 		_critic_input->reset_index();
@@ -70,7 +68,7 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 
 		for (size_t i = 0; i < sample->size(); i++)
 		{
-			DCQItem* s = (*sample)[i];
+			DQItem* s = (*sample)[i];
 			if (s->final) {
 				_target->push_back(s->r);
 			}
@@ -90,6 +88,7 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 		_network_actor->activate(_actor_input);
 		
 		Tensor actor_loss = -_network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
+		//Tensor actor_loss = -(*_network_critic->get_output());
 		
 		_network_actor_gradient->calc_gradient(&actor_loss);
 		_update_rule_actor->calc_update(_network_actor_gradient->get_gradient());
@@ -100,9 +99,6 @@ float DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 		_network_critic_target->polyak_averaging(0.99, _network_critic);
 		_network_actor_target->polyak_averaging(0.99, _network_actor);
 	}
-
-
-	return error;
 }
 
 Tensor DDPG::get_action(Tensor* p_state, const float p_sigma)

@@ -16,7 +16,7 @@ namespace Coeus {
 
 			~ReplayBuffer()
 			{
-				for (int i = 0; i < _buffer.size(); i++) {
+				for (size_t i = 0; i < _buffer.size(); i++) {
 					delete _buffer[i];
 				}
 			}
@@ -53,7 +53,7 @@ namespace Coeus {
 		private:
 			vector<T*>	_buffer;
 			vector<T*>	_sample;
-			int _size;
+			size_t _size;
 
 
 	};

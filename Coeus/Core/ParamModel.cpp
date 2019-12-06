@@ -117,6 +117,14 @@ void ParamModel::update(map<string, Tensor>* p_update) const
 	}
 }
 
+void ParamModel::override(map<string, Tensor>* p_source)
+{
+	for (const auto& param : _params)
+	{
+		param.second->override(&p_source->at(param.first));
+	}
+}
+
 map<string, Tensor> ParamModel::get_empty_params() const
 {
 	map<string, Tensor> result;
@@ -127,4 +135,21 @@ map<string, Tensor> ParamModel::get_empty_params() const
 	}
 
 	return result;
+}
+
+map<string, Tensor> ParamModel::get_params() const
+{
+	map<string, Tensor> result = get_empty_params();
+
+	for (const auto& param : _params)
+	{
+		result[param.first].override(param.second);
+	}
+
+	return result;
+}
+
+Tensor* ParamModel::operator[](const string& p_id)
+{
+	return _params[p_id];
 }

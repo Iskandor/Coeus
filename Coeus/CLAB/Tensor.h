@@ -25,6 +25,7 @@ public:
 	Tensor(const Tensor &p_copy);
 	~Tensor();
 	Tensor operator-() const;
+	
 
 	static Tensor Zero( initializer_list<int> p_shape);
 	static Tensor Ones( initializer_list<int> p_shape);
@@ -35,6 +36,7 @@ public:
 	float& operator []( int p_index) const;
 	Tensor T();
 	Tensor vec() const;
+	Tensor inv() const;
 
 	Tensor& operator += (const Tensor& p_rhs);
 	Tensor& operator += (float p_rhs);
@@ -60,7 +62,9 @@ public:
 	void set_row(Tensor& p_tensor, int p_row) const;
 	void get_column(Tensor& p_tensor, int p_column) const;
 	void set_column(Tensor& p_tensor, int p_column) const;
+	
 	int max_value_index() const;
+	int count_value(float p_value) const;
 
 	void override(Tensor* p_tensor) const;
 	void override(const float* p_data) const;

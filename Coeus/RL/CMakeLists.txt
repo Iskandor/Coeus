@@ -20,6 +20,7 @@ set(INCLUDE_FILES
 	ActorCritic.h
 	BoltzmanExploration.h
 	BufferItems.h
+	CACER.h
 	CACLA.h
 	CountModule.h
 	DDPG.h
@@ -43,6 +44,7 @@ set(SOURCE_FILES
 	A3C.cpp
 	ActorCritic.cpp
 	BoltzmanExploration.cpp
+	CACER.cpp
 	CACLA.cpp
 	CountModule.cpp
 	DDPG.cpp

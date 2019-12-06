@@ -477,7 +477,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	NAC agent(&network_critic, ADAM_RULE, 1e-4f, 0.99f, 0.95f, &network_actor, 1e-4f, 1e-3f);
+	NAC agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.95f, &network_actor, 1e-4f, 1e-1f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -531,7 +531,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 			loses++;
 		}
 
-		string s = "Actor-Critic Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
+		string s = "NAC Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
 		//console_print(s, 0, 0);
 		cout << s << endl;
 
@@ -731,7 +731,7 @@ void MazeExample::example_a2c(int p_epochs, bool p_verbose)
 
 void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 {
-	const int env_size = 8;
+	const int env_size = 16;
 
 	vector<IEnvironment*> maze_array;
 
@@ -763,7 +763,7 @@ void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	A3C agent(maze_array, &network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 5e-4f);
+	A3C agent(maze_array, &network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 9e-4f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -780,7 +780,7 @@ void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 
 	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
-		agent.train(16, 10);
+		agent.train(16, 2000);
 
 		_maze->reset();
 		state0 = _maze->get_state();
