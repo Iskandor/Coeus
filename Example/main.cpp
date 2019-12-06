@@ -44,9 +44,9 @@ int main()
 	ContinuousTest test;
 
 	//test.run_simple_cacla(1000);
-	test.run_simple_ddpg(500);
-	//test.run_cacla(50000);
-	//test.run_ddpg(50000);
+	//test.run_simple_ddpg(1000);
+	//test.run_cacla(10000);
+	test.run_ddpg(10000);
 
 	/*
 	IrisTest iris;
