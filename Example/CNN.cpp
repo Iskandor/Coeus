@@ -38,10 +38,10 @@ void CNN::run()
 	(*t)[1] = 0;
 	target.push_back(t);
 
-	_network.add_layer(new ConvLayer("conv0", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1, { 2,6,6 }));
+	_network.add_layer(new ConvLayer("conv0", RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), 3, 3, 1, 1, { 2,6,6 }));
 	_network.add_layer(new PoolingLayer("pool0", 2, 2));
-	_network.add_layer(new ConvLayer("conv1", RELU, new TensorInitializer(LECUN_UNIFORM), 3, 3, 1, 1));
-	_network.add_layer(new CoreLayer("output", 2, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
+	_network.add_layer(new ConvLayer("conv1", RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), 3, 3, 1, 1));
+	_network.add_layer(new CoreLayer("output", 2, SOFTMAX, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	_network.add_connection("conv0", "pool0");
 	_network.add_connection("pool0", "conv1");
 	//_network.add_connection("conv0", "conv1");
@@ -102,11 +102,11 @@ void CNN::run_mnist()
 
 	}
 
-	_network.add_layer(new ConvLayer("conv0", RELU, new TensorInitializer(LECUN_UNIFORM), 8, 5, 1, 2, { 1,28,28 }));
+	_network.add_layer(new ConvLayer("conv0", RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), 8, 5, 1, 2, { 1,28,28 }));
 	_network.add_layer(new PoolingLayer("pool0", 2, 2));
-	_network.add_layer(new ConvLayer("conv1", RELU, new TensorInitializer(LECUN_UNIFORM), 16, 5, 1, 2));
+	_network.add_layer(new ConvLayer("conv1", RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), 16, 5, 1, 2));
 	_network.add_layer(new PoolingLayer("pool1", 3, 3));
-	_network.add_layer(new CoreLayer("output", 10, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
+	_network.add_layer(new CoreLayer("output", 10, SOFTMAX, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 
 	_network.add_connection("conv0", "pool0");
 	_network.add_connection("pool0", "conv1");

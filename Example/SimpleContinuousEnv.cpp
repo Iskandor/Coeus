@@ -1,10 +1,11 @@
 #include "SimpleContinuousEnv.h"
+#include "Metrics.h"
 
 
-
-SimpleContinuousEnv::SimpleContinuousEnv()
+SimpleContinuousEnv::SimpleContinuousEnv(): _steps(0)
 {
-	_winning_position = 0;
+	_state_dim = 1;
+	_action_dim = 1;
 	_position = 0.f;
 	_target = 7.f;
 }
@@ -13,54 +14,55 @@ SimpleContinuousEnv::SimpleContinuousEnv()
 SimpleContinuousEnv::~SimpleContinuousEnv()
 = default;
 
-float SimpleContinuousEnv::get_state() const
+Tensor SimpleContinuousEnv::get_state()
 {
-	return _position;
+	return Tensor({ _state_dim }, Tensor::VALUE, _position);
 }
 
-void SimpleContinuousEnv::perform_action(const float p_action)
+void SimpleContinuousEnv::do_action(Tensor& p_action)
 {
-	_position += p_action * 0.1;
+	_position += p_action[0] * 0.1;
 
 	if (_position < 0) _position = 0;
 	if (_position > 10) _position = 10;
-
-	if (_position < _target + THETA && _position > _target - THETA) {
-		_winning_position++;
-	}
-	else
-	{
-		_winning_position = 0;
-	}
+	
+	_steps++;
 }
 
-float SimpleContinuousEnv::get_reward() const
+float SimpleContinuousEnv::get_reward()
 {
 	float reward = 0;
 
-	if (is_winner()) reward = 1.f;
-	if (is_failed()) reward = -1.f;
+	if (is_failed())
+	{
+		reward = -1;
+	}
+	else
+	{
+		reward = Coeus::Metrics::gaussian_distance(_position, 1, _target);
+	}
 
 	return reward;
 }
 
-bool SimpleContinuousEnv::is_finished() const
+float SimpleContinuousEnv::get_reward(Tensor& p_state)
 {
-	return is_winner() || is_failed();
+	_position = p_state[0];
+	return get_reward();
 }
 
-bool SimpleContinuousEnv::is_winner() const
+void SimpleContinuousEnv::reset()
 {
-	return _winning_position == 1;
+	_steps = 0;
+	_position = 5.f;
+}
+
+bool SimpleContinuousEnv::is_finished()
+{
+	return is_failed() || _steps == MAX_STEPS;
 }
 
 bool SimpleContinuousEnv::is_failed() const
 {
 	return _position == 0.f || _position == 10.f;
-}
-
-void SimpleContinuousEnv::reset()
-{
-	_winning_position = 0;
-	_position = 3.f;
 }

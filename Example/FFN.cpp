@@ -18,6 +18,8 @@
 #include "PowerSign.h"
 #include "RecurrentLayer.h"
 #include "KLDivergence.h"
+#include "RAdam.h"
+#include "LookAhead.h"
 
 FFN::FFN()
 {
@@ -62,18 +64,24 @@ void FFN::run() {
 
 	NeuralNetwork network;
 
-	network.add_layer(new CoreLayer("hidden", 4, SIGMOID, new TensorInitializer(LECUN_UNIFORM), 2));
-	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
+	network.add_layer(new CoreLayer("hidden", 4, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), 2));
+	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network.add_connection("hidden", "output");
 
 	network.init();
 
-	BackProp optimizer(&network);
-	//ADAM optimizer(&network);
+	for (int i = 0; i < 4; i++) {
+		network.activate(o_input[i]);
+		cout << *network.get_output() << endl;
+	}
+
+	
+	//BackProp optimizer(&network);
+	RADAM optimizer(&network);
 
 	//optimizer.init(new QuadraticCost(), 0.01f, 0.9f, true);
-	optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
-	//optimizer.init(new QuadraticCost(), 1e-3f);
+	//optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
+	optimizer.init(new QuadraticCost(), 1e-1f);
 
 	const auto start = chrono::system_clock::now();
 
@@ -103,13 +111,13 @@ void FFN::run_iris() {
 	_dataset.load_data("./data/iris.data");
 
 	NeuralNetwork network;
-	network.add_layer(new CoreLayer("hidden", 16, SIGMOID, new TensorInitializer(LECUN_UNIFORM), IrisDataset::SIZE));
-	network.add_layer(new CoreLayer("output", IrisDataset::CATEGORIES, SOFTMAX, new TensorInitializer(LECUN_UNIFORM)));
+	network.add_layer(new CoreLayer("hidden", 16, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), IrisDataset::SIZE));
+	network.add_layer(new CoreLayer("output", IrisDataset::CATEGORIES, SOFTMAX, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network.add_connection("hidden", "output");
 	network.init();
 
 
-	const int epochs = 100;
+	const int epochs = 1000;
 	vector<IrisDatasetItem>* data = nullptr;
 	map<int, Tensor> target;
 

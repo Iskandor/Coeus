@@ -6,8 +6,9 @@
 #define NEURONET_MAZE_H
 
 #include <vector>
-#include "IEnvironment.h"
 #include "MazeAction.h"
+#include <Tensor.h>
+#include <IEnvironment.h>
 
 using namespace std;
 

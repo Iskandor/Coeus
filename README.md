@@ -19,10 +19,11 @@ Intel Math Kernel Library (https://software.intel.com/en-us/mkl)
 - SARSA
 - Double Q-learning
 - Deep Q-Learning
-- Actor-Critic algorithms (AC, A2C)
+- Actor-Critic algorithms (AC, A2C, A3C)
 
 **Continuous reinforcement learning algorithms**
 - CACLA
+- DDPG
  
 **Other features**
 - BLAS backend
@@ -62,9 +63,9 @@ Intel Math Kernel Library (https://software.intel.com/en-us/mkl)
 ```
 
 ### Planned features
+- NAC, TRPO, PPO, CACER
 - Residual networks
 - Gated recurrent unit
-- DDPG, NAC, TRPO, PPO, CACER
 - CUDA support
 - Intrinsic motivation modules
 - ALE interface and examples

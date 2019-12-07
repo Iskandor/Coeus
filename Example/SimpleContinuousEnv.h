@@ -1,22 +1,26 @@
 #pragma once
-class SimpleContinuousEnv
+#include "IEnvironment.h"
+
+class SimpleContinuousEnv : public Coeus::IEnvironment
 {
 public:
 	SimpleContinuousEnv();
 	~SimpleContinuousEnv();
 
-	float get_state() const;
-	void perform_action(float p_action);
-	float get_reward() const;
-	bool is_finished() const;
-	bool is_winner() const;
-	bool is_failed() const;
-	void reset();
-
+	Tensor get_state() override;
+	void do_action(Tensor& p_action) override;
+	float get_reward() override;
+	float get_reward(Tensor& p_state);
+	void reset() override;
+	bool is_finished() override;
+	
 private:
-	float _position;
-	float _target;
-	int _winning_position;
-	const float THETA = 0.5f;
+	bool is_failed() const;
+	
+	float	_position;
+	float	_target;
+	int		_steps;
+	
+	const int MAX_STEPS = 100;
 };
 

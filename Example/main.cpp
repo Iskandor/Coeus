@@ -1,17 +1,8 @@
 #include "FFN.h"
-#include "IrisTest.h"
-#include "RNN.h"
-#include "MazeExample.h"
-#include "Encoder.h"
-#include <bitset>
-#include "mnist_reader.hpp"
 #include "CNN.h"
-#include "ConvLayer.h"
-#include "PoolingLayer.h"
-#include "TensorOperator.h"
-#include "IOUtils.h"
+#include "RNN.h"
 #include "ContinuousTest.h"
-#include "ReplayBuffer.h"
+#include "MazeExample.h"
 
 using namespace std;
 
@@ -45,17 +36,19 @@ int main()
 	//example.example_ddpg(2000);
 	//example.example_actor_critic(1000);
 	//example.example_nac(1000);
-	//example.example_a2c(2000);
-
-	//example.example_deep_q(64, 1e-3, 0, true);
+	//example.example_a2c(1000);
+	//example.example_a3c(1);
+	//
 	//example.example_icm(64);
 	//example.example_selector(64);
 
 	ContinuousTest test;
 
-	//test.run(32);
-	//test.run_cacla(50000);
-	test.run_ddpg(50000);
+	//test.run_simple_cacla(1000);
+	//test.run_simple_cacer(1000);
+	//test.run_simple_ddpg(1000);
+	test.run_cacla(10000);
+	//test.run_ddpg(10000);
 
 	/*
 	IrisTest iris;

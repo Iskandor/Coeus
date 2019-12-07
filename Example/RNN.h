@@ -1,6 +1,6 @@
 #pragma once
-#include "NeuralNetwork.h"
 #include "PackDataset2.h"
+#include <NeuralNetwork.h>
 
 using namespace Coeus;
 
