@@ -28,12 +28,11 @@ int main()
 	//model.run_mnist();
 	//model.test();
 	
-	//MazeExample example;
+	MazeExample example;
 	//example.example_q(15000);
 	//example.example_sarsa(30000);
 	//example.example_double_q(15000);
 	//example.example_deep_q(2000);
-	//example.example_ddpg(2000);
 	//example.example_actor_critic(1000);
 	//example.example_nac(1000);
 	//example.example_a2c(1000);
@@ -46,8 +45,8 @@ int main()
 
 	//test.run_simple_cacla(1000);
 	//test.run_simple_cacer(1000);
-	//test.run_simple_ddpg(1000);
-	test.run_cacla(10000);
+	test.run_simple_ddpg(1000);
+	//test.run_cacla(10000);
 	//test.run_ddpg(10000);
 
 	/*

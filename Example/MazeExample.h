@@ -21,7 +21,6 @@ public:
 	void example_nac(int p_epochs, bool p_verbose = true);
 	
 	void example_deep_q(int p_epochs, bool p_verbose = true);
-	void example_ddpg(int p_epochs, bool p_verbose = true);
 	
 	void example_a2c(int p_epochs, bool p_verbose = true);
 	void example_a3c(int p_epochs, bool p_verbose = true);
