@@ -76,12 +76,12 @@ void FFN::run() {
 	}
 
 	
-	//BackProp optimizer(&network);
-	RADAM optimizer(&network);
+	BackProp optimizer(&network);
+	//RADAM optimizer(&network);
 
 	//optimizer.init(new QuadraticCost(), 0.01f, 0.9f, true);
-	//optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
-	optimizer.init(new QuadraticCost(), 1e-1f);
+	optimizer.init(new QuadraticCost(), 0.5f, 0.9f, true);
+	//optimizer.init(new QuadraticCost(), 1e-1f);
 
 	const auto start = chrono::system_clock::now();
 

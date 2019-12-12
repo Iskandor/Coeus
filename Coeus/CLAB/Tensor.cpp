@@ -533,6 +533,21 @@ float Tensor::element_prod() const
 	return result;
 }
 
+float Tensor::trace() const
+{
+	check_rank_eq(2);
+	check_square();
+
+	float trace = 0;
+
+	for(int i = 0; i < _shape[0]; i++)
+	{
+		trace += _arr[i * _shape[1] + i];
+	}
+
+	return trace;
+}
+
 float* Tensor::alloc_arr(const int p_size) {
 	float* result = nullptr;
 
@@ -1199,6 +1214,17 @@ void Tensor::check_rank_eq(const int p_rank) const
 	}
 #endif
 }
+
+void Tensor::check_square() const
+{
+#ifdef _DEBUG
+	if (_shape[0] != _shape[1])
+	{
+		assert(("Matrix have to be square", 0));
+	}
+#endif	
+}
+
 
 Tensor operator*(const float p_lhs, const Tensor& p_rhs)
 {

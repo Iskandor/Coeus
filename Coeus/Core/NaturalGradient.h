@@ -22,6 +22,7 @@ namespace Coeus {
 		map<string, Tensor> _inv_fim;
 		Gradient			_natural_gradient;
 		float				_epsilon;
+		float				_alpha;
 	};
 }
 

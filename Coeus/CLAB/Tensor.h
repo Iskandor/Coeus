@@ -86,6 +86,7 @@ public:
 	void set(int p_z, int p_y, int p_x, float p_val) const;
 
 	float element_prod() const;
+	float trace() const;
 
 	static float* alloc_arr(int p_size);
 	static int* alloc_shape(int p_size);
@@ -170,6 +171,7 @@ private:
 	void check_size_eq(int p_size) const;
 	void check_rank_gt(int p_rank) const;
 	void check_rank_eq(int p_rank) const;
+	void check_square() const;
 	
 	float *_arr;
 	int _rank;
