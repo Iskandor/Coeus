@@ -5,7 +5,7 @@ class __declspec(dllexport) TensorOperatorMKL : public ITensorOperator
 {
 public:
 	TensorOperatorMKL() = default;
-	virtual ~TensorOperatorMKL() = default;
+	virtual ~TensorOperatorMKL();
 
 	void vv_add(float* p_x, float* p_y, float* p_z, int p_size) override;
 	void vv_add(float* p_x, float p_ax, float* p_y, float p_ay, float* p_z, int p_size) override;

@@ -13,6 +13,7 @@ namespace Coeus {
 		virtual ~NaturalGradient();
 
 		void calc_gradient(Tensor* p_loss = nullptr) override;
+		void calc_gradient(Gradient& p_gradient);
 		Gradient& get_gradient() override;
 		map<string, Tensor>& get_hessian_inv() { return _inv_fim; }
 

@@ -3,8 +3,7 @@
 using namespace Coeus;
 
 Gradient::Gradient()
-{
-}
+= default;
 
 Gradient::Gradient(map<string, Tensor>& p_buffer)
 {
@@ -23,9 +22,7 @@ Gradient::Gradient(Gradient& p_copy)
 }
 
 
-Gradient::~Gradient()
-{
-}
+Gradient::~Gradient() = default;
 
 void Gradient::init(ParamModel* p_model)
 {
@@ -59,6 +56,15 @@ Gradient& Gradient::operator+=(const Gradient& p_rhs)
 	for (auto& it : _buffer)
 	{
 		it.second += p_rhs._buffer.at(it.first);
+	}
+	return *this;
+}
+
+Gradient& Gradient::operator+=(const map<string, Tensor>& p_rhs)
+{
+	for (auto& it : _buffer)
+	{
+		it.second += p_rhs.at(it.first);
 	}
 	return *this;
 }

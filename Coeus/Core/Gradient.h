@@ -23,6 +23,7 @@ namespace Coeus
 
 		Gradient& operator= (const Gradient& p_copy);
 		Gradient& operator+= (const Gradient& p_rhs);
+		Gradient& operator+= (const map<string, Tensor>& p_rhs);
 
 	private:
 		map<string, Tensor> _buffer;

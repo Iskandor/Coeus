@@ -358,7 +358,7 @@ int MazeExample::example_sarsa(int p_epochs, const bool p_verbose) {
 }
 
 void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
-	const int hidden = 64;
+	const int hidden = 32;
 	const float limit = 0.01f;
 
 	NeuralNetwork network_critic;
@@ -394,10 +394,6 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 	SetConsoleActiveScreenBuffer(_hConsole_c);
 	
 	//Logger::instance().init("log.log");
-	float cum_i_reward = 0;
-	float cum_e_reward = 0;
-
-	Tensor prob({ 4 }, Tensor::ZERO);
 
 	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
@@ -412,11 +408,8 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 
 			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), _maze->ACTION_DIM());
 			Encoder::one_hot(action, action0);
-			
 			_maze->do_action(action);
 			state1 = _maze->get_state();
-			cum_e_reward += _maze->get_reward();
-
 			reward = _maze->get_reward();
 			agent.train(&state0, &action, &state1, reward, _maze->is_finished());
 
@@ -436,9 +429,6 @@ void MazeExample::example_actor_critic(int p_epochs, bool p_verbose) {
 		console_print(s, 0, 0);
 
 		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
-		cum_i_reward = 0;
-		cum_e_reward = 0;
-
 		//cout << wins << " / " << loses << endl;
 	}
 
@@ -459,9 +449,9 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze->STATE_DIM()));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
-	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _maze->STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
 	network_critic.add_connection("hidden1", "output");
@@ -469,15 +459,15 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze->STATE_DIM()));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
-	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _maze->STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	NAC agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.95f, &network_actor, 1e-4f, 1e-1f);
+	NAC agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.98f, &network_actor, 1e-1f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -490,10 +480,6 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	//SetConsoleActiveScreenBuffer(_hConsole_c);
 
 	//Logger::instance().init("log.log");
-	float cum_i_reward = 0;
-	float cum_e_reward = 0;
-
-	Tensor prob({ 4 }, Tensor::ZERO);
 
 	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
@@ -501,19 +487,13 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 		_maze->reset();
 		state0 = _maze->get_state();
 
-		network_critic.activate(&state0);
-
 		while (!_maze->is_finished()) {
 			network_actor.activate(&state0);
-
+			cout << *network_actor.get_output() << endl;
 			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), _maze->ACTION_DIM());
 			Encoder::one_hot(action, action0);
 			_maze->do_action(action);
-
-
 			state1 = _maze->get_state();
-			cum_e_reward += _maze->get_reward();
-
 			reward = _maze->get_reward();
 			agent.add_sample(&state0, &action, &state1, reward, _maze->is_finished());
 
@@ -536,8 +516,6 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 		cout << s << endl;
 
 		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
-		cum_i_reward = 0;
-		cum_e_reward = 0;
 
 		//cout << wins << " / " << loses << endl;
 	}

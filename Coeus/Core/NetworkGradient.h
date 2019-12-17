@@ -20,7 +20,6 @@ public:
 
 	NeuralNetwork* get_network() const { return _network; }
 	virtual Gradient& get_gradient();
-	Gradient& get_regular_gradient() { return _gradient; }
 
 	void reset();
 	void set_recurrent_mode(RECURRENT_MODE p_value);

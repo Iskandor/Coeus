@@ -288,6 +288,12 @@ void TensorOperatorMKL::V_reduce(float* p_A, float* p_V, const int p_batch, cons
 
 }
 
+TensorOperatorMKL::~TensorOperatorMKL()
+{
+	printf("TensorOperatorMKL deleted");
+	MKL_Free_Buffers();
+}
+
 void TensorOperatorMKL::vv_add(float* p_x, float* p_y, float* p_z, const int p_size)
 {
 	vsAdd(p_size, p_x, p_y, p_z);
@@ -435,13 +441,7 @@ void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Bt
 
 void TensorOperatorMKL::inv_M(float* p_A, float* p_Ai, int p_rows, int p_cols)
 {
-	int *ipiv = new int[p_rows];
-
-	memcpy(p_Ai, p_A, sizeof(float) * p_rows * p_cols);
-	
-	LAPACKE_sgetrf(LAPACK_ROW_MAJOR, p_rows, p_cols, p_Ai, p_cols, ipiv);
-
-	LAPACKE_sgetri(LAPACK_ROW_MAJOR, p_rows, p_Ai, p_cols, ipiv);
-
-	delete[] ipiv;
+	memcpy(p_Ai, p_A, sizeof(float) * p_rows * p_cols);	
+	LAPACKE_mkl_sgetrfnp(LAPACK_ROW_MAJOR, p_rows, p_cols, p_Ai, p_cols);
+	LAPACKE_mkl_sgetrinp(LAPACK_ROW_MAJOR, p_rows, p_Ai, p_cols);
 }
