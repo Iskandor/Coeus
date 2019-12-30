@@ -22,7 +22,7 @@ float QuadraticCost::cost(Tensor * p_prediction, Tensor * p_target)
 		r += pow(a - e, 2);
 	}
 
-	r *= 0.5;
+	r *= 1.f / p_prediction->size();
 
 	return r;
 }

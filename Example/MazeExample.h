@@ -24,7 +24,6 @@ public:
 	
 	void example_a2c(int p_epochs, bool p_verbose = true);
 	void example_a3c(int p_epochs, bool p_verbose = true);
-	void example_icm(int p_hidden);
 	void example_selector(int p_hidden);
 
 private:

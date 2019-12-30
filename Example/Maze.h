@@ -24,6 +24,7 @@ public:
 	void init(int* p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic = false);
 
 	Tensor get_state() override;
+	void set_state(Tensor& p_state);
 	void do_action(Tensor& p_action) override;
 	float get_reward() override;
 	bool is_finished() override;

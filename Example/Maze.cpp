@@ -74,6 +74,11 @@ Tensor Maze::get_state()
 	return res;
 }
 
+void Maze::set_state(Tensor& p_state)
+{
+	_actor = p_state.max_value_index();
+}
+
 void Maze::do_action(Tensor& p_action)
 {
 	int action = p_action.max_value_index();

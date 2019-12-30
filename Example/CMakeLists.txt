@@ -24,6 +24,7 @@ set(INCLUDE_FILES
 	Maze.h
 	MazeAction.h
 	MazeExample.h
+	MotivationTest.h
 	)
 
 set(SOURCE_FILES 
@@ -42,7 +43,8 @@ set(SOURCE_FILES
 	CartPole.cpp
 	Maze.cpp
 	MazeAction.cpp
-	MazeExample.cpp	
+	MazeExample.cpp
+	MotivationTest.cpp
 	main.cpp
 	)
 

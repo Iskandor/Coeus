@@ -436,6 +436,17 @@ void Tensor::set_column(Tensor& p_tensor, const int p_column) const
 	}
 }
 
+float Tensor::max_value() const
+{
+	int max = 0;
+
+	for (int i = 0; i < _size; i++) {
+		if (_arr[max] < _arr[i]) max = i;
+	}
+
+	return _arr[max];
+}
+
 int Tensor::max_value_index() const {
 	int max = 0;
 
@@ -971,6 +982,18 @@ Tensor Tensor::avg_sum(const int p_dim)
 	}
 
 	return Tensor(rank, shape, arr);
+}
+
+bool Tensor::has_NaN_Inf() const
+{
+	bool result = false;
+	
+	for(int i = 0; i < _size; i++)
+	{
+		if (_arr[i] != _arr[i] || isinf(_arr[i])) result = true;
+	}
+
+	return result;
 }
 
 void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x, const int p_h, const int p_w)

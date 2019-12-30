@@ -63,6 +63,7 @@ public:
 	void get_column(Tensor& p_tensor, int p_column) const;
 	void set_column(Tensor& p_tensor, int p_column) const;
 	
+	float max_value() const;
 	int max_value_index() const;
 	int count_value(float p_value) const;
 
@@ -105,6 +106,8 @@ public:
 	void replicate(int p_n);
 
 	Tensor avg_sum(int p_dim);
+
+	bool has_NaN_Inf() const;
 
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_z, int p_y, int p_x, int p_h, int p_w);

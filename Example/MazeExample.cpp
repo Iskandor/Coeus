@@ -471,17 +471,15 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
-	float value0, value1;
 	float reward = 0;
-	int epochs = p_epochs;
-	float td_error = 0;
 
 	int wins = 0, loses = 0;
 	//SetConsoleActiveScreenBuffer(_hConsole_c);
 
 	//Logger::instance().init("log.log");
+	int t = 0;
 
-	for (int e = 0; e < epochs; e++) {
+	for (int e = 0; e < p_epochs; e++) {
 		//cout << "Epoch " << e << endl;
 
 		_maze->reset();
@@ -489,7 +487,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 
 		while (!_maze->is_finished()) {
 			network_actor.activate(&state0);
-			cout << *network_actor.get_output() << endl;
+			//cout << *network_actor.get_output() << endl;
 			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), _maze->ACTION_DIM());
 			Encoder::one_hot(action, action0);
 			_maze->do_action(action);
@@ -497,10 +495,15 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 			reward = _maze->get_reward();
 			agent.add_sample(&state0, &action, &state1, reward, _maze->is_finished());
 
+			if (t == 10)
+			{
+				t = 0;
+				agent.train();
+			}
+			
 			state0.override(&state1);
+			t++;
 		}
-
-		agent.train();		
 
 		//cout << task.getEnvironment()->moves() << endl;
 
@@ -803,139 +806,6 @@ void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 	test_q(&network_actor);
 	cout << endl;
 	test_v(&network_critic);
-}
-
-void MazeExample::example_icm(int p_hidden) {
-
-	NeuralNetwork network_critic;
-
-	network_critic.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
-	network_critic.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
-	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
-	network_critic.add_connection("hidden0", "hidden1");
-	network_critic.add_connection("hidden1", "output");
-	network_critic.init();
-
-	TD critic(&network_critic, ADAM_RULE, 1e-3f, 0.9);
-
-	NeuralNetwork network_actor;
-
-	network_actor.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1), _maze->STATE_DIM()));
-	network_actor.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
-	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
-	network_actor.add_connection("hidden0", "hidden1");
-	network_actor.add_connection("hidden1", "output");
-	network_actor.init();
-
-	//PolicyGradient actor(&network_actor, ADAM_RULE, 0.1f);
-
-	NeuralNetwork network_model;
-
-	network_model.add_layer(new CoreLayer("hidden0", p_hidden, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1), _maze->STATE_DIM() + _maze->ACTION_DIM()));
-	network_model.add_layer(new CoreLayer("hidden1", p_hidden / 2, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
-	network_model.add_layer(new CoreLayer("output", _maze->STATE_DIM(), SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -0.1, 0.1)));
-	network_model.add_connection("hidden0", "hidden1");
-	network_model.add_connection("hidden1", "output");
-	network_model.init();
-
-	ADAM optimizer_m(&network_model);
-	optimizer_m.init(new QuadraticCost(), 1e-3f);
-	ICM icm(&network_model, &optimizer_m);
-
-	Tensor state0, state1;
-	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
-	float value0, value1;
-	float reward = 0;
-	int epochs = 2000;
-	float td_error = 0;
-
-	int wins = 0, loses = 0;
-
-	//EGreedyExploration exploration(1, new LinearInterpolation(1, 0.1, epochs));
-	//BoltzmanExploration exploration(10, new LinearInterpolation(10, 0.1, epochs));
-	//EGreedyExploration exploration(0);
-	BoltzmanExploration exploration(1);
-
-	Logger::instance().init("log.log");
-	float cum_i_reward = 0;
-	float cum_e_reward = 0;
-
-	for (int e = 0; e < epochs; e++) {
-		cout << "Epoch " << e << endl;
-
-		_maze->reset();
-		state0 = _maze->get_state();
-
-		while (!_maze->is_finished()) {
-			network_actor.activate(&state0);
-
-			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), 4);
-			Encoder::one_hot(action, action0);
-			_maze->do_action(action);
-
-			state1 = _maze->get_state();
-
-			const float ir = icm.get_intrinsic_reward(&state0, &action, &state1, 1.f);
-
-			cum_i_reward += ir;
-			cum_e_reward += _maze->get_reward();
-
-			reward = _maze->get_reward() + ir;
-			//cout << reward << endl;
-			td_error = critic.train(&state0, &state1, reward, _maze->is_finished());
-			icm.train(&state0, &action, &state1);
-			//icm.add(&state0, &action, &state1);
-			//actor.train(&state0, action0, td_error);
-
-			state0.override(&state1);
-		}
-
-		//icm.train(32);
-
-		cout << _maze->moves() << endl;
-
-		if (_maze->is_winner()) {
-			wins++;
-		}
-		else {
-			loses++;
-		}
-
-		Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / _maze->moves()) + ";" + to_string(cum_e_reward / _maze->moves()));
-		cum_i_reward = 0;
-		cum_e_reward = 0;
-
-		exploration.update(e);
-
-		cout << wins << " / " << loses << endl;
-	}
-
-	/* ICM Test
-	Tensor state = Tensor::Zero({ int(maze->mazeY() * maze->mazeX())});
-
-	for (unsigned int i = 0; i < maze->mazeY(); i++)
-	{
-		for (unsigned int j = 0; j < maze->mazeX(); j++)
-		{
-			const int s = i * maze->mazeX() + j;
-			Encoder::one_hot(state, s);
-
-			for(int a = 0; a < 4; a++)
-			{
-				Encoder::one_hot(action, a);
-
-				icm.activate(&state, &action);
-
-				cout <<  state << ":" << a << " -> " << *icm.get_output() << endl;
-			}
-		}
-	}
-	*/
-
-	Logger::instance().close();
-
-	test_q(&network_actor);
-	//test_v(&network_critic);
 }
 
 void MazeExample::example_selector(int p_hidden)
