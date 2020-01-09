@@ -26,9 +26,11 @@ namespace Coeus {
 		int		_sample;
 
 		Tensor* _fm_input;
-		Tensor* _im_input;
-		
-		Tensor* _target;
+		Tensor* _im_input;		
+		Tensor* _fm_target;
+		Tensor* _im_target;
+		Tensor* _h_input_s0;
+		Tensor* _h_input_s1;
 
 		NeuralNetwork* _forward_model;
 		NeuralNetwork* _inverse_model;

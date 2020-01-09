@@ -3,6 +3,7 @@
 #include "RNN.h"
 #include "ContinuousTest.h"
 #include "MazeExample.h"
+#include "MotivationTest.h"
 
 using namespace std;
 
@@ -28,7 +29,7 @@ int main()
 	//model.run_mnist();
 	//model.test();
 	
-	MazeExample example;
+	//MazeExample example;
 	//example.example_q(15000);
 	//example.example_sarsa(30000);
 	//example.example_double_q(15000);
@@ -41,11 +42,11 @@ int main()
 	//example.example_icm(64);
 	//example.example_selector(64);
 
-	ContinuousTest test;
+	//ContinuousTest test;
 
 	//test.run_simple_cacla(1000);
 	//test.run_simple_cacer(1000);
-	test.run_simple_ddpg(1000);
+	//test.run_simple_ddpg(1000);
 	//test.run_cacla(10000);
 	//test.run_ddpg(10000);
 
@@ -56,6 +57,10 @@ int main()
 	iris.run(2000);
 	iris.test();
 	*/
+
+	MotivationTest test;
+
+	test.test1(1000);
 
 	system("pause");
 

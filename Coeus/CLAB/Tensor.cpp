@@ -761,6 +761,67 @@ void Tensor::push_back(const float p_value)
 	_end++;
 }
 
+void Tensor::insert_row(Tensor* p_tensor)
+{
+	if (_rank == 2)
+	{
+		if (p_tensor->_rank == 1 && _size >= _end + p_tensor->_size && p_tensor->_shape[0] == _shape[1])
+		{
+			memcpy((_arr + _end), p_tensor->_arr, sizeof(float) * p_tensor->_size);
+			_end += p_tensor->_size;
+		}
+		else if (p_tensor->_rank == 2 && _size >= _end + p_tensor->_size && p_tensor->_shape[1] == _shape[1])
+		{
+			memcpy((_arr + _end), p_tensor->_arr, sizeof(float) * p_tensor->_size);
+			_end += p_tensor->_size;
+		}
+		else
+		{
+			assert(("Invalid shape or size", 0));
+		}
+	}
+	else
+	{
+		assert(("Invalid shape", 0));
+	}
+	
+}
+
+void Tensor::insert_column(Tensor* p_tensor)
+{
+	if (_rank == 2)
+	{
+		if (p_tensor->_rank == 1 && _size >= _end + p_tensor->_size && p_tensor->_shape[0] == _shape[0])
+		{
+			const int row_end = _end / _shape[0];
+
+			for (int i = 0; i < p_tensor->_shape[0]; i++)
+			{
+				_arr[row_end + i * _shape[1]] = p_tensor->_arr[i];
+			}
+			_end = (row_end + 1) * _shape[0];
+		}
+		else if (p_tensor->_rank == 2 && _size >= _end + p_tensor->_size && p_tensor->_shape[0] == _shape[0])
+		{
+			const int row_end = _end / _shape[0];
+
+			for(int i = 0; i < p_tensor->_shape[0]; i++)
+			{
+				memcpy((_arr + row_end + i * _shape[1]), p_tensor->_arr + i * p_tensor->_shape[1], sizeof(float) * p_tensor->_shape[1]);
+			}
+			_end = (row_end + p_tensor->_shape[1]) * _shape[0];
+		}
+		else
+		{
+			assert(("Invalid shape or size", 0));
+		}
+	}
+	else
+	{
+		assert(("Invalid shape", 0));
+	}
+}
+
 void Tensor::splice(const int p_start, Tensor* p_output) const
 {
 	if (_rank == 1)
@@ -999,16 +1060,25 @@ bool Tensor::has_NaN_Inf() const
 void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_y, const int p_x, const int p_h, const int p_w)
 {
 #ifdef _DEBUG
+	if (p_source->_shape[0] < p_y + p_h)
+	{
+		assert(("Invalid shape", 0));
+	}
+	if (p_source->_shape[1] < p_x + p_w)
+	{
+		assert(("Invalid shape", 0));
+	}
 	if (p_dest->_size != p_h * p_w)
 	{
 		assert(("Invalid size", 0));
 	}
 #endif
 
+	int index = p_y * p_source->_shape[1] + p_x;
 	for(int i = 0; i < p_h; i++)
-	{
-		const int index = (p_y + i) * p_source->_shape[1] + p_x;
+	{		
 		memcpy(p_dest->_arr + (i * p_w), p_source->_arr + index, sizeof(float) * p_w);
+		index += p_source->_shape[1];
 	}
 }
 

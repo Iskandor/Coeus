@@ -95,6 +95,9 @@ public:
 
 	void push_back(Tensor* p_tensor);
 	void push_back(float p_value);
+	void insert_row(Tensor* p_tensor);
+	void insert_column(Tensor* p_tensor);
+	
 	void splice(int p_start, Tensor* p_output) const;
 	void reset_index();
 	static Tensor*	concat(vector<Tensor*> &p_input);

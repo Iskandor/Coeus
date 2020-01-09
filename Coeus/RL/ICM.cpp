@@ -1,6 +1,7 @@
 #include "ICM.h"
 #include "Encoder.h"
 #include "RuleFactory.h"
+#include "NeuronOperator.h"
 
 using namespace Coeus;
 
@@ -28,7 +29,10 @@ ICM::ICM(NeuralNetwork* p_forward_model, NeuralNetwork* p_inverse_model, NeuralN
 
 	_fm_input = nullptr;
 	_im_input = nullptr;
-	_target = nullptr;
+	_fm_target = nullptr;
+	_im_target = nullptr;
+	_h_input_s0 = nullptr;
+	_h_input_s1 = nullptr;
 }
 
 ICM::~ICM()
@@ -36,7 +40,10 @@ ICM::~ICM()
 	delete _buffer;
 	delete _fm_input;
 	delete _im_input;
-	delete _target;
+	delete _fm_target;
+	delete _im_target;
+	delete _h_input_s0;
+	delete _h_input_s1;
 }
 
 void ICM::activate(Tensor* p_state0, Tensor* p_action, Tensor* p_state1, bool p_inverse_model)
@@ -86,8 +93,6 @@ float ICM::train(Tensor* p_state0, Tensor* p_action, Tensor* p_state1) {
 
 	_fm_gradient->calc_gradient(&fm_loss);
 	_im_gradient->calc_gradient(&im_loss);
-
-
 	_head->activate(p_state0);
 	
 	Tensor h_loss = _fm_gradient->get_input_gradient(1, 0, _head->get_output_dim());
@@ -128,35 +133,80 @@ float ICM::train(const int p_sample)
 {
 	float error = 0;
 
-	/*
 	if (_buffer->get_size() >= p_sample) {
-
-		if (_input == nullptr || _input->shape(0) != p_sample)
-		{
-			delete _input;
-			_input = new Tensor({ p_sample, _forward_model->get_input_dim() }, Tensor::ZERO);
-		}
-		if (_target == nullptr || _target->shape(0) != p_sample)
-		{
-			delete _target;
-			_target = new Tensor({ p_sample, _forward_model->get_output_dim() }, Tensor::ZERO);
-		}
+		_fm_input = NeuronOperator::init_auxiliary_parameter(_fm_input, p_sample, _forward_model->get_input_dim());
+		_im_input = NeuronOperator::init_auxiliary_parameter(_im_input, p_sample, _inverse_model->get_input_dim());
+		_fm_target = NeuronOperator::init_auxiliary_parameter(_fm_target, p_sample, _forward_model->get_output_dim());
+		_im_target = NeuronOperator::init_auxiliary_parameter(_im_target, p_sample, _inverse_model->get_output_dim());
+		_h_input_s0 = NeuronOperator::init_auxiliary_parameter(_h_input_s0, p_sample, _head->get_input_dim());
+		_h_input_s1 = NeuronOperator::init_auxiliary_parameter(_h_input_s1, p_sample, _head->get_input_dim());
 
 		vector<TransitionItem*>* sample = _buffer->get_sample(p_sample);
 
-		_input->reset_index();
-		_target->reset_index();
+		_fm_target->reset_index();
+		_im_target->reset_index();
+		_h_input_s0->reset_index();
+		_h_input_s1->reset_index();
 
-		for (auto& i : *sample)
+		for (auto& s : *sample)
 		{
-			_input->push_back(&i->a);
-			_input->push_back(&i->s0);
-			_target->push_back(&i->s1);
+			//cout << s->s0 << ":" << s->a << endl;
+			_h_input_s0->insert_row(&s->s0);
+			_h_input_s1->insert_row(&s->s1);
+			_fm_target->insert_row(&s->s1);
+			_im_target->insert_row(&s->a);
 		}
+		//cout << endl;
 
-		error = _forward_algorithm->train(_input, _target);
+		_head->activate(_h_input_s0);
+
+		_fm_input->reset_index();
+		_fm_input->insert_column(_head->get_output());
+		_fm_input->insert_column(_im_target);
+
+		_forward_model->activate(_fm_input);
+
+		_im_input->reset_index();
+		_im_input->insert_column(_head->get_output());
+		_head->activate(_h_input_s1);
+		_im_input->insert_column(_head->get_output());
+
+		_inverse_model->activate(_im_input);
+
+		QuadraticCost L;
+		Gradient hg;
+
+		Tensor fm_loss = L.cost_deriv(_forward_model->get_output(), _fm_target);
+		error += L.cost(_forward_model->get_output(), _fm_target);
+		Tensor im_loss = L.cost_deriv(_inverse_model->get_output(), _im_target);
+		error += L.cost(_inverse_model->get_output(), _im_target);
+
+		_fm_gradient->calc_gradient(&fm_loss);
+		_im_gradient->calc_gradient(&im_loss);
+		_head->activate(_h_input_s0);
+
+		Tensor h_loss = _fm_gradient->get_input_gradient(p_sample, 0, _head->get_output_dim());
+		_h_gradient->calc_gradient(&h_loss);
+		hg = _h_gradient->get_gradient();
+
+		h_loss = _im_gradient->get_input_gradient(p_sample, 0, _head->get_output_dim());
+		_h_gradient->calc_gradient(&h_loss);
+		hg += _h_gradient->get_gradient();
+
+		_head->activate(_h_input_s1);
+
+		h_loss = _im_gradient->get_input_gradient(p_sample, _head->get_output_dim(), _head->get_output_dim());
+		_h_gradient->calc_gradient(&h_loss);
+		hg += _h_gradient->get_gradient();
+
+		_fm_rule->calc_update(_fm_gradient->get_gradient());
+		_im_rule->calc_update(_im_gradient->get_gradient());
+		_h_rule->calc_update(hg);
+
+		_forward_model->update(_fm_rule->get_update());
+		_inverse_model->update(_im_rule->get_update());
+		_head->update(_h_rule->get_update());
 	}
-	*/
 
 	return error;
 }

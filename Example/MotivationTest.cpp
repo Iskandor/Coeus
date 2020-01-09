@@ -41,7 +41,7 @@ MotivationTest::~MotivationTest()
 
 void MotivationTest::test1(const int p_episodes)
 {
-	const int hidden = 64;
+	const int hidden = 128;
 	const float limit = 0.01f;
 
 	NeuralNetwork network_critic;
@@ -64,29 +64,29 @@ void MotivationTest::test1(const int p_episodes)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	const ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f);
+	const ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-3f);
 
 	NeuralNetwork network_head;
 
-	network_head.add_layer(new CoreLayer("hidden0", hidden * 4, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze.STATE_DIM()));
-	network_head.add_layer(new CoreLayer("hidden1", hidden * 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_head.add_layer(new CoreLayer("hidden0", hidden * 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze.STATE_DIM()));
+	network_head.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	// feed-forward connections	
 	network_head.add_connection("hidden0", "hidden1");
 	network_head.init();
 
 	NeuralNetwork network_forward_model;
-	network_forward_model.add_layer(new CoreLayer("fm_input", hidden * 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_head.get_output_dim() + _maze.ACTION_DIM()));
+	network_forward_model.add_layer(new CoreLayer("fm_input", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_head.get_output_dim() + _maze.ACTION_DIM()));
 	network_forward_model.add_layer(new CoreLayer("fm_output", _maze.STATE_DIM(), SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	network_forward_model.add_connection("fm_input", "fm_output");
 	network_forward_model.init();
 	
 	NeuralNetwork network_inverse_model;
-	network_inverse_model.add_layer(new CoreLayer("im_input", hidden * 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_head.get_output_dim() + network_head.get_output_dim()));
+	network_inverse_model.add_layer(new CoreLayer("im_input", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_head.get_output_dim() + network_head.get_output_dim()));
 	network_inverse_model.add_layer(new CoreLayer("im_output", _maze.ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	network_inverse_model.add_connection("im_input", "im_output");
 	network_inverse_model.init();
 
-	ICM icm(&network_forward_model, &network_inverse_model, &network_head, RADAM_RULE, 1e-3f);
+	ICM icm(&network_forward_model, &network_inverse_model, &network_head, RADAM_RULE, 1e-4f, 1e5);
 	
 	train_icm(icm);
 	system("pause");
@@ -120,9 +120,9 @@ void MotivationTest::test1(const int p_episodes)
 			const float re = _maze.get_reward();
 			const float reward = re + ri;
 			agent.train(&state0, &action, &state1, reward, _maze.is_finished());
-			icm.train(&state0, &action, &state1);
-			//icm.add(&state0, &action, &state1);
-			//icm.train(64);
+			//icm.train(&state0, &action, &state1);
+			icm.add(&state0, &action, &state1);
+			icm.train(64);
 
 			state0.override(&state1);
 			step++;
@@ -168,15 +168,17 @@ void MotivationTest::train_icm(ICM& p_icm)
 		float error = 0;
 		for(int j = 0; j < 25; j++)
 		{
-			Encoder::one_hot(s0, RandomGenerator::get_instance().random(0, _maze.STATE_DIM()));
-			Encoder::one_hot(a, RandomGenerator::get_instance().random(0, _maze.ACTION_DIM()));
+			int is0 = RandomGenerator::get_instance().random(0, _maze.STATE_DIM() - 1);
+			int ia = RandomGenerator::get_instance().random(0, _maze.ACTION_DIM() - 1);			
+			Encoder::one_hot(s0, is0);
+			Encoder::one_hot(a, ia);			
 			_maze.set_state(s0);
 			_maze.do_action(a);
 			s1 = _maze.get_state();
 
-			//p_icm.add(&s0, &a, &s1);
-			error += p_icm.train(&s0, &a, &s1);
-			//error += p_icm.train(64);
+			p_icm.add(&s0, &a, &s1);
+			//error += p_icm.train(&s0, &a, &s1);
+			error += p_icm.train(64);
 		}
 
 		printf("Episode %i error %1.6f\n", i, error);
