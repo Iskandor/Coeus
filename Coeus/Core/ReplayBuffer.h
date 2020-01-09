@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 #include <vector>
 #include "RandomGenerator.h"
 
@@ -36,10 +37,10 @@ namespace Coeus {
 				if (size > _buffer.size()) size = _buffer.size();
 
 				vector<int> index = RandomGenerator::get_instance().choice(_buffer.size(), size);
-				random_shuffle(index.begin(), index.end());
+				shuffle(index.begin(), index.end(), std::mt19937(std::random_device()()));
 
 				for (int i = 0; i < index.size(); i++) {
-					_sample.push_back(_buffer[i]);
+					_sample.push_back(_buffer[index[i]]);
 				}
 
 				return &_sample;
