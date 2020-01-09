@@ -82,8 +82,8 @@ void A3C::train(int p_t_max, int p_T_max)
 				Tensor loss({ 1 }, Tensor::VALUE, Vs0 - R);
 				_critic_gradient_array[i]->calc_gradient(&loss);
 
-				const Gradient actor_d_gradient = _policy_gradient[i]->get_gradient(&_sample_buffer[i][roll].s0, _sample_buffer[i][roll].a.max_value_index(), R);
-				const Gradient critic_d_gradient = _critic_gradient_array[i]->get_gradient();
+				const Gradient& actor_d_gradient = _policy_gradient[i]->get_gradient(&_sample_buffer[i][roll].s0, _sample_buffer[i][roll].a.max_value_index(), R);
+				const Gradient& critic_d_gradient = _critic_gradient_array[i]->get_gradient();
 
 				_actor_d_gradient_array[i] += actor_d_gradient;
 				_critic_d_gradient_array[i] += critic_d_gradient;
