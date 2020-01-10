@@ -84,10 +84,11 @@ void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const fl
 		_update_rule_critic->calc_update(_network_critic_gradient->get_gradient());
 
 		_network_critic->activate(_critic_input2);
-		_network_critic_gradient->calc_gradient();
+		critic_loss.fill(-1);
+		_network_critic_gradient->calc_gradient(&critic_loss);
 		_network_actor->activate(_actor_input);
 		
-		Tensor actor_loss = -_network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
+		Tensor actor_loss = _network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
 		//Tensor actor_loss = -(*_network_critic->get_output());
 		
 		_network_actor_gradient->calc_gradient(&actor_loss);
