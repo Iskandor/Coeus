@@ -22,6 +22,7 @@ namespace Coeus
 		NeuralNetwork*		_network_critic;
 		NaturalGradient*	_actor_natural_gradient;
 		IUpdateRule*		_rule_critic;
+		IUpdateRule*		_rule_actor;
 
 		PolicyGradient*	_actor;
 		GAE*			_critic;

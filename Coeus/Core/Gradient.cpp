@@ -37,6 +37,20 @@ void Gradient::fill(const float p_value)
 	}
 }
 
+bool Gradient::is_invalid()
+{
+	bool result = false;
+	for (auto& it : _buffer)
+	{
+		if (it.second.has_NaN_Inf())
+		{
+			result = true;
+		}
+	}
+
+	return result;
+}
+
 Tensor& Gradient::operator[](const string& p_id)
 {
 	return _buffer[p_id];
