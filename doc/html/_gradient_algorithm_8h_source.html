@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/GradientAlgorithm.h Source File</title>
+<title>Coeus: Coeus/Core/GradientAlgorithm.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,36 +91,36 @@ $(document).ready(function(){initNavTree('_gradient_algorithm_8h_source.html',''
 <div class="title">GradientAlgorithm.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_gradient_algorithm_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_neural_network_8h.html">NeuralNetwork.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_cost_function_8h.html">ICostFunction.h</a>&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_network_gradient_8h.html">NetworkGradient.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_update_rule_8h.html">IUpdateRule.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;NeuralNetwork.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;ICostFunction.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;NetworkGradient.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;IUpdateRule.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a> {</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>Coeus {</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gradient_algorithm.html">    9</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html">GradientAlgorithm</a></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="class_coeus_1_1_gradient_algorithm.html#a11295c9f7858ab27005b3da845daf289">GradientAlgorithm</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html#a9460caaa389360b32c3261fc15a5f1c6">~GradientAlgorithm</a>();</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="class_coeus_1_1_gradient_algorithm.html">GradientAlgorithm</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="class_coeus_1_1_gradient_algorithm.html">GradientAlgorithm</a>();</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html#acd3031d6810ec8b16c3c3f0b88ce9b49">train</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_target);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html#acd3031d6810ec8b16c3c3f0b88ce9b49">train</a>(vector&lt;Tensor*&gt;* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_target);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html#acd3031d6810ec8b16c3c3f0b88ce9b49">train</a>(vector&lt;Tensor*&gt;* p_input, vector&lt;Tensor*&gt;* p_target, <span class="keywordtype">bool</span> p_update = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html#ab07844e15f17dbfdde754b662a20f816">reset</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html#acea6de3f752cb2253fa71bb509201cde">set_recurrent_mode</a>(<a class="code" href="namespace_coeus.html#a001fd6d688e447bc506446edc3a3bb03">RECURRENT_MODE</a> p_value);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> train(<a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_target);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> train(vector&lt;Tensor*&gt;* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_target);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> train(vector&lt;Tensor*&gt;* p_input, vector&lt;Tensor*&gt;* p_target, <span class="keywordtype">bool</span> p_update = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> reset() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordtype">void</span> set_recurrent_mode(RECURRENT_MODE p_value);</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_gradient_algorithm.html#ad7ddc784132bf1f84cb452777dcc4a7b">init</a>(<a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>* p_cost_function, <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>* p_update_rule);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> init(<a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>* p_cost_function, <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>* p_update_rule);</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gradient_algorithm.html#a33ba2a7fe99afcee8add6c0f2df1cb7b">   25</a></span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>*      <a class="code" href="class_coeus_1_1_gradient_algorithm.html#a33ba2a7fe99afcee8add6c0f2df1cb7b">_network</a>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gradient_algorithm.html#aa0f3b36b68f14c47e19578f9bd24ac1f">   26</a></span>&#160;        <a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>*      <a class="code" href="class_coeus_1_1_gradient_algorithm.html#aa0f3b36b68f14c47e19578f9bd24ac1f">_cost_function</a>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gradient_algorithm.html#a4d0047a22d0eb63dc543e86da359be27">   27</a></span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*        <a class="code" href="class_coeus_1_1_gradient_algorithm.html#a4d0047a22d0eb63dc543e86da359be27">_update_rule</a>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gradient_algorithm.html#abb065ad6e692b49e72d86490a38bd811">   28</a></span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>*    <a class="code" href="class_coeus_1_1_gradient_algorithm.html#abb065ad6e692b49e72d86490a38bd811">_network_gradient</a>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gradient_algorithm.html#a0c9f09001d967e8344a4a30d51dfc4c8">   29</a></span>&#160;        <a class="code" href="class_coeus_1_1_gradient.html">Gradient</a>            <a class="code" href="class_coeus_1_1_gradient_algorithm.html#a0c9f09001d967e8344a4a30d51dfc4c8">_batch_gradient</a>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gradient_algorithm.html#ab41c7b38689bddbf370fdcf42810040d">   30</a></span>&#160;        <a class="code" href="namespace_coeus.html#a001fd6d688e447bc506446edc3a3bb03">RECURRENT_MODE</a>      <a class="code" href="class_coeus_1_1_gradient_algorithm.html#ab41c7b38689bddbf370fdcf42810040d">_recurrent_mode</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>*      _network;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>*      _cost_function;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*        _update_rule;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>*    _network_gradient;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="class_coeus_1_1_gradient.html">Gradient</a>            _batch_gradient;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        RECURRENT_MODE      _recurrent_mode;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    };</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
@@ -127,33 +128,15 @@ $(document).ready(function(){initNavTree('_gradient_algorithm_8h_source.html',''
 </div><!-- doc-content -->
 <div class="ttc" id="aclass_coeus_1_1_network_gradient_html"><div class="ttname"><a href="class_coeus_1_1_network_gradient.html">Coeus::NetworkGradient</a></div><div class="ttdef"><b>Definition:</b> NetworkGradient.h:9</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_update_rule_html"><div class="ttname"><a href="class_coeus_1_1_i_update_rule.html">Coeus::IUpdateRule</a></div><div class="ttdef"><b>Definition:</b> IUpdateRule.h:11</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_a11295c9f7858ab27005b3da845daf289"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#a11295c9f7858ab27005b3da845daf289">Coeus::GradientAlgorithm::GradientAlgorithm</a></div><div class="ttdeci">GradientAlgorithm(NeuralNetwork *p_network)</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.cpp:8</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_cost_function_html"><div class="ttname"><a href="class_coeus_1_1_i_cost_function.html">Coeus::ICostFunction</a></div><div class="ttdef"><b>Definition:</b> ICostFunction.h:7</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_acd3031d6810ec8b16c3c3f0b88ce9b49"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#acd3031d6810ec8b16c3c3f0b88ce9b49">Coeus::GradientAlgorithm::train</a></div><div class="ttdeci">virtual float train(Tensor *p_input, Tensor *p_target)</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.cpp:27</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_ad7ddc784132bf1f84cb452777dcc4a7b"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#ad7ddc784132bf1f84cb452777dcc4a7b">Coeus::GradientAlgorithm::init</a></div><div class="ttdeci">void init(ICostFunction *p_cost_function, IUpdateRule *p_update_rule)</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.cpp:112</div></div>
-<div class="ttc" id="a_neural_network_8h_html"><div class="ttname"><a href="_neural_network_8h.html">NeuralNetwork.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_acea6de3f752cb2253fa71bb509201cde"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#acea6de3f752cb2253fa71bb509201cde">Coeus::GradientAlgorithm::set_recurrent_mode</a></div><div class="ttdeci">void set_recurrent_mode(RECURRENT_MODE p_value)</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.cpp:107</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_ab41c7b38689bddbf370fdcf42810040d"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#ab41c7b38689bddbf370fdcf42810040d">Coeus::GradientAlgorithm::_recurrent_mode</a></div><div class="ttdeci">RECURRENT_MODE _recurrent_mode</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.h:30</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_aa0f3b36b68f14c47e19578f9bd24ac1f"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#aa0f3b36b68f14c47e19578f9bd24ac1f">Coeus::GradientAlgorithm::_cost_function</a></div><div class="ttdeci">ICostFunction * _cost_function</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.h:26</div></div>
-<div class="ttc" id="anamespace_coeus_html_a001fd6d688e447bc506446edc3a3bb03"><div class="ttname"><a href="namespace_coeus.html#a001fd6d688e447bc506446edc3a3bb03">Coeus::RECURRENT_MODE</a></div><div class="ttdeci">RECURRENT_MODE</div><div class="ttdef"><b>Definition:</b> Coeus.h:38</div></div>
-<div class="ttc" id="a_i_update_rule_8h_html"><div class="ttname"><a href="_i_update_rule_8h.html">IUpdateRule.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_a33ba2a7fe99afcee8add6c0f2df1cb7b"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#a33ba2a7fe99afcee8add6c0f2df1cb7b">Coeus::GradientAlgorithm::_network</a></div><div class="ttdeci">NeuralNetwork * _network</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.h:25</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_a4d0047a22d0eb63dc543e86da359be27"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#a4d0047a22d0eb63dc543e86da359be27">Coeus::GradientAlgorithm::_update_rule</a></div><div class="ttdeci">IUpdateRule * _update_rule</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.h:27</div></div>
 <div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html">Coeus::GradientAlgorithm</a></div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.h:9</div></div>
 <div class="ttc" id="aclass_coeus_1_1_neural_network_html"><div class="ttname"><a href="class_coeus_1_1_neural_network.html">Coeus::NeuralNetwork</a></div><div class="ttdef"><b>Definition:</b> NeuralNetwork.h:12</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_a0c9f09001d967e8344a4a30d51dfc4c8"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#a0c9f09001d967e8344a4a30d51dfc4c8">Coeus::GradientAlgorithm::_batch_gradient</a></div><div class="ttdeci">Gradient _batch_gradient</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.h:29</div></div>
-<div class="ttc" id="a_i_cost_function_8h_html"><div class="ttname"><a href="_i_cost_function_8h.html">ICostFunction.h</a></div></div>
-<div class="ttc" id="a_network_gradient_8h_html"><div class="ttname"><a href="_network_gradient_8h.html">NetworkGradient.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_abb065ad6e692b49e72d86490a38bd811"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#abb065ad6e692b49e72d86490a38bd811">Coeus::GradientAlgorithm::_network_gradient</a></div><div class="ttdeci">NetworkGradient * _network_gradient</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.h:28</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_a9460caaa389360b32c3261fc15a5f1c6"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#a9460caaa389360b32c3261fc15a5f1c6">Coeus::GradientAlgorithm::~GradientAlgorithm</a></div><div class="ttdeci">virtual ~GradientAlgorithm()</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.cpp:20</div></div>
 <div class="ttc" id="aclass_coeus_1_1_gradient_html"><div class="ttname"><a href="class_coeus_1_1_gradient.html">Coeus::Gradient</a></div><div class="ttdef"><b>Definition:</b> Gradient.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gradient_algorithm_html_ab07844e15f17dbfdde754b662a20f816"><div class="ttname"><a href="class_coeus_1_1_gradient_algorithm.html#ab07844e15f17dbfdde754b662a20f816">Coeus::GradientAlgorithm::reset</a></div><div class="ttdeci">void reset() const</div><div class="ttdef"><b>Definition:</b> GradientAlgorithm.cpp:102</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_gradient_algorithm_8h.html">GradientAlgorithm.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>GradientAlgorithm.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

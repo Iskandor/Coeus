@@ -15,7 +15,7 @@ public:
 	virtual ~DDPG();
 
 	void train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p_reward, bool p_final) const;
-	Tensor get_action(Tensor* p_state, float p_sigma);
+	Tensor get_action(Tensor* p_state, float p_sigma) const;
 
 private:	
 	float calc_max_qa(Tensor* p_state) const;

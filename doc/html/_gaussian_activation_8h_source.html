@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/GaussianActivation.h Source File</title>
+<title>Coeus: Coeus/Core/GaussianActivation.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,21 +91,21 @@ $(document).ready(function(){initNavTree('_gaussian_activation_8h_source.html','
 <div class="title">GaussianActivation.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_gaussian_activation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_activation_function_8h.html">IActivationFunction.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;IActivationFunction.h&quot;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
 <div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_coeus_1_1_gaussian_activation.html">    6</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_gaussian_activation.html">GaussianActivation</a> : <span class="keyword">public</span> <a class="code" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    {</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_coeus_1_1_gaussian_activation.html#ad10ee7b5129e235b4bd458545094fc65">GaussianActivation</a>(<span class="keywordtype">float</span> p_sigma);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_gaussian_activation.html#ae7e9a88faaa4d04cabc6423456369dce">~GaussianActivation</a>();</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* <a class="code" href="class_coeus_1_1_gaussian_activation.html#afd835047af867ca87da72a4fcf4c48c3">backward</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_x = <span class="keyword">nullptr</span>) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* <a class="code" href="class_coeus_1_1_gaussian_activation.html#a5691666e17b3d9edf123f71110255b7c">forward</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_input) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="class_coeus_1_1_gaussian_activation.html#ac4da4f9a14e2fc749c115a4c2ddc9cc2">derivative</a>(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_input) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_coeus_1_1_gaussian_activation.html">GaussianActivation</a>(<span class="keywordtype">float</span> p_sigma);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        ~<a class="code" href="class_coeus_1_1_gaussian_activation.html">GaussianActivation</a>();</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* backward(<a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_x = <span class="keyword">nullptr</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* forward(<a class="code" href="class_tensor.html">Tensor</a>* p_input) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> derivative(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_input) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <a class="code" href="classnlohmann_1_1basic__json.html">json</a> <a class="code" href="class_coeus_1_1_gaussian_activation.html#a678857c8a1a6781a601b015f1b85a4fb">get_json</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        json get_json() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">float</span> _sigma;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    };</div>
@@ -113,22 +114,13 @@ $(document).ready(function(){initNavTree('_gaussian_activation_8h_source.html','
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_gaussian_activation_html_afd835047af867ca87da72a4fcf4c48c3"><div class="ttname"><a href="class_coeus_1_1_gaussian_activation.html#afd835047af867ca87da72a4fcf4c48c3">Coeus::GaussianActivation::backward</a></div><div class="ttdeci">Tensor * backward(Tensor *p_input, Tensor *p_x=nullptr) override</div><div class="ttdef"><b>Definition:</b> GaussianActivation.cpp:14</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gaussian_activation_html_a5691666e17b3d9edf123f71110255b7c"><div class="ttname"><a href="class_coeus_1_1_gaussian_activation.html#a5691666e17b3d9edf123f71110255b7c">Coeus::GaussianActivation::forward</a></div><div class="ttdeci">Tensor * forward(Tensor *p_input) override</div><div class="ttdef"><b>Definition:</b> GaussianActivation.cpp:19</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gaussian_activation_html_ae7e9a88faaa4d04cabc6423456369dce"><div class="ttname"><a href="class_coeus_1_1_gaussian_activation.html#ae7e9a88faaa4d04cabc6423456369dce">Coeus::GaussianActivation::~GaussianActivation</a></div><div class="ttdeci">~GaussianActivation()</div><div class="ttdef"><b>Definition:</b> GaussianActivation.cpp:10</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="a_i_activation_function_8h_html"><div class="ttname"><a href="_i_activation_function_8h.html">IActivationFunction.h</a></div></div>
-<div class="ttc" id="aclassnlohmann_1_1basic__json_html"><div class="ttname"><a href="classnlohmann_1_1basic__json.html">nlohmann::basic_json</a></div><div class="ttdoc">a class to store JSON values</div><div class="ttdef"><b>Definition:</b> json.hpp:187</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_activation_function_html"><div class="ttname"><a href="class_coeus_1_1_i_activation_function.html">Coeus::IActivationFunction</a></div><div class="ttdef"><b>Definition:</b> IActivationFunction.h:11</div></div>
 <div class="ttc" id="aclass_coeus_1_1_gaussian_activation_html"><div class="ttname"><a href="class_coeus_1_1_gaussian_activation.html">Coeus::GaussianActivation</a></div><div class="ttdef"><b>Definition:</b> GaussianActivation.h:6</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gaussian_activation_html_ad10ee7b5129e235b4bd458545094fc65"><div class="ttname"><a href="class_coeus_1_1_gaussian_activation.html#ad10ee7b5129e235b4bd458545094fc65">Coeus::GaussianActivation::GaussianActivation</a></div><div class="ttdeci">GaussianActivation(float p_sigma)</div><div class="ttdef"><b>Definition:</b> GaussianActivation.cpp:7</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gaussian_activation_html_ac4da4f9a14e2fc749c115a4c2ddc9cc2"><div class="ttname"><a href="class_coeus_1_1_gaussian_activation.html#ac4da4f9a14e2fc749c115a4c2ddc9cc2">Coeus::GaussianActivation::derivative</a></div><div class="ttdeci">Tensor derivative(Tensor &amp;p_input) override</div><div class="ttdef"><b>Definition:</b> GaussianActivation.cpp:32</div></div>
-<div class="ttc" id="aclass_coeus_1_1_gaussian_activation_html_a678857c8a1a6781a601b015f1b85a4fb"><div class="ttname"><a href="class_coeus_1_1_gaussian_activation.html#a678857c8a1a6781a601b015f1b85a4fb">Coeus::GaussianActivation::get_json</a></div><div class="ttdeci">json get_json() override</div><div class="ttdef"><b>Definition:</b> GaussianActivation.cpp:37</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_gaussian_activation_8h.html">GaussianActivation.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>GaussianActivation.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

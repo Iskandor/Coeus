@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -94,8 +95,6 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_i_update_rule.html',''
 <div class="title">Coeus::IUpdateRule Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_i_update_rule_8h_source.html">IUpdateRule.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Coeus::IUpdateRule:</div>
 <div class="dyncontent">
@@ -117,249 +116,41 @@ Inheritance diagram for Coeus::IUpdateRule:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afb15a8b6e4572662338aed1edd6ceb7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#afb15a8b6e4572662338aed1edd6ceb7b">IUpdateRule</a> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model, float p_alpha)</td></tr>
+<tr class="memitem:afb15a8b6e4572662338aed1edd6ceb7b"><td class="memItemLeft" align="right" valign="top"><a id="afb15a8b6e4572662338aed1edd6ceb7b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>IUpdateRule</b> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model, float p_alpha)</td></tr>
 <tr class="separator:afb15a8b6e4572662338aed1edd6ceb7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad61a3d27b62070ba3a90ca4ed6323dcc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#ad61a3d27b62070ba3a90ca4ed6323dcc">~IUpdateRule</a> ()</td></tr>
-<tr class="separator:ad61a3d27b62070ba3a90ca4ed6323dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b8bf9f5c1b59bd278bbb3c38cec6180"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#a3b8bf9f5c1b59bd278bbb3c38cec6180">calc_update</a> (<a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> &amp;p_gradient, float p_alpha=0)</td></tr>
+<tr class="memitem:a3b8bf9f5c1b59bd278bbb3c38cec6180"><td class="memItemLeft" align="right" valign="top"><a id="a3b8bf9f5c1b59bd278bbb3c38cec6180"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>calc_update</b> (<a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> &amp;p_gradient, float p_alpha=0)</td></tr>
 <tr class="separator:a3b8bf9f5c1b59bd278bbb3c38cec6180"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1c257a55411eef78e839573a96a2112"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#ad1c257a55411eef78e839573a96a2112">clone</a> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)=0</td></tr>
+<tr class="memitem:ad1c257a55411eef78e839573a96a2112"><td class="memItemLeft" align="right" valign="top"><a id="ad1c257a55411eef78e839573a96a2112"></a>
+virtual <a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>clone</b> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)=0</td></tr>
 <tr class="separator:ad1c257a55411eef78e839573a96a2112"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83d30b9f828100567bc4b6346a66b476"><td class="memItemLeft" align="right" valign="top">map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#a83d30b9f828100567bc4b6346a66b476">get_update</a> ()</td></tr>
+<tr class="memitem:a83d30b9f828100567bc4b6346a66b476"><td class="memItemLeft" align="right" valign="top"><a id="a83d30b9f828100567bc4b6346a66b476"></a>
+map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>get_update</b> ()</td></tr>
 <tr class="separator:a83d30b9f828100567bc4b6346a66b476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a048a86efffda66edaaef6f602e8d0118"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#a048a86efffda66edaaef6f602e8d0118">_alpha</a></td></tr>
+<tr class="memitem:a048a86efffda66edaaef6f602e8d0118"><td class="memItemLeft" align="right" valign="top"><a id="a048a86efffda66edaaef6f602e8d0118"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>_alpha</b></td></tr>
 <tr class="separator:a048a86efffda66edaaef6f602e8d0118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade5a474f553d4498f30bcf64965bbf66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#ade5a474f553d4498f30bcf64965bbf66">_model</a></td></tr>
+<tr class="memitem:ade5a474f553d4498f30bcf64965bbf66"><td class="memItemLeft" align="right" valign="top"><a id="ade5a474f553d4498f30bcf64965bbf66"></a>
+<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_model</b></td></tr>
 <tr class="separator:ade5a474f553d4498f30bcf64965bbf66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b527d494a602c8cf8c06f89b840d87d"><td class="memItemLeft" align="right" valign="top">map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_update_rule.html#a7b527d494a602c8cf8c06f89b840d87d">_update</a></td></tr>
+<tr class="memitem:a7b527d494a602c8cf8c06f89b840d87d"><td class="memItemLeft" align="right" valign="top"><a id="a7b527d494a602c8cf8c06f89b840d87d"></a>
+map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_update</b></td></tr>
 <tr class="separator:a7b527d494a602c8cf8c06f89b840d87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="afb15a8b6e4572662338aed1edd6ceb7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb15a8b6e4572662338aed1edd6ceb7b">&#9670;&nbsp;</a></span>IUpdateRule()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">IUpdateRule::IUpdateRule </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *&#160;</td>
-          <td class="paramname"><em>p_model</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_alpha</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad61a3d27b62070ba3a90ca4ed6323dcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad61a3d27b62070ba3a90ca4ed6323dcc">&#9670;&nbsp;</a></span>~IUpdateRule()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">IUpdateRule::~IUpdateRule </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3b8bf9f5c1b59bd278bbb3c38cec6180"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b8bf9f5c1b59bd278bbb3c38cec6180">&#9670;&nbsp;</a></span>calc_update()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void IUpdateRule::calc_update </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> &amp;&#160;</td>
-          <td class="paramname"><em>p_gradient</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_alpha</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented in <a class="el" href="class_coeus_1_1_adadelta_rule.html#aab9b3a8fc79425efd71b169c36914cc5">Coeus::AdadeltaRule</a>, <a class="el" href="class_coeus_1_1_a_d_a_m_rule.html#a19b3a5a0b8cccc2b3610090c327bd3e9">Coeus::ADAMRule</a>, <a class="el" href="class_coeus_1_1_r_a_d_a_m_rule.html#a021bad58ea1d28da6457a2a1e41ee441">Coeus::RADAMRule</a>, <a class="el" href="class_coeus_1_1_adagrad_rule.html#a2b0ba0b58c3acc6d7a54e21d58c0d546">Coeus::AdagradRule</a>, <a class="el" href="class_coeus_1_1_ada_max_rule.html#aa36f63cdb19b2d909105b1753f7c2d79">Coeus::AdaMaxRule</a>, <a class="el" href="class_coeus_1_1_a_m_s_grad_rule.html#a547d128d2af625a15272ab869960f67f">Coeus::AMSGradRule</a>, <a class="el" href="class_coeus_1_1_back_prop_rule.html#a200d38be2a2d078605a5a30ae8f7e976">Coeus::BackPropRule</a>, <a class="el" href="class_coeus_1_1_nadam_rule.html#a703864f2675d3c83cf2cd2a00f5ec41e">Coeus::NadamRule</a>, <a class="el" href="class_coeus_1_1_power_sign_rule.html#a48c358c302f83a4a9eb4b7eb853c06e2">Coeus::PowerSignRule</a>, and <a class="el" href="class_coeus_1_1_r_m_s_prop_rule.html#a4564dbc86aec65be5e5b0e076b56cd01">Coeus::RMSPropRule</a>.</p>
-
-</div>
-</div>
-<a id="ad1c257a55411eef78e839573a96a2112"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1c257a55411eef78e839573a96a2112">&#9670;&nbsp;</a></span>clone()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>* Coeus::IUpdateRule::clone </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *&#160;</td>
-          <td class="paramname"><em>p_model</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="class_coeus_1_1_adagrad_rule.html#a97d77872852c04b3a7ef436f6cae7bfc">Coeus::AdagradRule</a>, <a class="el" href="class_coeus_1_1_ada_max_rule.html#a52b7a27c2235a82477f98c7971acc4ec">Coeus::AdaMaxRule</a>, <a class="el" href="class_coeus_1_1_a_m_s_grad_rule.html#aebbb0e10082a7eeb4575c2917f6153e9">Coeus::AMSGradRule</a>, <a class="el" href="class_coeus_1_1_back_prop_rule.html#a5072e7a892340858743de41acc75b8c8">Coeus::BackPropRule</a>, <a class="el" href="class_coeus_1_1_nadam_rule.html#ad2adbaaf9b86405c8cc003f0f3655bcb">Coeus::NadamRule</a>, <a class="el" href="class_coeus_1_1_power_sign_rule.html#a695e0d996c1c109cabc582186cd7df2c">Coeus::PowerSignRule</a>, <a class="el" href="class_coeus_1_1_r_m_s_prop_rule.html#acf6283046e4b9a04141fcdd6854884cb">Coeus::RMSPropRule</a>, <a class="el" href="class_coeus_1_1_a_d_a_m_rule.html#a6df8c53d45dc4031beb5055eab34bd30">Coeus::ADAMRule</a>, <a class="el" href="class_coeus_1_1_r_a_d_a_m_rule.html#aba2a3954671f4e6ec50ca1a45b881547">Coeus::RADAMRule</a>, and <a class="el" href="class_coeus_1_1_adadelta_rule.html#abf7ee94913cc7cffd789eb67b1e29687">Coeus::AdadeltaRule</a>.</p>
-
-</div>
-</div>
-<a id="a83d30b9f828100567bc4b6346a66b476"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83d30b9f828100567bc4b6346a66b476">&#9670;&nbsp;</a></span>get_update()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">map&lt;string, <a class="el" href="class_tensor.html">Tensor</a>&gt;* Coeus::IUpdateRule::get_update </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a048a86efffda66edaaef6f602e8d0118"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a048a86efffda66edaaef6f602e8d0118">&#9670;&nbsp;</a></span>_alpha</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float Coeus::IUpdateRule::_alpha</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ade5a474f553d4498f30bcf64965bbf66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade5a474f553d4498f30bcf64965bbf66">&#9670;&nbsp;</a></span>_model</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a>* Coeus::IUpdateRule::_model</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7b527d494a602c8cf8c06f89b840d87d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b527d494a602c8cf8c06f89b840d87d">&#9670;&nbsp;</a></span>_update</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">map&lt;string, <a class="el" href="class_tensor.html">Tensor</a>&gt; Coeus::IUpdateRule::_update</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/Core/<a class="el" href="_i_update_rule_8h_source.html">IUpdateRule.h</a></li>
-<li>D:/GIT/Coeus/Coeus/Core/<a class="el" href="_i_update_rule_8cpp.html">IUpdateRule.cpp</a></li>
+<li>Coeus/Core/<a class="el" href="_i_update_rule_8h_source.html">IUpdateRule.h</a></li>
+<li>Coeus/Core/IUpdateRule.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

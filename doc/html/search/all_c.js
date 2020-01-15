@@ -1,30 +1,4 @@
 var searchData=
 [
-  ['lecun_5fnormal_466',['LECUN_NORMAL',['../class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53aa119ae4a1658a534a4ee7a5b6efe332f',1,'Coeus::TensorInitializer']]],
-  ['lecun_5funiform_467',['LECUN_UNIFORM',['../class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a71906c92c755435d6fa74661ab2a401a',1,'Coeus::TensorInitializer']]],
-  ['linear_468',['LINEAR',['../namespace_coeus.html#a083460eecdbf89793271b893748cea04a2a92067843f1b7993f603055bad8d249',1,'Coeus']]],
-  ['linearactivation_469',['LinearActivation',['../class_coeus_1_1_linear_activation.html',1,'Coeus::LinearActivation'],['../class_coeus_1_1_linear_activation.html#ac8e61158213eda18ee732627a78b2340',1,'Coeus::LinearActivation::LinearActivation()']]],
-  ['linearactivation_2ecpp_470',['LinearActivation.cpp',['../_linear_activation_8cpp.html',1,'']]],
-  ['linearactivation_2eh_471',['LinearActivation.h',['../_linear_activation_8h.html',1,'']]],
-  ['linearinterpolation_472',['LinearInterpolation',['../class_coeus_1_1_linear_interpolation.html',1,'Coeus::LinearInterpolation'],['../class_coeus_1_1_linear_interpolation.html#a8392c742075ed4fa83882f2286876479',1,'Coeus::LinearInterpolation::LinearInterpolation()']]],
-  ['linearinterpolation_2ecpp_473',['LinearInterpolation.cpp',['../_linear_interpolation_8cpp.html',1,'']]],
-  ['linearinterpolation_2eh_474',['LinearInterpolation.h',['../_linear_interpolation_8h.html',1,'']]],
-  ['load_5fnetwork_475',['load_network',['../class_coeus_1_1_i_o_utils.html#a410294172cd9b68e23977e1e63256594',1,'Coeus::IOUtils']]],
-  ['load_5fparam_476',['load_param',['../class_coeus_1_1_i_o_utils.html#a8b7d77402aae71afc9612abccb1a8cc5',1,'Coeus::IOUtils']]],
-  ['log_477',['log',['../class_coeus_1_1_logger.html#a5d3343019afe263e4a647a44ce49ea1d',1,'Coeus::Logger']]],
-  ['logger_478',['Logger',['../class_coeus_1_1_logger.html',1,'Coeus']]],
-  ['logger_2ecpp_479',['Logger.cpp',['../_logger_8cpp.html',1,'']]],
-  ['logger_2eh_480',['Logger.h',['../_logger_8h.html',1,'']]],
-  ['lookahead_481',['LookAhead',['../class_coeus_1_1_look_ahead.html',1,'Coeus::LookAhead'],['../class_coeus_1_1_look_ahead.html#ab01bdad12ce70cf343a6924cbe589363',1,'Coeus::LookAhead::LookAhead()']]],
-  ['lookahead_2ecpp_482',['LookAhead.cpp',['../_look_ahead_8cpp.html',1,'']]],
-  ['lookahead_2eh_483',['LookAhead.h',['../_look_ahead_8h.html',1,'']]],
-  ['lsom_484',['LSOM',['../class_coeus_1_1_base_layer.html#ab6940f3ccd161ebb1d939c4e3cfe88a7a386d77f2bf3d49030f8bfb02a8f63a8f',1,'Coeus::BaseLayer']]],
-  ['lstm_485',['LSTM',['../class_coeus_1_1_base_layer.html#ab6940f3ccd161ebb1d939c4e3cfe88a7a4517420170864b2f0bfbcd12d83789e4',1,'Coeus::BaseLayer']]],
-  ['lstm_5fdelta_486',['lstm_delta',['../class_i_tensor_operator.html#a714841255ef90e80bb4be7cc19aa0bb0',1,'ITensorOperator::lstm_delta()'],['../class_tensor_operator_m_k_l.html#a147ea7e307eb3e395d93a8a57339d1c0',1,'TensorOperatorMKL::lstm_delta()']]],
-  ['lstm_5fderivative_487',['lstm_derivative',['../class_i_tensor_operator.html#ab4b9e810e6397211df39798afdefdd16',1,'ITensorOperator::lstm_derivative()'],['../class_tensor_operator_m_k_l.html#a7a21665b1d0d00b16942dbbb8a89e896',1,'TensorOperatorMKL::lstm_derivative()']]],
-  ['lstm_5fstate_488',['lstm_state',['../class_i_tensor_operator.html#abe287708563db4bfbe271fa7434189a9',1,'ITensorOperator::lstm_state()'],['../class_tensor_operator_m_k_l.html#a4ae74e8de974c591281d52dc4a595c38',1,'TensorOperatorMKL::lstm_state()']]],
-  ['lstm_5fw_5fgradient_489',['lstm_w_gradient',['../class_i_tensor_operator.html#a946292c0a41ec57e497e62b355375a94',1,'ITensorOperator::lstm_w_gradient()'],['../class_tensor_operator_m_k_l.html#ae511482e91837c961ae6101c2afa4928',1,'TensorOperatorMKL::lstm_w_gradient()']]],
-  ['lstmlayer_490',['LSTMLayer',['../class_coeus_1_1_l_s_t_m_layer.html',1,'Coeus::LSTMLayer'],['../class_coeus_1_1_l_s_t_m_layer.html#ad8311130ad552ca4b3ac30a11e898635',1,'Coeus::LSTMLayer::LSTMLayer(const string &amp;p_id, int p_dim, ACTIVATION p_activation, TensorInitializer *p_initializer, int p_in_dim=0)'],['../class_coeus_1_1_l_s_t_m_layer.html#af0b3f0c9e3902bc704687e41c158058f',1,'Coeus::LSTMLayer::LSTMLayer(json p_data)'],['../class_coeus_1_1_l_s_t_m_layer.html#adf9137566865304be4f93790a0226d22',1,'Coeus::LSTMLayer::LSTMLayer(LSTMLayer &amp;p_copy, bool p_clone)']]],
-  ['lstmlayer_2ecpp_491',['LSTMLayer.cpp',['../_l_s_t_m_layer_8cpp.html',1,'']]],
-  ['lstmlayer_2eh_492',['LSTMLayer.h',['../_l_s_t_m_layer_8h.html',1,'']]]
+  ['openmpbatchmodule_78',['OpenMPBatchModule',['../class_coeus_1_1_open_m_p_batch_module.html',1,'Coeus']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/Encoder.h Source File</title>
+<title>Coeus: Coeus/Core/Encoder.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,21 +91,21 @@ $(document).ready(function(){initNavTree('_encoder_8h_source.html','');});
 <div class="title">Encoder.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_encoder_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tensor_8h.html">Tensor.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;Tensor.h&quot;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a> {</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span>Coeus {</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_coeus_1_1_encoder.html">    6</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_encoder.html">Encoder</a></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    {</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_coeus_1_1_encoder.html#ab5d9324930644abeb150da7a7747ffe3">Encoder</a>();</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_encoder.html#a87cc8067c98c0ab2134dee3822e3b250">~Encoder</a>();</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_coeus_1_1_encoder.html">Encoder</a>();</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        ~<a class="code" href="class_coeus_1_1_encoder.html">Encoder</a>();</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_encoder.html#a538db34fece8795c6377c51ac8912200">one_hot</a>(<span class="keywordtype">int</span>* p_result, <span class="keywordtype">int</span> p_size, <span class="keywordtype">int</span> p_value);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_encoder.html#a538db34fece8795c6377c51ac8912200">one_hot</a>(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_result, <span class="keywordtype">int</span> p_value);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_encoder.html#a979914ca65e4112db1c776e12d33550e">pop_code</a>(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_result, <span class="keywordtype">float</span> p_value, <span class="keywordtype">float</span> p_lower_limit = 0, <span class="keywordtype">float</span> p_upper_limit = 1);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_encoder.html#aaa6085858069277a945ba41505f74124">grey_code</a>(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_result, <a class="code" href="class_tensor.html">Tensor</a>&amp; p_bin);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> one_hot(<span class="keywordtype">int</span>* p_result, <span class="keywordtype">int</span> p_size, <span class="keywordtype">int</span> p_value);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> one_hot(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_result, <span class="keywordtype">int</span> p_value);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> pop_code(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_result, <span class="keywordtype">float</span> p_value, <span class="keywordtype">float</span> p_lower_limit = 0, <span class="keywordtype">float</span> p_upper_limit = 1);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> grey_code(<a class="code" href="class_tensor.html">Tensor</a>&amp; p_result, <a class="code" href="class_tensor.html">Tensor</a>&amp; p_bin);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">int</span> xor_c(<span class="keyword">const</span> <span class="keywordtype">int</span> a, <span class="keyword">const</span> <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a == b ? 0 : 1; }</div>
@@ -113,19 +114,12 @@ $(document).ready(function(){initNavTree('_encoder_8h_source.html','');});
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_encoder_html_ab5d9324930644abeb150da7a7747ffe3"><div class="ttname"><a href="class_coeus_1_1_encoder.html#ab5d9324930644abeb150da7a7747ffe3">Coeus::Encoder::Encoder</a></div><div class="ttdeci">Encoder()</div><div class="ttdef"><b>Definition:</b> Encoder.cpp:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_encoder_html_aaa6085858069277a945ba41505f74124"><div class="ttname"><a href="class_coeus_1_1_encoder.html#aaa6085858069277a945ba41505f74124">Coeus::Encoder::grey_code</a></div><div class="ttdeci">static void grey_code(Tensor &amp;p_result, Tensor &amp;p_bin)</div><div class="ttdef"><b>Definition:</b> Encoder.cpp:57</div></div>
-<div class="ttc" id="aclass_coeus_1_1_encoder_html_a979914ca65e4112db1c776e12d33550e"><div class="ttname"><a href="class_coeus_1_1_encoder.html#a979914ca65e4112db1c776e12d33550e">Coeus::Encoder::pop_code</a></div><div class="ttdeci">static void pop_code(Tensor &amp;p_result, float p_value, float p_lower_limit=0, float p_upper_limit=1)</div><div class="ttdef"><b>Definition:</b> Encoder.cpp:42</div></div>
-<div class="ttc" id="a_tensor_8h_html"><div class="ttname"><a href="_tensor_8h.html">Tensor.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_encoder_html_a87cc8067c98c0ab2134dee3822e3b250"><div class="ttname"><a href="class_coeus_1_1_encoder.html#a87cc8067c98c0ab2134dee3822e3b250">Coeus::Encoder::~Encoder</a></div><div class="ttdeci">~Encoder()</div><div class="ttdef"><b>Definition:</b> Encoder.cpp:13</div></div>
-<div class="ttc" id="aclass_coeus_1_1_encoder_html_a538db34fece8795c6377c51ac8912200"><div class="ttname"><a href="class_coeus_1_1_encoder.html#a538db34fece8795c6377c51ac8912200">Coeus::Encoder::one_hot</a></div><div class="ttdeci">static void one_hot(int *p_result, int p_size, int p_value)</div><div class="ttdef"><b>Definition:</b> Encoder.cpp:17</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
 <div class="ttc" id="aclass_coeus_1_1_encoder_html"><div class="ttname"><a href="class_coeus_1_1_encoder.html">Coeus::Encoder</a></div><div class="ttdef"><b>Definition:</b> Encoder.h:6</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_encoder_8h.html">Encoder.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>Encoder.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

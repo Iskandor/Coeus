@@ -11,7 +11,6 @@ var class_coeus_1_1_network_gradient =
     [ "get_input_gradient", "class_coeus_1_1_network_gradient.html#ad7b00e70f2f2b6739f5785f67f167119", null ],
     [ "get_network", "class_coeus_1_1_network_gradient.html#a8d9022251342ce570dd0c0dba94dc199", null ],
     [ "get_recurrent_mode", "class_coeus_1_1_network_gradient.html#affb2de8a1645c16e4e94377392356ac8", null ],
-    [ "get_regular_gradient", "class_coeus_1_1_network_gradient.html#a9d41e821e4abe664f8e45919dcedbed2", null ],
     [ "reset", "class_coeus_1_1_network_gradient.html#af3fb4fc87c31f7213899c8749731b4a2", null ],
     [ "set_recurrent_mode", "class_coeus_1_1_network_gradient.html#ac3643e31e611b67617a811753651b634", null ],
     [ "unfold_layer", "class_coeus_1_1_network_gradient.html#a603eaeda0e54ef5d9d5bac8674542c0a", null ],

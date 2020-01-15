@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/RL/DDPG.h Source File</title>
+<title>Coeus: Coeus/RL/DDPG.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,21 +91,21 @@ $(document).ready(function(){initNavTree('_d_d_p_g_8h_source.html','');});
 <div class="title">DDPG.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_d_d_p_g_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_neural_network_8h.html">NeuralNetwork.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_gradient_algorithm_8h.html">GradientAlgorithm.h</a>&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_replay_buffer_8h.html">ReplayBuffer.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_buffer_items_8h.html">BufferItems.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;NeuralNetwork.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;GradientAlgorithm.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;ReplayBuffer.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;BufferItems.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// deep deterministic policy gradient</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="class_coeus_1_1_d_d_p_g.html">   10</a></span>&#160;<span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_d_d_p_g.html">DDPG</a></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="class_coeus_1_1_d_d_p_g.html#a84d232e31cb9c939fc6986fb2691ab55">DDPG</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network_critic, <a class="code" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a> p_critic_rule, <span class="keywordtype">float</span> p_critic_alpha, <span class="keywordtype">float</span> p_gamma,</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;         <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network_actor, <a class="code" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a> p_actor_rule, <span class="keywordtype">float</span> p_actor_alpha, <span class="keywordtype">int</span> p_buffer_size, <span class="keywordtype">int</span> p_sample_size);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_coeus_1_1_d_d_p_g.html#a20ec5062e823718dd4c98f301ef24a3d">~DDPG</a>();</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="class_coeus_1_1_d_d_p_g.html#a84d232e31cb9c939fc6986fb2691ab55">DDPG</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network_critic, GRADIENT_RULE p_critic_rule, <span class="keywordtype">float</span> p_critic_alpha, <span class="keywordtype">float</span> p_gamma,</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;         <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network_actor, GRADIENT_RULE p_actor_rule, <span class="keywordtype">float</span> p_actor_alpha, <span class="keywordtype">int</span> p_buffer_size, <span class="keywordtype">int</span> p_sample_size);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="class_coeus_1_1_d_d_p_g.html">DDPG</a>();</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_d_d_p_g.html#aa82fdfc825d0d8335e01a0124dc8a18f">train</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action0, <a class="code" href="class_tensor.html">Tensor</a>* p_state1, <span class="keywordtype">float</span> p_reward, <span class="keywordtype">bool</span> p_final) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="class_coeus_1_1_d_d_p_g.html#ac6a905ffd77ad719ce75cff654431694">get_action</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_state, <span class="keywordtype">float</span> p_sigma);</div>
@@ -139,24 +140,17 @@ $(document).ready(function(){initNavTree('_d_d_p_g_8h_source.html','');});
 </div><!-- doc-content -->
 <div class="ttc" id="aclass_coeus_1_1_network_gradient_html"><div class="ttname"><a href="class_coeus_1_1_network_gradient.html">Coeus::NetworkGradient</a></div><div class="ttdef"><b>Definition:</b> NetworkGradient.h:9</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_update_rule_html"><div class="ttname"><a href="class_coeus_1_1_i_update_rule.html">Coeus::IUpdateRule</a></div><div class="ttdef"><b>Definition:</b> IUpdateRule.h:11</div></div>
-<div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html_ac6a905ffd77ad719ce75cff654431694"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html#ac6a905ffd77ad719ce75cff654431694">Coeus::DDPG::get_action</a></div><div class="ttdeci">Tensor get_action(Tensor *p_state, float p_sigma)</div><div class="ttdef"><b>Definition:</b> DDPG.cpp:104</div></div>
-<div class="ttc" id="a_buffer_items_8h_html"><div class="ttname"><a href="_buffer_items_8h.html">BufferItems.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html_aa82fdfc825d0d8335e01a0124dc8a18f"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html#aa82fdfc825d0d8335e01a0124dc8a18f">Coeus::DDPG::train</a></div><div class="ttdeci">void train(Tensor *p_state0, Tensor *p_action0, Tensor *p_state1, float p_reward, bool p_final) const</div><div class="ttdef"><b>Definition:</b> DDPG.cpp:45</div></div>
-<div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html_a84d232e31cb9c939fc6986fb2691ab55"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html#a84d232e31cb9c939fc6986fb2691ab55">Coeus::DDPG::DDPG</a></div><div class="ttdeci">DDPG(NeuralNetwork *p_network_critic, GRADIENT_RULE p_critic_rule, float p_critic_alpha, float p_gamma, NeuralNetwork *p_network_actor, GRADIENT_RULE p_actor_rule, float p_actor_alpha, int p_buffer_size, int p_sample_size)</div><div class="ttdef"><b>Definition:</b> DDPG.cpp:9</div></div>
-<div class="ttc" id="a_replay_buffer_8h_html"><div class="ttname"><a href="_replay_buffer_8h.html">ReplayBuffer.h</a></div></div>
-<div class="ttc" id="a_gradient_algorithm_8h_html"><div class="ttname"><a href="_gradient_algorithm_8h.html">GradientAlgorithm.h</a></div></div>
+<div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html_ac6a905ffd77ad719ce75cff654431694"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html#ac6a905ffd77ad719ce75cff654431694">Coeus::DDPG::get_action</a></div><div class="ttdeci">Tensor get_action(Tensor *p_state, float p_sigma)</div><div class="ttdoc">Return action as output from the actor network modified by gaussian noise with variance sigma.</div><div class="ttdef"><b>Definition:</b> DDPG.cpp:128</div></div>
+<div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html_aa82fdfc825d0d8335e01a0124dc8a18f"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html#aa82fdfc825d0d8335e01a0124dc8a18f">Coeus::DDPG::train</a></div><div class="ttdeci">void train(Tensor *p_state0, Tensor *p_action0, Tensor *p_state1, float p_reward, bool p_final) const</div><div class="ttdoc">Training method updating actor and critic on one sample taken from the replay buffer.</div><div class="ttdef"><b>Definition:</b> DDPG.cpp:62</div></div>
+<div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html_a84d232e31cb9c939fc6986fb2691ab55"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html#a84d232e31cb9c939fc6986fb2691ab55">Coeus::DDPG::DDPG</a></div><div class="ttdeci">DDPG(NeuralNetwork *p_network_critic, GRADIENT_RULE p_critic_rule, float p_critic_alpha, float p_gamma, NeuralNetwork *p_network_actor, GRADIENT_RULE p_actor_rule, float p_actor_alpha, int p_buffer_size, int p_sample_size)</div><div class="ttdoc">DDPG algorithm constructor.</div><div class="ttdef"><b>Definition:</b> DDPG.cpp:18</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html_a20ec5062e823718dd4c98f301ef24a3d"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html#a20ec5062e823718dd4c98f301ef24a3d">Coeus::DDPG::~DDPG</a></div><div class="ttdeci">virtual ~DDPG()</div><div class="ttdef"><b>Definition:</b> DDPG.cpp:34</div></div>
-<div class="ttc" id="a_neural_network_8h_html"><div class="ttname"><a href="_neural_network_8h.html">NeuralNetwork.h</a></div></div>
-<div class="ttc" id="anamespace_coeus_html_ace1cf14f78880c67ad6e3a0b521f01a1"><div class="ttname"><a href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">Coeus::GRADIENT_RULE</a></div><div class="ttdeci">GRADIENT_RULE</div><div class="ttdef"><b>Definition:</b> Coeus.h:25</div></div>
 <div class="ttc" id="aclass_coeus_1_1_neural_network_html"><div class="ttname"><a href="class_coeus_1_1_neural_network.html">Coeus::NeuralNetwork</a></div><div class="ttdef"><b>Definition:</b> NeuralNetwork.h:12</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="aclass_coeus_1_1_replay_buffer_html"><div class="ttname"><a href="class_coeus_1_1_replay_buffer.html">Coeus::ReplayBuffer</a></div><div class="ttdef"><b>Definition:</b> ReplayBuffer.h:10</div></div>
+<div class="ttc" id="aclass_coeus_1_1_replay_buffer_html"><div class="ttname"><a href="class_coeus_1_1_replay_buffer.html">Coeus::ReplayBuffer</a></div><div class="ttdef"><b>Definition:</b> ReplayBuffer.h:11</div></div>
 <div class="ttc" id="aclass_coeus_1_1_d_d_p_g_html"><div class="ttname"><a href="class_coeus_1_1_d_d_p_g.html">Coeus::DDPG</a></div><div class="ttdef"><b>Definition:</b> DDPG.h:10</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><a class="el" href="_d_d_p_g_8h.html">DDPG.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><b>DDPG.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

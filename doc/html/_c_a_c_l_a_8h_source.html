@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/RL/CACLA.h Source File</title>
+<title>Coeus: Coeus/RL/CACLA.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,69 +91,50 @@ $(document).ready(function(){initNavTree('_c_a_c_l_a_8h_source.html','');});
 <div class="title">CACLA.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_c_a_c_l_a_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_neural_network_8h.html">NeuralNetwork.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_network_gradient_8h.html">NetworkGradient.h</a>&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_update_rule_8h.html">IUpdateRule.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_quadratic_cost_8h.html">QuadraticCost.h</a>&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_t_d_8h.html">TD.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;NeuralNetwork.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;NetworkGradient.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;IUpdateRule.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;QuadraticCost.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;TD.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html">   10</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html">CACLA</a></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    {</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#ad4e6d8a42078bd52c319d377fdc5b182">CACLA</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_critic, <a class="code" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a> p_critic_rule, <span class="keywordtype">float</span> p_critic_alpha, <span class="keywordtype">float</span> p_gamma, </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;              <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_actor, <a class="code" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a> p_actor_rule, <span class="keywordtype">float</span> p_actor_alpha, <span class="keywordtype">float</span> p_beta = 0.f);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#a6df806d0fd24ca618eb60626bc4162b9">~CACLA</a>();</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_coeus_1_1_c_a_c_l_a.html">CACLA</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_critic, GRADIENT_RULE p_critic_rule, <span class="keywordtype">float</span> p_critic_alpha, <span class="keywordtype">float</span> p_gamma, </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;              <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_actor, GRADIENT_RULE p_actor_rule, <span class="keywordtype">float</span> p_actor_alpha, <span class="keywordtype">float</span> p_beta = 0.f);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="class_coeus_1_1_c_a_c_l_a.html">CACLA</a>();</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#a02a2d7d82955a8e5e77e81b917e8ac94">train</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action0, <a class="code" href="class_tensor.html">Tensor</a>* p_state1, <span class="keywordtype">float</span> p_reward, <span class="keywordtype">bool</span> p_final);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#a68a1093154ae4ad84942469826876400">get_action</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_state, <span class="keywordtype">float</span> p_sigma = 1.0f) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> train(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action0, <a class="code" href="class_tensor.html">Tensor</a>* p_state1, <span class="keywordtype">float</span> p_reward, <span class="keywordtype">bool</span> p_final);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> get_action(<a class="code" href="class_tensor.html">Tensor</a>* p_state, <span class="keywordtype">float</span> p_sigma = 1.0f) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#a9878424da789d5152f9fbdddc18b083a">   21</a></span>&#160;        <a class="code" href="class_coeus_1_1_t_d.html">TD</a>* <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#a9878424da789d5152f9fbdddc18b083a">_critic</a>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#aa2385ebd266260792dad027cc84e93e7">   22</a></span>&#160;        <a class="code" href="class_coeus_1_1_quadratic_cost.html">QuadraticCost</a> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#aa2385ebd266260792dad027cc84e93e7">_mse</a>;</div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#abb43cdecce2b02b1630fc629adff62be">   23</a></span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#abb43cdecce2b02b1630fc629adff62be">_actor</a>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#ae305f490b3f5d7da6a4a68eb25fa4674">   24</a></span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#ae305f490b3f5d7da6a4a68eb25fa4674">_actor_gradient</a>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#af8d164181caae45aa9f6cd668f69ab2c">   25</a></span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>* <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#af8d164181caae45aa9f6cd668f69ab2c">_update_rule</a>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="class_coeus_1_1_t_d.html">TD</a>* _critic;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <a class="code" href="class_coeus_1_1_quadratic_cost.html">QuadraticCost</a> _mse;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* _actor;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* _actor_gradient;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>* _update_rule;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#a271eed0e76b27f3451c2830c490bc487">   27</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#a271eed0e76b27f3451c2830c490bc487">_actor_alpha</a>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#a0ec515a1602b1776d9fdbbf2761dae2f">   28</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#a0ec515a1602b1776d9fdbbf2761dae2f">_beta</a>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="class_coeus_1_1_c_a_c_l_a.html#a04b7bcbefc207878a2ff71212347985d">   29</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_c_a_c_l_a.html#a04b7bcbefc207878a2ff71212347985d">_var</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">float</span> _actor_alpha;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">float</span> _beta;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">float</span> _var;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    };</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_a271eed0e76b27f3451c2830c490bc487"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#a271eed0e76b27f3451c2830c490bc487">Coeus::CACLA::_actor_alpha</a></div><div class="ttdeci">float _actor_alpha</div><div class="ttdef"><b>Definition:</b> CACLA.h:27</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_a0ec515a1602b1776d9fdbbf2761dae2f"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#a0ec515a1602b1776d9fdbbf2761dae2f">Coeus::CACLA::_beta</a></div><div class="ttdeci">float _beta</div><div class="ttdef"><b>Definition:</b> CACLA.h:28</div></div>
 <div class="ttc" id="aclass_coeus_1_1_network_gradient_html"><div class="ttname"><a href="class_coeus_1_1_network_gradient.html">Coeus::NetworkGradient</a></div><div class="ttdef"><b>Definition:</b> NetworkGradient.h:9</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_update_rule_html"><div class="ttname"><a href="class_coeus_1_1_i_update_rule.html">Coeus::IUpdateRule</a></div><div class="ttdef"><b>Definition:</b> IUpdateRule.h:11</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_a04b7bcbefc207878a2ff71212347985d"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#a04b7bcbefc207878a2ff71212347985d">Coeus::CACLA::_var</a></div><div class="ttdeci">float _var</div><div class="ttdef"><b>Definition:</b> CACLA.h:29</div></div>
 <div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html">Coeus::CACLA</a></div><div class="ttdef"><b>Definition:</b> CACLA.h:10</div></div>
-<div class="ttc" id="a_quadratic_cost_8h_html"><div class="ttname"><a href="_quadratic_cost_8h.html">QuadraticCost.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_a02a2d7d82955a8e5e77e81b917e8ac94"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#a02a2d7d82955a8e5e77e81b917e8ac94">Coeus::CACLA::train</a></div><div class="ttdeci">virtual void train(Tensor *p_state0, Tensor *p_action0, Tensor *p_state1, float p_reward, bool p_final)</div><div class="ttdef"><b>Definition:</b> CACLA.cpp:27</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_af8d164181caae45aa9f6cd668f69ab2c"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#af8d164181caae45aa9f6cd668f69ab2c">Coeus::CACLA::_update_rule</a></div><div class="ttdeci">IUpdateRule * _update_rule</div><div class="ttdef"><b>Definition:</b> CACLA.h:25</div></div>
 <div class="ttc" id="aclass_coeus_1_1_quadratic_cost_html"><div class="ttname"><a href="class_coeus_1_1_quadratic_cost.html">Coeus::QuadraticCost</a></div><div class="ttdef"><b>Definition:</b> QuadraticCost.h:5</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_abb43cdecce2b02b1630fc629adff62be"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#abb43cdecce2b02b1630fc629adff62be">Coeus::CACLA::_actor</a></div><div class="ttdeci">NeuralNetwork * _actor</div><div class="ttdef"><b>Definition:</b> CACLA.h:23</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_a68a1093154ae4ad84942469826876400"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#a68a1093154ae4ad84942469826876400">Coeus::CACLA::get_action</a></div><div class="ttdeci">Tensor get_action(Tensor *p_state, float p_sigma=1.0f) const</div><div class="ttdef"><b>Definition:</b> CACLA.cpp:46</div></div>
 <div class="ttc" id="aclass_coeus_1_1_t_d_html"><div class="ttname"><a href="class_coeus_1_1_t_d.html">Coeus::TD</a></div><div class="ttdef"><b>Definition:</b> TD.h:9</div></div>
-<div class="ttc" id="a_neural_network_8h_html"><div class="ttname"><a href="_neural_network_8h.html">NeuralNetwork.h</a></div></div>
-<div class="ttc" id="anamespace_coeus_html_ace1cf14f78880c67ad6e3a0b521f01a1"><div class="ttname"><a href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">Coeus::GRADIENT_RULE</a></div><div class="ttdeci">GRADIENT_RULE</div><div class="ttdef"><b>Definition:</b> Coeus.h:25</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_a6df806d0fd24ca618eb60626bc4162b9"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#a6df806d0fd24ca618eb60626bc4162b9">Coeus::CACLA::~CACLA</a></div><div class="ttdeci">virtual ~CACLA()</div><div class="ttdef"><b>Definition:</b> CACLA.cpp:20</div></div>
-<div class="ttc" id="a_i_update_rule_8h_html"><div class="ttname"><a href="_i_update_rule_8h.html">IUpdateRule.h</a></div></div>
-<div class="ttc" id="a_t_d_8h_html"><div class="ttname"><a href="_t_d_8h.html">TD.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_ad4e6d8a42078bd52c319d377fdc5b182"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#ad4e6d8a42078bd52c319d377fdc5b182">Coeus::CACLA::CACLA</a></div><div class="ttdeci">CACLA(NeuralNetwork *p_critic, GRADIENT_RULE p_critic_rule, float p_critic_alpha, float p_gamma, NeuralNetwork *p_actor, GRADIENT_RULE p_actor_rule, float p_actor_alpha, float p_beta=0.f)</div><div class="ttdef"><b>Definition:</b> CACLA.cpp:8</div></div>
 <div class="ttc" id="aclass_coeus_1_1_neural_network_html"><div class="ttname"><a href="class_coeus_1_1_neural_network.html">Coeus::NeuralNetwork</a></div><div class="ttdef"><b>Definition:</b> NeuralNetwork.h:12</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_aa2385ebd266260792dad027cc84e93e7"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#aa2385ebd266260792dad027cc84e93e7">Coeus::CACLA::_mse</a></div><div class="ttdeci">QuadraticCost _mse</div><div class="ttdef"><b>Definition:</b> CACLA.h:22</div></div>
-<div class="ttc" id="a_network_gradient_8h_html"><div class="ttname"><a href="_network_gradient_8h.html">NetworkGradient.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_ae305f490b3f5d7da6a4a68eb25fa4674"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#ae305f490b3f5d7da6a4a68eb25fa4674">Coeus::CACLA::_actor_gradient</a></div><div class="ttdeci">NetworkGradient * _actor_gradient</div><div class="ttdef"><b>Definition:</b> CACLA.h:24</div></div>
-<div class="ttc" id="aclass_coeus_1_1_c_a_c_l_a_html_a9878424da789d5152f9fbdddc18b083a"><div class="ttname"><a href="class_coeus_1_1_c_a_c_l_a.html#a9878424da789d5152f9fbdddc18b083a">Coeus::CACLA::_critic</a></div><div class="ttdeci">TD * _critic</div><div class="ttdef"><b>Definition:</b> CACLA.h:21</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><a class="el" href="_c_a_c_l_a_8h.html">CACLA.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><b>CACLA.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

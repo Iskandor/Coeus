@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -94,8 +95,6 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_i_batch_module.html','
 <div class="title">Coeus::IBatchModule Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_i_batch_module_8h_source.html">IBatchModule.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Coeus::IBatchModule:</div>
 <div class="dyncontent">
@@ -110,288 +109,44 @@ Inheritance diagram for Coeus::IBatchModule:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3043a0ef185202a2d0a2eab713b182cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#a3043a0ef185202a2d0a2eab713b182cf">IBatchModule</a> (int p_batch)</td></tr>
+<tr class="memitem:a3043a0ef185202a2d0a2eab713b182cf"><td class="memItemLeft" align="right" valign="top"><a id="a3043a0ef185202a2d0a2eab713b182cf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>IBatchModule</b> (int p_batch)</td></tr>
 <tr class="separator:a3043a0ef185202a2d0a2eab713b182cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab4a95c96786906d53b6fd8f614b9b86"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#aab4a95c96786906d53b6fd8f614b9b86">~IBatchModule</a> ()</td></tr>
-<tr class="separator:aab4a95c96786906d53b6fd8f614b9b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7bc1c68b8c3feaf37f62c20e2c47865"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#ab7bc1c68b8c3feaf37f62c20e2c47865">run_batch</a> (int p_b, int p_batch, vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_input, vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_target)=0</td></tr>
+<tr class="memitem:ab7bc1c68b8c3feaf37f62c20e2c47865"><td class="memItemLeft" align="right" valign="top"><a id="ab7bc1c68b8c3feaf37f62c20e2c47865"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>run_batch</b> (int p_b, int p_batch, vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_input, vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_target)=0</td></tr>
 <tr class="separator:ab7bc1c68b8c3feaf37f62c20e2c47865"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d4bd3a9efc060ba02c19c0a324b7d9f"><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#a4d4bd3a9efc060ba02c19c0a324b7d9f">get_error</a> (vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_input, vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_target)=0</td></tr>
+<tr class="memitem:a4d4bd3a9efc060ba02c19c0a324b7d9f"><td class="memItemLeft" align="right" valign="top"><a id="a4d4bd3a9efc060ba02c19c0a324b7d9f"></a>
+virtual float&#160;</td><td class="memItemRight" valign="bottom"><b>get_error</b> (vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_input, vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *p_target)=0</td></tr>
 <tr class="separator:a4d4bd3a9efc060ba02c19c0a324b7d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af30514f9ffe7b86bee3b6b81cf35f73d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#af30514f9ffe7b86bee3b6b81cf35f73d">get_gradient</a> ()</td></tr>
+<tr class="memitem:af30514f9ffe7b86bee3b6b81cf35f73d"><td class="memItemLeft" align="right" valign="top"><a id="af30514f9ffe7b86bee3b6b81cf35f73d"></a>
+<a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_gradient</b> ()</td></tr>
 <tr class="separator:af30514f9ffe7b86bee3b6b81cf35f73d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc18b55eeca33d501f9ccc2940353853"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#acc18b55eeca33d501f9ccc2940353853">get_batch_size</a> () const</td></tr>
+<tr class="memitem:acc18b55eeca33d501f9ccc2940353853"><td class="memItemLeft" align="right" valign="top"><a id="acc18b55eeca33d501f9ccc2940353853"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>get_batch_size</b> () const</td></tr>
 <tr class="separator:acc18b55eeca33d501f9ccc2940353853"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ac6b5cc481308f25facb5a129fe0c65cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#ac6b5cc481308f25facb5a129fe0c65cf">_batch_size</a></td></tr>
+<tr class="memitem:ac6b5cc481308f25facb5a129fe0c65cf"><td class="memItemLeft" align="right" valign="top"><a id="ac6b5cc481308f25facb5a129fe0c65cf"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_batch_size</b></td></tr>
 <tr class="separator:ac6b5cc481308f25facb5a129fe0c65cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac83c5999fad87d242a77586b8fd5ea80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_gradient.html">Gradient</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#ac83c5999fad87d242a77586b8fd5ea80">_gradient</a></td></tr>
+<tr class="memitem:ac83c5999fad87d242a77586b8fd5ea80"><td class="memItemLeft" align="right" valign="top"><a id="ac83c5999fad87d242a77586b8fd5ea80"></a>
+<a class="el" href="class_coeus_1_1_gradient.html">Gradient</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_gradient</b></td></tr>
 <tr class="separator:ac83c5999fad87d242a77586b8fd5ea80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2f3ab88a660efff010f96a6d42d6297"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_gradient_accumulator.html">GradientAccumulator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_batch_module.html#ae2f3ab88a660efff010f96a6d42d6297">_gradient_accumulator</a></td></tr>
+<tr class="memitem:ae2f3ab88a660efff010f96a6d42d6297"><td class="memItemLeft" align="right" valign="top"><a id="ae2f3ab88a660efff010f96a6d42d6297"></a>
+<a class="el" href="class_coeus_1_1_gradient_accumulator.html">GradientAccumulator</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_gradient_accumulator</b></td></tr>
 <tr class="separator:ae2f3ab88a660efff010f96a6d42d6297"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3043a0ef185202a2d0a2eab713b182cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3043a0ef185202a2d0a2eab713b182cf">&#9670;&nbsp;</a></span>IBatchModule()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">IBatchModule::IBatchModule </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_batch</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aab4a95c96786906d53b6fd8f614b9b86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab4a95c96786906d53b6fd8f614b9b86">&#9670;&nbsp;</a></span>~IBatchModule()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">IBatchModule::~IBatchModule </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="acc18b55eeca33d501f9ccc2940353853"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc18b55eeca33d501f9ccc2940353853">&#9670;&nbsp;</a></span>get_batch_size()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Coeus::IBatchModule::get_batch_size </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4d4bd3a9efc060ba02c19c0a324b7d9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d4bd3a9efc060ba02c19c0a324b7d9f">&#9670;&nbsp;</a></span>get_error()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual float Coeus::IBatchModule::get_error </td>
-          <td>(</td>
-          <td class="paramtype">vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *&#160;</td>
-          <td class="paramname"><em>p_input</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *&#160;</td>
-          <td class="paramname"><em>p_target</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="class_coeus_1_1_p_p_l_batch_module.html#ab226abba7a4bdf458f18327975a0640a">Coeus::PPLBatchModule</a>, <a class="el" href="class_coeus_1_1_open_m_p_batch_module.html#a9e23e311a9e2de09d048429cf2149379">Coeus::OpenMPBatchModule</a>, and <a class="el" href="class_coeus_1_1_single_batch_module.html#acf74eb7812ab9cb2f6812445346cfbae">Coeus::SingleBatchModule</a>.</p>
-
-</div>
-</div>
-<a id="af30514f9ffe7b86bee3b6b81cf35f73d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af30514f9ffe7b86bee3b6b81cf35f73d">&#9670;&nbsp;</a></span>get_gradient()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_gradient.html">Gradient</a>&amp; Coeus::IBatchModule::get_gradient </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab7bc1c68b8c3feaf37f62c20e2c47865"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7bc1c68b8c3feaf37f62c20e2c47865">&#9670;&nbsp;</a></span>run_batch()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void Coeus::IBatchModule::run_batch </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_batch</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *&#160;</td>
-          <td class="paramname"><em>p_input</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">vector&lt; <a class="el" href="class_tensor.html">Tensor</a> * &gt; *&#160;</td>
-          <td class="paramname"><em>p_target</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="class_coeus_1_1_p_p_l_batch_module.html#a83607508e83f8006d61a81048741e189">Coeus::PPLBatchModule</a>, <a class="el" href="class_coeus_1_1_open_m_p_batch_module.html#a4f18b4ad7057fda1c1a13e92e408ae5e">Coeus::OpenMPBatchModule</a>, and <a class="el" href="class_coeus_1_1_single_batch_module.html#abc53b16bfd9674bc5bcf0612c0cabf20">Coeus::SingleBatchModule</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="ac6b5cc481308f25facb5a129fe0c65cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6b5cc481308f25facb5a129fe0c65cf">&#9670;&nbsp;</a></span>_batch_size</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Coeus::IBatchModule::_batch_size</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac83c5999fad87d242a77586b8fd5ea80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac83c5999fad87d242a77586b8fd5ea80">&#9670;&nbsp;</a></span>_gradient</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> Coeus::IBatchModule::_gradient</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae2f3ab88a660efff010f96a6d42d6297"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2f3ab88a660efff010f96a6d42d6297">&#9670;&nbsp;</a></span>_gradient_accumulator</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_gradient_accumulator.html">GradientAccumulator</a>* Coeus::IBatchModule::_gradient_accumulator</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/Core/<a class="el" href="_i_batch_module_8h_source.html">IBatchModule.h</a></li>
-<li>D:/GIT/Coeus/Coeus/Core/<a class="el" href="_i_batch_module_8cpp.html">IBatchModule.cpp</a></li>
+<li>Coeus/Core/<a class="el" href="_i_batch_module_8h_source.html">IBatchModule.h</a></li>
+<li>Coeus/Core/IBatchModule.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_batch_module.html">IBatchModule</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_batch_module.html">IBatchModule</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

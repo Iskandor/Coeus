@@ -7,7 +7,6 @@ var hierarchy =
     [ "Coeus::ActorCritic", "class_coeus_1_1_actor_critic.html", null ],
     [ "Coeus::AutoDifferentiator", "class_coeus_1_1_auto_differentiator.html", null ],
     [ "Base64", "class_base64.html", null ],
-    [ "nlohmann::basic_json< ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType >", "classnlohmann_1_1basic__json.html", null ],
     [ "Coeus::BoltzmanExploration", "class_coeus_1_1_boltzman_exploration.html", null ],
     [ "Coeus::CACLA", "class_coeus_1_1_c_a_c_l_a.html", [
       [ "Coeus::CACER", "class_coeus_1_1_c_a_c_e_r.html", null ]
@@ -18,6 +17,7 @@ var hierarchy =
     [ "Coeus::EGreedyExploration", "class_coeus_1_1_e_greedy_exploration.html", null ],
     [ "Coeus::Encoder", "class_coeus_1_1_encoder.html", null ],
     [ "Coeus::GAE", "class_coeus_1_1_g_a_e.html", null ],
+    [ "Coeus::GM2", "class_coeus_1_1_g_m2.html", null ],
     [ "Coeus::Gradient", "class_coeus_1_1_gradient.html", null ],
     [ "Coeus::GradientAccumulator", "class_coeus_1_1_gradient_accumulator.html", null ],
     [ "Coeus::GradientAlgorithm", "class_coeus_1_1_gradient_algorithm.html", [
@@ -33,7 +33,6 @@ var hierarchy =
       [ "Coeus::RADAM", "class_coeus_1_1_r_a_d_a_m.html", null ],
       [ "Coeus::RMSProp", "class_coeus_1_1_r_m_s_prop.html", null ]
     ] ],
-    [ "std::hash< nlohmann::json >", "structstd_1_1hash_3_01nlohmann_1_1json_01_4.html", null ],
     [ "Coeus::IActorCritic", "class_coeus_1_1_i_actor_critic.html", null ],
     [ "Coeus::IBatchModule", "class_coeus_1_1_i_batch_module.html", [
       [ "Coeus::OpenMPBatchModule", "class_coeus_1_1_open_m_p_batch_module.html", null ],
@@ -81,11 +80,6 @@ var hierarchy =
     [ "ITensorOperator", "class_i_tensor_operator.html", [
       [ "TensorOperatorMKL", "class_tensor_operator_m_k_l.html", null ]
     ] ],
-    [ "iterator", null, [
-      [ "nlohmann::basic_json< ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType >::const_iterator", "classnlohmann_1_1basic__json_1_1const__iterator.html", [
-        [ "nlohmann::basic_json< ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType >::iterator", "classnlohmann_1_1basic__json_1_1iterator.html", null ]
-      ] ]
-    ] ],
     [ "Coeus::IUpdateRule", "class_coeus_1_1_i_update_rule.html", [
       [ "Coeus::AdadeltaRule", "class_coeus_1_1_adadelta_rule.html", null ],
       [ "Coeus::AdagradRule", "class_coeus_1_1_adagrad_rule.html", null ],
@@ -98,7 +92,6 @@ var hierarchy =
       [ "Coeus::RADAMRule", "class_coeus_1_1_r_a_d_a_m_rule.html", null ],
       [ "Coeus::RMSPropRule", "class_coeus_1_1_r_m_s_prop_rule.html", null ]
     ] ],
-    [ "nlohmann::basic_json< ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType >::json_pointer", "classnlohmann_1_1basic__json_1_1json__pointer.html", null ],
     [ "Coeus::Logger", "class_coeus_1_1_logger.html", null ],
     [ "Coeus::Metrics", "class_coeus_1_1_metrics.html", null ],
     [ "Coeus::NAC", "class_coeus_1_1_n_a_c.html", null ],
@@ -129,9 +122,6 @@ var hierarchy =
     [ "Coeus::ReplayBuffer< T >", "class_coeus_1_1_replay_buffer.html", null ],
     [ "Coeus::ReplayBuffer< Coeus::DQItem >", "class_coeus_1_1_replay_buffer.html", null ],
     [ "Coeus::ReplayBuffer< Coeus::TransitionItem >", "class_coeus_1_1_replay_buffer.html", null ],
-    [ "reverse_iterator", null, [
-      [ "nlohmann::basic_json< ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType >::json_reverse_iterator< Base >", "classnlohmann_1_1basic__json_1_1json__reverse__iterator.html", null ]
-    ] ],
     [ "Coeus::RuleFactory", "class_coeus_1_1_rule_factory.html", null ],
     [ "Coeus::SARSA", "class_coeus_1_1_s_a_r_s_a.html", null ],
     [ "Coeus::TD", "class_coeus_1_1_t_d.html", null ],

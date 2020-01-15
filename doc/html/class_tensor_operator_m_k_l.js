@@ -1,7 +1,7 @@
 var class_tensor_operator_m_k_l =
 [
     [ "TensorOperatorMKL", "class_tensor_operator_m_k_l.html#a57948ed6c0008b182e2e399e0f67aef2", null ],
-    [ "~TensorOperatorMKL", "class_tensor_operator_m_k_l.html#a00f735c57852bbb5d33dfa5272e030a0", null ],
+    [ "~TensorOperatorMKL", "class_tensor_operator_m_k_l.html#a4e53685a986226741ffd846c0e634a42", null ],
     [ "full_b_gradient", "class_tensor_operator_m_k_l.html#ab28c836d446609be6cd467cd8726c088", null ],
     [ "full_bias_b", "class_tensor_operator_m_k_l.html#a0ede0ec7e9440cc9e6565af549902761", null ],
     [ "full_bias_s", "class_tensor_operator_m_k_l.html#abe439547f8a6fae6392a68fac33a5c26", null ],

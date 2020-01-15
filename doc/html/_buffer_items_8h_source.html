@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/RL/BufferItems.h Source File</title>
+<title>Coeus: Coeus/RL/BufferItems.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,62 +91,51 @@ $(document).ready(function(){initNavTree('_buffer_items_8h_source.html','');});
 <div class="title">BufferItems.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_buffer_items_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tensor_8h.html">Tensor.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;Tensor.h&quot;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
 <div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_d_q_item.html">    6</a></span>&#160;    <span class="keyword">struct </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="struct_coeus_1_1_d_q_item.html">DQItem</a></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    {</div>
-<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_d_q_item.html#af19bf19cdc604e42be4248470202dc08">    8</a></span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="struct_coeus_1_1_d_q_item.html#af19bf19cdc604e42be4248470202dc08">s0</a>;</div>
-<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_d_q_item.html#ada9fdd5025315cb32f2e538a4ddcd881">    9</a></span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="struct_coeus_1_1_d_q_item.html#ada9fdd5025315cb32f2e538a4ddcd881">a</a>;</div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_d_q_item.html#ae829317f63b9e0a8e87d37ff22e31cd1">   10</a></span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="struct_coeus_1_1_d_q_item.html#ae829317f63b9e0a8e87d37ff22e31cd1">s1</a>;</div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_d_q_item.html#a0602a810d2564aee9ce0d0484cd86f98">   11</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="struct_coeus_1_1_d_q_item.html#a0602a810d2564aee9ce0d0484cd86f98">r</a>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_d_q_item.html#a0e912cd4c33c593f4e65616381aa6a70">   12</a></span>&#160;        <span class="keywordtype">bool</span> <span class="keyword">final</span>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> s0;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> a;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> s1;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keywordtype">float</span> r;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordtype">bool</span> <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_d_q_item.html#a78fbcfe920a2580159ae61117819d922">   14</a></span>&#160;        <a class="code" href="struct_coeus_1_1_d_q_item.html#a78fbcfe920a2580159ae61117819d922">DQItem</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_s0, <a class="code" href="class_tensor.html">Tensor</a>* p_a, <a class="code" href="class_tensor.html">Tensor</a>* p_s1, <span class="keyword">const</span> <span class="keywordtype">float</span> p_r, <span class="keyword">const</span> <span class="keywordtype">bool</span> p_final) {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;            <a class="code" href="struct_coeus_1_1_d_q_item.html#af19bf19cdc604e42be4248470202dc08">s0</a> = <a class="code" href="class_tensor.html">Tensor</a>(*p_s0);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;            <a class="code" href="struct_coeus_1_1_d_q_item.html#ada9fdd5025315cb32f2e538a4ddcd881">a</a> = <a class="code" href="class_tensor.html">Tensor</a>(*p_a);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;            <a class="code" href="struct_coeus_1_1_d_q_item.html#ae829317f63b9e0a8e87d37ff22e31cd1">s1</a> = <a class="code" href="class_tensor.html">Tensor</a>(*p_s1);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;            <a class="code" href="struct_coeus_1_1_d_q_item.html#a0602a810d2564aee9ce0d0484cd86f98">r</a> = p_r;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <a class="code" href="struct_coeus_1_1_d_q_item.html">DQItem</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_s0, <a class="code" href="class_tensor.html">Tensor</a>* p_a, <a class="code" href="class_tensor.html">Tensor</a>* p_s1, <span class="keyword">const</span> <span class="keywordtype">float</span> p_r, <span class="keyword">const</span> <span class="keywordtype">bool</span> p_final) {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;            s0 = <a class="code" href="class_tensor.html">Tensor</a>(*p_s0);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;            a = <a class="code" href="class_tensor.html">Tensor</a>(*p_a);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;            s1 = <a class="code" href="class_tensor.html">Tensor</a>(*p_s1);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;            r = p_r;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;            <span class="keyword">final</span> = p_final;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        }</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    };</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
 <div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_transition_item.html">   23</a></span>&#160;    <span class="keyword">struct </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="struct_coeus_1_1_transition_item.html">TransitionItem</a></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    {</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_transition_item.html#a176b41b5874e1f667d6365aaa33bfa5d">   25</a></span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="struct_coeus_1_1_transition_item.html#a176b41b5874e1f667d6365aaa33bfa5d">s0</a>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_transition_item.html#a6d57bf8a220b693077ba696bf35a4f98">   26</a></span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="struct_coeus_1_1_transition_item.html#a6d57bf8a220b693077ba696bf35a4f98">a</a>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_transition_item.html#aff21876e53f44c2aaa1d32a14cf52c3a">   27</a></span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="struct_coeus_1_1_transition_item.html#aff21876e53f44c2aaa1d32a14cf52c3a">s1</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> s0;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> a;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a> s1;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="struct_coeus_1_1_transition_item.html#af89fa8dddf2cca88b574a514a5b2764a">   29</a></span>&#160;        <a class="code" href="struct_coeus_1_1_transition_item.html#af89fa8dddf2cca88b574a514a5b2764a">TransitionItem</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_s0, <a class="code" href="class_tensor.html">Tensor</a>* p_a, <a class="code" href="class_tensor.html">Tensor</a>* p_s1) {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <a class="code" href="struct_coeus_1_1_transition_item.html#a176b41b5874e1f667d6365aaa33bfa5d">s0</a> = <a class="code" href="class_tensor.html">Tensor</a>(*p_s0);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <a class="code" href="struct_coeus_1_1_transition_item.html#a6d57bf8a220b693077ba696bf35a4f98">a</a> = <a class="code" href="class_tensor.html">Tensor</a>(*p_a);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <a class="code" href="struct_coeus_1_1_transition_item.html#aff21876e53f44c2aaa1d32a14cf52c3a">s1</a> = <a class="code" href="class_tensor.html">Tensor</a>(*p_s1);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="struct_coeus_1_1_transition_item.html">TransitionItem</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_s0, <a class="code" href="class_tensor.html">Tensor</a>* p_a, <a class="code" href="class_tensor.html">Tensor</a>* p_s1) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            s0 = <a class="code" href="class_tensor.html">Tensor</a>(*p_s0);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            a = <a class="code" href="class_tensor.html">Tensor</a>(*p_a);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            s1 = <a class="code" href="class_tensor.html">Tensor</a>(*p_s1);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        }</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    };</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="astruct_coeus_1_1_transition_item_html_aff21876e53f44c2aaa1d32a14cf52c3a"><div class="ttname"><a href="struct_coeus_1_1_transition_item.html#aff21876e53f44c2aaa1d32a14cf52c3a">Coeus::TransitionItem::s1</a></div><div class="ttdeci">Tensor s1</div><div class="ttdef"><b>Definition:</b> BufferItems.h:27</div></div>
 <div class="ttc" id="astruct_coeus_1_1_transition_item_html"><div class="ttname"><a href="struct_coeus_1_1_transition_item.html">Coeus::TransitionItem</a></div><div class="ttdef"><b>Definition:</b> BufferItems.h:23</div></div>
-<div class="ttc" id="a_tensor_8h_html"><div class="ttname"><a href="_tensor_8h.html">Tensor.h</a></div></div>
-<div class="ttc" id="astruct_coeus_1_1_transition_item_html_af89fa8dddf2cca88b574a514a5b2764a"><div class="ttname"><a href="struct_coeus_1_1_transition_item.html#af89fa8dddf2cca88b574a514a5b2764a">Coeus::TransitionItem::TransitionItem</a></div><div class="ttdeci">TransitionItem(Tensor *p_s0, Tensor *p_a, Tensor *p_s1)</div><div class="ttdef"><b>Definition:</b> BufferItems.h:29</div></div>
-<div class="ttc" id="astruct_coeus_1_1_transition_item_html_a6d57bf8a220b693077ba696bf35a4f98"><div class="ttname"><a href="struct_coeus_1_1_transition_item.html#a6d57bf8a220b693077ba696bf35a4f98">Coeus::TransitionItem::a</a></div><div class="ttdeci">Tensor a</div><div class="ttdef"><b>Definition:</b> BufferItems.h:26</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
 <div class="ttc" id="astruct_coeus_1_1_d_q_item_html"><div class="ttname"><a href="struct_coeus_1_1_d_q_item.html">Coeus::DQItem</a></div><div class="ttdef"><b>Definition:</b> BufferItems.h:6</div></div>
-<div class="ttc" id="astruct_coeus_1_1_transition_item_html_a176b41b5874e1f667d6365aaa33bfa5d"><div class="ttname"><a href="struct_coeus_1_1_transition_item.html#a176b41b5874e1f667d6365aaa33bfa5d">Coeus::TransitionItem::s0</a></div><div class="ttdeci">Tensor s0</div><div class="ttdef"><b>Definition:</b> BufferItems.h:25</div></div>
-<div class="ttc" id="astruct_coeus_1_1_d_q_item_html_a0602a810d2564aee9ce0d0484cd86f98"><div class="ttname"><a href="struct_coeus_1_1_d_q_item.html#a0602a810d2564aee9ce0d0484cd86f98">Coeus::DQItem::r</a></div><div class="ttdeci">float r</div><div class="ttdef"><b>Definition:</b> BufferItems.h:11</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="astruct_coeus_1_1_d_q_item_html_ae829317f63b9e0a8e87d37ff22e31cd1"><div class="ttname"><a href="struct_coeus_1_1_d_q_item.html#ae829317f63b9e0a8e87d37ff22e31cd1">Coeus::DQItem::s1</a></div><div class="ttdeci">Tensor s1</div><div class="ttdef"><b>Definition:</b> BufferItems.h:10</div></div>
-<div class="ttc" id="astruct_coeus_1_1_d_q_item_html_af19bf19cdc604e42be4248470202dc08"><div class="ttname"><a href="struct_coeus_1_1_d_q_item.html#af19bf19cdc604e42be4248470202dc08">Coeus::DQItem::s0</a></div><div class="ttdeci">Tensor s0</div><div class="ttdef"><b>Definition:</b> BufferItems.h:8</div></div>
-<div class="ttc" id="astruct_coeus_1_1_d_q_item_html_ada9fdd5025315cb32f2e538a4ddcd881"><div class="ttname"><a href="struct_coeus_1_1_d_q_item.html#ada9fdd5025315cb32f2e538a4ddcd881">Coeus::DQItem::a</a></div><div class="ttdeci">Tensor a</div><div class="ttdef"><b>Definition:</b> BufferItems.h:9</div></div>
-<div class="ttc" id="astruct_coeus_1_1_d_q_item_html_a78fbcfe920a2580159ae61117819d922"><div class="ttname"><a href="struct_coeus_1_1_d_q_item.html#a78fbcfe920a2580159ae61117819d922">Coeus::DQItem::DQItem</a></div><div class="ttdeci">DQItem(Tensor *p_s0, Tensor *p_a, Tensor *p_s1, const float p_r, const bool p_final)</div><div class="ttdef"><b>Definition:</b> BufferItems.h:14</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><a class="el" href="_buffer_items_8h.html">BufferItems.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><b>BufferItems.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

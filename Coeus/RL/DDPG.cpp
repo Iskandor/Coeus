@@ -1,11 +1,20 @@
 #include "DDPG.h"
 #include "RuleFactory.h"
-#include "QuadraticCost.h"
-#include "TensorOperator.h"
 
 using namespace Coeus;
 
-
+/**
+ * \brief DDPG algorithm constructor
+ * \param p_network_critic critic neural network
+ * \param p_critic_rule update rule for critic training
+ * \param p_critic_alpha critic learning rate
+ * \param p_gamma critic discount factor
+ * \param p_network_actor actor neural network
+ * \param p_actor_rule update rule for actor training
+ * \param p_actor_alpha actor learning rate
+ * \param p_buffer_size size of replay buffer
+ * \param p_sample_size size of sample taken from the replay buffer
+ */
 DDPG::DDPG(	NeuralNetwork* p_network_critic, GRADIENT_RULE p_critic_rule, float p_critic_alpha, float p_gamma,
 			NeuralNetwork* p_network_actor, GRADIENT_RULE p_actor_rule, float p_actor_alpha, 
 			int p_buffer_size, int p_sample_size):
@@ -42,6 +51,14 @@ DDPG::~DDPG()
 	delete _critic_input2;
 }
 
+/**
+ * \brief Training method updating actor and critic on one sample taken from the replay buffer
+ * \param p_state0 agent's state from time t0
+ * \param p_action0 action taken in time t0
+ * \param p_state1 agent's state from time t1 (successor state)
+ * \param p_reward reward taken from transition state0 - action0 - state1
+ * \param p_final flag indicating that state1 is terminal
+ */
 void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, bool p_final) const
 {
 	_buffer->add_item(new DQItem(p_state0, p_action0, p_state1, p_reward, p_final));
@@ -102,7 +119,13 @@ void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const fl
 	}
 }
 
-Tensor DDPG::get_action(Tensor* p_state, const float p_sigma)
+/**
+ * \brief Return action as output from the actor network modified by gaussian noise with variance sigma
+ * \param p_state actual state where the agent is choosing its next action
+ * \param p_sigma variance of gaussian noise added to action
+ * \return 
+ */
+Tensor DDPG::get_action(Tensor* p_state, const float p_sigma) const
 {
 	Tensor output({ _network_actor->get_output_dim() }, Tensor::ZERO);
 	_network_actor->activate(p_state);

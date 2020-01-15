@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -93,270 +94,41 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_i_c_m.html','');});
 <div class="title">Coeus::ICM Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_i_c_m_8h_source.html">ICM.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af694b8a3eae928880d89d7320dcf5173"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#af694b8a3eae928880d89d7320dcf5173">ICM</a> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_forward_model, <a class="el" href="class_coeus_1_1_gradient_algorithm.html">GradientAlgorithm</a> *p_forward_algorithm, int p_size=0)</td></tr>
-<tr class="separator:af694b8a3eae928880d89d7320dcf5173"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60e8e4c5631f146783d60d22d3cc9107"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#a60e8e4c5631f146783d60d22d3cc9107">~ICM</a> ()</td></tr>
-<tr class="separator:a60e8e4c5631f146783d60d22d3cc9107"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa956a906fa0d03231017b4b5978e63c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#aa956a906fa0d03231017b4b5978e63c6">activate</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action)</td></tr>
-<tr class="separator:aa956a906fa0d03231017b4b5978e63c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac16518cae6f0971f881bda8b619941b1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#ac16518cae6f0971f881bda8b619941b1">train</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action, <a class="el" href="class_tensor.html">Tensor</a> *p_state1)</td></tr>
+<tr class="memitem:ab4ad52f1d7060ad623d5193b8924c8bc"><td class="memItemLeft" align="right" valign="top"><a id="ab4ad52f1d7060ad623d5193b8924c8bc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ICM</b> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_forward_model, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_inverse_model, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_head, GRADIENT_RULE p_rule, float p_alpha, int p_size=0)</td></tr>
+<tr class="separator:ab4ad52f1d7060ad623d5193b8924c8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b0fb4dcae38ff13ccaf335c9d5dbb7c"><td class="memItemLeft" align="right" valign="top"><a id="a5b0fb4dcae38ff13ccaf335c9d5dbb7c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>activate</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, bool p_inverse_model=false)</td></tr>
+<tr class="separator:a5b0fb4dcae38ff13ccaf335c9d5dbb7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac16518cae6f0971f881bda8b619941b1"><td class="memItemLeft" align="right" valign="top"><a id="ac16518cae6f0971f881bda8b619941b1"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>train</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action, <a class="el" href="class_tensor.html">Tensor</a> *p_state1)</td></tr>
 <tr class="separator:ac16518cae6f0971f881bda8b619941b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad10578d553f71fd0d8d7779aaff668cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#ad10578d553f71fd0d8d7779aaff668cd">add</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action, <a class="el" href="class_tensor.html">Tensor</a> *p_state1) const</td></tr>
+<tr class="memitem:ad10578d553f71fd0d8d7779aaff668cd"><td class="memItemLeft" align="right" valign="top"><a id="ad10578d553f71fd0d8d7779aaff668cd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action, <a class="el" href="class_tensor.html">Tensor</a> *p_state1) const</td></tr>
 <tr class="separator:ad10578d553f71fd0d8d7779aaff668cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa41d0fde0ed78383ad05489f46126fad"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#aa41d0fde0ed78383ad05489f46126fad">train</a> (int p_sample)</td></tr>
+<tr class="memitem:aa41d0fde0ed78383ad05489f46126fad"><td class="memItemLeft" align="right" valign="top"><a id="aa41d0fde0ed78383ad05489f46126fad"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>train</b> (int p_sample)</td></tr>
 <tr class="separator:aa41d0fde0ed78383ad05489f46126fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec9000564db9b3bb222f9e6557246fd2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#aec9000564db9b3bb222f9e6557246fd2">get_intrinsic_reward</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, float p_eta=1)</td></tr>
+<tr class="memitem:aec9000564db9b3bb222f9e6557246fd2"><td class="memItemLeft" align="right" valign="top"><a id="aec9000564db9b3bb222f9e6557246fd2"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_intrinsic_reward</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, float p_eta=1)</td></tr>
 <tr class="separator:aec9000564db9b3bb222f9e6557246fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d848fac4a03ca9903384db2425e8819"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_c_m.html#a6d848fac4a03ca9903384db2425e8819">get_output</a> () const</td></tr>
+<tr class="memitem:a6d848fac4a03ca9903384db2425e8819"><td class="memItemLeft" align="right" valign="top"><a id="a6d848fac4a03ca9903384db2425e8819"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_output</b> () const</td></tr>
 <tr class="separator:a6d848fac4a03ca9903384db2425e8819"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af694b8a3eae928880d89d7320dcf5173"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af694b8a3eae928880d89d7320dcf5173">&#9670;&nbsp;</a></span>ICM()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ICM::ICM </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td>
-          <td class="paramname"><em>p_forward_model</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_gradient_algorithm.html">GradientAlgorithm</a> *&#160;</td>
-          <td class="paramname"><em>p_forward_algorithm</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_size</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a60e8e4c5631f146783d60d22d3cc9107"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60e8e4c5631f146783d60d22d3cc9107">&#9670;&nbsp;</a></span>~ICM()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ICM::~ICM </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa956a906fa0d03231017b4b5978e63c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa956a906fa0d03231017b4b5978e63c6">&#9670;&nbsp;</a></span>activate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ICM::activate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_action</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad10578d553f71fd0d8d7779aaff668cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad10578d553f71fd0d8d7779aaff668cd">&#9670;&nbsp;</a></span>add()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ICM::add </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_action</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state1</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aec9000564db9b3bb222f9e6557246fd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec9000564db9b3bb222f9e6557246fd2">&#9670;&nbsp;</a></span>get_intrinsic_reward()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ICM::get_intrinsic_reward </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_action</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_eta</em> = <code>1</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6d848fac4a03ca9903384db2425e8819"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d848fac4a03ca9903384db2425e8819">&#9670;&nbsp;</a></span>get_output()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a>* Coeus::ICM::get_output </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa41d0fde0ed78383ad05489f46126fad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa41d0fde0ed78383ad05489f46126fad">&#9670;&nbsp;</a></span>train() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ICM::train </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_sample</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac16518cae6f0971f881bda8b619941b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac16518cae6f0971f881bda8b619941b1">&#9670;&nbsp;</a></span>train() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ICM::train </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_action</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state1</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_i_c_m_8h_source.html">ICM.h</a></li>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_i_c_m_8cpp.html">ICM.cpp</a></li>
+<li>Coeus/RL/<a class="el" href="_i_c_m_8h_source.html">ICM.h</a></li>
+<li>Coeus/RL/ICM.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_c_m.html">ICM</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_c_m.html">ICM</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

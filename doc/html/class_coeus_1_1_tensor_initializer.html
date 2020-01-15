@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -95,255 +96,55 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_tensor_initializer.htm
 <div class="title">Coeus::TensorInitializer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_tensor_initializer_8h_source.html">TensorInitializer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a69de95d7c1a65fc7b88f62d9acfd6e53"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53">INIT</a> { <br />
-&#160;&#160;<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a99571e2b2b430a6171280ab3ed40f80b">DEBUG</a> = 0, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a24c1af5fdff861ad881e786120a3a7ad">UNIFORM</a> = 1, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a71906c92c755435d6fa74661ab2a401a">LECUN_UNIFORM</a> = 2, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a28232e2a1ad6edfdd1cd326eaa59ecdf">GLOROT_UNIFORM</a> = 3, 
+<tr class="memitem:a69de95d7c1a65fc7b88f62d9acfd6e53"><td class="memItemLeft" align="right" valign="top"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>INIT</b> { <br />
+&#160;&#160;<b>DEBUG</b> = 0, 
+<b>UNIFORM</b> = 1, 
+<b>LECUN_UNIFORM</b> = 2, 
+<b>GLOROT_UNIFORM</b> = 3, 
 <br />
-&#160;&#160;<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a21828ac791b7e7a09f9f7e260389f7a0">IDENTITY</a> = 4, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53aeb40968fe9d5ca0adda08f04345631ad">NORMAL</a> = 5, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53aa0f06989c4df09a31cf5824ae884ba08">EXPONENTIAL</a> = 6, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a6e5cd367f9d210afcb0caddfed7e2c15">HE_UNIFORM</a> = 7, 
+&#160;&#160;<b>IDENTITY</b> = 4, 
+<b>NORMAL</b> = 5, 
+<b>EXPONENTIAL</b> = 6, 
+<b>HE_UNIFORM</b> = 7, 
 <br />
-&#160;&#160;<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53aa119ae4a1658a534a4ee7a5b6efe332f">LECUN_NORMAL</a> = 8, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53aa6ccda6c4000c6c1faf4ad0facf80b15">GLOROT_NORMAL</a> = 9, 
-<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53a6be6fbb30c1b277f5959db9f4c835b46">HE_NORMAL</a> = 10
+&#160;&#160;<b>LECUN_NORMAL</b> = 8, 
+<b>GLOROT_NORMAL</b> = 9, 
+<b>HE_NORMAL</b> = 10
 <br />
  }</td></tr>
 <tr class="separator:a69de95d7c1a65fc7b88f62d9acfd6e53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aff56bd069239e334fb87f33438ca17df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_tensor_initializer.html#aff56bd069239e334fb87f33438ca17df">TensorInitializer</a> ()</td></tr>
-<tr class="separator:aff56bd069239e334fb87f33438ca17df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34b88e000e18adaf331a7499e56e5d25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a34b88e000e18adaf331a7499e56e5d25">TensorInitializer</a> (<a class="el" href="class_coeus_1_1_tensor_initializer.html">TensorInitializer</a> &amp;p_copy)</td></tr>
+<tr class="memitem:a34b88e000e18adaf331a7499e56e5d25"><td class="memItemLeft" align="right" valign="top"><a id="a34b88e000e18adaf331a7499e56e5d25"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TensorInitializer</b> (<a class="el" href="class_coeus_1_1_tensor_initializer.html">TensorInitializer</a> &amp;p_copy)</td></tr>
 <tr class="separator:a34b88e000e18adaf331a7499e56e5d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a560019829dedb13de474d509607bf3a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a560019829dedb13de474d509607bf3a2">TensorInitializer</a> (<a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53">INIT</a> p_init, float p_arg1=0, float p_arg2=0)</td></tr>
+<tr class="memitem:a560019829dedb13de474d509607bf3a2"><td class="memItemLeft" align="right" valign="top"><a id="a560019829dedb13de474d509607bf3a2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TensorInitializer</b> (INIT p_init, float p_arg1=0, float p_arg2=0)</td></tr>
 <tr class="separator:a560019829dedb13de474d509607bf3a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0159138dce3c2ef7a095112cc664b8ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a0159138dce3c2ef7a095112cc664b8ab">~TensorInitializer</a> ()</td></tr>
-<tr class="separator:a0159138dce3c2ef7a095112cc664b8ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54644ee590926a9f8815b1f061f37748"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a54644ee590926a9f8815b1f061f37748">init</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_tensor) const</td></tr>
+<tr class="memitem:a54644ee590926a9f8815b1f061f37748"><td class="memItemLeft" align="right" valign="top"><a id="a54644ee590926a9f8815b1f061f37748"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_tensor) const</td></tr>
 <tr class="separator:a54644ee590926a9f8815b1f061f37748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a268aff56d6efedcb271e168e2cd8fceb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a268aff56d6efedcb271e168e2cd8fceb">init</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_tensor, <a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53">INIT</a> p_init, float p_arg1=0, float p_arg2=0)</td></tr>
+<tr class="memitem:a268aff56d6efedcb271e168e2cd8fceb"><td class="memItemLeft" align="right" valign="top"><a id="a268aff56d6efedcb271e168e2cd8fceb"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_tensor, INIT p_init, float p_arg1=0, float p_arg2=0)</td></tr>
 <tr class="separator:a268aff56d6efedcb271e168e2cd8fceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a69de95d7c1a65fc7b88f62d9acfd6e53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69de95d7c1a65fc7b88f62d9acfd6e53">&#9670;&nbsp;</a></span>INIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53">Coeus::TensorInitializer::INIT</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53a99571e2b2b430a6171280ab3ed40f80b"></a>DEBUG&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53a24c1af5fdff861ad881e786120a3a7ad"></a>UNIFORM&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53a71906c92c755435d6fa74661ab2a401a"></a>LECUN_UNIFORM&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53a28232e2a1ad6edfdd1cd326eaa59ecdf"></a>GLOROT_UNIFORM&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53a21828ac791b7e7a09f9f7e260389f7a0"></a>IDENTITY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53aeb40968fe9d5ca0adda08f04345631ad"></a>NORMAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53aa0f06989c4df09a31cf5824ae884ba08"></a>EXPONENTIAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53a6e5cd367f9d210afcb0caddfed7e2c15"></a>HE_UNIFORM&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53aa119ae4a1658a534a4ee7a5b6efe332f"></a>LECUN_NORMAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53aa6ccda6c4000c6c1faf4ad0facf80b15"></a>GLOROT_NORMAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a69de95d7c1a65fc7b88f62d9acfd6e53a6be6fbb30c1b277f5959db9f4c835b46"></a>HE_NORMAL&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aff56bd069239e334fb87f33438ca17df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff56bd069239e334fb87f33438ca17df">&#9670;&nbsp;</a></span>TensorInitializer() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TensorInitializer::TensorInitializer </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a34b88e000e18adaf331a7499e56e5d25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34b88e000e18adaf331a7499e56e5d25">&#9670;&nbsp;</a></span>TensorInitializer() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TensorInitializer::TensorInitializer </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_tensor_initializer.html">TensorInitializer</a> &amp;&#160;</td>
-          <td class="paramname"><em>p_copy</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a560019829dedb13de474d509607bf3a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a560019829dedb13de474d509607bf3a2">&#9670;&nbsp;</a></span>TensorInitializer() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">TensorInitializer::TensorInitializer </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53">INIT</a>&#160;</td>
-          <td class="paramname"><em>p_init</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_arg1</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_arg2</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0159138dce3c2ef7a095112cc664b8ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0159138dce3c2ef7a095112cc664b8ab">&#9670;&nbsp;</a></span>~TensorInitializer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">TensorInitializer::~TensorInitializer </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a54644ee590926a9f8815b1f061f37748"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54644ee590926a9f8815b1f061f37748">&#9670;&nbsp;</a></span>init() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TensorInitializer::init </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_tensor</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a268aff56d6efedcb271e168e2cd8fceb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a268aff56d6efedcb271e168e2cd8fceb">&#9670;&nbsp;</a></span>init() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TensorInitializer::init </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_tensor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_tensor_initializer.html#a69de95d7c1a65fc7b88f62d9acfd6e53">INIT</a>&#160;</td>
-          <td class="paramname"><em>p_init</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_arg1</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_arg2</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/CLAB/<a class="el" href="_tensor_initializer_8h_source.html">TensorInitializer.h</a></li>
-<li>D:/GIT/Coeus/Coeus/CLAB/<a class="el" href="_tensor_initializer_8cpp.html">TensorInitializer.cpp</a></li>
+<li>Coeus/CLAB/<a class="el" href="_tensor_initializer_8h_source.html">TensorInitializer.h</a></li>
+<li>Coeus/CLAB/TensorInitializer.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_tensor_initializer.html">TensorInitializer</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_tensor_initializer.html">TensorInitializer</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

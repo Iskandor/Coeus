@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -95,450 +96,68 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_double_q_learning.html
 <div class="title">Coeus::DoubleQLearning Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_double_q_learning_8h_source.html">DoubleQLearning.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abe03faf1a81ca62e8d74bd555999ed73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#abe03faf1a81ca62e8d74bd555999ed73">DoubleQLearning</a> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_a, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_b, <a class="el" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a> p_grad_rule, float p_alpha, float p_gamma, float p_lambda=0)</td></tr>
+<tr class="memitem:abe03faf1a81ca62e8d74bd555999ed73"><td class="memItemLeft" align="right" valign="top"><a id="abe03faf1a81ca62e8d74bd555999ed73"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>DoubleQLearning</b> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_a, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_b, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda=0)</td></tr>
 <tr class="separator:abe03faf1a81ca62e8d74bd555999ed73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e9f747839af3b028715506c1f60ea2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a7e9f747839af3b028715506c1f60ea2d">~DoubleQLearning</a> ()</td></tr>
-<tr class="separator:a7e9f747839af3b028715506c1f60ea2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a412d9b99b4ae76c7f9efa68c035b10"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a5a412d9b99b4ae76c7f9efa68c035b10">train</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, int p_action0, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, float p_reward, bool p_finished) const</td></tr>
+<tr class="memitem:a5a412d9b99b4ae76c7f9efa68c035b10"><td class="memItemLeft" align="right" valign="top"><a id="a5a412d9b99b4ae76c7f9efa68c035b10"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>train</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, int p_action0, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, float p_reward, bool p_finished) const</td></tr>
 <tr class="separator:a5a412d9b99b4ae76c7f9efa68c035b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b6756a43f3520ceea22933a195e4c06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a2b6756a43f3520ceea22933a195e4c06">get_output</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state) const</td></tr>
+<tr class="memitem:a2b6756a43f3520ceea22933a195e4c06"><td class="memItemLeft" align="right" valign="top"><a id="a2b6756a43f3520ceea22933a195e4c06"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_output</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state) const</td></tr>
 <tr class="separator:a2b6756a43f3520ceea22933a195e4c06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a5dce178253f86a32d40e3e6b537b5e7e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a5dce178253f86a32d40e3e6b537b5e7e">calc_max_qa_index</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network) const</td></tr>
+<tr class="memitem:a5dce178253f86a32d40e3e6b537b5e7e"><td class="memItemLeft" align="right" valign="top"><a id="a5dce178253f86a32d40e3e6b537b5e7e"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>calc_max_qa_index</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network) const</td></tr>
 <tr class="separator:a5dce178253f86a32d40e3e6b537b5e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ab1b9550c73ddea4ebfdc305d5e68eefc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#ab1b9550c73ddea4ebfdc305d5e68eefc">_network_a</a></td></tr>
+<tr class="memitem:ab1b9550c73ddea4ebfdc305d5e68eefc"><td class="memItemLeft" align="right" valign="top"><a id="ab1b9550c73ddea4ebfdc305d5e68eefc"></a>
+<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_network_a</b></td></tr>
 <tr class="separator:ab1b9550c73ddea4ebfdc305d5e68eefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af875fb1154652130671ef07d1b67db23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#af875fb1154652130671ef07d1b67db23">_network_b</a></td></tr>
+<tr class="memitem:af875fb1154652130671ef07d1b67db23"><td class="memItemLeft" align="right" valign="top"><a id="af875fb1154652130671ef07d1b67db23"></a>
+<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_network_b</b></td></tr>
 <tr class="separator:af875fb1154652130671ef07d1b67db23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfd8d5a744bdd8339a14a442d3c2053c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#adfd8d5a744bdd8339a14a442d3c2053c">_network_gradient_a</a></td></tr>
+<tr class="memitem:adfd8d5a744bdd8339a14a442d3c2053c"><td class="memItemLeft" align="right" valign="top"><a id="adfd8d5a744bdd8339a14a442d3c2053c"></a>
+<a class="el" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_network_gradient_a</b></td></tr>
 <tr class="separator:adfd8d5a744bdd8339a14a442d3c2053c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22f522ab370c2a08b3a214638a6e6b15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a22f522ab370c2a08b3a214638a6e6b15">_network_gradient_b</a></td></tr>
+<tr class="memitem:a22f522ab370c2a08b3a214638a6e6b15"><td class="memItemLeft" align="right" valign="top"><a id="a22f522ab370c2a08b3a214638a6e6b15"></a>
+<a class="el" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_network_gradient_b</b></td></tr>
 <tr class="separator:a22f522ab370c2a08b3a214638a6e6b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a007cb25c81bf9a2aff5f57ee08f4145b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a007cb25c81bf9a2aff5f57ee08f4145b">_update_rule_a</a></td></tr>
+<tr class="memitem:a007cb25c81bf9a2aff5f57ee08f4145b"><td class="memItemLeft" align="right" valign="top"><a id="a007cb25c81bf9a2aff5f57ee08f4145b"></a>
+<a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_update_rule_a</b></td></tr>
 <tr class="separator:a007cb25c81bf9a2aff5f57ee08f4145b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1b0f591efc841a7ca7a14a31ebd62c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#ab1b0f591efc841a7ca7a14a31ebd62c0">_update_rule_b</a></td></tr>
+<tr class="memitem:ab1b0f591efc841a7ca7a14a31ebd62c0"><td class="memItemLeft" align="right" valign="top"><a id="ab1b0f591efc841a7ca7a14a31ebd62c0"></a>
+<a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_update_rule_b</b></td></tr>
 <tr class="separator:ab1b0f591efc841a7ca7a14a31ebd62c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a489dcc90a4c5b49a972b5a645a0c05e0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a489dcc90a4c5b49a972b5a645a0c05e0">_alpha</a></td></tr>
+<tr class="memitem:a489dcc90a4c5b49a972b5a645a0c05e0"><td class="memItemLeft" align="right" valign="top"><a id="a489dcc90a4c5b49a972b5a645a0c05e0"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>_alpha</b></td></tr>
 <tr class="separator:a489dcc90a4c5b49a972b5a645a0c05e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9bcf456afa9d6e1e60ce708ec9b0b73"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#ab9bcf456afa9d6e1e60ce708ec9b0b73">_gamma</a></td></tr>
+<tr class="memitem:ab9bcf456afa9d6e1e60ce708ec9b0b73"><td class="memItemLeft" align="right" valign="top"><a id="ab9bcf456afa9d6e1e60ce708ec9b0b73"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>_gamma</b></td></tr>
 <tr class="separator:ab9bcf456afa9d6e1e60ce708ec9b0b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadfe9b95b57b9d7137ddef58c88a3835"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#aadfe9b95b57b9d7137ddef58c88a3835">_action_count</a></td></tr>
+<tr class="memitem:aadfe9b95b57b9d7137ddef58c88a3835"><td class="memItemLeft" align="right" valign="top"><a id="aadfe9b95b57b9d7137ddef58c88a3835"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_action_count</b></td></tr>
 <tr class="separator:aadfe9b95b57b9d7137ddef58c88a3835"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17344e14e3954f829cb3358c533f5cf5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_double_q_learning.html#a17344e14e3954f829cb3358c533f5cf5">_output</a></td></tr>
+<tr class="memitem:a17344e14e3954f829cb3358c533f5cf5"><td class="memItemLeft" align="right" valign="top"><a id="a17344e14e3954f829cb3358c533f5cf5"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_output</b></td></tr>
 <tr class="separator:a17344e14e3954f829cb3358c533f5cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abe03faf1a81ca62e8d74bd555999ed73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe03faf1a81ca62e8d74bd555999ed73">&#9670;&nbsp;</a></span>DoubleQLearning()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">DoubleQLearning::DoubleQLearning </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td>
-          <td class="paramname"><em>p_network_a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td>
-          <td class="paramname"><em>p_network_b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a>&#160;</td>
-          <td class="paramname"><em>p_grad_rule</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_alpha</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_gamma</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_lambda</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7e9f747839af3b028715506c1f60ea2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e9f747839af3b028715506c1f60ea2d">&#9670;&nbsp;</a></span>~DoubleQLearning()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">DoubleQLearning::~DoubleQLearning </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5dce178253f86a32d40e3e6b537b5e7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5dce178253f86a32d40e3e6b537b5e7e">&#9670;&nbsp;</a></span>calc_max_qa_index()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int DoubleQLearning::calc_max_qa_index </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td>
-          <td class="paramname"><em>p_network</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2b6756a43f3520ceea22933a195e4c06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b6756a43f3520ceea22933a195e4c06">&#9670;&nbsp;</a></span>get_output()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a> * DoubleQLearning::get_output </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5a412d9b99b4ae76c7f9efa68c035b10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a412d9b99b4ae76c7f9efa68c035b10">&#9670;&nbsp;</a></span>train()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float DoubleQLearning::train </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_action0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_reward</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>p_finished</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="aadfe9b95b57b9d7137ddef58c88a3835"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadfe9b95b57b9d7137ddef58c88a3835">&#9670;&nbsp;</a></span>_action_count</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Coeus::DoubleQLearning::_action_count</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a489dcc90a4c5b49a972b5a645a0c05e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a489dcc90a4c5b49a972b5a645a0c05e0">&#9670;&nbsp;</a></span>_alpha</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float Coeus::DoubleQLearning::_alpha</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab9bcf456afa9d6e1e60ce708ec9b0b73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9bcf456afa9d6e1e60ce708ec9b0b73">&#9670;&nbsp;</a></span>_gamma</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float Coeus::DoubleQLearning::_gamma</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab1b9550c73ddea4ebfdc305d5e68eefc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1b9550c73ddea4ebfdc305d5e68eefc">&#9670;&nbsp;</a></span>_network_a</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* Coeus::DoubleQLearning::_network_a</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af875fb1154652130671ef07d1b67db23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af875fb1154652130671ef07d1b67db23">&#9670;&nbsp;</a></span>_network_b</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* Coeus::DoubleQLearning::_network_b</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adfd8d5a744bdd8339a14a442d3c2053c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfd8d5a744bdd8339a14a442d3c2053c">&#9670;&nbsp;</a></span>_network_gradient_a</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* Coeus::DoubleQLearning::_network_gradient_a</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a22f522ab370c2a08b3a214638a6e6b15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22f522ab370c2a08b3a214638a6e6b15">&#9670;&nbsp;</a></span>_network_gradient_b</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* Coeus::DoubleQLearning::_network_gradient_b</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a17344e14e3954f829cb3358c533f5cf5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17344e14e3954f829cb3358c533f5cf5">&#9670;&nbsp;</a></span>_output</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a>* Coeus::DoubleQLearning::_output</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a007cb25c81bf9a2aff5f57ee08f4145b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a007cb25c81bf9a2aff5f57ee08f4145b">&#9670;&nbsp;</a></span>_update_rule_a</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>* Coeus::DoubleQLearning::_update_rule_a</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab1b0f591efc841a7ca7a14a31ebd62c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1b0f591efc841a7ca7a14a31ebd62c0">&#9670;&nbsp;</a></span>_update_rule_b</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>* Coeus::DoubleQLearning::_update_rule_b</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_double_q_learning_8h_source.html">DoubleQLearning.h</a></li>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_double_q_learning_8cpp.html">DoubleQLearning.cpp</a></li>
+<li>Coeus/RL/<a class="el" href="_double_q_learning_8h_source.html">DoubleQLearning.h</a></li>
+<li>Coeus/RL/DoubleQLearning.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_double_q_learning.html">DoubleQLearning</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_double_q_learning.html">DoubleQLearning</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

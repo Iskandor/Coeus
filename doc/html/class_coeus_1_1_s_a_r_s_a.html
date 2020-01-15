@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -93,145 +94,26 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_s_a_r_s_a.html','');})
 <div class="title">Coeus::SARSA Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_s_a_r_s_a_8h_source.html">SARSA.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a28351073c5e73318589284b2b53c1836"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_s_a_r_s_a.html#a28351073c5e73318589284b2b53c1836">SARSA</a> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network, <a class="el" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a> p_grad_rule, float p_alpha, float p_gamma, float p_lambda=0)</td></tr>
+<tr class="memitem:a28351073c5e73318589284b2b53c1836"><td class="memItemLeft" align="right" valign="top"><a id="a28351073c5e73318589284b2b53c1836"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>SARSA</b> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda=0)</td></tr>
 <tr class="separator:a28351073c5e73318589284b2b53c1836"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3091f0a31ee868db6e06ca5ca17002e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_s_a_r_s_a.html#ae3091f0a31ee868db6e06ca5ca17002e">~SARSA</a> ()</td></tr>
-<tr class="separator:ae3091f0a31ee868db6e06ca5ca17002e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae114185027e6620172e16d5402ef8c22"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_s_a_r_s_a.html#ae114185027e6620172e16d5402ef8c22">train</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, int p_action0, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, int p_action1, float p_reward, bool p_final) const</td></tr>
+<tr class="memitem:ae114185027e6620172e16d5402ef8c22"><td class="memItemLeft" align="right" valign="top"><a id="ae114185027e6620172e16d5402ef8c22"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>train</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, int p_action0, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, int p_action1, float p_reward, bool p_final) const</td></tr>
 <tr class="separator:ae114185027e6620172e16d5402ef8c22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a28351073c5e73318589284b2b53c1836"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28351073c5e73318589284b2b53c1836">&#9670;&nbsp;</a></span>SARSA()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SARSA::SARSA </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td>
-          <td class="paramname"><em>p_network</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a>&#160;</td>
-          <td class="paramname"><em>p_grad_rule</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_alpha</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_gamma</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_lambda</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae3091f0a31ee868db6e06ca5ca17002e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3091f0a31ee868db6e06ca5ca17002e">&#9670;&nbsp;</a></span>~SARSA()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SARSA::~SARSA </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae114185027e6620172e16d5402ef8c22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae114185027e6620172e16d5402ef8c22">&#9670;&nbsp;</a></span>train()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float SARSA::train </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_action0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_state1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_action1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_reward</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>p_final</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_s_a_r_s_a_8h_source.html">SARSA.h</a></li>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_s_a_r_s_a_8cpp.html">SARSA.cpp</a></li>
+<li>Coeus/RL/<a class="el" href="_s_a_r_s_a_8h_source.html">SARSA.h</a></li>
+<li>Coeus/RL/SARSA.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_s_a_r_s_a.html">SARSA</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_s_a_r_s_a.html">SARSA</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

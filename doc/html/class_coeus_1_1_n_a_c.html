@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -93,176 +94,29 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_n_a_c.html','');});
 <div class="title">Coeus::NAC Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_n_a_c_8h_source.html">NAC.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a67ee915fe4ff825f3852d8b4366f8f5a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_n_a_c.html#a67ee915fe4ff825f3852d8b4366f8f5a">NAC</a> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_critic, <a class="el" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a> p_rule_critic, float p_alpha_critic, float p_gamma, float p_lambda, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_actor, float p_alpha_actor, float p_delta)</td></tr>
-<tr class="separator:a67ee915fe4ff825f3852d8b4366f8f5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f8ce014e117eeb5a4c189a56390d58f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_n_a_c.html#a5f8ce014e117eeb5a4c189a56390d58f">~NAC</a> ()</td></tr>
-<tr class="separator:a5f8ce014e117eeb5a4c189a56390d58f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3d21d11351d916e777f89e27080936f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_n_a_c.html#ae3d21d11351d916e777f89e27080936f">add_sample</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_s0, <a class="el" href="class_tensor.html">Tensor</a> *p_a, <a class="el" href="class_tensor.html">Tensor</a> *p_s1, float p_r, bool p_final)</td></tr>
+<tr class="memitem:a4d53463ffc018e5093ba060e5978f82b"><td class="memItemLeft" align="right" valign="top"><a id="a4d53463ffc018e5093ba060e5978f82b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>NAC</b> (<a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_critic, GRADIENT_RULE p_rule_critic, float p_alpha_critic, float p_gamma, float p_lambda, <a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *p_network_actor, float p_epsilon)</td></tr>
+<tr class="separator:a4d53463ffc018e5093ba060e5978f82b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3d21d11351d916e777f89e27080936f"><td class="memItemLeft" align="right" valign="top"><a id="ae3d21d11351d916e777f89e27080936f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add_sample</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_s0, <a class="el" href="class_tensor.html">Tensor</a> *p_a, <a class="el" href="class_tensor.html">Tensor</a> *p_s1, float p_r, bool p_final)</td></tr>
 <tr class="separator:ae3d21d11351d916e777f89e27080936f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f01a72debc081281b654c4c951b1368"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_n_a_c.html#a1f01a72debc081281b654c4c951b1368">train</a> ()</td></tr>
+<tr class="memitem:a1f01a72debc081281b654c4c951b1368"><td class="memItemLeft" align="right" valign="top"><a id="a1f01a72debc081281b654c4c951b1368"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>train</b> ()</td></tr>
 <tr class="separator:a1f01a72debc081281b654c4c951b1368"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a67ee915fe4ff825f3852d8b4366f8f5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67ee915fe4ff825f3852d8b4366f8f5a">&#9670;&nbsp;</a></span>NAC()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">NAC::NAC </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td>
-          <td class="paramname"><em>p_network_critic</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace_coeus.html#ace1cf14f78880c67ad6e3a0b521f01a1">GRADIENT_RULE</a>&#160;</td>
-          <td class="paramname"><em>p_rule_critic</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_alpha_critic</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_gamma</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_lambda</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a> *&#160;</td>
-          <td class="paramname"><em>p_network_actor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_alpha_actor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_delta</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5f8ce014e117eeb5a4c189a56390d58f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f8ce014e117eeb5a4c189a56390d58f">&#9670;&nbsp;</a></span>~NAC()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">NAC::~NAC </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae3d21d11351d916e777f89e27080936f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3d21d11351d916e777f89e27080936f">&#9670;&nbsp;</a></span>add_sample()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NAC::add_sample </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_s0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_s1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>p_r</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>p_final</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1f01a72debc081281b654c4c951b1368"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f01a72debc081281b654c4c951b1368">&#9670;&nbsp;</a></span>train()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NAC::train </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_n_a_c_8h_source.html">NAC.h</a></li>
-<li>D:/GIT/Coeus/Coeus/RL/<a class="el" href="_n_a_c_8cpp.html">NAC.cpp</a></li>
+<li>Coeus/RL/<a class="el" href="_n_a_c_8h_source.html">NAC.h</a></li>
+<li>Coeus/RL/NAC.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_n_a_c.html">NAC</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_n_a_c.html">NAC</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

@@ -23,51 +23,28 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "Coeus", "index.html", [
-    [ "Coeus", "md__d_1__g_i_t__coeus__coeus__r_e_a_d_m_e.html", null ],
-    [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
-      [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ],
-        [ "Enumerator", "namespacemembers_eval.html", null ]
-      ] ]
-    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ],
-        [ "Enumerations", "functions_enum.html", null ],
-        [ "Enumerator", "functions_eval.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "All", "functions.html", null ],
+        [ "Functions", "functions_func.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Functions", "globals_func.html", null ],
-        [ "Variables", "globals_vars.html", null ]
-      ] ]
+      [ "File List", "files.html", "files_dup" ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"_a2_c_8cpp.html",
-"_p_p_l_batch_module_8h_source.html",
-"class_coeus_1_1_boltzman_exploration.html#a651120c2e6c9ddf78782f8dc3cfdec31",
-"class_coeus_1_1_i_environment.html#ab28253d1d072413f3859b7d930a6ffbb",
-"class_coeus_1_1_quadratic_cost.html#a52fd5f86b92c62cbdb9a498e28eaba01",
-"class_tensor_operator_m_k_l.html#ab2231e2fd121be29f97d52d200394bc9",
-"classnlohmann_1_1basic__json_1_1json__reverse__iterator.html#a9accc9dd9f9033f50c0ab6bcf337ffe0"
+".html",
+"class_coeus_1_1_base_layer.html#ac2ada773070c15cfd3a2f8c18598f301",
+"class_coeus_1_1_i_c_m.html#a60e8e4c5631f146783d60d22d3cc9107",
+"class_coeus_1_1_pooling_layer.html#a97c749c6ac411382367e05462bce2c7c",
+"class_tensor.html#ae1c3d5bd27450be3ff191f95a9d035a9"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

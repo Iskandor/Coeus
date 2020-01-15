@@ -8,7 +8,9 @@ var class_coeus_1_1_gradient =
     [ "end", "class_coeus_1_1_gradient.html#a42450ec528a65c51e1d5514c1188bf82", null ],
     [ "fill", "class_coeus_1_1_gradient.html#a86551577ca87005be67278c4c209a385", null ],
     [ "init", "class_coeus_1_1_gradient.html#a03923591b918ed0c22ae27f7f3138155", null ],
+    [ "is_invalid", "class_coeus_1_1_gradient.html#a8b33f4a58f46908608bdcb55849c0fe4", null ],
     [ "operator+=", "class_coeus_1_1_gradient.html#a2b52a79502e3c573a2b3b72092023c93", null ],
+    [ "operator+=", "class_coeus_1_1_gradient.html#a262cb376b478369e6fd516dc924fc46c", null ],
     [ "operator=", "class_coeus_1_1_gradient.html#a9c3957fa6e65471f20ba05bd9186553e", null ],
     [ "operator[]", "class_coeus_1_1_gradient.html#ad49b0b2dbdd5661fc1ff972cdc07ca06", null ]
 ];

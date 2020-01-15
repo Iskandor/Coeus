@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/RL/EGreedyExploration.h Source File</title>
+<title>Coeus: Coeus/RL/EGreedyExploration.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,20 +91,20 @@ $(document).ready(function(){initNavTree('_e_greedy_exploration_8h_source.html',
 <div class="title">EGreedyExploration.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_e_greedy_exploration_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tensor_8h.html">Tensor.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_interpolation_8h.html">IInterpolation.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;Tensor.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;IInterpolation.h&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;{</div>
 <div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="class_coeus_1_1_e_greedy_exploration.html">    7</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_e_greedy_exploration.html">EGreedyExploration</a></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    {</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_e_greedy_exploration.html#a865e8334b715e152a6ed1dadf522b923">EGreedyExploration</a>(<span class="keywordtype">float</span> p_epsilon, <a class="code" href="class_coeus_1_1_i_interpolation.html">IInterpolation</a>* p_interpolation = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="class_coeus_1_1_e_greedy_exploration.html#ab46c7ba602ba87e6fcf92aa2ec143034">~EGreedyExploration</a>();</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_e_greedy_exploration.html">EGreedyExploration</a>(<span class="keywordtype">float</span> p_epsilon, <a class="code" href="class_coeus_1_1_i_interpolation.html">IInterpolation</a>* p_interpolation = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        ~<a class="code" href="class_coeus_1_1_e_greedy_exploration.html">EGreedyExploration</a>();</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="class_coeus_1_1_e_greedy_exploration.html#a2b8b4c3995697ef76ef814c7b4d79a39">get_action</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_values) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_e_greedy_exploration.html#a01de768d90aefda0b1666e7e4ada5e49">update</a>(<span class="keywordtype">int</span> p_t);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordtype">int</span> get_action(<a class="code" href="class_tensor.html">Tensor</a>* p_values) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">void</span> update(<span class="keywordtype">int</span> p_t);</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">float</span>           _epsilon;</div>
@@ -112,20 +113,13 @@ $(document).ready(function(){initNavTree('_e_greedy_exploration_8h_source.html',
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="a_tensor_8h_html"><div class="ttname"><a href="_tensor_8h.html">Tensor.h</a></div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="a_i_interpolation_8h_html"><div class="ttname"><a href="_i_interpolation_8h.html">IInterpolation.h</a></div></div>
 <div class="ttc" id="aclass_coeus_1_1_e_greedy_exploration_html"><div class="ttname"><a href="class_coeus_1_1_e_greedy_exploration.html">Coeus::EGreedyExploration</a></div><div class="ttdef"><b>Definition:</b> EGreedyExploration.h:7</div></div>
-<div class="ttc" id="aclass_coeus_1_1_e_greedy_exploration_html_a01de768d90aefda0b1666e7e4ada5e49"><div class="ttname"><a href="class_coeus_1_1_e_greedy_exploration.html#a01de768d90aefda0b1666e7e4ada5e49">Coeus::EGreedyExploration::update</a></div><div class="ttdeci">void update(int p_t)</div><div class="ttdef"><b>Definition:</b> EGreedyExploration.cpp:19</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_interpolation_html"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html">Coeus::IInterpolation</a></div><div class="ttdef"><b>Definition:</b> IInterpolation.h:4</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="aclass_coeus_1_1_e_greedy_exploration_html_ab46c7ba602ba87e6fcf92aa2ec143034"><div class="ttname"><a href="class_coeus_1_1_e_greedy_exploration.html#ab46c7ba602ba87e6fcf92aa2ec143034">Coeus::EGreedyExploration::~EGreedyExploration</a></div><div class="ttdeci">~EGreedyExploration()</div><div class="ttdef"><b>Definition:</b> EGreedyExploration.cpp:14</div></div>
-<div class="ttc" id="aclass_coeus_1_1_e_greedy_exploration_html_a865e8334b715e152a6ed1dadf522b923"><div class="ttname"><a href="class_coeus_1_1_e_greedy_exploration.html#a865e8334b715e152a6ed1dadf522b923">Coeus::EGreedyExploration::EGreedyExploration</a></div><div class="ttdeci">EGreedyExploration(float p_epsilon, IInterpolation *p_interpolation=nullptr)</div><div class="ttdef"><b>Definition:</b> EGreedyExploration.cpp:7</div></div>
-<div class="ttc" id="aclass_coeus_1_1_e_greedy_exploration_html_a2b8b4c3995697ef76ef814c7b4d79a39"><div class="ttname"><a href="class_coeus_1_1_e_greedy_exploration.html#a2b8b4c3995697ef76ef814c7b4d79a39">Coeus::EGreedyExploration::get_action</a></div><div class="ttdeci">int get_action(Tensor *p_values) const</div><div class="ttdef"><b>Definition:</b> EGreedyExploration.cpp:28</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><a class="el" href="_e_greedy_exploration_8h.html">EGreedyExploration.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><b>EGreedyExploration.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

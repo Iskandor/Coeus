@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/base64.h Source File</title>
+<title>Coeus: Coeus/Core/base64.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,24 +91,24 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="title">base64.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="base64_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef BASE64_H</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef BASE64_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define BASE64_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="base64_8h.html#aeaf3f12738fa64f3cccbe5b361d4c62d">    6</a></span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> <a class="code" href="base64_8h.html#aeaf3f12738fa64f3cccbe5b361d4c62d">kBase64Alphabet</a>[] = <span class="stringliteral">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> kBase64Alphabet[] = <span class="stringliteral">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    <span class="stringliteral">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="stringliteral">&quot;0123456789+/&quot;</span>;</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="class_base64.html">   10</a></span>&#160;<span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_base64.html">Base64</a> {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="class_base64.html#ad234621ec037e09be3e96a1df479d3ad">   12</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="class_base64.html#ad234621ec037e09be3e96a1df479d3ad">Encode</a>(<span class="keyword">const</span> std::string &amp;in, std::string *out) {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> Encode(<span class="keyword">const</span> std::string &amp;in, std::string *out) {</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">int</span> i = 0, j = 0;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">size_t</span> enc_len = 0;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a3[3];</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a4[4];</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    out-&gt;resize(<a class="code" href="class_base64.html#a0df7dbd2cdd9fef872f122ef21c9abd7">EncodedLength</a>(in));</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    out-&gt;resize(EncodedLength(in));</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">size_t</span> input_len = in.size();</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::string::const_iterator input = in.begin();</div>
@@ -118,7 +119,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        a3_to_a4(a4, a3);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">for</span> (i = 0; i &lt; 4; i++) {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;          (*out)[enc_len++] = <a class="code" href="base64_8h.html#aeaf3f12738fa64f3cccbe5b361d4c62d">kBase64Alphabet</a>[a4[i]];</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;          (*out)[enc_len++] = kBase64Alphabet[a4[i]];</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        }</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        i = 0;</div>
@@ -133,7 +134,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      a3_to_a4(a4, a3);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <span class="keywordflow">for</span> (j = 0; j &lt; i + 1; j++) {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        (*out)[enc_len++] = <a class="code" href="base64_8h.html#aeaf3f12738fa64f3cccbe5b361d4c62d">kBase64Alphabet</a>[a4[j]];</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        (*out)[enc_len++] = kBase64Alphabet[a4[j]];</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keywordflow">while</span> ((i++ &lt; 3)) {</div>
@@ -144,13 +145,13 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span> (enc_len == out-&gt;size());</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  }</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="class_base64.html#a2d8e4b90610915909c80e83cd1e8476c">   55</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="class_base64.html#a2d8e4b90610915909c80e83cd1e8476c">Encode</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *input, <span class="keywordtype">size_t</span> input_length, <span class="keywordtype">char</span> *out, <span class="keywordtype">size_t</span> out_length) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> Encode(<span class="keyword">const</span> <span class="keywordtype">char</span> *input, <span class="keywordtype">size_t</span> input_length, <span class="keywordtype">char</span> *out, <span class="keywordtype">size_t</span> out_length) {</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">int</span> i = 0, j = 0;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">char</span> *out_begin = out;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a3[3];</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a4[4];</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">size_t</span> encoded_length = <a class="code" href="class_base64.html#a0df7dbd2cdd9fef872f122ef21c9abd7">EncodedLength</a>(input_length);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">size_t</span> encoded_length = EncodedLength(input_length);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">if</span> (out_length &lt; encoded_length) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
@@ -160,7 +161,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        a3_to_a4(a4, a3);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">for</span> (i = 0; i &lt; 4; i++) {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;          *out++ = <a class="code" href="base64_8h.html#aeaf3f12738fa64f3cccbe5b361d4c62d">kBase64Alphabet</a>[a4[i]];</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;          *out++ = kBase64Alphabet[a4[i]];</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        i = 0;</div>
@@ -175,7 +176,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      a3_to_a4(a4, a3);</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordflow">for</span> (j = 0; j &lt; i + 1; j++) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        *out++ = <a class="code" href="base64_8h.html#aeaf3f12738fa64f3cccbe5b361d4c62d">kBase64Alphabet</a>[a4[j]];</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        *out++ = kBase64Alphabet[a4[j]];</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      }</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="keywordflow">while</span> ((i++ &lt; 3)) {</div>
@@ -186,7 +187,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">return</span> (out == (out_begin + encoded_length));</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  }</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="class_base64.html#ae6a7457922b536ccae57467db1f972af">   97</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="class_base64.html#ae6a7457922b536ccae57467db1f972af">Decode</a>(<span class="keyword">const</span> std::string &amp;in, std::string *out) {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> Decode(<span class="keyword">const</span> std::string &amp;in, std::string *out) {</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">int</span> i = 0, j = 0;</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">size_t</span> dec_len = 0;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a3[3];</div>
@@ -195,7 +196,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">size_t</span> input_len = in.size();</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    std::string::const_iterator input = in.begin();</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    out-&gt;resize(<a class="code" href="class_base64.html#adc3c2225c9134b5d2ca8e36d1732bf9d">DecodedLength</a>(in));</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    out-&gt;resize(DecodedLength(in));</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">while</span> (input_len--) {</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="keywordflow">if</span> (*input == <span class="charliteral">&#39;=&#39;</span>) {</div>
@@ -237,13 +238,13 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordflow">return</span> (dec_len == out-&gt;size());</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  }</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
-<div class="line"><a name="l00148"></a><span class="lineno"><a class="line" href="class_base64.html#a005d5580c89f0c01e8e9762002985def">  148</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="class_base64.html#a005d5580c89f0c01e8e9762002985def">Decode</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *input, <span class="keywordtype">size_t</span> input_length, <span class="keywordtype">char</span> *out, <span class="keywordtype">size_t</span> out_length) {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> Decode(<span class="keyword">const</span> <span class="keywordtype">char</span> *input, <span class="keywordtype">size_t</span> input_length, <span class="keywordtype">char</span> *out, <span class="keywordtype">size_t</span> out_length) {</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keywordtype">int</span> i = 0, j = 0;</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">char</span> *out_begin = out;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a3[3];</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> a4[4];</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordtype">size_t</span> decoded_length = <a class="code" href="class_base64.html#adc3c2225c9134b5d2ca8e36d1732bf9d">DecodedLength</a>(input, input_length);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordtype">size_t</span> decoded_length = DecodedLength(input, input_length);</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">if</span> (out_length &lt; decoded_length) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
@@ -287,7 +288,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordflow">return</span> (out == (out_begin + decoded_length));</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  }</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
-<div class="line"><a name="l00198"></a><span class="lineno"><a class="line" href="class_base64.html#adc3c2225c9134b5d2ca8e36d1732bf9d">  198</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="class_base64.html#adc3c2225c9134b5d2ca8e36d1732bf9d">DecodedLength</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *in, <span class="keywordtype">size_t</span> in_length) {</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">size_t</span> DecodedLength(<span class="keyword">const</span> <span class="keywordtype">char</span> *in, <span class="keywordtype">size_t</span> in_length) {</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordtype">int</span> numEq = 0;</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *in_end = in + in_length;</div>
@@ -296,7 +297,7 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordflow">return</span> ((6 * in_length) / 8) - numEq;</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;  }</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno"><a class="line" href="class_base64.html#a7113fbf3bbf5d40881d353bdd4d2b71f">  207</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="class_base64.html#a7113fbf3bbf5d40881d353bdd4d2b71f">DecodedLength</a>(<span class="keyword">const</span> std::string &amp;in) {</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">size_t</span> DecodedLength(<span class="keyword">const</span> std::string &amp;in) {</div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordtype">int</span> numEq = 0;</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">size_t</span> n = in.size();</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
@@ -307,15 +308,15 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keywordflow">return</span> ((6 * n) / 8) - numEq;</div>
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  }</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno"><a class="line" href="class_base64.html#a0df7dbd2cdd9fef872f122ef21c9abd7">  218</a></span>&#160;  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="class_base64.html#a0df7dbd2cdd9fef872f122ef21c9abd7">EncodedLength</a>(<span class="keywordtype">size_t</span> length) {</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">size_t</span> EncodedLength(<span class="keywordtype">size_t</span> length) {</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keywordflow">return</span> (length + 2 - ((length + 2) % 3)) / 3 * 4;</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  }</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
-<div class="line"><a name="l00222"></a><span class="lineno"><a class="line" href="class_base64.html#a288ebede449355c76a998bf65065b419">  222</a></span>&#160;  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="class_base64.html#a288ebede449355c76a998bf65065b419">EncodedLength</a>(<span class="keyword">const</span> std::string &amp;in) {</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="class_base64.html#a0df7dbd2cdd9fef872f122ef21c9abd7">EncodedLength</a>(in.length());</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">size_t</span> EncodedLength(<span class="keyword">const</span> std::string &amp;in) {</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordflow">return</span> EncodedLength(in.length());</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;  }</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
-<div class="line"><a name="l00226"></a><span class="lineno"><a class="line" href="class_base64.html#ab97d90737b8e76ce60e87c5a6e3ab1a3">  226</a></span>&#160;  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="class_base64.html#ab97d90737b8e76ce60e87c5a6e3ab1a3">StripPadding</a>(std::string *in) {</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">void</span> StripPadding(std::string *in) {</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="keywordflow">while</span> (!in-&gt;empty() &amp;&amp; *(in-&gt;rbegin()) == <span class="charliteral">&#39;=&#39;</span>) in-&gt;resize(in-&gt;size() - 1);</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;  }</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
@@ -348,21 +349,11 @@ $(document).ready(function(){initNavTree('base64_8h_source.html','');});
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="preprocessor">#endif // BASE64_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_base64_html_adc3c2225c9134b5d2ca8e36d1732bf9d"><div class="ttname"><a href="class_base64.html#adc3c2225c9134b5d2ca8e36d1732bf9d">Base64::DecodedLength</a></div><div class="ttdeci">static size_t DecodedLength(const char *in, size_t in_length)</div><div class="ttdef"><b>Definition:</b> base64.h:198</div></div>
-<div class="ttc" id="aclass_base64_html_a005d5580c89f0c01e8e9762002985def"><div class="ttname"><a href="class_base64.html#a005d5580c89f0c01e8e9762002985def">Base64::Decode</a></div><div class="ttdeci">static bool Decode(const char *input, size_t input_length, char *out, size_t out_length)</div><div class="ttdef"><b>Definition:</b> base64.h:148</div></div>
-<div class="ttc" id="aclass_base64_html_ad234621ec037e09be3e96a1df479d3ad"><div class="ttname"><a href="class_base64.html#ad234621ec037e09be3e96a1df479d3ad">Base64::Encode</a></div><div class="ttdeci">static bool Encode(const std::string &amp;in, std::string *out)</div><div class="ttdef"><b>Definition:</b> base64.h:12</div></div>
-<div class="ttc" id="aclass_base64_html_a2d8e4b90610915909c80e83cd1e8476c"><div class="ttname"><a href="class_base64.html#a2d8e4b90610915909c80e83cd1e8476c">Base64::Encode</a></div><div class="ttdeci">static bool Encode(const char *input, size_t input_length, char *out, size_t out_length)</div><div class="ttdef"><b>Definition:</b> base64.h:55</div></div>
-<div class="ttc" id="aclass_base64_html_ae6a7457922b536ccae57467db1f972af"><div class="ttname"><a href="class_base64.html#ae6a7457922b536ccae57467db1f972af">Base64::Decode</a></div><div class="ttdeci">static bool Decode(const std::string &amp;in, std::string *out)</div><div class="ttdef"><b>Definition:</b> base64.h:97</div></div>
-<div class="ttc" id="abase64_8h_html_aeaf3f12738fa64f3cccbe5b361d4c62d"><div class="ttname"><a href="base64_8h.html#aeaf3f12738fa64f3cccbe5b361d4c62d">kBase64Alphabet</a></div><div class="ttdeci">const char kBase64Alphabet[]</div><div class="ttdef"><b>Definition:</b> base64.h:6</div></div>
-<div class="ttc" id="aclass_base64_html_a0df7dbd2cdd9fef872f122ef21c9abd7"><div class="ttname"><a href="class_base64.html#a0df7dbd2cdd9fef872f122ef21c9abd7">Base64::EncodedLength</a></div><div class="ttdeci">static size_t EncodedLength(size_t length)</div><div class="ttdef"><b>Definition:</b> base64.h:218</div></div>
-<div class="ttc" id="aclass_base64_html_a288ebede449355c76a998bf65065b419"><div class="ttname"><a href="class_base64.html#a288ebede449355c76a998bf65065b419">Base64::EncodedLength</a></div><div class="ttdeci">static size_t EncodedLength(const std::string &amp;in)</div><div class="ttdef"><b>Definition:</b> base64.h:222</div></div>
-<div class="ttc" id="aclass_base64_html_ab97d90737b8e76ce60e87c5a6e3ab1a3"><div class="ttname"><a href="class_base64.html#ab97d90737b8e76ce60e87c5a6e3ab1a3">Base64::StripPadding</a></div><div class="ttdeci">static void StripPadding(std::string *in)</div><div class="ttdef"><b>Definition:</b> base64.h:226</div></div>
 <div class="ttc" id="aclass_base64_html"><div class="ttname"><a href="class_base64.html">Base64</a></div><div class="ttdef"><b>Definition:</b> base64.h:10</div></div>
-<div class="ttc" id="aclass_base64_html_a7113fbf3bbf5d40881d353bdd4d2b71f"><div class="ttname"><a href="class_base64.html#a7113fbf3bbf5d40881d353bdd4d2b71f">Base64::DecodedLength</a></div><div class="ttdeci">static size_t DecodedLength(const std::string &amp;in)</div><div class="ttdef"><b>Definition:</b> base64.h:207</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="base64_8h.html">base64.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>base64.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -95,8 +96,6 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_neuron_operator.html',
 <div class="title">Coeus::NeuronOperator Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_neuron_operator_8h_source.html">NeuronOperator.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Coeus::NeuronOperator:</div>
 <div class="dyncontent">
@@ -110,726 +109,139 @@ Inheritance diagram for Coeus::NeuronOperator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac7293a87b80850043fc2cd9f55d572d5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#ac7293a87b80850043fc2cd9f55d572d5">NeuronOperator</a> (int p_dim, <a class="el" href="namespace_coeus.html#a083460eecdbf89793271b893748cea04">ACTIVATION</a> p_activation)</td></tr>
+<tr class="memitem:ac7293a87b80850043fc2cd9f55d572d5"><td class="memItemLeft" align="right" valign="top"><a id="ac7293a87b80850043fc2cd9f55d572d5"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>NeuronOperator</b> (int p_dim, ACTIVATION p_activation)</td></tr>
 <tr class="separator:ac7293a87b80850043fc2cd9f55d572d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3b5486cf61e2f636de0f1cfff165411"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#ab3b5486cf61e2f636de0f1cfff165411">NeuronOperator</a> (<a class="el" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a> p_data)</td></tr>
+<tr class="memitem:ab3b5486cf61e2f636de0f1cfff165411"><td class="memItemLeft" align="right" valign="top"><a id="ab3b5486cf61e2f636de0f1cfff165411"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>NeuronOperator</b> (json p_data)</td></tr>
 <tr class="separator:ab3b5486cf61e2f636de0f1cfff165411"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04d8864d41ae0a28cc6630b3788cc8a1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a04d8864d41ae0a28cc6630b3788cc8a1">NeuronOperator</a> (<a class="el" href="class_coeus_1_1_neuron_operator.html">NeuronOperator</a> &amp;p_copy, bool p_clone)</td></tr>
+<tr class="memitem:a04d8864d41ae0a28cc6630b3788cc8a1"><td class="memItemLeft" align="right" valign="top"><a id="a04d8864d41ae0a28cc6630b3788cc8a1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>NeuronOperator</b> (<a class="el" href="class_coeus_1_1_neuron_operator.html">NeuronOperator</a> &amp;p_copy, bool p_clone)</td></tr>
 <tr class="separator:a04d8864d41ae0a28cc6630b3788cc8a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecd5197c6648cdafb34e761bbee90a23"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#aecd5197c6648cdafb34e761bbee90a23">~NeuronOperator</a> ()</td></tr>
-<tr class="separator:aecd5197c6648cdafb34e761bbee90a23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3deac158dd00ddb82a1fc12fdea98b29"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a3deac158dd00ddb82a1fc12fdea98b29">integrate</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_input, <a class="el" href="class_tensor.html">Tensor</a> *p_weights)</td></tr>
+<tr class="memitem:a3deac158dd00ddb82a1fc12fdea98b29"><td class="memItemLeft" align="right" valign="top"><a id="a3deac158dd00ddb82a1fc12fdea98b29"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>integrate</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_input, <a class="el" href="class_tensor.html">Tensor</a> *p_weights)</td></tr>
 <tr class="separator:a3deac158dd00ddb82a1fc12fdea98b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a628b0309a1603f372f7fa09fd18a2938"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a628b0309a1603f372f7fa09fd18a2938">activate</a> ()</td></tr>
+<tr class="memitem:a628b0309a1603f372f7fa09fd18a2938"><td class="memItemLeft" align="right" valign="top"><a id="a628b0309a1603f372f7fa09fd18a2938"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>activate</b> ()</td></tr>
 <tr class="separator:a628b0309a1603f372f7fa09fd18a2938"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a711303500c470519b9adfb1205398055"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a711303500c470519b9adfb1205398055">derivative</a> () const</td></tr>
+<tr class="memitem:a711303500c470519b9adfb1205398055"><td class="memItemLeft" align="right" valign="top"><a id="a711303500c470519b9adfb1205398055"></a>
+<a class="el" href="class_tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>derivative</b> () const</td></tr>
 <tr class="separator:a711303500c470519b9adfb1205398055"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c633cf55763ac7e0b2d608b3993da07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a0c633cf55763ac7e0b2d608b3993da07">get_function</a> () const</td></tr>
+<tr class="memitem:a0c633cf55763ac7e0b2d608b3993da07"><td class="memItemLeft" align="right" valign="top"><a id="a0c633cf55763ac7e0b2d608b3993da07"></a>
+<a class="el" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_function</b> () const</td></tr>
 <tr class="separator:a0c633cf55763ac7e0b2d608b3993da07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29c9e0ce1b8d11b0a5cbac70ecc5de01"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a29c9e0ce1b8d11b0a5cbac70ecc5de01">get_output</a> () const</td></tr>
+<tr class="memitem:a29c9e0ce1b8d11b0a5cbac70ecc5de01"><td class="memItemLeft" align="right" valign="top"><a id="a29c9e0ce1b8d11b0a5cbac70ecc5de01"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_output</b> () const</td></tr>
 <tr class="separator:a29c9e0ce1b8d11b0a5cbac70ecc5de01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7df58f035b3247234b861cce03b3717b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_param.html">Param</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a7df58f035b3247234b861cce03b3717b">get_bias</a> () const</td></tr>
+<tr class="memitem:a7df58f035b3247234b861cce03b3717b"><td class="memItemLeft" align="right" valign="top"><a id="a7df58f035b3247234b861cce03b3717b"></a>
+<a class="el" href="class_coeus_1_1_param.html">Param</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_bias</b> () const</td></tr>
 <tr class="separator:a7df58f035b3247234b861cce03b3717b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eeefdf0253149684b6d3a73f0d37475"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a0eeefdf0253149684b6d3a73f0d37475">get_id</a> () const</td></tr>
+<tr class="memitem:a0eeefdf0253149684b6d3a73f0d37475"><td class="memItemLeft" align="right" valign="top"><a id="a0eeefdf0253149684b6d3a73f0d37475"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>get_id</b> () const</td></tr>
 <tr class="separator:a0eeefdf0253149684b6d3a73f0d37475"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2faad001616583479ba16318710d50f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#ad2faad001616583479ba16318710d50f">get_json</a> () const</td></tr>
+<tr class="memitem:ad2faad001616583479ba16318710d50f"><td class="memItemLeft" align="right" valign="top"><a id="ad2faad001616583479ba16318710d50f"></a>
+json&#160;</td><td class="memItemRight" valign="bottom"><b>get_json</b> () const</td></tr>
 <tr class="separator:ad2faad001616583479ba16318710d50f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_coeus_1_1_param_model"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_coeus_1_1_param_model')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_coeus_1_1_param_model.html">Coeus::ParamModel</a></td></tr>
-<tr class="memitem:ae2d8ea4fb55648592e569976b16e04c0 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#ae2d8ea4fb55648592e569976b16e04c0">ParamModel</a> ()</td></tr>
-<tr class="separator:ae2d8ea4fb55648592e569976b16e04c0 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a750a4b11e796bbd156492665844f8075 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a750a4b11e796bbd156492665844f8075">~ParamModel</a> ()</td></tr>
-<tr class="separator:a750a4b11e796bbd156492665844f8075 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87b9d2f392c23fe2fd2c0823485e78f9 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a87b9d2f392c23fe2fd2c0823485e78f9">get_params_size</a> () const</td></tr>
+<tr class="memitem:a87b9d2f392c23fe2fd2c0823485e78f9 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a87b9d2f392c23fe2fd2c0823485e78f9"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>get_params_size</b> () const</td></tr>
 <tr class="separator:a87b9d2f392c23fe2fd2c0823485e78f9 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add1800b1f3b031ad6d23ba887e90bc57 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#add1800b1f3b031ad6d23ba887e90bc57">get_empty_params</a> () const</td></tr>
+<tr class="memitem:add1800b1f3b031ad6d23ba887e90bc57 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="add1800b1f3b031ad6d23ba887e90bc57"></a>
+map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_empty_params</b> () const</td></tr>
 <tr class="separator:add1800b1f3b031ad6d23ba887e90bc57 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15f9f8621e95de0580eace06e1af411d inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a15f9f8621e95de0580eace06e1af411d">get_params</a> () const</td></tr>
+<tr class="memitem:a15f9f8621e95de0580eace06e1af411d inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a15f9f8621e95de0580eace06e1af411d"></a>
+map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_params</b> () const</td></tr>
 <tr class="separator:a15f9f8621e95de0580eace06e1af411d inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a98dcd950d2fb3a749ffd63bd7623ce inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a5a98dcd950d2fb3a749ffd63bd7623ce">operator[]</a> (const string &amp;p_id)</td></tr>
+<tr class="memitem:a5a98dcd950d2fb3a749ffd63bd7623ce inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a5a98dcd950d2fb3a749ffd63bd7623ce"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const string &amp;p_id)</td></tr>
 <tr class="separator:a5a98dcd950d2fb3a749ffd63bd7623ce inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aead2cb66d1d31a024d0c9d136a799aa1 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#aead2cb66d1d31a024d0c9d136a799aa1">DEBUG_compare</a> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
+<tr class="memitem:aead2cb66d1d31a024d0c9d136a799aa1 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="aead2cb66d1d31a024d0c9d136a799aa1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_compare</b> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
 <tr class="separator:aead2cb66d1d31a024d0c9d136a799aa1 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9e8665b0b95647ee01a1d88ba3a39b9 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#ae9e8665b0b95647ee01a1d88ba3a39b9">copy_params</a> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
+<tr class="memitem:ae9e8665b0b95647ee01a1d88ba3a39b9 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="ae9e8665b0b95647ee01a1d88ba3a39b9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>copy_params</b> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
 <tr class="separator:ae9e8665b0b95647ee01a1d88ba3a39b9 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad24d09722dcbce0a7d73d4a8ddabfa2f inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#ad24d09722dcbce0a7d73d4a8ddabfa2f">polyak_averaging</a> (float p_alpha, <a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
+<tr class="memitem:ad24d09722dcbce0a7d73d4a8ddabfa2f inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="ad24d09722dcbce0a7d73d4a8ddabfa2f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>polyak_averaging</b> (float p_alpha, <a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
 <tr class="separator:ad24d09722dcbce0a7d73d4a8ddabfa2f inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc530a229f4b5154bac419924fdc9544 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#acc530a229f4b5154bac419924fdc9544">average_params</a> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> **p_model, int p_size) const</td></tr>
+<tr class="memitem:acc530a229f4b5154bac419924fdc9544 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="acc530a229f4b5154bac419924fdc9544"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>average_params</b> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> **p_model, int p_size) const</td></tr>
 <tr class="separator:acc530a229f4b5154bac419924fdc9544 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e28fbe10b3c30733381650308a0cf5b inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a3e28fbe10b3c30733381650308a0cf5b">add_param</a> (const string &amp;p_id, <a class="el" href="class_tensor.html">Tensor</a> *p_param)</td></tr>
+<tr class="memitem:a3e28fbe10b3c30733381650308a0cf5b inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a3e28fbe10b3c30733381650308a0cf5b"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>add_param</b> (const string &amp;p_id, <a class="el" href="class_tensor.html">Tensor</a> *p_param)</td></tr>
 <tr class="separator:a3e28fbe10b3c30733381650308a0cf5b inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90bc1d4e4693389ab8cb3c9c386a3b5c inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a90bc1d4e4693389ab8cb3c9c386a3b5c">add_param</a> (<a class="el" href="class_coeus_1_1_param.html">Param</a> *p_param)</td></tr>
+<tr class="memitem:a90bc1d4e4693389ab8cb3c9c386a3b5c inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a90bc1d4e4693389ab8cb3c9c386a3b5c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add_param</b> (<a class="el" href="class_coeus_1_1_param.html">Param</a> *p_param)</td></tr>
 <tr class="separator:a90bc1d4e4693389ab8cb3c9c386a3b5c inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abca591a1a50c854d56b10a4cd452ff3d inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#abca591a1a50c854d56b10a4cd452ff3d">add_param</a> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
+<tr class="memitem:abca591a1a50c854d56b10a4cd452ff3d inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="abca591a1a50c854d56b10a4cd452ff3d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add_param</b> (<a class="el" href="class_coeus_1_1_param_model.html">ParamModel</a> *p_model)</td></tr>
 <tr class="separator:abca591a1a50c854d56b10a4cd452ff3d inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a496cd1c2c2b48d19c7dbda69871bf1 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a3a496cd1c2c2b48d19c7dbda69871bf1">update</a> (map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt; *p_update) const</td></tr>
+<tr class="memitem:a3a496cd1c2c2b48d19c7dbda69871bf1 inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a3a496cd1c2c2b48d19c7dbda69871bf1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt; *p_update) const</td></tr>
 <tr class="separator:a3a496cd1c2c2b48d19c7dbda69871bf1 inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec509c2934e896ea8b88c3717472b2fd inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#aec509c2934e896ea8b88c3717472b2fd">override</a> (map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt; *p_source)</td></tr>
+<tr class="memitem:aec509c2934e896ea8b88c3717472b2fd inherit pub_methods_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="aec509c2934e896ea8b88c3717472b2fd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>override</b> (map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt; *p_source)</td></tr>
 <tr class="separator:aec509c2934e896ea8b88c3717472b2fd inherit pub_methods_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a0be6c9512cbf12861a7c35fa6e977756"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a0be6c9512cbf12861a7c35fa6e977756">init_auxiliary_parameter</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_param, int p_rows, int p_cols)</td></tr>
+<tr class="memitem:a0be6c9512cbf12861a7c35fa6e977756"><td class="memItemLeft" align="right" valign="top"><a id="a0be6c9512cbf12861a7c35fa6e977756"></a>
+static <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>init_auxiliary_parameter</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_param, int p_rows, int p_cols)</td></tr>
 <tr class="separator:a0be6c9512cbf12861a7c35fa6e977756"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4984f57812f16e531bf433784ec69f49"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a4984f57812f16e531bf433784ec69f49">init_auxiliary_parameter</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_param, int p_depth, int p_rows, int p_cols)</td></tr>
+<tr class="memitem:a4984f57812f16e531bf433784ec69f49"><td class="memItemLeft" align="right" valign="top"><a id="a4984f57812f16e531bf433784ec69f49"></a>
+static <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>init_auxiliary_parameter</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_param, int p_depth, int p_rows, int p_cols)</td></tr>
 <tr class="separator:a4984f57812f16e531bf433784ec69f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5632a32fa5c34568a9db434fd26887b3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a5632a32fa5c34568a9db434fd26887b3">init_auxiliary_parameter</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_param, int p_batch, int p_depth, int p_rows, int p_cols)</td></tr>
+<tr class="memitem:a5632a32fa5c34568a9db434fd26887b3"><td class="memItemLeft" align="right" valign="top"><a id="a5632a32fa5c34568a9db434fd26887b3"></a>
+static <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>init_auxiliary_parameter</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_param, int p_batch, int p_depth, int p_rows, int p_cols)</td></tr>
 <tr class="separator:a5632a32fa5c34568a9db434fd26887b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a7983c807565a49c1e3c003eb75a33915"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a7983c807565a49c1e3c003eb75a33915">_id</a></td></tr>
+<tr class="memitem:a7983c807565a49c1e3c003eb75a33915"><td class="memItemLeft" align="right" valign="top"><a id="a7983c807565a49c1e3c003eb75a33915"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>_id</b></td></tr>
 <tr class="separator:a7983c807565a49c1e3c003eb75a33915"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ba9410f6b2bd0df19b543eded3c4e3d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a9ba9410f6b2bd0df19b543eded3c4e3d">_dim</a></td></tr>
+<tr class="memitem:a9ba9410f6b2bd0df19b543eded3c4e3d"><td class="memItemLeft" align="right" valign="top"><a id="a9ba9410f6b2bd0df19b543eded3c4e3d"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_dim</b></td></tr>
 <tr class="separator:a9ba9410f6b2bd0df19b543eded3c4e3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a354ce02eddb0afefb8e3d5bea3bd5f1d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_param.html">Param</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a354ce02eddb0afefb8e3d5bea3bd5f1d">_bias</a></td></tr>
+<tr class="memitem:a354ce02eddb0afefb8e3d5bea3bd5f1d"><td class="memItemLeft" align="right" valign="top"><a id="a354ce02eddb0afefb8e3d5bea3bd5f1d"></a>
+<a class="el" href="class_coeus_1_1_param.html">Param</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_bias</b></td></tr>
 <tr class="separator:a354ce02eddb0afefb8e3d5bea3bd5f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56d2d49c30d9fdf5a2322e76c1dbfd71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a56d2d49c30d9fdf5a2322e76c1dbfd71">_activation_function</a></td></tr>
+<tr class="memitem:a56d2d49c30d9fdf5a2322e76c1dbfd71"><td class="memItemLeft" align="right" valign="top"><a id="a56d2d49c30d9fdf5a2322e76c1dbfd71"></a>
+<a class="el" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_activation_function</b></td></tr>
 <tr class="separator:a56d2d49c30d9fdf5a2322e76c1dbfd71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44f84941157317e52e2e663d99d5ea71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a44f84941157317e52e2e663d99d5ea71">_net</a></td></tr>
+<tr class="memitem:a44f84941157317e52e2e663d99d5ea71"><td class="memItemLeft" align="right" valign="top"><a id="a44f84941157317e52e2e663d99d5ea71"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_net</b></td></tr>
 <tr class="separator:a44f84941157317e52e2e663d99d5ea71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11e112310838ed284a7a071c186ae16a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#a11e112310838ed284a7a071c186ae16a">_dnet</a></td></tr>
+<tr class="memitem:a11e112310838ed284a7a071c186ae16a"><td class="memItemLeft" align="right" valign="top"><a id="a11e112310838ed284a7a071c186ae16a"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_dnet</b></td></tr>
 <tr class="separator:a11e112310838ed284a7a071c186ae16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae49a3f32003efa9ccbfa39193b4fa273"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#ae49a3f32003efa9ccbfa39193b4fa273">_int</a></td></tr>
+<tr class="memitem:ae49a3f32003efa9ccbfa39193b4fa273"><td class="memItemLeft" align="right" valign="top"><a id="ae49a3f32003efa9ccbfa39193b4fa273"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_int</b></td></tr>
 <tr class="separator:ae49a3f32003efa9ccbfa39193b4fa273"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1a55a1c25b693974e7a77600e4f3b1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_neuron_operator.html#ae1a55a1c25b693974e7a77600e4f3b1c">_output</a></td></tr>
+<tr class="memitem:ae1a55a1c25b693974e7a77600e4f3b1c"><td class="memItemLeft" align="right" valign="top"><a id="ae1a55a1c25b693974e7a77600e4f3b1c"></a>
+<a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_output</b></td></tr>
 <tr class="separator:ae1a55a1c25b693974e7a77600e4f3b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_coeus_1_1_param_model"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_coeus_1_1_param_model')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_coeus_1_1_param_model.html">Coeus::ParamModel</a></td></tr>
-<tr class="memitem:ac4b66aa7b299271b9c4fe48854196cf9 inherit pro_attribs_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#ac4b66aa7b299271b9c4fe48854196cf9">_id</a></td></tr>
+<tr class="memitem:ac4b66aa7b299271b9c4fe48854196cf9 inherit pro_attribs_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="ac4b66aa7b299271b9c4fe48854196cf9"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>_id</b></td></tr>
 <tr class="separator:ac4b66aa7b299271b9c4fe48854196cf9 inherit pro_attribs_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3598f83fb4c066c9684bbcbfff2ddcf8 inherit pro_attribs_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a3598f83fb4c066c9684bbcbfff2ddcf8">_params</a></td></tr>
+<tr class="memitem:a3598f83fb4c066c9684bbcbfff2ddcf8 inherit pro_attribs_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a3598f83fb4c066c9684bbcbfff2ddcf8"></a>
+map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_params</b></td></tr>
 <tr class="separator:a3598f83fb4c066c9684bbcbfff2ddcf8 inherit pro_attribs_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a110135eac37b8623dbf3f7201d73335a inherit pro_attribs_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top">map&lt; string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_param_model.html#a110135eac37b8623dbf3f7201d73335a">_param_map</a></td></tr>
+<tr class="memitem:a110135eac37b8623dbf3f7201d73335a inherit pro_attribs_class_coeus_1_1_param_model"><td class="memItemLeft" align="right" valign="top"><a id="a110135eac37b8623dbf3f7201d73335a"></a>
+map&lt; string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_param_map</b></td></tr>
 <tr class="separator:a110135eac37b8623dbf3f7201d73335a inherit pro_attribs_class_coeus_1_1_param_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac7293a87b80850043fc2cd9f55d572d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7293a87b80850043fc2cd9f55d572d5">&#9670;&nbsp;</a></span>NeuronOperator() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">NeuronOperator::NeuronOperator </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_dim</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespace_coeus.html#a083460eecdbf89793271b893748cea04">ACTIVATION</a>&#160;</td>
-          <td class="paramname"><em>p_activation</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab3b5486cf61e2f636de0f1cfff165411"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3b5486cf61e2f636de0f1cfff165411">&#9670;&nbsp;</a></span>NeuronOperator() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">NeuronOperator::NeuronOperator </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>&#160;</td>
-          <td class="paramname"><em>p_data</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a04d8864d41ae0a28cc6630b3788cc8a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04d8864d41ae0a28cc6630b3788cc8a1">&#9670;&nbsp;</a></span>NeuronOperator() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">NeuronOperator::NeuronOperator </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_coeus_1_1_neuron_operator.html">NeuronOperator</a> &amp;&#160;</td>
-          <td class="paramname"><em>p_copy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>p_clone</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aecd5197c6648cdafb34e761bbee90a23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aecd5197c6648cdafb34e761bbee90a23">&#9670;&nbsp;</a></span>~NeuronOperator()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">NeuronOperator::~NeuronOperator </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a628b0309a1603f372f7fa09fd18a2938"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a628b0309a1603f372f7fa09fd18a2938">&#9670;&nbsp;</a></span>activate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NeuronOperator::activate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented in <a class="el" href="class_coeus_1_1_conv_operator.html#ab9383e1ef146ffab6255a4670294b35e">Coeus::ConvOperator</a>.</p>
-
-</div>
-</div>
-<a id="a711303500c470519b9adfb1205398055"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a711303500c470519b9adfb1205398055">&#9670;&nbsp;</a></span>derivative()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a> NeuronOperator::derivative </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7df58f035b3247234b861cce03b3717b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7df58f035b3247234b861cce03b3717b">&#9670;&nbsp;</a></span>get_bias()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_param.html">Param</a>* Coeus::NeuronOperator::get_bias </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0c633cf55763ac7e0b2d608b3993da07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c633cf55763ac7e0b2d608b3993da07">&#9670;&nbsp;</a></span>get_function()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a>* Coeus::NeuronOperator::get_function </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0eeefdf0253149684b6d3a73f0d37475"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0eeefdf0253149684b6d3a73f0d37475">&#9670;&nbsp;</a></span>get_id()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string Coeus::NeuronOperator::get_id </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad2faad001616583479ba16318710d50f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2faad001616583479ba16318710d50f">&#9670;&nbsp;</a></span>get_json()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a> NeuronOperator::get_json </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a29c9e0ce1b8d11b0a5cbac70ecc5de01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29c9e0ce1b8d11b0a5cbac70ecc5de01">&#9670;&nbsp;</a></span>get_output()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a>* Coeus::NeuronOperator::get_output </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5632a32fa5c34568a9db434fd26887b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5632a32fa5c34568a9db434fd26887b3">&#9670;&nbsp;</a></span>init_auxiliary_parameter() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a> * NeuronOperator::init_auxiliary_parameter </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_param</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_batch</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_depth</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_rows</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_cols</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4984f57812f16e531bf433784ec69f49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4984f57812f16e531bf433784ec69f49">&#9670;&nbsp;</a></span>init_auxiliary_parameter() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a> * NeuronOperator::init_auxiliary_parameter </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_param</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_depth</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_rows</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_cols</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0be6c9512cbf12861a7c35fa6e977756"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0be6c9512cbf12861a7c35fa6e977756">&#9670;&nbsp;</a></span>init_auxiliary_parameter() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a> * NeuronOperator::init_auxiliary_parameter </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_param</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_rows</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>p_cols</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3deac158dd00ddb82a1fc12fdea98b29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3deac158dd00ddb82a1fc12fdea98b29">&#9670;&nbsp;</a></span>integrate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void NeuronOperator::integrate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_input</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_weights</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a56d2d49c30d9fdf5a2322e76c1dbfd71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56d2d49c30d9fdf5a2322e76c1dbfd71">&#9670;&nbsp;</a></span>_activation_function</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a>* Coeus::NeuronOperator::_activation_function</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a354ce02eddb0afefb8e3d5bea3bd5f1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a354ce02eddb0afefb8e3d5bea3bd5f1d">&#9670;&nbsp;</a></span>_bias</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_coeus_1_1_param.html">Param</a>* Coeus::NeuronOperator::_bias</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9ba9410f6b2bd0df19b543eded3c4e3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ba9410f6b2bd0df19b543eded3c4e3d">&#9670;&nbsp;</a></span>_dim</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Coeus::NeuronOperator::_dim</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a11e112310838ed284a7a071c186ae16a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11e112310838ed284a7a071c186ae16a">&#9670;&nbsp;</a></span>_dnet</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a>* Coeus::NeuronOperator::_dnet</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7983c807565a49c1e3c003eb75a33915"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7983c807565a49c1e3c003eb75a33915">&#9670;&nbsp;</a></span>_id</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string Coeus::NeuronOperator::_id</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae49a3f32003efa9ccbfa39193b4fa273"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae49a3f32003efa9ccbfa39193b4fa273">&#9670;&nbsp;</a></span>_int</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a>* Coeus::NeuronOperator::_int</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a44f84941157317e52e2e663d99d5ea71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44f84941157317e52e2e663d99d5ea71">&#9670;&nbsp;</a></span>_net</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a>* Coeus::NeuronOperator::_net</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae1a55a1c25b693974e7a77600e4f3b1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1a55a1c25b693974e7a77600e4f3b1c">&#9670;&nbsp;</a></span>_output</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_tensor.html">Tensor</a>* Coeus::NeuronOperator::_output</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>D:/GIT/Coeus/Coeus/Core/<a class="el" href="_neuron_operator_8h_source.html">NeuronOperator.h</a></li>
-<li>D:/GIT/Coeus/Coeus/Core/<a class="el" href="_neuron_operator_8cpp.html">NeuronOperator.cpp</a></li>
+<li>Coeus/Core/<a class="el" href="_neuron_operator_8h_source.html">NeuronOperator.h</a></li>
+<li>Coeus/Core/NeuronOperator.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_neuron_operator.html">NeuronOperator</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_neuron_operator.html">NeuronOperator</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

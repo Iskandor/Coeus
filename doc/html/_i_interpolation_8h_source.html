@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/CLAB/IInterpolation.h Source File</title>
+<title>Coeus: Coeus/CLAB/IInterpolation.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,44 +91,37 @@ $(document).ready(function(){initNavTree('_i_interpolation_8h_source.html','');}
 <div class="title">IInterpolation.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_i_interpolation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;{</div>
 <div class="line"><a name="l00004"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_interpolation.html">    4</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_i_interpolation.html">IInterpolation</a></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;    {</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;        <a class="code" href="class_coeus_1_1_i_interpolation.html#af48b68399841aaafca012a3071a5f0b7">IInterpolation</a>(<span class="keywordtype">float</span> p_point1, <span class="keywordtype">float</span> p_point2, <span class="keywordtype">int</span> p_interval);</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_coeus_1_1_i_interpolation.html#ae4db074b267c29185920e7066051c936">~IInterpolation</a>();</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;        <a class="code" href="class_coeus_1_1_i_interpolation.html">IInterpolation</a>(<span class="keywordtype">float</span> p_point1, <span class="keywordtype">float</span> p_point2, <span class="keywordtype">int</span> p_interval);</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="class_coeus_1_1_i_interpolation.html">IInterpolation</a>();</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_interpolation.html#a4145a2142e4512d6db5c465b17709b5f">interpolate</a>(<span class="keywordtype">int</span> p_t) = 0;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> interpolate(<span class="keywordtype">int</span> p_t) = 0;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_interpolation.html#afdf16be4cc824fa198f2559ade63a5d5">   13</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_interpolation.html#afdf16be4cc824fa198f2559ade63a5d5">_point1</a>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_interpolation.html#a4641bc8b172813424294dbaf27ad4bcd">   14</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_interpolation.html#a4641bc8b172813424294dbaf27ad4bcd">_point2</a>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_interpolation.html#a0a72af59708bfe6bd6f3477c75a3d1b1">   15</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="class_coeus_1_1_i_interpolation.html#a0a72af59708bfe6bd6f3477c75a3d1b1">_interval</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordtype">float</span> _point1;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">float</span> _point2;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">int</span> _interval;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    };</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_interpolation.html#af48b68399841aaafca012a3071a5f0b7">   18</a></span>&#160;    <span class="keyword">inline</span> <a class="code" href="class_coeus_1_1_i_interpolation.html#af48b68399841aaafca012a3071a5f0b7">IInterpolation::IInterpolation</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> p_point1, <span class="keyword">const</span> <span class="keywordtype">float</span> p_point2, <span class="keyword">const</span> <span class="keywordtype">int</span> p_interval): _point1(p_point1), _point2(p_point2), _interval(p_interval)</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">inline</span> IInterpolation::IInterpolation(<span class="keyword">const</span> <span class="keywordtype">float</span> p_point1, <span class="keyword">const</span> <span class="keywordtype">float</span> p_point2, <span class="keyword">const</span> <span class="keywordtype">int</span> p_interval): _point1(p_point1), _point2(p_point2), _interval(p_interval)</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    {</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">inline</span> <a class="code" href="class_coeus_1_1_i_interpolation.html#ae4db074b267c29185920e7066051c936">IInterpolation::~IInterpolation</a>()</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">inline</span> IInterpolation::~IInterpolation()</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_i_interpolation_html_a0a72af59708bfe6bd6f3477c75a3d1b1"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html#a0a72af59708bfe6bd6f3477c75a3d1b1">Coeus::IInterpolation::_interval</a></div><div class="ttdeci">int _interval</div><div class="ttdef"><b>Definition:</b> IInterpolation.h:15</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_interpolation_html_a4641bc8b172813424294dbaf27ad4bcd"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html#a4641bc8b172813424294dbaf27ad4bcd">Coeus::IInterpolation::_point2</a></div><div class="ttdeci">float _point2</div><div class="ttdef"><b>Definition:</b> IInterpolation.h:14</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_interpolation_html_a4145a2142e4512d6db5c465b17709b5f"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html#a4145a2142e4512d6db5c465b17709b5f">Coeus::IInterpolation::interpolate</a></div><div class="ttdeci">virtual float interpolate(int p_t)=0</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_interpolation_html_ae4db074b267c29185920e7066051c936"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html#ae4db074b267c29185920e7066051c936">Coeus::IInterpolation::~IInterpolation</a></div><div class="ttdeci">virtual ~IInterpolation()</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_interpolation_html_af48b68399841aaafca012a3071a5f0b7"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html#af48b68399841aaafca012a3071a5f0b7">Coeus::IInterpolation::IInterpolation</a></div><div class="ttdeci">IInterpolation(float p_point1, float p_point2, int p_interval)</div><div class="ttdef"><b>Definition:</b> IInterpolation.h:18</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_interpolation_html"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html">Coeus::IInterpolation</a></div><div class="ttdef"><b>Definition:</b> IInterpolation.h:4</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_interpolation_html_afdf16be4cc824fa198f2559ade63a5d5"><div class="ttname"><a href="class_coeus_1_1_i_interpolation.html#afdf16be4cc824fa198f2559ade63a5d5">Coeus::IInterpolation::_point1</a></div><div class="ttdeci">float _point1</div><div class="ttdef"><b>Definition:</b> IInterpolation.h:13</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_8f76b9b3bcc2f0791111061cfbdb690f.html">CLAB</a></li><li class="navelem"><a class="el" href="_i_interpolation_8h.html">IInterpolation.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_8f76b9b3bcc2f0791111061cfbdb690f.html">CLAB</a></li><li class="navelem"><b>IInterpolation.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

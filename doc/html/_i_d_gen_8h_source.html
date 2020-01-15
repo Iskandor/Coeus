@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/IDGen.h Source File</title>
+<title>Coeus: Coeus/Core/IDGen.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,18 +91,18 @@ $(document).ready(function(){initNavTree('_i_d_gen_8h_source.html','');});
 <div class="title">IDGen.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_i_d_gen_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;{</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    </div>
 <div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_d_gen.html">    8</a></span>&#160;<span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_i_d_gen.html">IDGen</a></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_i_d_gen.html">IDGen</a>&amp; <a class="code" href="class_coeus_1_1_i_d_gen.html#a8e2055aa80d8514eeb3d459e1934d4a1">instance</a>();</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    std::string <a class="code" href="class_coeus_1_1_i_d_gen.html#abb2571e88446c9b531f561805f74a175">next</a>();</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_i_d_gen.html">IDGen</a>&amp; instance();</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    std::string next();</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="class_coeus_1_1_i_d_gen.html">IDGen</a>() : _id(0) {}</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    uint32_t _id;</div>
@@ -111,14 +112,11 @@ $(document).ready(function(){initNavTree('_i_d_gen_8h_source.html','');});
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_i_d_gen_html_abb2571e88446c9b531f561805f74a175"><div class="ttname"><a href="class_coeus_1_1_i_d_gen.html#abb2571e88446c9b531f561805f74a175">Coeus::IDGen::next</a></div><div class="ttdeci">std::string next()</div><div class="ttdef"><b>Definition:</b> IDGen.cpp:12</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_d_gen_html_a8e2055aa80d8514eeb3d459e1934d4a1"><div class="ttname"><a href="class_coeus_1_1_i_d_gen.html#a8e2055aa80d8514eeb3d459e1934d4a1">Coeus::IDGen::instance</a></div><div class="ttdeci">static IDGen &amp; instance()</div><div class="ttdef"><b>Definition:</b> IDGen.cpp:7</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_d_gen_html"><div class="ttname"><a href="class_coeus_1_1_i_d_gen.html">Coeus::IDGen</a></div><div class="ttdef"><b>Definition:</b> IDGen.h:8</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_i_d_gen_8h.html">IDGen.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>IDGen.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

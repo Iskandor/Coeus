@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/ICostFunction.h Source File</title>
+<title>Coeus: Coeus/Core/ICostFunction.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,37 +91,31 @@ $(document).ready(function(){initNavTree('_i_cost_function_8h_source.html','');}
 <div class="title">ICostFunction.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_i_cost_function_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tensor_8h.html">Tensor.h</a>&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;Tensor.h&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a> {</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span>Coeus {</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_cost_function.html">    7</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    {</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_i_cost_function.html#ade324266e80a8f430e4f11b6844e6d5c">ICostFunction</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_coeus_1_1_i_cost_function.html#ad04d0339e78d0777bee0bcfa5dc52db9">~ICostFunction</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_cost_function.html#a0e6a191246f47213069ab0b471ee01dc">cost</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_prediction, <a class="code" href="class_tensor.html">Tensor</a>* p_target) = 0;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_tensor.html">Tensor</a> <a class="code" href="class_coeus_1_1_i_cost_function.html#aa3fc0150c24b2200f59d5b79da8100fa">cost_deriv</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_prediction, <a class="code" href="class_tensor.html">Tensor</a>* p_target) = 0;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> cost(<a class="code" href="class_tensor.html">Tensor</a>* p_prediction, <a class="code" href="class_tensor.html">Tensor</a>* p_target) = 0;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="class_tensor.html">Tensor</a> cost_deriv(<a class="code" href="class_tensor.html">Tensor</a>* p_prediction, <a class="code" href="class_tensor.html">Tensor</a>* p_target) = 0;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    };</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_i_cost_function_html_a0e6a191246f47213069ab0b471ee01dc"><div class="ttname"><a href="class_coeus_1_1_i_cost_function.html#a0e6a191246f47213069ab0b471ee01dc">Coeus::ICostFunction::cost</a></div><div class="ttdeci">virtual float cost(Tensor *p_prediction, Tensor *p_target)=0</div></div>
-<div class="ttc" id="a_tensor_8h_html"><div class="ttname"><a href="_tensor_8h.html">Tensor.h</a></div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_cost_function_html"><div class="ttname"><a href="class_coeus_1_1_i_cost_function.html">Coeus::ICostFunction</a></div><div class="ttdef"><b>Definition:</b> ICostFunction.h:7</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_cost_function_html_ade324266e80a8f430e4f11b6844e6d5c"><div class="ttname"><a href="class_coeus_1_1_i_cost_function.html#ade324266e80a8f430e4f11b6844e6d5c">Coeus::ICostFunction::ICostFunction</a></div><div class="ttdeci">ICostFunction()=default</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_cost_function_html_ad04d0339e78d0777bee0bcfa5dc52db9"><div class="ttname"><a href="class_coeus_1_1_i_cost_function.html#ad04d0339e78d0777bee0bcfa5dc52db9">Coeus::ICostFunction::~ICostFunction</a></div><div class="ttdeci">virtual ~ICostFunction()=default</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_cost_function_html_aa3fc0150c24b2200f59d5b79da8100fa"><div class="ttname"><a href="class_coeus_1_1_i_cost_function.html#aa3fc0150c24b2200f59d5b79da8100fa">Coeus::ICostFunction::cost_deriv</a></div><div class="ttdeci">virtual Tensor cost_deriv(Tensor *p_prediction, Tensor *p_target)=0</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_i_cost_function_8h.html">ICostFunction.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>ICostFunction.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/ConvOperator.h Source File</title>
+<title>Coeus: Coeus/Core/ConvOperator.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,42 +91,35 @@ $(document).ready(function(){initNavTree('_conv_operator_8h_source.html','');});
 <div class="title">ConvOperator.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_conv_operator_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_neuron_operator_8h.html">NeuronOperator.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;NeuronOperator.h&quot;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
 <div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_coeus_1_1_conv_operator.html">    6</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_conv_operator.html">ConvOperator</a> : <span class="keyword">public</span> <a class="code" href="class_coeus_1_1_neuron_operator.html">NeuronOperator</a></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    {</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_coeus_1_1_conv_operator.html#a696e86987440d7b771276edf2f01e01f">ConvOperator</a>(<span class="keywordtype">int</span> p_dim, <a class="code" href="namespace_coeus.html#a083460eecdbf89793271b893748cea04">ACTIVATION</a> p_activation);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_conv_operator.html#a696e86987440d7b771276edf2f01e01f">ConvOperator</a>(<a class="code" href="class_coeus_1_1_conv_operator.html">ConvOperator</a>&amp; p_copy, <span class="keywordtype">bool</span> p_clone);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="class_coeus_1_1_conv_operator.html#a840a08d44c6059b8ed4a425d6677d6c5">~ConvOperator</a>();</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_coeus_1_1_conv_operator.html">ConvOperator</a>(<span class="keywordtype">int</span> p_dim, ACTIVATION p_activation);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="class_coeus_1_1_conv_operator.html">ConvOperator</a>(<a class="code" href="class_coeus_1_1_conv_operator.html">ConvOperator</a>&amp; p_copy, <span class="keywordtype">bool</span> p_clone);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        ~<a class="code" href="class_coeus_1_1_conv_operator.html">ConvOperator</a>();</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_conv_operator.html#acb4a2c8f948c707bfbec7f07916165e5">integrate</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_dim_tensor, <span class="keywordtype">int</span> p_rows, <span class="keywordtype">int</span> p_cols, <a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_weights);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_conv_operator.html#ab9383e1ef146ffab6255a4670294b35e">activate</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordtype">void</span> integrate(<a class="code" href="class_tensor.html">Tensor</a>* p_dim_tensor, <span class="keywordtype">int</span> p_rows, <span class="keywordtype">int</span> p_cols, <a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_weights);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordtype">void</span> activate() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_conv_operator.html#acb4a2c8f948c707bfbec7f07916165e5">integrate</a>(<a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_weights) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">void</span> integrate(<a class="code" href="class_tensor.html">Tensor</a>* p_input, <a class="code" href="class_tensor.html">Tensor</a>* p_weights) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    };</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="anamespace_coeus_html_a083460eecdbf89793271b893748cea04"><div class="ttname"><a href="namespace_coeus.html#a083460eecdbf89793271b893748cea04">Coeus::ACTIVATION</a></div><div class="ttdeci">ACTIVATION</div><div class="ttdef"><b>Definition:</b> Coeus.h:13</div></div>
-<div class="ttc" id="aclass_coeus_1_1_conv_operator_html_a696e86987440d7b771276edf2f01e01f"><div class="ttname"><a href="class_coeus_1_1_conv_operator.html#a696e86987440d7b771276edf2f01e01f">Coeus::ConvOperator::ConvOperator</a></div><div class="ttdeci">ConvOperator(int p_dim, ACTIVATION p_activation)</div><div class="ttdef"><b>Definition:</b> ConvOperator.cpp:6</div></div>
-<div class="ttc" id="aclass_coeus_1_1_conv_operator_html_a840a08d44c6059b8ed4a425d6677d6c5"><div class="ttname"><a href="class_coeus_1_1_conv_operator.html#a840a08d44c6059b8ed4a425d6677d6c5">Coeus::ConvOperator::~ConvOperator</a></div><div class="ttdeci">~ConvOperator()</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_conv_operator_html_ab9383e1ef146ffab6255a4670294b35e"><div class="ttname"><a href="class_coeus_1_1_conv_operator.html#ab9383e1ef146ffab6255a4670294b35e">Coeus::ConvOperator::activate</a></div><div class="ttdeci">void activate() override</div><div class="ttdef"><b>Definition:</b> ConvOperator.cpp:24</div></div>
 <div class="ttc" id="aclass_coeus_1_1_neuron_operator_html"><div class="ttname"><a href="class_coeus_1_1_neuron_operator.html">Coeus::NeuronOperator</a></div><div class="ttdef"><b>Definition:</b> NeuronOperator.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_conv_operator_html_acb4a2c8f948c707bfbec7f07916165e5"><div class="ttname"><a href="class_coeus_1_1_conv_operator.html#acb4a2c8f948c707bfbec7f07916165e5">Coeus::ConvOperator::integrate</a></div><div class="ttdeci">void integrate(Tensor *p_dim_tensor, int p_rows, int p_cols, Tensor *p_input, Tensor *p_weights)</div><div class="ttdef"><b>Definition:</b> ConvOperator.cpp:17</div></div>
 <div class="ttc" id="aclass_coeus_1_1_conv_operator_html"><div class="ttname"><a href="class_coeus_1_1_conv_operator.html">Coeus::ConvOperator</a></div><div class="ttdef"><b>Definition:</b> ConvOperator.h:6</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="a_neuron_operator_8h_html"><div class="ttname"><a href="_neuron_operator_8h.html">NeuronOperator.h</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_conv_operator_8h.html">ConvOperator.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>ConvOperator.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/RL/IMotivationModule.h Source File</title>
+<title>Coeus: Coeus/RL/IMotivationModule.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,41 +91,32 @@ $(document).ready(function(){initNavTree('_i_motivation_module_8h_source.html','
 <div class="title">IMotivationModule.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_i_motivation_module_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;{</div>
 <div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_motivation_module.html">    5</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_i_motivation_module.html">IMotivationModule</a></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    {</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        <a class="code" href="class_coeus_1_1_i_motivation_module.html#ab689b33b16c6a0d81eded723f8df5790">IMotivationModule</a>();</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <a class="code" href="class_coeus_1_1_i_motivation_module.html#a4bfe75b0b553e54c1d0e213cc0d4e928">~IMotivationModule</a>();</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        <a class="code" href="class_coeus_1_1_i_motivation_module.html">IMotivationModule</a>();</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        ~<a class="code" href="class_coeus_1_1_i_motivation_module.html">IMotivationModule</a>();</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_motivation_module.html#ac7a5935abbad0d8ceb805d0c05d279ec">uncertainty_motivation</a>() = 0;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_motivation_module.html#a08a292e855f0c860343ec6aedcbaeb01">familiarity_motivation</a>() = 0;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_motivation_module.html#a5a091b4a8a9e16d6000645fdfcb45bb1">intermediate_novelty_motivation</a>(<span class="keywordtype">float</span> p_sigma) = 0;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_motivation_module.html#a58d4b8af7bc807a522480c63bdbc7529">surprise_motivation</a>() = 0;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> uncertainty_motivation() = 0;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> familiarity_motivation() = 0;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> intermediate_novelty_motivation(<span class="keywordtype">float</span> p_sigma) = 0;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> surprise_motivation() = 0;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_motivation_module.html#aff5483846a2c00b47b5e657ff5cf67df">progress_uncertainty_motivation</a>() = 0;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_i_motivation_module.html#a0e8a98d839e10ce747257c776431ef80">progress_familiarity_motivation</a>() = 0;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> progress_uncertainty_motivation() = 0;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">float</span> progress_familiarity_motivation() = 0;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    };</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_a4bfe75b0b553e54c1d0e213cc0d4e928"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#a4bfe75b0b553e54c1d0e213cc0d4e928">Coeus::IMotivationModule::~IMotivationModule</a></div><div class="ttdeci">~IMotivationModule()</div><div class="ttdef"><b>Definition:</b> IMotivationModule.cpp:10</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_a0e8a98d839e10ce747257c776431ef80"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#a0e8a98d839e10ce747257c776431ef80">Coeus::IMotivationModule::progress_familiarity_motivation</a></div><div class="ttdeci">virtual float progress_familiarity_motivation()=0</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html">Coeus::IMotivationModule</a></div><div class="ttdef"><b>Definition:</b> IMotivationModule.h:5</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_a58d4b8af7bc807a522480c63bdbc7529"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#a58d4b8af7bc807a522480c63bdbc7529">Coeus::IMotivationModule::surprise_motivation</a></div><div class="ttdeci">virtual float surprise_motivation()=0</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_a5a091b4a8a9e16d6000645fdfcb45bb1"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#a5a091b4a8a9e16d6000645fdfcb45bb1">Coeus::IMotivationModule::intermediate_novelty_motivation</a></div><div class="ttdeci">virtual float intermediate_novelty_motivation(float p_sigma)=0</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_ab689b33b16c6a0d81eded723f8df5790"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#ab689b33b16c6a0d81eded723f8df5790">Coeus::IMotivationModule::IMotivationModule</a></div><div class="ttdeci">IMotivationModule()</div><div class="ttdef"><b>Definition:</b> IMotivationModule.cpp:5</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_aff5483846a2c00b47b5e657ff5cf67df"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#aff5483846a2c00b47b5e657ff5cf67df">Coeus::IMotivationModule::progress_uncertainty_motivation</a></div><div class="ttdeci">virtual float progress_uncertainty_motivation()=0</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_a08a292e855f0c860343ec6aedcbaeb01"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#a08a292e855f0c860343ec6aedcbaeb01">Coeus::IMotivationModule::familiarity_motivation</a></div><div class="ttdeci">virtual float familiarity_motivation()=0</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_motivation_module_html_ac7a5935abbad0d8ceb805d0c05d279ec"><div class="ttname"><a href="class_coeus_1_1_i_motivation_module.html#ac7a5935abbad0d8ceb805d0c05d279ec">Coeus::IMotivationModule::uncertainty_motivation</a></div><div class="ttdeci">virtual float uncertainty_motivation()=0</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><a class="el" href="_i_motivation_module_8h.html">IMotivationModule.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_d1e3b9c3d41a6dcbd660b05e6fb6305b.html">RL</a></li><li class="navelem"><b>IMotivationModule.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

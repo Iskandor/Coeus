@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -93,14 +94,14 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_i_c_m.html','');});
 
 <p>This is the complete list of members for <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#aa956a906fa0d03231017b4b5978e63c6">activate</a>(Tensor *p_state0, Tensor *p_action)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#ad10578d553f71fd0d8d7779aaff668cd">add</a>(Tensor *p_state0, Tensor *p_action, Tensor *p_state1) const</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#aec9000564db9b3bb222f9e6557246fd2">get_intrinsic_reward</a>(Tensor *p_state0, Tensor *p_action, Tensor *p_state1, float p_eta=1)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#a6d848fac4a03ca9903384db2425e8819">get_output</a>() const</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#af694b8a3eae928880d89d7320dcf5173">ICM</a>(NeuralNetwork *p_forward_model, GradientAlgorithm *p_forward_algorithm, int p_size=0)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#ac16518cae6f0971f881bda8b619941b1">train</a>(Tensor *p_state0, Tensor *p_action, Tensor *p_state1)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#aa41d0fde0ed78383ad05489f46126fad">train</a>(int p_sample)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html#a60e8e4c5631f146783d60d22d3cc9107">~ICM</a>()</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>activate</b>(Tensor *p_state0, Tensor *p_action, Tensor *p_state1, bool p_inverse_model=false) (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>add</b>(Tensor *p_state0, Tensor *p_action, Tensor *p_state1) const (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>get_intrinsic_reward</b>(Tensor *p_state0, Tensor *p_action, Tensor *p_state1, float p_eta=1) (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>get_output</b>() const (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ICM</b>(NeuralNetwork *p_forward_model, NeuralNetwork *p_inverse_model, NeuralNetwork *p_head, GRADIENT_RULE p_rule, float p_alpha, int p_size=0) (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>train</b>(Tensor *p_state0, Tensor *p_action, Tensor *p_state1) (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>train</b>(int p_sample) (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~ICM</b>() (defined in <a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a>)</td><td class="entry"><a class="el" href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

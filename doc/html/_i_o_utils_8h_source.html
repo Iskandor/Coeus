@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/IOUtils.h Source File</title>
+<title>Coeus: Coeus/Core/IOUtils.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,16 +91,16 @@ $(document).ready(function(){initNavTree('_i_o_utils_8h_source.html','');});
 <div class="title">IOUtils.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_i_o_utils_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_base_layer_8h.html">BaseLayer.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="json_8hpp.html">json.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_neural_network_8h.html">NeuralNetwork.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_activation_function_8h.html">IActivationFunction.h</a>&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_param_8h.html">Param.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;BaseLayer.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;json.hpp&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;NeuralNetwork.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;IActivationFunction.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;Param.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespacenlohmann.html">nlohmann</a>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">using namespace </span>nlohmann;</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>Coeus</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_o_utils.html">   13</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_i_o_utils.html">IOUtils</a></div>
@@ -109,19 +110,19 @@ $(document).ready(function(){initNavTree('_i_o_utils_8h_source.html','');});
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        ~<a class="code" href="class_coeus_1_1_i_o_utils.html">IOUtils</a>();</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> save_network(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>&amp; p_network, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; p_filename);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keyword">static</span> <a class="code" href="classnlohmann_1_1basic__json.html">json</a> load_network(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp; p_filename);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_base_layer.html">BaseLayer</a>* create_layer(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">json</a>&amp; p_data);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a>* init_activation_function(<a class="code" href="classnlohmann_1_1basic__json.html">json</a> p_data);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keyword">static</span> <a class="code" href="classnlohmann_1_1basic__json.html">json</a> save_param(<a class="code" href="class_coeus_1_1_param.html">Param</a>* p_param);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_param.html">Param</a>* load_param(<a class="code" href="classnlohmann_1_1basic__json.html">json</a> p_data);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keyword">static</span> json load_network(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp; p_filename);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_base_layer.html">BaseLayer</a>* create_layer(<span class="keyword">const</span> json&amp; p_data);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_i_activation_function.html">IActivationFunction</a>* init_activation_function(json p_data);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keyword">static</span> json save_param(<a class="code" href="class_coeus_1_1_param.html">Param</a>* p_param);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keyword">static</span> <a class="code" href="class_coeus_1_1_param.html">Param</a>* load_param(json p_data);</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">static</span> T* create_layer(<a class="code" href="classnlohmann_1_1basic__json.html">json</a> p_data);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">static</span> T* create_layer(json p_data);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    };</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    T* IOUtils::create_layer(<a class="code" href="classnlohmann_1_1basic__json.html">json</a> p_data)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    T* IOUtils::create_layer(json p_data)</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> T(p_data);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
@@ -131,22 +132,14 @@ $(document).ready(function(){initNavTree('_i_o_utils_8h_source.html','');});
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclass_coeus_1_1_base_layer_html"><div class="ttname"><a href="class_coeus_1_1_base_layer.html">Coeus::BaseLayer</a></div><div class="ttdef"><b>Definition:</b> BaseLayer.h:15</div></div>
-<div class="ttc" id="a_base_layer_8h_html"><div class="ttname"><a href="_base_layer_8h.html">BaseLayer.h</a></div></div>
-<div class="ttc" id="anamespacenlohmann_html"><div class="ttname"><a href="namespacenlohmann.html">nlohmann</a></div><div class="ttdoc">namespace for Niels Lohmann</div><div class="ttdef"><b>Definition:</b> json.hpp:67</div></div>
 <div class="ttc" id="aclass_coeus_1_1_param_html"><div class="ttname"><a href="class_coeus_1_1_param.html">Coeus::Param</a></div><div class="ttdef"><b>Definition:</b> Param.h:10</div></div>
-<div class="ttc" id="a_i_activation_function_8h_html"><div class="ttname"><a href="_i_activation_function_8h.html">IActivationFunction.h</a></div></div>
-<div class="ttc" id="a_neural_network_8h_html"><div class="ttname"><a href="_neural_network_8h.html">NeuralNetwork.h</a></div></div>
-<div class="ttc" id="ajson_8hpp_html"><div class="ttname"><a href="json_8hpp.html">json.hpp</a></div></div>
-<div class="ttc" id="aclassnlohmann_1_1basic__json_html"><div class="ttname"><a href="classnlohmann_1_1basic__json.html">nlohmann::basic_json</a></div><div class="ttdoc">a class to store JSON values</div><div class="ttdef"><b>Definition:</b> json.hpp:187</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_activation_function_html"><div class="ttname"><a href="class_coeus_1_1_i_activation_function.html">Coeus::IActivationFunction</a></div><div class="ttdef"><b>Definition:</b> IActivationFunction.h:11</div></div>
 <div class="ttc" id="aclass_coeus_1_1_neural_network_html"><div class="ttname"><a href="class_coeus_1_1_neural_network.html">Coeus::NeuralNetwork</a></div><div class="ttdef"><b>Definition:</b> NeuralNetwork.h:12</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="a_param_8h_html"><div class="ttname"><a href="_param_8h.html">Param.h</a></div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_o_utils_html"><div class="ttname"><a href="class_coeus_1_1_i_o_utils.html">Coeus::IOUtils</a></div><div class="ttdef"><b>Definition:</b> IOUtils.h:13</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_i_o_utils_8h.html">IOUtils.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>IOUtils.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

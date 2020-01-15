@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/RecurrentLayer.h Source File</title>
+<title>Coeus: Coeus/Core/RecurrentLayer.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,33 +91,33 @@ $(document).ready(function(){initNavTree('_recurrent_layer_8h_source.html','');}
 <div class="title">RecurrentLayer.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_recurrent_layer_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_base_layer_8h.html">BaseLayer.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_coeus_8h.html">Coeus.h</a>&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_param_8h.html">Param.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_neuron_operator_8h.html">NeuronOperator.h</a>&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_tensor_initializer_8h.html">TensorInitializer.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;BaseLayer.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;Coeus.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;Param.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;NeuronOperator.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;TensorInitializer.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a> {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Coeus {</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="class_coeus_1_1_recurrent_layer.html">   10</a></span>&#160;<span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a> : <span class="keyword">public</span> <a class="code" href="class_coeus_1_1_base_layer.html">BaseLayer</a></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="class_coeus_1_1_recurrent_layer.html#a7cfd2009ed6097d358dee0c65889ac85">RecurrentLayer</a>(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp; p_id, <span class="keywordtype">int</span> p_dim, <a class="code" href="namespace_coeus.html#a083460eecdbf89793271b893748cea04">ACTIVATION</a> p_activation, <a class="code" href="class_coeus_1_1_tensor_initializer.html">TensorInitializer</a>* p_initializer, <span class="keywordtype">int</span> p_in_dim = 0);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="class_coeus_1_1_recurrent_layer.html#a7cfd2009ed6097d358dee0c65889ac85">RecurrentLayer</a>(<a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>&amp; p_copy, <span class="keywordtype">bool</span> p_clone);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html#a7cfd2009ed6097d358dee0c65889ac85">RecurrentLayer</a>(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">json</a>&amp; p_data);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="class_coeus_1_1_recurrent_layer.html#a62a2ca29531d6cdd69b9c177c5957911">~RecurrentLayer</a>();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>* <a class="code" href="class_coeus_1_1_recurrent_layer.html#addbe50a4f99293a6e0df5ed29a78c555">copy</a>(<span class="keywordtype">bool</span> p_clone) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp; p_id, <span class="keywordtype">int</span> p_dim, ACTIVATION p_activation, <a class="code" href="class_coeus_1_1_tensor_initializer.html">TensorInitializer</a>* p_initializer, <span class="keywordtype">int</span> p_in_dim = 0);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>(<a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>&amp; p_copy, <span class="keywordtype">bool</span> p_clone);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>(<span class="keyword">const</span> json&amp; p_data);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    ~<a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>();</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="class_coeus_1_1_recurrent_layer.html">RecurrentLayer</a>* copy(<span class="keywordtype">bool</span> p_clone) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html#a3dbb4c5d9853aa8954b96996cdaa767b">activate</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> activate() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html#acdcfbb1ec6d566159a2ee6e873365ea1">calc_derivative</a>(map&lt;string, Tensor*&gt;&amp; p_derivative) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html#a638a9aa8e89e1d7ebee271adda492eb1">calc_gradient</a>(<a class="code" href="class_coeus_1_1_gradient.html">Gradient</a>&amp; p_gradient_map, map&lt;string, Tensor*&gt;&amp; p_derivative_map) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> calc_derivative(map&lt;string, Tensor*&gt;&amp; p_derivative) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> calc_gradient(<a class="code" href="class_coeus_1_1_gradient.html">Gradient</a>&amp; p_gradient_map, map&lt;string, Tensor*&gt;&amp; p_derivative_map) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html#aadf58cd841009fbc19fa9dc1b2a3d86b">reset</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_recurrent_layer.html#a1e9177ecc7197d531a42db6a5482516f">init</a>(vector&lt;BaseLayer*&gt;&amp; p_input_layers, vector&lt;BaseLayer*&gt;&amp; p_output_layers) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> reset() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> init(vector&lt;BaseLayer*&gt;&amp; p_input_layers, vector&lt;BaseLayer*&gt;&amp; p_output_layers) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classnlohmann_1_1basic__json.html">json</a> <a class="code" href="class_coeus_1_1_recurrent_layer.html#a389507329b7d88dca963578c004a5908">get_json</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    json get_json() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="class_tensor.html">Tensor</a>* get_dim_tensor() <span class="keyword">override</span>;</div>
@@ -135,33 +136,16 @@ $(document).ready(function(){initNavTree('_recurrent_layer_8h_source.html','');}
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclass_coeus_1_1_base_layer_html"><div class="ttname"><a href="class_coeus_1_1_base_layer.html">Coeus::BaseLayer</a></div><div class="ttdef"><b>Definition:</b> BaseLayer.h:15</div></div>
-<div class="ttc" id="a_coeus_8h_html"><div class="ttname"><a href="_coeus_8h.html">Coeus.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_a389507329b7d88dca963578c004a5908"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#a389507329b7d88dca963578c004a5908">Coeus::RecurrentLayer::get_json</a></div><div class="ttdeci">json get_json() const override</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:166</div></div>
 <div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html">Coeus::RecurrentLayer</a></div><div class="ttdef"><b>Definition:</b> RecurrentLayer.h:10</div></div>
-<div class="ttc" id="a_base_layer_8h_html"><div class="ttname"><a href="_base_layer_8h.html">BaseLayer.h</a></div></div>
-<div class="ttc" id="anamespace_coeus_html_a083460eecdbf89793271b893748cea04"><div class="ttname"><a href="namespace_coeus.html#a083460eecdbf89793271b893748cea04">Coeus::ACTIVATION</a></div><div class="ttdeci">ACTIVATION</div><div class="ttdef"><b>Definition:</b> Coeus.h:13</div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_aadf58cd841009fbc19fa9dc1b2a3d86b"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#aadf58cd841009fbc19fa9dc1b2a3d86b">Coeus::RecurrentLayer::reset</a></div><div class="ttdeci">void reset() override</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:145</div></div>
 <div class="ttc" id="aclass_coeus_1_1_tensor_initializer_html"><div class="ttname"><a href="class_coeus_1_1_tensor_initializer.html">Coeus::TensorInitializer</a></div><div class="ttdef"><b>Definition:</b> TensorInitializer.h:6</div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_acdcfbb1ec6d566159a2ee6e873365ea1"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#acdcfbb1ec6d566159a2ee6e873365ea1">Coeus::RecurrentLayer::calc_derivative</a></div><div class="ttdeci">void calc_derivative(map&lt; string, Tensor * &gt; &amp;p_derivative) override</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:141</div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_a62a2ca29531d6cdd69b9c177c5957911"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#a62a2ca29531d6cdd69b9c177c5957911">Coeus::RecurrentLayer::~RecurrentLayer</a></div><div class="ttdeci">~RecurrentLayer()</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:56</div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_addbe50a4f99293a6e0df5ed29a78c555"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#addbe50a4f99293a6e0df5ed29a78c555">Coeus::RecurrentLayer::copy</a></div><div class="ttdeci">RecurrentLayer * copy(bool p_clone) override</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:64</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
 <div class="ttc" id="aclass_coeus_1_1_param_html"><div class="ttname"><a href="class_coeus_1_1_param.html">Coeus::Param</a></div><div class="ttdef"><b>Definition:</b> Param.h:10</div></div>
 <div class="ttc" id="aclass_coeus_1_1_neuron_operator_html"><div class="ttname"><a href="class_coeus_1_1_neuron_operator.html">Coeus::NeuronOperator</a></div><div class="ttdef"><b>Definition:</b> NeuronOperator.h:8</div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_a638a9aa8e89e1d7ebee271adda492eb1"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#a638a9aa8e89e1d7ebee271adda492eb1">Coeus::RecurrentLayer::calc_gradient</a></div><div class="ttdeci">void calc_gradient(Gradient &amp;p_gradient_map, map&lt; string, Tensor * &gt; &amp;p_derivative_map) override</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:91</div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_a1e9177ecc7197d531a42db6a5482516f"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#a1e9177ecc7197d531a42db6a5482516f">Coeus::RecurrentLayer::init</a></div><div class="ttdeci">void init(vector&lt; BaseLayer * &gt; &amp;p_input_layers, vector&lt; BaseLayer * &gt; &amp;p_output_layers) override</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:150</div></div>
-<div class="ttc" id="aclassnlohmann_1_1basic__json_html"><div class="ttname"><a href="classnlohmann_1_1basic__json.html">nlohmann::basic_json</a></div><div class="ttdoc">a class to store JSON values</div><div class="ttdef"><b>Definition:</b> json.hpp:187</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_a7cfd2009ed6097d358dee0c65889ac85"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#a7cfd2009ed6097d358dee0c65889ac85">Coeus::RecurrentLayer::RecurrentLayer</a></div><div class="ttdeci">RecurrentLayer(const string &amp;p_id, int p_dim, ACTIVATION p_activation, TensorInitializer *p_initializer, int p_in_dim=0)</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:9</div></div>
-<div class="ttc" id="a_neuron_operator_8h_html"><div class="ttname"><a href="_neuron_operator_8h.html">NeuronOperator.h</a></div></div>
-<div class="ttc" id="a_tensor_initializer_8h_html"><div class="ttname"><a href="_tensor_initializer_8h.html">TensorInitializer.h</a></div></div>
-<div class="ttc" id="a_param_8h_html"><div class="ttname"><a href="_param_8h.html">Param.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_recurrent_layer_html_a3dbb4c5d9853aa8954b96996cdaa767b"><div class="ttname"><a href="class_coeus_1_1_recurrent_layer.html#a3dbb4c5d9853aa8954b96996cdaa767b">Coeus::RecurrentLayer::activate</a></div><div class="ttdeci">void activate() override</div><div class="ttdef"><b>Definition:</b> RecurrentLayer.cpp:69</div></div>
 <div class="ttc" id="aclass_coeus_1_1_gradient_html"><div class="ttname"><a href="class_coeus_1_1_gradient.html">Coeus::Gradient</a></div><div class="ttdef"><b>Definition:</b> Gradient.h:8</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_recurrent_layer_8h.html">RecurrentLayer.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>RecurrentLayer.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

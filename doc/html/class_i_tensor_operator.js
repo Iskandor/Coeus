@@ -3,7 +3,7 @@ var class_i_tensor_operator =
     [ "ITensorOperator", "class_i_tensor_operator.html#a7a2cb9a910469812589266e0bd30a08a", null ],
     [ "ITensorOperator", "class_i_tensor_operator.html#a91754eabdccd45cce53354906dcadbfb", null ],
     [ "ITensorOperator", "class_i_tensor_operator.html#add46dd14ddcee80e20112df3ab1df39f", null ],
-    [ "~ITensorOperator", "class_i_tensor_operator.html#a52e4dae43189a16e75d971a3f58a3e06", null ],
+    [ "~ITensorOperator", "class_i_tensor_operator.html#a9aee417b9d4ff48802d3212145e05422", null ],
     [ "full_b_gradient", "class_i_tensor_operator.html#a29d45df0f001250f255e1d296e95952d", null ],
     [ "full_bias_b", "class_i_tensor_operator.html#a3b4f1e826beb014aa67d37c728d528fa", null ],
     [ "full_bias_s", "class_i_tensor_operator.html#ac071ca790d0cf8c7c1897fb6956799ad", null ],

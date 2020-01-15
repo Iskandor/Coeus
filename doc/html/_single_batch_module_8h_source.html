@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coeus: D:/GIT/Coeus/Coeus/Core/SingleBatchModule.h Source File</title>
+<title>Coeus: Coeus/Core/SingleBatchModule.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,22 +91,22 @@ $(document).ready(function(){initNavTree('_single_batch_module_8h_source.html','
 <div class="title">SingleBatchModule.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="_single_batch_module_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_batch_module_8h.html">IBatchModule.h</a>&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_neural_network_8h.html">NeuralNetwork.h</a>&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_network_gradient_8h.html">NetworkGradient.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_update_rule_8h.html">IUpdateRule.h</a>&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_i_cost_function_8h.html">ICostFunction.h</a>&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;IBatchModule.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;NeuralNetwork.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;NetworkGradient.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;IUpdateRule.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;ICostFunction.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_coeus.html">Coeus</a> {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Coeus {</div>
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="class_coeus_1_1_single_batch_module.html">    9</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_single_batch_module.html">SingleBatchModule</a> : <span class="keyword">public</span> <a class="code" href="class_coeus_1_1_i_batch_module.html">IBatchModule</a></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="class_coeus_1_1_single_batch_module.html#a24b658b2f9025246af6b1e1454f82584">SingleBatchModule</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network, <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* p_network_gradient, <a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>* p_cost_function, <span class="keywordtype">int</span> p_batch);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_coeus_1_1_single_batch_module.html#acd05bc6562d8a6bcd946c971e530d065">~SingleBatchModule</a>();</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="class_coeus_1_1_single_batch_module.html">SingleBatchModule</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_network, <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* p_network_gradient, <a class="code" href="class_coeus_1_1_i_cost_function.html">ICostFunction</a>* p_cost_function, <span class="keywordtype">int</span> p_batch);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        ~<a class="code" href="class_coeus_1_1_single_batch_module.html">SingleBatchModule</a>();</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_coeus_1_1_single_batch_module.html#abc53b16bfd9674bc5bcf0612c0cabf20">run_batch</a>(<span class="keywordtype">int</span> p_b, <span class="keywordtype">int</span> p_batch, vector&lt;Tensor*&gt;* p_input, vector&lt;Tensor*&gt;* p_target) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">float</span> <a class="code" href="class_coeus_1_1_single_batch_module.html#acf74eb7812ab9cb2f6812445346cfbae">get_error</a>(vector&lt;Tensor*&gt;* p_input, vector&lt;Tensor*&gt;* p_target) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">void</span> run_batch(<span class="keywordtype">int</span> p_b, <span class="keywordtype">int</span> p_batch, vector&lt;Tensor*&gt;* p_input, vector&lt;Tensor*&gt;* p_target) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">float</span> get_error(vector&lt;Tensor*&gt;* p_input, vector&lt;Tensor*&gt;* p_target) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>*      _network;</div>
@@ -115,25 +116,15 @@ $(document).ready(function(){initNavTree('_single_batch_module_8h_source.html','
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclass_coeus_1_1_single_batch_module_html_acf74eb7812ab9cb2f6812445346cfbae"><div class="ttname"><a href="class_coeus_1_1_single_batch_module.html#acf74eb7812ab9cb2f6812445346cfbae">Coeus::SingleBatchModule::get_error</a></div><div class="ttdeci">float get_error(vector&lt; Tensor * &gt; *p_input, vector&lt; Tensor * &gt; *p_target) override</div><div class="ttdef"><b>Definition:</b> SingleBatchModule.cpp:37</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_batch_module_html"><div class="ttname"><a href="class_coeus_1_1_i_batch_module.html">Coeus::IBatchModule</a></div><div class="ttdef"><b>Definition:</b> IBatchModule.h:8</div></div>
 <div class="ttc" id="aclass_coeus_1_1_network_gradient_html"><div class="ttname"><a href="class_coeus_1_1_network_gradient.html">Coeus::NetworkGradient</a></div><div class="ttdef"><b>Definition:</b> NetworkGradient.h:9</div></div>
-<div class="ttc" id="a_i_batch_module_8h_html"><div class="ttname"><a href="_i_batch_module_8h.html">IBatchModule.h</a></div></div>
-<div class="ttc" id="aclass_coeus_1_1_single_batch_module_html_acd05bc6562d8a6bcd946c971e530d065"><div class="ttname"><a href="class_coeus_1_1_single_batch_module.html#acd05bc6562d8a6bcd946c971e530d065">Coeus::SingleBatchModule::~SingleBatchModule</a></div><div class="ttdeci">~SingleBatchModule()</div></div>
-<div class="ttc" id="aclass_coeus_1_1_single_batch_module_html_a24b658b2f9025246af6b1e1454f82584"><div class="ttname"><a href="class_coeus_1_1_single_batch_module.html#a24b658b2f9025246af6b1e1454f82584">Coeus::SingleBatchModule::SingleBatchModule</a></div><div class="ttdeci">SingleBatchModule(NeuralNetwork *p_network, NetworkGradient *p_network_gradient, ICostFunction *p_cost_function, int p_batch)</div><div class="ttdef"><b>Definition:</b> SingleBatchModule.cpp:6</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_cost_function_html"><div class="ttname"><a href="class_coeus_1_1_i_cost_function.html">Coeus::ICostFunction</a></div><div class="ttdef"><b>Definition:</b> ICostFunction.h:7</div></div>
-<div class="ttc" id="a_neural_network_8h_html"><div class="ttname"><a href="_neural_network_8h.html">NeuralNetwork.h</a></div></div>
 <div class="ttc" id="aclass_coeus_1_1_single_batch_module_html"><div class="ttname"><a href="class_coeus_1_1_single_batch_module.html">Coeus::SingleBatchModule</a></div><div class="ttdef"><b>Definition:</b> SingleBatchModule.h:9</div></div>
-<div class="ttc" id="aclass_coeus_1_1_single_batch_module_html_abc53b16bfd9674bc5bcf0612c0cabf20"><div class="ttname"><a href="class_coeus_1_1_single_batch_module.html#abc53b16bfd9674bc5bcf0612c0cabf20">Coeus::SingleBatchModule::run_batch</a></div><div class="ttdeci">void run_batch(int p_b, int p_batch, vector&lt; Tensor * &gt; *p_input, vector&lt; Tensor * &gt; *p_target) override</div><div class="ttdef"><b>Definition:</b> SingleBatchModule.cpp:17</div></div>
-<div class="ttc" id="a_i_update_rule_8h_html"><div class="ttname"><a href="_i_update_rule_8h.html">IUpdateRule.h</a></div></div>
 <div class="ttc" id="aclass_coeus_1_1_neural_network_html"><div class="ttname"><a href="class_coeus_1_1_neural_network.html">Coeus::NeuralNetwork</a></div><div class="ttdef"><b>Definition:</b> NeuralNetwork.h:12</div></div>
-<div class="ttc" id="anamespace_coeus_html"><div class="ttname"><a href="namespace_coeus.html">Coeus</a></div><div class="ttdef"><b>Definition:</b> ExponentialInterpolation.h:3</div></div>
-<div class="ttc" id="a_i_cost_function_8h_html"><div class="ttname"><a href="_i_cost_function_8h.html">ICostFunction.h</a></div></div>
-<div class="ttc" id="a_network_gradient_8h_html"><div class="ttname"><a href="_network_gradient_8h.html">NetworkGradient.h</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><a class="el" href="_single_batch_module_8h.html">SingleBatchModule.h</a></li>
+    <li class="navelem"><a class="el" href="dir_0bb35aa9c4d1b097f2fae0d97723d652.html">Coeus</a></li><li class="navelem"><a class="el" href="dir_bd0baa63756efb7b2893f5657594499d.html">Core</a></li><li class="navelem"><b>SingleBatchModule.h</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

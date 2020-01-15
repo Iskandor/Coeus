@@ -31,6 +31,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.jpg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Coeus
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
   </td>
  </tr>
@@ -93,8 +94,6 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_i_gate.html','');});
 <div class="title">Coeus::IGate Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_i_gate_8h_source.html">IGate.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Coeus::IGate:</div>
 <div class="dyncontent">
@@ -116,142 +115,22 @@ Inheritance diagram for Coeus::IGate:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a263d9e09a58811fcce23ec04389a9387"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_gate.html#a263d9e09a58811fcce23ec04389a9387">IGate</a> ()=default</td></tr>
-<tr class="separator:a263d9e09a58811fcce23ec04389a9387"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46ea3592467f83bf6be7a5da606ac16d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_gate.html#a46ea3592467f83bf6be7a5da606ac16d">~IGate</a> ()=default</td></tr>
-<tr class="separator:a46ea3592467f83bf6be7a5da606ac16d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d32d1686e9e9fa3cfe0bbeccb4645b5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_gate.html#a3d32d1686e9e9fa3cfe0bbeccb4645b5">forward</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_input)=0</td></tr>
+<tr class="memitem:a3d32d1686e9e9fa3cfe0bbeccb4645b5"><td class="memItemLeft" align="right" valign="top"><a id="a3d32d1686e9e9fa3cfe0bbeccb4645b5"></a>
+virtual <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>forward</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_input)=0</td></tr>
 <tr class="separator:a3d32d1686e9e9fa3cfe0bbeccb4645b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6b57e68315599707549b8742ad5029a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_i_gate.html#ad6b57e68315599707549b8742ad5029a">backward</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_input, <a class="el" href="class_tensor.html">Tensor</a> *p_x)=0</td></tr>
+<tr class="memitem:ad6b57e68315599707549b8742ad5029a"><td class="memItemLeft" align="right" valign="top"><a id="ad6b57e68315599707549b8742ad5029a"></a>
+virtual <a class="el" href="class_tensor.html">Tensor</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>backward</b> (<a class="el" href="class_tensor.html">Tensor</a> *p_input, <a class="el" href="class_tensor.html">Tensor</a> *p_x)=0</td></tr>
 <tr class="separator:ad6b57e68315599707549b8742ad5029a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a263d9e09a58811fcce23ec04389a9387"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a263d9e09a58811fcce23ec04389a9387">&#9670;&nbsp;</a></span>IGate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Coeus::IGate::IGate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a46ea3592467f83bf6be7a5da606ac16d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46ea3592467f83bf6be7a5da606ac16d">&#9670;&nbsp;</a></span>~IGate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual Coeus::IGate::~IGate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad6b57e68315599707549b8742ad5029a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6b57e68315599707549b8742ad5029a">&#9670;&nbsp;</a></span>backward()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class_tensor.html">Tensor</a>* Coeus::IGate::backward </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_input</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_x</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="class_coeus_1_1_i_activation_function.html#a429ed4e9920aa10a5118d2a35e3da30f">Coeus::IActivationFunction</a>, <a class="el" href="class_coeus_1_1_linear_activation.html#ac510d7e7e2974aced303f5217eb560cf">Coeus::LinearActivation</a>, <a class="el" href="class_coeus_1_1_softplus_activation.html#ad2d1df76ba04ff21b7db05fc7d7625f3">Coeus::SoftplusActivation</a>, <a class="el" href="class_coeus_1_1_binary_activation.html#a50faf5e4ffddcf64379a36d712430bc4">Coeus::BinaryActivation</a>, <a class="el" href="class_coeus_1_1_tanh_activation.html#a84873d2d4e14201e1707a9132594ad44">Coeus::TanhActivation</a>, <a class="el" href="class_coeus_1_1_exponential_activation.html#a116ba9955141c59c06814654b2805c5d">Coeus::ExponentialActivation</a>, <a class="el" href="class_coeus_1_1_gaussian_activation.html#afd835047af867ca87da72a4fcf4c48c3">Coeus::GaussianActivation</a>, <a class="el" href="class_coeus_1_1_relu_activation.html#ac0c38fd5628710a8058bc471a0f464a8">Coeus::ReluActivation</a>, <a class="el" href="class_coeus_1_1_sigmoid_activation.html#a29494515ef3ad06ec440a32d5f5a06aa">Coeus::SigmoidActivation</a>, and <a class="el" href="class_coeus_1_1_softmax_activation.html#a0dbd7f8cb03463f054334e47a79daee1">Coeus::SoftmaxActivation</a>.</p>
-
-</div>
-</div>
-<a id="a3d32d1686e9e9fa3cfe0bbeccb4645b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d32d1686e9e9fa3cfe0bbeccb4645b5">&#9670;&nbsp;</a></span>forward()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class_tensor.html">Tensor</a>* Coeus::IGate::forward </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tensor.html">Tensor</a> *&#160;</td>
-          <td class="paramname"><em>p_input</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="class_coeus_1_1_i_activation_function.html#ac2361a2cdd5c55e8d98c0ae44c2c497b">Coeus::IActivationFunction</a>, <a class="el" href="class_coeus_1_1_softplus_activation.html#ad3f523f4b0a5cad0a21f77bac4811479">Coeus::SoftplusActivation</a>, <a class="el" href="class_coeus_1_1_binary_activation.html#ad30b687f963c7b8cd5b43cec634b9ad7">Coeus::BinaryActivation</a>, <a class="el" href="class_coeus_1_1_tanh_activation.html#a465c5f0be703b67976322309a66dc057">Coeus::TanhActivation</a>, <a class="el" href="class_coeus_1_1_exponential_activation.html#acc5a2518033cde072cc4f5178513990e">Coeus::ExponentialActivation</a>, <a class="el" href="class_coeus_1_1_gaussian_activation.html#a5691666e17b3d9edf123f71110255b7c">Coeus::GaussianActivation</a>, <a class="el" href="class_coeus_1_1_linear_activation.html#a9455b18cfb809792d43dca55f8648a36">Coeus::LinearActivation</a>, <a class="el" href="class_coeus_1_1_relu_activation.html#afdaa6738a234ea762c4a503e0fc52e78">Coeus::ReluActivation</a>, <a class="el" href="class_coeus_1_1_sigmoid_activation.html#a01bb91a0b283c798b905faa3a73897a2">Coeus::SigmoidActivation</a>, and <a class="el" href="class_coeus_1_1_softmax_activation.html#a1c941841270da9b78d9782c2dfaf9c0e">Coeus::SoftmaxActivation</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>D:/GIT/Coeus/Coeus/Core/<a class="el" href="_i_gate_8h_source.html">IGate.h</a></li>
+<li>Coeus/Core/<a class="el" href="_i_gate_8h_source.html">IGate.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_coeus.html">Coeus</a></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_gate.html">IGate</a></li>
+    <li class="navelem"><b>Coeus</b></li><li class="navelem"><a class="el" href="class_coeus_1_1_i_gate.html">IGate</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>
