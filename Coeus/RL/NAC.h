@@ -30,7 +30,10 @@ namespace Coeus
 		vector<DQItem> _sample_buffer;
 
 		map<string, Tensor> _actor_update;
+		
 		Gradient			_critic_gradient;
+		Gradient			_actor_gradient;
+		Tensor				_fisher_matrix;
 		
 		float _delta;
 	};

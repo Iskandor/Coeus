@@ -64,9 +64,9 @@ vector<float> CartPole::get_state(bool p_norm) const
 	vector<float> result(STATE);
 
 	result[0] = p_norm ? _x / _x_threshold : _x;
-	result[1] = _x_dot;
+	result[1] = p_norm ? _x_dot / 2 : _x_dot;
 	result[2] = p_norm ? _theta / _theta_threshold_radians : _theta;
-	result[3] = _theta_dot;
+	result[3] = p_norm ? _theta_dot / 3 : _theta_dot;
 
 	return result;
 }

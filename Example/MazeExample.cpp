@@ -43,6 +43,21 @@ MazeExample::MazeExample()
 	  2, 0, 0, 0 };
 
 	_maze = new Maze(topology, 4, 4, 15, false);
+
+	/*
+	int topology[] =
+	{ 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 2, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 2, 0, 0,
+		0, 0, 0, 2, 0, 0, 0, 0,
+		0, 2, 2, 0, 0, 0, 2, 0,
+		0, 2, 0, 0, 2, 0, 2, 0,
+		0, 0, 0, 2, 0, 0, 0, 0
+	};
+
+	_maze = new Maze(topology, 8, 8, 63, false);
+	*/
 }
 
 
@@ -467,7 +482,7 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	NAC agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.98f, &network_actor, 1e-1f);
+	NAC agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.98f, &network_actor, 1e-4f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
@@ -495,10 +510,12 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 			reward = _maze->get_reward();
 			agent.add_sample(&state0, &action, &state1, reward, _maze->is_finished());
 
-			if (t == 10)
+			if (t == 64)
 			{
 				t = 0;
 				agent.train();
+				//test_q(&network_actor);
+				//system("pause");
 			}
 			
 			state0.override(&state1);
@@ -517,6 +534,13 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 		string s = "NAC Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
 		//console_print(s, 0, 0);
 		cout << s << endl;
+
+		if (e % 100 == 0)
+		{
+			test_q(&network_actor);
+			cout << endl;
+			test_v(&network_critic);
+		}
 
 		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
 
@@ -721,7 +745,7 @@ void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 		maze_array.push_back(new Maze(*_maze));
 	}
 
-	int hidden = 64;
+	int hidden = 32;
 	float limit = 0.01f;
 
 	NeuralNetwork network_critic;
@@ -744,13 +768,12 @@ void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	A3C agent(maze_array, &network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 9e-4f);
+	A3C agent(maze_array, &network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-3f);
 
 	Tensor state0, state1;
 	Tensor action({ _maze->ACTION_DIM() }, Tensor::ZERO);
 	float value0, value1;
 	float reward = 0;
-	int epochs = p_epochs;
 	float td_error = 0;
 
 	int wins = 0, loses = 0;
@@ -759,9 +782,8 @@ void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 	//Logger::instance().init("log.log");
 	Tensor prob({ _maze->ACTION_DIM() }, Tensor::ZERO);
 
-	for (int e = 0; e < epochs; e++) {
 		//cout << "Epoch " << e << endl;
-		agent.train(16, 2000);
+		agent.train(16, p_epochs);
 
 		_maze->reset();
 		state0 = _maze->get_state();
@@ -786,12 +808,11 @@ void MazeExample::example_a3c(int p_epochs, bool p_verbose)
 			loses++;
 		}
 
-		string s = "A3C Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
-		console_print(s, 0, 0);
+		//string s = "A3C Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
+		//console_print(s, 0, 0);
 
 		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
 		//cout << wins << " / " << loses << endl;
-	}
 
 	test_policy(network_actor);
 	CloseHandle(_hConsole_c);
@@ -1086,7 +1107,7 @@ void MazeExample::test_policy(NeuralNetwork &p_network)
 	//cout << "--- TEST ---" << endl;
 	console_clear();
 
-	while (!_maze->is_finished() && step < 10) {
+	while (!_maze->is_finished() && step < _maze->mazeX() + _maze->mazeY()) {
 		for (int i = 0; i < _maze->mazeY(); i++) {
 			console_print(_maze->toString(i), 0, i + 1);
 		}

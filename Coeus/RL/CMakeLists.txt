@@ -28,6 +28,7 @@ set(INCLUDE_FILES
 	DoubleQLearning.h
 	EGreedyExploration.h
 	GAE.h
+	GM2.h
 	IActorCritic.h
 	ICM.h
 	IEnvironment.h
@@ -52,6 +53,7 @@ set(SOURCE_FILES
 	DoubleQLearning.cpp
 	EGreedyExploration.cpp
 	GAE.cpp
+	GM2.cpp
 	IActorCritic.cpp
 	ICM.cpp
 	IMotivationModule.cpp

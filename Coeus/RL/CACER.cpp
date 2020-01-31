@@ -23,7 +23,16 @@ void CACER::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p
 		vector<DQItem*>* sample = _buffer->get_sample(_sample_size);
 
 		const Tensor delta = _critic->train(sample);
-		const int size = _sample_size - delta.count_value(0);
+		int size = 0;
+		for (size_t i = 0; i < sample->size(); i++)
+		{
+			if (delta[i] > 0)
+			{
+				size++;
+			}
+		}
+
+		//TODO: memory leak somewhere here!!!
 		Tensor state0({ size, _actor->get_input_dim() }, Tensor::ZERO);
 		Tensor action({ size, _actor->get_output_dim() }, Tensor::ZERO);
 
@@ -31,16 +40,16 @@ void CACER::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p
 		{
 			if (delta[i] > 0)
 			{
-				state0.push_back(&sample->at(i)->s0);
-				action.push_back(&sample->at(i)->a);
+				state0.insert_row(&sample->at(i)->s0);
+				action.insert_row(&sample->at(i)->a);
 			}
 		}
-
+		
 		_actor->activate(&state0);
 		Tensor loss = _mse.cost_deriv(_actor->get_output(), &action);
-
+		
 		_actor_gradient->calc_gradient(&loss);
-		_update_rule->calc_update(_actor_gradient->get_gradient(), _actor_alpha);
+		_update_rule->calc_update(_actor_gradient->get_gradient());
 		_actor->update(_update_rule->get_update());
 	}
 }

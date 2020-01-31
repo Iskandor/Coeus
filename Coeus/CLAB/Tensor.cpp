@@ -173,10 +173,19 @@ Tensor Tensor::inv() const
 
 	/*
 	Tensor control = *this * result;
-
 	cout << control << endl;
 	*/
 	
+	return result;
+}
+
+Tensor Tensor::pinv() const
+{
+	Tensor result(_rank, copy_shape(_rank, _shape), alloc_arr(_size));
+	result.fill(0);
+
+	TensorOperator::instance().pinv(_arr, result._arr, _shape[0], _shape[1]);
+
 	return result;
 }
 
@@ -1051,7 +1060,10 @@ bool Tensor::has_NaN_Inf() const
 	
 	for(int i = 0; i < _size; i++)
 	{
-		if (_arr[i] != _arr[i] || isinf(_arr[i])) result = true;
+		if (_arr[i] != _arr[i] || isinf(_arr[i])) {			
+			result = true;
+			break;
+		}
 	}
 
 	return result;

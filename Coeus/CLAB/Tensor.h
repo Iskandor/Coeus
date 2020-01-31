@@ -37,6 +37,7 @@ public:
 	Tensor T();
 	Tensor vec() const;
 	Tensor inv() const;
+	Tensor pinv() const;
 
 	Tensor& operator += (const Tensor& p_rhs);
 	Tensor& operator += (float p_rhs);

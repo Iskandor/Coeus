@@ -7,6 +7,8 @@ namespace Coeus
 {
 	class __declspec(dllexport) Gradient
 	{
+		friend class NetworkGradient;
+		friend class NaturalGradient;
 	public:
 		Gradient();
 		explicit Gradient(map<string, Tensor>& p_buffer);
@@ -15,6 +17,7 @@ namespace Coeus
 
 		void init(ParamModel* p_model);
 		void fill(float p_value);
+		void fill(Tensor& p_gradient);
 
 		bool is_invalid();
 
@@ -26,8 +29,16 @@ namespace Coeus
 		Gradient& operator= (const Gradient& p_copy);
 		Gradient& operator+= (const Gradient& p_rhs);
 		Gradient& operator+= (const map<string, Tensor>& p_rhs);
+		Gradient& operator/= (float p_rhs);
+
+		void flatten();
+		void reshape();
+
+		Tensor& gradient() { return _gradient; }
+		Tensor& hessian() { return _hessian; }
 
 	private:
+		int _params_size;
 		map<string, Tensor> _buffer;
 
 		Tensor _gradient;

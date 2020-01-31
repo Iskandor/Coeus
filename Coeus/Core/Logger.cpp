@@ -1,3 +1,4 @@
+#include <ctime>
 #include "Logger.h"
 
 using namespace Coeus;
@@ -5,13 +6,11 @@ using namespace Coeus;
 
 
 Logger::Logger()
-{
-}
+= default;
 
 
 Logger::~Logger()
-{
-}
+= default;
 
 Logger& Logger::instance() 
 {
@@ -19,12 +18,21 @@ Logger& Logger::instance()
 	return logger;
 }
 
-void Logger::init(string p_name)
+void Logger::init(const string& p_name)
 {
-	_file.open(p_name);
+	if (p_name.empty())
+	{
+		const int timestamp = std::time(nullptr);
+		_file.open("log" + to_string(timestamp) + ".log");
+	}
+	else
+	{
+		_file.open(p_name);
+	}
+	
 }
 
-void Logger::log(string p_msg) 
+void Logger::log(const string& p_msg) 
 {
 	_file << p_msg << endl;
 }

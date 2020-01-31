@@ -52,7 +52,7 @@ DDPG::~DDPG()
 }
 
 /**
- * \brief Training method updating actor and critic on one sample taken from the replay buffer
+ * \brief Training method updating actor and critic on minibatch taken from the replay buffer
  * \param p_state0 agent's state from time t0
  * \param p_action0 action taken in time t0
  * \param p_state1 agent's state from time t1 (successor state)

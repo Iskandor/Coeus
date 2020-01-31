@@ -15,6 +15,8 @@ namespace Coeus
 		float train(Tensor* p_state0, Tensor* p_state1, float p_reward, bool p_finished) const;
 		Tensor train(vector<DQItem*>* p_sample) const;
 
+		float get_delta(Tensor* p_state0, Tensor* p_state1, float p_reward, bool p_finished) const;
+
 	private:
 		NeuralNetwork*		_network;
 		NetworkGradient*	_network_gradient;

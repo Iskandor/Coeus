@@ -11,8 +11,8 @@ class __declspec(dllexport) Logger
 {
 public:
 	static Logger& instance();
-	void init(string p_name);
-	void log(string p_msg);
+	void init(const string& p_name = "");
+	void log(const string& p_msg);
 	void close();
 
 private:

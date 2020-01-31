@@ -3,6 +3,8 @@
 #include <mkl.h>
 #include <cstring>
 #include <iostream>
+#include <algorithm>
+#include <omp.h>
 
 void TensorOperatorMKL::full_int_s(float* p_net, float* p_x, float* p_w, const int p_rows, const int p_cols)
 {
@@ -439,9 +441,63 @@ void TensorOperatorMKL::MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Bt
 		p_beta, p_C, p_cols);
 }
 
-void TensorOperatorMKL::inv_M(float* p_A, float* p_Ai, int p_rows, int p_cols)
+void TensorOperatorMKL::inv_M(float* p_A, float* p_Ai, const int p_rows, const int p_cols)
 {
 	memcpy(p_Ai, p_A, sizeof(float) * p_rows * p_cols);	
 	LAPACKE_mkl_sgetrfnp(LAPACK_ROW_MAJOR, p_rows, p_cols, p_Ai, p_cols);
 	LAPACKE_mkl_sgetrinp(LAPACK_ROW_MAJOR, p_rows, p_Ai, p_cols);
+}
+
+void TensorOperatorMKL::pinv(float* p_A, float* p_Ai, const int p_rows, const int p_cols)
+{
+	int thread = omp_get_max_threads();
+	omp_set_num_threads(thread);
+
+	MKL_INT  k = std::min(p_rows, p_cols);
+	MKL_INT  lda = p_cols; //column-major, n for row-major
+	MKL_INT  ldu = k; //column-major, min(m,n) for row-major
+	MKL_INT  ldvt = p_cols; //column-major, n for row-major
+	MKL_INT  lwork;
+	MKL_INT info;
+
+	float wkopt;
+	char jobu = 'S';
+	char jobvt = 'S';
+
+	float* s = (float*)malloc(k * sizeof(float));
+	float* u = (float*)malloc(ldu*k * sizeof(float));
+	float* vt = (float*)malloc(ldvt*p_cols * sizeof(float));
+	
+	lwork = -1;
+	sgesvd(&jobu, &jobvt, &p_rows, &p_cols, p_A, &lda, s, u, &ldu, vt, &ldvt, &wkopt, &lwork, &info);
+	lwork = (MKL_INT)wkopt;
+	float* work = (float*)malloc(lwork * sizeof(float));
+
+	sgesvd(&jobu, &jobvt, &p_rows, &p_cols, p_A, &lda, s, u, &ldu, vt, &ldvt, work, &lwork, &info);
+	if (info > 0) {
+		printf("The algorithm computing SVD failed to converge.\n");
+		exit(1);
+	}
+
+	//u=(s^-1)*U
+	MKL_INT incx = 1;
+	#pragma omp parallel for
+	for (int i = 0; i<k; i++)
+	{
+		float ss;
+		if (s[i] > 1.0e-5f)
+			ss = 1.0f / s[i];
+		else
+			ss = s[i];
+		sscal(&p_rows, &ss, &u[i*p_rows], &incx);
+	}
+	//inv(A)=(Vt)^T *u^T
+	float alpha = 1.0, beta = 0.0;
+	MKL_INT ld_inva = p_cols;
+	sgemm("T", "T", &p_cols, &p_rows, &k, &alpha, vt, &ldvt, u, &ldu, &beta, p_Ai, &ld_inva);
+
+	free(s);
+	free(u);
+	free(vt);
+	free(work);
 }

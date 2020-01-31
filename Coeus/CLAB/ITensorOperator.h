@@ -23,6 +23,7 @@ public:
 	virtual void MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float* p_C, int p_rows, int p_common, int p_cols) = 0;
 	virtual void MM_prod(float* p_A, bool p_Atrans, float* p_B, bool p_Btrans, float p_alpha, float* p_C, float p_beta, int p_rows, int p_common, int p_cols) = 0;
 	virtual void inv_M(float* p_A, float* p_Ai, int p_rows, int p_cols) = 0;
+	virtual void pinv(float* p_A, float* p_Ai, int p_rows, int p_cols) = 0;
 
 	virtual void v_reduce(float* p_x, float* p_y, int p_size) = 0;
 	virtual void M_reduce(float* p_x, float* p_A, bool p_row_major, int p_rows, int p_cols, bool p_accumulate) = 0;

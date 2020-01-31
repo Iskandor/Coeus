@@ -8,6 +8,8 @@
 #include "ADAM.h"
 #include "RAdam.h"
 #include "BackProph.h"
+#include "CartPole.h"
+#include "DDPG.h"
 
 MotivationTest::MotivationTest()
 {
@@ -36,10 +38,116 @@ MotivationTest::MotivationTest()
 }
 
 MotivationTest::~MotivationTest()
+= default;
+
+void MotivationTest::cart_pole_icm(int p_episodes)
 {
+	CartPole env;
+
+	const int hidden = 128;
+	const float limit = 0.01f;
+
+	NeuralNetwork network_features;
+
+	network_features.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), CartPole::STATE));
+	network_features.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	// feed-forward connections	
+	network_features.add_connection("hidden0", "hidden1");
+	network_features.init();
+
+	NeuralNetwork network_forward_model;
+	network_forward_model.add_layer(new CoreLayer("fm_input", hidden / 4, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_features.get_output_dim() + CartPole::ACTION));
+	network_forward_model.add_layer(new CoreLayer("fm_output", CartPole::STATE, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_forward_model.add_connection("fm_input", "fm_output");
+	network_forward_model.init();
+
+	NeuralNetwork network_inverse_model;
+	network_inverse_model.add_layer(new CoreLayer("im_input", hidden / 4, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_features.get_output_dim() + network_features.get_output_dim()));
+	network_inverse_model.add_layer(new CoreLayer("im_output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_inverse_model.add_connection("im_input", "im_output");
+	network_inverse_model.init();
+
+	ICM icm(&network_forward_model, &network_inverse_model, &network_features, RADAM_RULE, 1e-4f);
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE + CartPole::ACTION));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	const DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-4f, 10000, 64);
+
+	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
+	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
+	Tensor state1({ CartPole::STATE }, Tensor::ZERO);
+
+	for (int e = 0; e < p_episodes; ++e) {
+		//printf("CartPole episode %i...\n", e);
+		float cri = 0;
+		float cre = 0;
+		int total_steps = 0;
+		
+		env.reset();
+
+		copy_state(env.get_state(true), state0);
+
+
+		while (true) {
+			action = agent.get_action(&state0, 1.f);
+
+			env.perform_action(action[0]);
+			copy_state(env.get_state(true), state1);
+
+			total_steps++;
+
+			const float ri = icm.get_intrinsic_reward(&state0, &action, &state1, .01f);
+			cri += ri;
+			const float re = env.get_reward();
+			cre += re;
+			const float reward = re + ri;
+			agent.train(&state0, &action, &state1, reward, env.is_finished());
+			icm.train(&state0, &action, &state1);
+			//icm.add(&state0, &action, &state1);
+			//icm.train(64);
+
+			
+			state0 = state1;
+
+			if (e % 1000 == 0) {
+				//cout << network_critic.get_output()->at(0) << " " << delta << endl;
+			}
+
+			if (env.is_finished()) {
+				break;
+			}
+		}
+		
+		printf("CartPole ICM Episode %i internal reward %0.4f ", e, cri);
+
+		if (evaluate_cart_pole(cre))
+		{
+			break;
+		}
+	}
+
+	//test_cart_pole(network_actor, network_critic, 6000);
 }
 
-void MotivationTest::test1(const int p_episodes)
+void MotivationTest::test_icm(const int p_episodes)
 {
 	const int hidden = 128;
 	const float limit = 0.01f;
@@ -64,29 +172,29 @@ void MotivationTest::test1(const int p_episodes)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	const ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-3f);
+	const ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f);
 
-	NeuralNetwork network_head;
+	NeuralNetwork network_feature;
 
-	network_head.add_layer(new CoreLayer("hidden0", hidden * 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze.STATE_DIM()));
-	network_head.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_feature.add_layer(new CoreLayer("hidden0", hidden * 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze.STATE_DIM()));
+	network_feature.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	// feed-forward connections	
-	network_head.add_connection("hidden0", "hidden1");
-	network_head.init();
+	network_feature.add_connection("hidden0", "hidden1");
+	network_feature.init();
 
 	NeuralNetwork network_forward_model;
-	network_forward_model.add_layer(new CoreLayer("fm_input", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_head.get_output_dim() + _maze.ACTION_DIM()));
+	network_forward_model.add_layer(new CoreLayer("fm_input", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_feature.get_output_dim() + _maze.ACTION_DIM()));
 	network_forward_model.add_layer(new CoreLayer("fm_output", _maze.STATE_DIM(), SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	network_forward_model.add_connection("fm_input", "fm_output");
 	network_forward_model.init();
 	
 	NeuralNetwork network_inverse_model;
-	network_inverse_model.add_layer(new CoreLayer("im_input", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_head.get_output_dim() + network_head.get_output_dim()));
+	network_inverse_model.add_layer(new CoreLayer("im_input", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), network_feature.get_output_dim() + network_feature.get_output_dim()));
 	network_inverse_model.add_layer(new CoreLayer("im_output", _maze.ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
 	network_inverse_model.add_connection("im_input", "im_output");
 	network_inverse_model.init();
 
-	ICM icm(&network_forward_model, &network_inverse_model, &network_head, RADAM_RULE, 1e-4f, 1e5);
+	ICM icm(&network_forward_model, &network_inverse_model, &network_feature, RADAM_RULE, 1e-4f, 1e5);
 	
 	train_icm(icm);
 	system("pause");
@@ -114,7 +222,7 @@ void MotivationTest::test1(const int p_episodes)
 			Encoder::one_hot(action, action0);
 			_maze.do_action(action);
 			state1 = _maze.get_state();
-			const float ri = icm.get_intrinsic_reward(&state0, &action, &state1, 0.1f);
+			const float ri = icm.get_intrinsic_reward(&state0, &action, &state1, 0.01f);
 			cri += ri;
 			//cout << ri << endl;
 			const float re = _maze.get_reward();
@@ -135,7 +243,7 @@ void MotivationTest::test1(const int p_episodes)
 			loses++;
 		}
 
-		if (e % 100 == 0)
+		if (e % 100 == 0 && false)
 		{
 			test_policy(network_actor);
 			cout << endl;
@@ -157,6 +265,118 @@ void MotivationTest::test1(const int p_episodes)
 	test_icm_model(icm);
 }
 
+void MotivationTest::test_gm2(int p_episodes)
+{
+	const int hidden = 128;
+	const float limit = 0.01f;
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze.STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_actor.add_layer(new CoreLayer("output", _maze.ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	const ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f);
+
+	NeuralNetwork network_autoencoder;
+
+	network_autoencoder.add_layer(new CoreLayer("hidden0", _maze.STATE_DIM() * 16, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit), _maze.STATE_DIM()));
+	network_autoencoder.add_layer(new CoreLayer("hidden1", _maze.STATE_DIM() * 8, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_autoencoder.add_layer(new CoreLayer("latent", _maze.STATE_DIM() / 4, SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_autoencoder.add_layer(new CoreLayer("hidden2", _maze.STATE_DIM() * 8, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_autoencoder.add_layer(new CoreLayer("hidden3", _maze.STATE_DIM() * 16, RELU, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	network_autoencoder.add_layer(new CoreLayer("output", _maze.STATE_DIM(), SIGMOID, new TensorInitializer(TensorInitializer::UNIFORM, -limit, limit)));
+	// feed-forward connections	
+	network_autoencoder.add_connection("hidden0", "hidden1");
+	network_autoencoder.add_connection("hidden1", "latent");
+	network_autoencoder.add_connection("latent", "hidden2");
+	network_autoencoder.add_connection("hidden2", "hidden3");
+	network_autoencoder.add_connection("hidden3", "output");
+	network_autoencoder.init();
+
+	GM2 gm2(&network_autoencoder, RADAM_RULE, 1e-4f, 1e5);
+
+	train_gm2(gm2);
+	system("pause");
+
+	Tensor state0, state1;
+	Tensor action({ _maze.ACTION_DIM() }, Tensor::ZERO);
+
+	int wins = 0, loses = 0;
+
+
+	//Logger::instance().init("log.log");
+
+	for (int e = 0; e < p_episodes; e++) {
+		float cri = 0;
+		int step = 0;
+		_maze.reset();
+		state0 = _maze.get_state();
+
+		network_critic.activate(&state0);
+
+		while (!_maze.is_finished()) {
+			network_actor.activate(&state0);
+
+			const int action0 = RandomGenerator::get_instance().choice(network_actor.get_output()->arr(), _maze.ACTION_DIM());
+			Encoder::one_hot(action, action0);
+			_maze.do_action(action);
+			state1 = _maze.get_state();
+			const float ri = gm2.uncertainty_motivation(&state1);
+			cri += ri;
+			//cout << ri << endl;
+			const float re = _maze.get_reward();
+			const float reward = re + ri;
+			agent.train(&state0, &action, &state1, reward, _maze.is_finished());
+			gm2.train(&state1);
+
+			state0.override(&state1);
+			step++;
+		}
+
+		if (_maze.is_winner()) {
+			wins++;
+		}
+		else {
+			loses++;
+		}
+
+		if (e % 100 == 0 && false)
+		{
+			test_policy(network_actor);
+			cout << endl;
+			test_v(&network_critic);
+			cout << endl;
+			//test_icm_model2(icm, network_actor);
+			test_gm2_model(gm2);
+			system("pause");
+		}
+
+		printf("Actor-Critic Episode %i results: %i / %i\n", e, wins, loses);
+		printf("%f\n", cri / step);
+	}
+
+	test_policy(network_actor);
+	cout << endl;
+	test_v(&network_critic);
+	cout << endl;
+	test_gm2_model(gm2);
+}
+
 void MotivationTest::train_icm(ICM& p_icm)
 {
 	Tensor s0 = Tensor::Zero({ _maze.STATE_DIM() });
@@ -176,15 +396,44 @@ void MotivationTest::train_icm(ICM& p_icm)
 			_maze.do_action(a);
 			s1 = _maze.get_state();
 
-			p_icm.add(&s0, &a, &s1);
-			//error += p_icm.train(&s0, &a, &s1);
-			error += p_icm.train(64);
+			//p_icm.add(&s0, &a, &s1);
+			error += p_icm.train(&s0, &a, &s1);
+			//error += p_icm.train(64);
 		}
 
 		printf("Episode %i error %1.6f\n", i, error);
 	}
 
 	test_icm_model(p_icm);
+}
+
+void MotivationTest::train_gm2(GM2& p_gm2)
+{
+	Tensor s0 = Tensor::Zero({ _maze.STATE_DIM() });
+	Tensor s1 = Tensor::Zero({ _maze.STATE_DIM() });
+	Tensor a = Tensor::Zero({ _maze.ACTION_DIM() });
+
+	for (int i = 0; i < 4000; i++)
+	{
+		float error = 0;
+		for (int j = 0; j < 25; j++)
+		{
+			int is0 = RandomGenerator::get_instance().random(0, _maze.STATE_DIM() - 1);
+			int ia = RandomGenerator::get_instance().random(0, _maze.ACTION_DIM() - 1);
+			Encoder::one_hot(s0, is0);
+			Encoder::one_hot(a, ia);
+			_maze.set_state(s0);
+			_maze.do_action(a);
+			s1 = _maze.get_state();
+
+			p_gm2.add(&s0, &a, &s1);
+			error += p_gm2.train(64);
+		}
+
+		printf("Episode %i error %1.6f\n", i, error);
+	}
+
+	test_gm2_model(p_gm2);
 }
 
 void MotivationTest::test_icm_model(ICM& p_icm)
@@ -220,6 +469,26 @@ void MotivationTest::test_icm_model(ICM& p_icm)
 
 	cout << endl;
 	
+}
+
+void MotivationTest::test_gm2_model(GM2& p_gm2) const
+{
+	Tensor s = Tensor::Zero({ _maze.STATE_DIM() });
+
+	for (unsigned int i = 0; i < _maze.mazeY(); i++)
+	{
+		for (unsigned int j = 0; j < _maze.mazeX(); j++)
+		{
+			Encoder::one_hot(s, i * _maze.mazeX() + j);
+			const float ri = p_gm2.uncertainty_motivation(&s);			
+
+			//printf("%1.2f ", ri);
+		}
+
+		cout << endl;
+	}
+
+	cout << endl;
 }
 
 void MotivationTest::test_icm_model2(ICM& p_icm, NeuralNetwork& p_actor)
@@ -299,6 +568,36 @@ void MotivationTest::test_policy(NeuralNetwork &p_network)
 	}
 
 	cout << endl;
+}
+
+bool MotivationTest::evaluate_cart_pole(float p_reward)
+{
+	if (_rewards.size() == 100)
+	{
+		_rewards.erase(_rewards.begin());
+	}
+	_rewards.push_back(p_reward);
+
+	float r_sum = 0;
+
+	for (float r : _rewards)
+	{
+		r_sum += r;
+	}
+
+	r_sum /= _rewards.size();
+
+	printf("evaluation with average reward %0.4f\n", r_sum);
+
+	return r_sum >= 195;
+}
+
+void MotivationTest::copy_state(vector<float>& p_observation, Tensor& p_state)
+{
+	for (int i = 0; i < p_observation.size(); i++)
+	{
+		p_state.set(i, p_observation[i]);
+	}
 }
 
 void MotivationTest::test_v(NeuralNetwork* p_network)
