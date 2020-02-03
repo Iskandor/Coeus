@@ -423,7 +423,7 @@ void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
+	DDPG agent(&network_critic, ADAM_RULE, 1e-4f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
 
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
@@ -436,7 +436,7 @@ void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
 	
 	for (int e = 0; e < p_episodes; ++e) {
 		//printf("CartPole episode %i...\n", e);
-		float total_reward = test_cart_pole(network_actor, network_critic, 195);
+		const float total_reward = test_cart_pole(network_actor, network_critic, 195);
 		int total_steps = 0;
 
 		_cart_pole.reset();

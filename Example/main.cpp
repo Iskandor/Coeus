@@ -62,7 +62,7 @@ int main()
 	//test.run_simple_cacer(1000);
 	//test.run_simple_ddpg(1000);
 	//test.run_cacla(10000);
-	for(int i = 0; i < 10; i++) test.run_ddpg(100, true);
+	for(int i = 0; i < 10; i++) test.run_ddpg(2500, true);
 
 	/*
 	IrisTest iris;
@@ -75,6 +75,7 @@ int main()
 	//MotivationTest test;
 
 	//test.cart_pole_icm(10000);
+	//for (int i = 0; i < 10; i++) test.cart_pole_icm2(1000, true);
 	//test.test_icm(1000);
 	//test.test_gm2(1000);
 

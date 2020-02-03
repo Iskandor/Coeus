@@ -27,6 +27,7 @@ set(INCLUDE_FILES
 	DeepQLearning.h
 	DoubleQLearning.h
 	EGreedyExploration.h
+	ForwardModel.h
 	GAE.h
 	GM2.h
 	IActorCritic.h
@@ -52,6 +53,7 @@ set(SOURCE_FILES
 	DeepQLearning.cpp
 	DoubleQLearning.cpp
 	EGreedyExploration.cpp
+	ForwardModel.cpp
 	GAE.cpp
 	GM2.cpp
 	IActorCritic.cpp

@@ -3,6 +3,7 @@
 #include "NeuralNetwork.h"
 #include "ICM.h"
 #include "GM2.h"
+#include "CartPole.h"
 
 using namespace Coeus;
 
@@ -13,6 +14,7 @@ public:
 	~MotivationTest();
 
 	void cart_pole_icm(int p_episodes);
+	void cart_pole_icm2(int p_episodes, bool p_log = false);
 	
 	void test_icm(int p_episodes);
 	void test_gm2(int p_episodes);
@@ -27,7 +29,8 @@ private:
 	void test_v(NeuralNetwork* p_network);
 	void test_policy(NeuralNetwork& p_network);
 
-	bool evaluate_cart_pole(float p_reward);
+	float evaluate_cart_pole(float p_reward);
+	float test_cart_pole(CartPole& p_env, NeuralNetwork& p_actor, NeuralNetwork& p_critic, int p_episodes);
 	void copy_state(vector<float>& p_observation, Tensor& p_state);
 	
 	Maze	_maze;
