@@ -14,22 +14,27 @@ namespace Coeus {
 	{
 	public:
 		GAE(NeuralNetwork* p_network, float p_gamma, float p_lambda);
+		GAE(NeuralNetwork* p_network, GRADIENT_RULE p_rule, float p_alpha, float p_gamma, float p_lambda);
 		~GAE();
 
-		void set_sample(vector<DQItem> &p_sample);
-		vector<float> get_advantages();
+		Tensor&		get_advantages(vector<DQItem> &p_sample);
+		void		train(vector<DQItem> &p_sample);
 
-		Gradient& get_gradient(Tensor* p_state0, float p_advantage) const;
+		Gradient&	get_gradient(Tensor* p_state0, float p_return) const;
 
 
 	private:
+		void activate(vector<DQItem> &p_sample) const;
+		
+		Tensor				_input_buffer_s0;
+		Tensor				_returns;
+		Tensor				_advantages;
 		NeuralNetwork*		_network;
 		NetworkGradient*	_network_gradient;
-
-		vector<DQItem> _sample_buffer;
-
-		float _gamma;
-		float _lambda;
+		IUpdateRule*		_update_rule;
+		
+		float	_gamma;
+		float	_lambda;
 
 	};
 }

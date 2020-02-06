@@ -53,6 +53,7 @@ public:
 	Tensor operator - (float p_rhs) const;
 	Tensor operator * (const Tensor& p_rhs) const;
 	Tensor operator * (float p_rhs) const;
+	Tensor operator / (float p_rhs) const;
 	friend Tensor operator * (float p_lhs, const Tensor& p_rhs);
 
 	float dot(const Tensor& p_rhs) const;

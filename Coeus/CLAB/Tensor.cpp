@@ -357,6 +357,12 @@ Tensor Tensor::operator*(const float p_rhs) const
 	return result *= p_rhs;
 }
 
+Tensor Tensor::operator/(const float p_rhs) const
+{
+	Tensor result = *this;
+	return result /= p_rhs;
+}
+
 float Tensor::dot(const Tensor& p_rhs) const
 {
 	float result = 0;

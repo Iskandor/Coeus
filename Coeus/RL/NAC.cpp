@@ -45,15 +45,14 @@ void NAC::train()
 	_actor_gradient.fill(0);
 	_fisher_matrix.fill(0);
 	
-	_critic->set_sample(_sample_buffer);
-	vector<float> advantage = _critic->get_advantages();
+	Tensor advantages = _critic->get_advantages(_sample_buffer);
 	
 	for(size_t i = 0; i < _sample_buffer.size(); i++)
 	{
 		//Gradient& actor_gradient = _actor->get_gradient(&_sample_buffer[i].s0, _sample_buffer[i].a.max_value_index(), advantage[i]);
 		//NaturalGradient::calc_hessian(actor_gradient);
 		
-		_rule_critic->calc_update(_critic->get_gradient(&_sample_buffer[i].s0, advantage[i]));
+		_rule_critic->calc_update(_critic->get_gradient(&_sample_buffer[i].s0, advantages[i]));
 		_network_critic->update(_rule_critic->get_update());
 
 		//_actor_gradient += actor_gradient;		

@@ -36,6 +36,7 @@ set(INCLUDE_FILES
 	IMotivationModule.h
 	NAC.h
 	PolicyGradient.h
+	PPO.h
 	QLearning.h
 	SARSA.h
 	TD.h
@@ -61,6 +62,7 @@ set(SOURCE_FILES
 	IMotivationModule.cpp
 	NAC.cpp
 	PolicyGradient.cpp
+	PPO.cpp
 	QLearning.cpp
 	SARSA.cpp
 	TD.cpp
