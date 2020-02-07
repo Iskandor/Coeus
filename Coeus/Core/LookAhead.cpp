@@ -55,7 +55,7 @@ void LookAhead::slow_update()
 		{
 			p.second += 0.5 * (*(*_network)[p.first] - p.second);
 		}
-		_network->override(&_slow_params);
+		_network->override(_slow_params);
 		_kt = 0;
 	}
 }

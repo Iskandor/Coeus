@@ -12,7 +12,7 @@ var class_coeus_1_1_param_model =
     [ "get_params", "class_coeus_1_1_param_model.html#a15f9f8621e95de0580eace06e1af411d", null ],
     [ "get_params_size", "class_coeus_1_1_param_model.html#a87b9d2f392c23fe2fd2c0823485e78f9", null ],
     [ "operator[]", "class_coeus_1_1_param_model.html#a5a98dcd950d2fb3a749ffd63bd7623ce", null ],
-    [ "override", "class_coeus_1_1_param_model.html#aec509c2934e896ea8b88c3717472b2fd", null ],
+    [ "override", "class_coeus_1_1_param_model.html#a490bee3ccb95c32675ca72651bd3cb01", null ],
     [ "polyak_averaging", "class_coeus_1_1_param_model.html#ad24d09722dcbce0a7d73d4a8ddabfa2f", null ],
     [ "update", "class_coeus_1_1_param_model.html#a3a496cd1c2c2b48d19c7dbda69871bf1", null ],
     [ "operator<<", "class_coeus_1_1_param_model.html#ab9ab019181235dde8b51e573199b9dee", null ],

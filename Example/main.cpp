@@ -43,7 +43,7 @@ int main()
 	//model.run_mnist();
 	//model.test();
 	
-	//MazeExample example;
+	MazeExample example;
 	//example.example_q(15000);
 	//example.example_sarsa(30000);
 	//example.example_double_q(15000);
@@ -52,17 +52,18 @@ int main()
 	//example.example_nac(1000);
 	//example.example_a2c(1000);
 	//example.example_a3c(2000);
-	//
+	example.example_ppo(1000);
+	
 	//example.example_icm(64);
 	//example.example_selector(64);
 
-	ContinuousTest test;
+	//ContinuousTest test;
 
 	//test.run_simple_cacla(1000);
 	//test.run_simple_cacer(1000);
 	//test.run_simple_ddpg(1000);
 	//test.run_cacla(10000);
-	for(int i = 0; i < 10; i++) test.run_ddpg(2500, true);
+	//for(int i = 0; i < 10; i++) test.run_ddpg(2500, true);
 
 	/*
 	IrisTest iris;

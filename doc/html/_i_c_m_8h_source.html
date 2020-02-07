@@ -91,62 +91,69 @@ $(document).ready(function(){initNavTree('_i_c_m_8h_source.html','');});
 <div class="title">ICM.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;NeuralNetwork.h&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;GradientAlgorithm.h&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;QuadraticCost.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;ReplayBuffer.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;BufferItems.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Coeus {</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_c_m.html">   10</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_i_c_m.html">ICM</a></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="class_coeus_1_1_i_c_m.html">ICM</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_forward_model, <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_inverse_model, <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_head, GRADIENT_RULE p_rule, <span class="keywordtype">float</span> p_alpha, <span class="keywordtype">int</span> p_size = 0);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        ~<a class="code" href="class_coeus_1_1_i_c_m.html">ICM</a>();</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">void</span> activate(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1, <span class="keywordtype">bool</span> p_inverse_model = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordtype">float</span> train(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordtype">void</span> add(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordtype">float</span> train(<span class="keywordtype">int</span> p_sample);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordtype">float</span> get_intrinsic_reward(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1, <span class="keywordtype">float</span> p_eta = 1);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* get_output()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _forward_model-&gt;get_output(); }</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="class_coeus_1_1_replay_buffer.html">ReplayBuffer&lt;TransitionItem&gt;</a>* _buffer;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">int</span>     _sample;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _fm_input;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _im_input;      </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _fm_target;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _im_target;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _h_input_s0;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _h_input_s1;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* _forward_model;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* _inverse_model;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* _head;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* _fm_gradient;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* _im_gradient;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* _h_gradient;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*    _fm_rule;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*    _im_rule;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*    _h_rule;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">float</span> _forward_reward;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="class_coeus_1_1_quadratic_cost.html">QuadraticCost</a> _L;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    };</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Intrinsic curiosity module</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Curiosity-driven Exploration by Self-supervised Prediction</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * https://pathak22.github.io/noreward-rl/resources/icml17.pdf</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;NeuralNetwork.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;GradientAlgorithm.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;QuadraticCost.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;ReplayBuffer.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;BufferItems.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>Coeus {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_coeus_1_1_i_c_m.html">   15</a></span>&#160;    <span class="keyword">class </span><span class="keyword">__declspec(dllexport)</span> <a class="code" href="class_coeus_1_1_i_c_m.html">ICM</a></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="class_coeus_1_1_i_c_m.html">ICM</a>(<a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_forward_model, <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_inverse_model, <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* p_feature_extractor, GRADIENT_RULE p_rule, <span class="keywordtype">float</span> p_alpha, <span class="keywordtype">int</span> p_size = 0, <span class="keywordtype">float</span> p_beta = .2f);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        ~<a class="code" href="class_coeus_1_1_i_c_m.html">ICM</a>();</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">void</span> activate(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1, <span class="keywordtype">bool</span> p_inverse_model = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordtype">float</span> train(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">void</span> add(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">float</span> train(<span class="keywordtype">int</span> p_sample);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">float</span> get_intrinsic_reward(<a class="code" href="class_tensor.html">Tensor</a>* p_state0, <a class="code" href="class_tensor.html">Tensor</a>* p_action, <a class="code" href="class_tensor.html">Tensor</a>* p_state1, <span class="keywordtype">float</span> p_eta = 1);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* get_output()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _forward_model-&gt;get_output(); }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="class_coeus_1_1_replay_buffer.html">ReplayBuffer&lt;TransitionItem&gt;</a>* _buffer;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">int</span>     _sample;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _fm_input;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _im_input;      </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _fm_target;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _im_target;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _fe_input_s0;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="class_tensor.html">Tensor</a>* _fe_input_s1;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* _forward_model;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* _inverse_model;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="class_coeus_1_1_neural_network.html">NeuralNetwork</a>* _feature_extractor;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* _fm_gradient;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* _im_gradient;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="class_coeus_1_1_network_gradient.html">NetworkGradient</a>* _fe_gradient;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*    _fm_rule;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*    _im_rule;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="class_coeus_1_1_i_update_rule.html">IUpdateRule</a>*    _fe_rule;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordtype">float</span> _forward_reward;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="class_coeus_1_1_quadratic_cost.html">QuadraticCost</a> _L;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">float</span> _beta;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    };</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclass_coeus_1_1_network_gradient_html"><div class="ttname"><a href="class_coeus_1_1_network_gradient.html">Coeus::NetworkGradient</a></div><div class="ttdef"><b>Definition:</b> NetworkGradient.h:9</div></div>
 <div class="ttc" id="aclass_coeus_1_1_i_update_rule_html"><div class="ttname"><a href="class_coeus_1_1_i_update_rule.html">Coeus::IUpdateRule</a></div><div class="ttdef"><b>Definition:</b> IUpdateRule.h:11</div></div>
-<div class="ttc" id="aclass_coeus_1_1_i_c_m_html"><div class="ttname"><a href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></div><div class="ttdef"><b>Definition:</b> ICM.h:10</div></div>
+<div class="ttc" id="aclass_coeus_1_1_i_c_m_html"><div class="ttname"><a href="class_coeus_1_1_i_c_m.html">Coeus::ICM</a></div><div class="ttdef"><b>Definition:</b> ICM.h:15</div></div>
 <div class="ttc" id="aclass_coeus_1_1_quadratic_cost_html"><div class="ttname"><a href="class_coeus_1_1_quadratic_cost.html">Coeus::QuadraticCost</a></div><div class="ttdef"><b>Definition:</b> QuadraticCost.h:5</div></div>
 <div class="ttc" id="aclass_tensor_html"><div class="ttname"><a href="class_tensor.html">Tensor</a></div><div class="ttdef"><b>Definition:</b> Tensor.h:8</div></div>
 <div class="ttc" id="aclass_coeus_1_1_neural_network_html"><div class="ttname"><a href="class_coeus_1_1_neural_network.html">Coeus::NeuralNetwork</a></div><div class="ttdef"><b>Definition:</b> NeuralNetwork.h:12</div></div>

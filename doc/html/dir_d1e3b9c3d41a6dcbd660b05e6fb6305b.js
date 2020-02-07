@@ -12,6 +12,7 @@ var dir_d1e3b9c3d41a6dcbd660b05e6fb6305b =
     [ "DeepQLearning.h", "_deep_q_learning_8h_source.html", null ],
     [ "DoubleQLearning.h", "_double_q_learning_8h_source.html", null ],
     [ "EGreedyExploration.h", "_e_greedy_exploration_8h_source.html", null ],
+    [ "ForwardModel.h", "_forward_model_8h_source.html", null ],
     [ "GAE.h", "_g_a_e_8h_source.html", null ],
     [ "GM2.h", "_g_m2_8h_source.html", null ],
     [ "IActorCritic.h", "_i_actor_critic_8h_source.html", null ],
@@ -20,6 +21,7 @@ var dir_d1e3b9c3d41a6dcbd660b05e6fb6305b =
     [ "IMotivationModule.h", "_i_motivation_module_8h_source.html", null ],
     [ "NAC.h", "_n_a_c_8h_source.html", null ],
     [ "PolicyGradient.h", "_policy_gradient_8h_source.html", null ],
+    [ "PPO.h", "_p_p_o_8h_source.html", null ],
     [ "QLearning.h", "_q_learning_8h_source.html", null ],
     [ "SARSA.h", "_s_a_r_s_a_8h_source.html", null ],
     [ "TD.h", "_t_d_8h_source.html", null ]

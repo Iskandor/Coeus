@@ -13,11 +13,18 @@
 
 using namespace Coeus;
 
+/**
+ * \brief Creates empty network
+ */
 NeuralNetwork::NeuralNetwork() : ParamModel()
 {
 	ParamModelStorage::instance().bind(_id, _id);
 }
 
+/**
+ * \brief Creates network from data in json format loaded from the file
+ * \param p_data text file in json format
+ */
 NeuralNetwork::NeuralNetwork(json p_data)
 {
 	for (json::iterator it = p_data["layers"].begin(); it != p_data["layers"].end(); ++it) {
@@ -33,6 +40,12 @@ NeuralNetwork::NeuralNetwork(json p_data)
 	init();
 }
 
+/**
+ * \brief Creates a copy or clone of the network. The copy shares the parameters with the original and every change will have impact on the original as well as on the copy.
+ * The clone has its own parameters with the same value as the original and change in parameters of one network will leave the others network parameters intact.
+ * \param p_copy source network
+ * \param p_clone copy / clone flag 
+ */
 NeuralNetwork::NeuralNetwork(NeuralNetwork& p_copy, const bool p_clone) : ParamModel()
 {
 	if (p_clone)

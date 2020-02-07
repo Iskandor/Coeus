@@ -23,6 +23,7 @@ var class_i_tensor_operator =
     [ "Mv_add", "class_i_tensor_operator.html#ae8bd039c836905561bbdbba693a62294", null ],
     [ "operator=", "class_i_tensor_operator.html#a2ba1e8a76cb025bb074717696932ee71", null ],
     [ "operator=", "class_i_tensor_operator.html#abf6a28fcd7cecf3486b72a89989265ce", null ],
+    [ "pinv", "class_i_tensor_operator.html#abd1db524bb2ab180d690f9745331962d", null ],
     [ "V_reduce", "class_i_tensor_operator.html#a2e88ba8f1bdf9dd7caeae086731c5b22", null ],
     [ "v_reduce", "class_i_tensor_operator.html#acc6bba07b719b96eae693882cfed5f34", null ],
     [ "vc_prod", "class_i_tensor_operator.html#a0fc56d33334f508057cc2010f5c774db", null ],

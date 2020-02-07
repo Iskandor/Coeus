@@ -123,7 +123,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_ro
 {
 	if (p_rows == 1)
 	{
-		if (p_param == nullptr || p_param->rank() != 1)
+		if (p_param == nullptr || p_param->rank() != 1 || p_param->size() != p_cols)
 		{
 			delete p_param;
 			p_param = new Tensor({ p_cols }, Tensor::ZERO);
@@ -131,7 +131,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_ro
 	}
 	if (p_rows > 1)
 	{
-		if (p_param == nullptr || p_param->rank() != 2)
+		if (p_param == nullptr || p_param->rank() != 2 || p_param->size() != p_rows * p_cols)
 		{
 			delete p_param;
 			p_param = new Tensor({ p_rows, p_cols }, Tensor::ZERO);
@@ -145,7 +145,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_de
 {
 	if (p_depth == 1)
 	{
-		if (p_param == nullptr || p_param->rank() != 2)
+		if (p_param == nullptr || p_param->rank() != 2 || p_param->size() != p_rows * p_cols)
 		{
 			delete p_param;
 			p_param = new Tensor({ p_rows, p_cols }, Tensor::ZERO);
@@ -153,7 +153,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_de
 	}
 	if (p_depth > 1)
 	{
-		if (p_param == nullptr || p_param->rank() != 3)
+		if (p_param == nullptr || p_param->rank() != 3 || p_param->size() != p_depth * p_rows * p_cols)
 		{
 			delete p_param;
 			p_param = new Tensor({ p_depth, p_rows, p_cols }, Tensor::ZERO);
@@ -167,7 +167,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, int p_batch, i
 {
 	if (p_batch == 1)
 	{
-		if (p_param == nullptr || p_param->rank() != 3)
+		if (p_param == nullptr || p_param->rank() != 3 || p_param->size() != p_depth * p_rows * p_cols)
 		{
 			delete p_param;
 			p_param = new Tensor({ p_depth, p_rows, p_cols }, Tensor::ZERO);
@@ -175,7 +175,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, int p_batch, i
 	}
 	if (p_batch > 1)
 	{
-		if (p_param == nullptr || p_param->rank() != 4)
+		if (p_param == nullptr || p_param->rank() != 4 || p_param->size() != p_batch * p_depth * p_rows * p_cols)
 		{
 			delete p_param;
 			p_param = new Tensor({ p_batch, p_depth, p_rows, p_cols }, Tensor::ZERO);

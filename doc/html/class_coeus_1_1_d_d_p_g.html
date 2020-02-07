@@ -101,11 +101,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a84d232e31cb9c939fc6986fb2691ab55"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_coeus_1_1_d_d_p_g.html">DDPG</a> algorithm constructor.  <a href="class_coeus_1_1_d_d_p_g.html#a84d232e31cb9c939fc6986fb2691ab55">More...</a><br /></td></tr>
 <tr class="separator:a84d232e31cb9c939fc6986fb2691ab55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa82fdfc825d0d8335e01a0124dc8a18f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_d_d_p_g.html#aa82fdfc825d0d8335e01a0124dc8a18f">train</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state0, <a class="el" href="class_tensor.html">Tensor</a> *p_action0, <a class="el" href="class_tensor.html">Tensor</a> *p_state1, float p_reward, bool p_final) const</td></tr>
-<tr class="memdesc:aa82fdfc825d0d8335e01a0124dc8a18f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Training method updating actor and critic on one sample taken from the replay buffer.  <a href="class_coeus_1_1_d_d_p_g.html#aa82fdfc825d0d8335e01a0124dc8a18f">More...</a><br /></td></tr>
+<tr class="memdesc:aa82fdfc825d0d8335e01a0124dc8a18f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Training method updating actor and critic on minibatch taken from the replay buffer.  <a href="class_coeus_1_1_d_d_p_g.html#aa82fdfc825d0d8335e01a0124dc8a18f">More...</a><br /></td></tr>
 <tr class="separator:aa82fdfc825d0d8335e01a0124dc8a18f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6a905ffd77ad719ce75cff654431694"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_d_d_p_g.html#ac6a905ffd77ad719ce75cff654431694">get_action</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state, float p_sigma)</td></tr>
-<tr class="memdesc:ac6a905ffd77ad719ce75cff654431694"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return action as output from the actor network modified by gaussian noise with variance sigma.  <a href="class_coeus_1_1_d_d_p_g.html#ac6a905ffd77ad719ce75cff654431694">More...</a><br /></td></tr>
-<tr class="separator:ac6a905ffd77ad719ce75cff654431694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad59d3147198e42c618c0b88420a66933"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_coeus_1_1_d_d_p_g.html#ad59d3147198e42c618c0b88420a66933">get_action</a> (<a class="el" href="class_tensor.html">Tensor</a> *p_state, float p_sigma) const</td></tr>
+<tr class="memdesc:ad59d3147198e42c618c0b88420a66933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return action as output from the actor network modified by gaussian noise with variance sigma.  <a href="class_coeus_1_1_d_d_p_g.html#ad59d3147198e42c618c0b88420a66933">More...</a><br /></td></tr>
+<tr class="separator:ad59d3147198e42c618c0b88420a66933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a84d232e31cb9c939fc6986fb2691ab55"></a>
@@ -195,8 +195,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac6a905ffd77ad719ce75cff654431694"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6a905ffd77ad719ce75cff654431694">&#9670;&nbsp;</a></span>get_action()</h2>
+<a id="ad59d3147198e42c618c0b88420a66933"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad59d3147198e42c618c0b88420a66933">&#9670;&nbsp;</a></span>get_action()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -216,7 +216,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -277,7 +277,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Training method updating actor and critic on one sample taken from the replay buffer. </p>
+<p>Training method updating actor and critic on minibatch taken from the replay buffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">p_state0</td><td>agent's state from time t0 </td></tr>

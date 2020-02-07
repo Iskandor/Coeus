@@ -42,7 +42,7 @@ class __declspec(dllexport) ParamModel
 		void	add_param(Param* p_param);
 		void	add_param(ParamModel* p_model);
 		void	update(map<string, Tensor> *p_update) const;
-		void	override(map<string, Tensor> *p_source);
+		void	override(map<string, Tensor>& p_source);
 
 	protected:
 		string				 _id;

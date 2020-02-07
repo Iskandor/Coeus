@@ -19,6 +19,7 @@ public:
 	int example_sarsa(int p_epochs, bool p_verbose = true);
 	void example_actor_critic(int p_epochs, bool p_verbose = true);
 	void example_nac(int p_epochs, bool p_verbose = true);
+	void example_ppo(int p_epochs);
 	
 	void example_deep_q(int p_epochs, bool p_verbose = true);
 	

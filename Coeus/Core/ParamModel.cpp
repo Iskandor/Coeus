@@ -38,6 +38,10 @@ void ParamModel::DEBUG_compare(ParamModel* p_model)
 	}
 }
 
+/**
+ * \brief Copy parameters from p_model and override them in this model. There must exist a mapping between model parameter keys (the models are clones of each other)
+ * \param p_model source of parameters
+ */
 void ParamModel::copy_params(ParamModel* p_model)
 {
 	if (_param_map.empty())
@@ -117,11 +121,11 @@ void ParamModel::update(map<string, Tensor>* p_update) const
 	}
 }
 
-void ParamModel::override(map<string, Tensor>* p_source)
+void ParamModel::override(map<string, Tensor>& p_source)
 {
 	for (const auto& param : _params)
 	{
-		param.second->override(&p_source->at(param.first));
+		param.second->override(&p_source[param.first]);
 	}
 }
 

@@ -16,6 +16,7 @@ var hierarchy =
     [ "Coeus::DQItem", "struct_coeus_1_1_d_q_item.html", null ],
     [ "Coeus::EGreedyExploration", "class_coeus_1_1_e_greedy_exploration.html", null ],
     [ "Coeus::Encoder", "class_coeus_1_1_encoder.html", null ],
+    [ "Coeus::ForwardModel", "class_coeus_1_1_forward_model.html", null ],
     [ "Coeus::GAE", "class_coeus_1_1_g_a_e.html", null ],
     [ "Coeus::GM2", "class_coeus_1_1_g_m2.html", null ],
     [ "Coeus::Gradient", "class_coeus_1_1_gradient.html", null ],
@@ -115,6 +116,7 @@ var hierarchy =
     ] ],
     [ "Coeus::ParamModelStorage", "class_coeus_1_1_param_model_storage.html", null ],
     [ "Coeus::PolicyGradient", "class_coeus_1_1_policy_gradient.html", null ],
+    [ "Coeus::PPO", "class_coeus_1_1_p_p_o.html", null ],
     [ "Coeus::QLearning", "class_coeus_1_1_q_learning.html", [
       [ "Coeus::DeepQLearning", "class_coeus_1_1_deep_q_learning.html", null ]
     ] ],

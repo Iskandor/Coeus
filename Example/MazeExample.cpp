@@ -29,6 +29,7 @@
 #include "A2C.h"
 #include "ActorCritic.h"
 #include "A3C.h"
+#include "PPO.h"
 
 using namespace Coeus;
 
@@ -540,6 +541,95 @@ void MazeExample::example_nac(int p_epochs, bool p_verbose)
 			test_q(&network_actor);
 			cout << endl;
 			test_v(&network_critic);
+		}
+
+		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));
+
+		//cout << wins << " / " << loses << endl;
+	}
+
+	SetConsoleActiveScreenBuffer(_hConsole_c);
+	test_policy(network_actor);
+	CloseHandle(_hConsole_c);
+
+	//Logger::instance().close();
+
+	test_q(&network_actor);
+	cout << endl;
+	test_v(&network_critic);
+}
+
+void MazeExample::example_ppo(int p_epochs)
+{
+	int hidden = 32;
+	float limit = 0.01f;
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _maze->STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _maze->STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("output", _maze->ACTION_DIM(), SOFTMAX, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	PPO agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, 0.95f, &network_actor, ADAM_RULE, 1e-3f, 8);
+
+	Tensor state0, state1;
+	Tensor action;
+	float reward = 0;
+
+	int wins = 0, loses = 0;
+	//SetConsoleActiveScreenBuffer(_hConsole_c);
+
+	//Logger::instance().init("log.log");
+
+	for (int e = 0; e < p_epochs; e++) {
+		//cout << "Epoch " << e << endl;
+
+		_maze->reset();
+		state0 = _maze->get_state();
+
+		while (!_maze->is_finished()) {
+			action = agent.get_action(&state0);
+			_maze->do_action(action);
+			state1 = _maze->get_state();
+			reward = _maze->get_reward();
+			agent.train(&state0, &action, &state1, reward, _maze->is_finished());
+			state0.override(&state1);
+		}
+
+		//cout << task.getEnvironment()->moves() << endl;
+
+		if (_maze->is_winner()) {
+			wins++;
+		}
+		else {
+			loses++;
+		}
+
+		string s = "PPO Episode " + to_string(e) + " results: " + to_string(wins) + " / " + to_string(loses);
+		//console_print(s, 0, 0);
+		cout << s << endl;
+
+		if (e % 100 == 0)
+		{
+			/*
+			test_q(&network_actor);
+			cout << endl;
+			test_v(&network_critic);
+			*/
 		}
 
 		//Logger::instance().log(to_string(e) + ";" + to_string(cum_i_reward / task.getEnvironment()->moves()) + ";" + to_string(cum_e_reward / task.getEnvironment()->moves()));

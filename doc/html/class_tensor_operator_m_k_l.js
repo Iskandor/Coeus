@@ -19,6 +19,7 @@ var class_tensor_operator_m_k_l =
     [ "MM_prod", "class_tensor_operator_m_k_l.html#a3a464cc5a4b0df1b1eaf244912d144b3", null ],
     [ "MM_prod", "class_tensor_operator_m_k_l.html#ac1ddc589c176eae0fe9b89cbcd1766e2", null ],
     [ "Mv_add", "class_tensor_operator_m_k_l.html#ae292aac9b9c08c173189dc71af53ad4f", null ],
+    [ "pinv", "class_tensor_operator_m_k_l.html#a293240b7285757e3449e90974cfc79a2", null ],
     [ "V_reduce", "class_tensor_operator_m_k_l.html#af44168b6d7f29b94ebe013daf178fa69", null ],
     [ "v_reduce", "class_tensor_operator_m_k_l.html#a0ab88dea73b45e501aa73fe5161b88fc", null ],
     [ "vc_prod", "class_tensor_operator_m_k_l.html#aa94004e3eab43dfdf179b03b8229c5a1", null ],

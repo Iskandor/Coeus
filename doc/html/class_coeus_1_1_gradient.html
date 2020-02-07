@@ -89,6 +89,7 @@ $(document).ready(function(){initNavTree('class_coeus_1_1_gradient.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="class_coeus_1_1_gradient-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Coeus::Gradient Class Reference</div>  </div>
@@ -109,6 +110,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="e
 <tr class="memitem:a86551577ca87005be67278c4c209a385"><td class="memItemLeft" align="right" valign="top"><a id="a86551577ca87005be67278c4c209a385"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>fill</b> (float p_value)</td></tr>
 <tr class="separator:a86551577ca87005be67278c4c209a385"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3775647689ca438631e9e2293598e14f"><td class="memItemLeft" align="right" valign="top"><a id="a3775647689ca438631e9e2293598e14f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>fill</b> (<a class="el" href="class_tensor.html">Tensor</a> &amp;p_gradient)</td></tr>
+<tr class="separator:a3775647689ca438631e9e2293598e14f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b33f4a58f46908608bdcb55849c0fe4"><td class="memItemLeft" align="right" valign="top"><a id="a8b33f4a58f46908608bdcb55849c0fe4"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_invalid</b> ()</td></tr>
 <tr class="separator:a8b33f4a58f46908608bdcb55849c0fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +134,30 @@ map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt;::iterator
 <tr class="memitem:a262cb376b478369e6fd516dc924fc46c"><td class="memItemLeft" align="right" valign="top"><a id="a262cb376b478369e6fd516dc924fc46c"></a>
 <a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const map&lt; string, <a class="el" href="class_tensor.html">Tensor</a> &gt; &amp;p_rhs)</td></tr>
 <tr class="separator:a262cb376b478369e6fd516dc924fc46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7342af7d4dcd69904933c197106a93a8"><td class="memItemLeft" align="right" valign="top"><a id="a7342af7d4dcd69904933c197106a93a8"></a>
+<a class="el" href="class_coeus_1_1_gradient.html">Gradient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator/=</b> (float p_rhs)</td></tr>
+<tr class="separator:a7342af7d4dcd69904933c197106a93a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6172e34ec172c2a079b81da51179031c"><td class="memItemLeft" align="right" valign="top"><a id="a6172e34ec172c2a079b81da51179031c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>flatten</b> ()</td></tr>
+<tr class="separator:a6172e34ec172c2a079b81da51179031c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add87750ca49e01a7e1c8e8ba1fa1c7df"><td class="memItemLeft" align="right" valign="top"><a id="add87750ca49e01a7e1c8e8ba1fa1c7df"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reshape</b> ()</td></tr>
+<tr class="separator:add87750ca49e01a7e1c8e8ba1fa1c7df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ee84a76af98743a4fd4e307514e62d"><td class="memItemLeft" align="right" valign="top"><a id="a91ee84a76af98743a4fd4e307514e62d"></a>
+<a class="el" href="class_tensor.html">Tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>gradient</b> ()</td></tr>
+<tr class="separator:a91ee84a76af98743a4fd4e307514e62d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71f6f27198582064b54942891558cfe0"><td class="memItemLeft" align="right" valign="top"><a id="a71f6f27198582064b54942891558cfe0"></a>
+<a class="el" href="class_tensor.html">Tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>hessian</b> ()</td></tr>
+<tr class="separator:a71f6f27198582064b54942891558cfe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a0f5cc0e4ba210560d38a72f34f308aa4"><td class="memItemLeft" align="right" valign="top"><a id="a0f5cc0e4ba210560d38a72f34f308aa4"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>NetworkGradient</b></td></tr>
+<tr class="separator:a0f5cc0e4ba210560d38a72f34f308aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ac2dffe74ddf080cea7e9ce54f76d19"><td class="memItemLeft" align="right" valign="top"><a id="a5ac2dffe74ddf080cea7e9ce54f76d19"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>NaturalGradient</b></td></tr>
+<tr class="separator:a5ac2dffe74ddf080cea7e9ce54f76d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>Coeus/Core/<a class="el" href="_gradient_8h_source.html">Gradient.h</a></li>
