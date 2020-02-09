@@ -1,5 +1,6 @@
 #include "IActivationFunction.h"
 #include "NeuronOperator.h"
+#include "TensorFactory.h"
 
 using namespace Coeus;
 
@@ -19,7 +20,11 @@ Tensor* IActivationFunction::backward(Tensor* p_input, Tensor* p_x)
 	}
 	if (p_input->rank() == 3)
 	{
-		_gradient = NeuronOperator::init_auxiliary_parameter(_gradient, p_input->shape(0), p_input->shape(1), p_input->shape(2));
+		_gradient = TensorFactory::tensor(p_input->shape(0), p_input->shape(1), p_input->shape(2), _gradient);
+	}
+	if (p_input->rank() == 4)
+	{
+		_gradient = TensorFactory::tensor(p_input->shape(0), p_input->shape(1), p_input->shape(2), p_input->shape(3), _gradient);
 	}
 
 	return _gradient;
@@ -44,7 +49,11 @@ Tensor* IActivationFunction::forward(Tensor* p_input)
 	}
 	if (p_input->rank() == 3)
 	{
-		_input = NeuronOperator::init_auxiliary_parameter(_input, p_input->shape(0), p_input->shape(1), p_input->shape(2));
+		_input = TensorFactory::tensor(p_input->shape(0), p_input->shape(1), p_input->shape(2), _input);
+	}
+	if (p_input->rank() == 4)
+	{
+		_input = TensorFactory::tensor(p_input->shape(0), p_input->shape(1), p_input->shape(2), p_input->shape(3), _input);
 	}
 
 	_input->override(p_input);
@@ -59,7 +68,11 @@ Tensor* IActivationFunction::forward(Tensor* p_input)
 	}
 	if (p_input->rank() == 3)
 	{
-		_output = NeuronOperator::init_auxiliary_parameter(_output, p_input->shape(0), p_input->shape(1), p_input->shape(2));
+		_output = TensorFactory::tensor(p_input->shape(0), p_input->shape(1), p_input->shape(2), _output);
+	}
+	if (p_input->rank() == 4)
+	{
+		_output = TensorFactory::tensor(p_input->shape(0), p_input->shape(1), p_input->shape(2), p_input->shape(3), _output);
 	}
 
 	return _output;

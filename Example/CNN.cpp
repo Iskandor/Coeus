@@ -116,7 +116,7 @@ void CNN::run_mnist()
 	_network.init();
 
 	BackProp optimizer(&_network);
-	optimizer.init(new CrossEntropyCost(), 0.001, 0.9);
+	optimizer.init(new QuadraticCost(), 0.1, 0.9);
 
 
 	for (int i = 0; i < 100; i++)

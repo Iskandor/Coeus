@@ -44,6 +44,8 @@ public:
 
 	virtual void gru_state(int p_batch, float* p_state, float* p_zg, float* p_hcan, int p_size) = 0;
 
+	virtual void conv_b_gradient(int p_batch, float* p_delta1, float* p_grad, int p_filters, int p_h, int p_w) = 0;
+
 protected:
 	ITensorOperator() = default;
 	virtual ~ITensorOperator() = default;

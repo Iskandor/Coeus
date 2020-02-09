@@ -113,6 +113,11 @@ void BaseLayer::integrate(Tensor* p_input)
 		_batch_size = 1;
 		_batch = false;
 	}
+	if (p_input->rank() == 4)
+	{
+		_batch_size = p_input->shape(0);
+		_batch = true;
+	}
 
 	_input = NeuronOperator::init_auxiliary_parameter(_input, _batch_size, _in_dim);
 

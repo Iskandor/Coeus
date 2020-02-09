@@ -529,6 +529,11 @@ float Tensor::at(const int p_z, const int p_y, const int p_x) const {
 	return _arr[p_z * _shape[2] * _shape[1] + p_y * _shape[1] + p_x];
 }
 
+float Tensor::at(const int p_n, const int p_z, const int p_y, const int p_x) const
+{
+	return _arr[p_n * _shape[1] * _shape[2] * _shape[3] + p_z * _shape[2] * _shape[3] + p_y * _shape[3] + p_x];
+}
+
 void Tensor::set(const int p_x, const float p_val) const {
 	check_size_gt(p_x);
 
@@ -545,6 +550,11 @@ void Tensor::set(const int p_y, const int p_x, const float p_val) const {
 
 void Tensor::set(const int p_z, const int p_y, const int p_x, const float p_val) const {
 	_arr[p_z * _shape[2] * _shape[1] + p_y * _shape[1] + p_x] = p_val;
+}
+
+void Tensor::set(const int p_n, const int p_z, const int p_y, const int p_x, const float p_val) const
+{
+	_arr[p_n * _shape[1] * _shape[2] * _shape[3] + p_z * _shape[2] * _shape[3] + p_y * _shape[3] + p_x] = p_val;
 }
 
 float Tensor::element_prod() const
@@ -693,6 +703,26 @@ void Tensor::print_volume(ostream& output, const Tensor& p_tensor)
 	}
 }
 
+void Tensor::print_batch_volume(ostream & output, const Tensor & p_tensor)
+{
+	for (int n = 0; n < p_tensor._shape[0]; n++) {
+		for (int i = 0; i < p_tensor._shape[1]; i++) {
+			for (int j = 0; j < p_tensor._shape[2]; j++) {
+				for (int k = 0; k < p_tensor._shape[3]; k++) {
+					if (k == p_tensor._shape[3] - 1) {
+						output << p_tensor._arr[n * p_tensor._shape[1] * p_tensor._shape[2] * p_tensor._shape[3] + i * p_tensor._shape[2] * p_tensor._shape[3] + j * p_tensor._shape[3] + k];
+					}
+					else {
+						output << p_tensor._arr[n * p_tensor._shape[1] * p_tensor._shape[2] * p_tensor._shape[3] + i * p_tensor._shape[2] * p_tensor._shape[3] + j * p_tensor._shape[3] + k] << ",";
+					}
+				}
+				output << endl;
+			}
+			output << endl;
+		}
+	}
+}
+
 int* Tensor::copy_shape(const int p_rank, const int* p_shape) {
 	int* shape = alloc_shape(p_rank);
 
@@ -765,6 +795,11 @@ void Tensor::push_back(Tensor* p_tensor)
 			memcpy((_arr + index), (p_tensor->_arr + i * rows * cols), sizeof(float) * rows * cols);
 		}
 		_end += rows * cols;
+	}
+	if (_rank == 4)
+	{
+		memcpy((_arr + _end), p_tensor->_arr, sizeof(float) * p_tensor->_size);
+		_end += p_tensor->_size;
 	}
 }
 
@@ -915,6 +950,59 @@ Tensor Tensor::concat(vector<Tensor>& p_vector)
 	return Tensor({ size }, res);
 }
 
+void Tensor::padding(Tensor& p_dest, Tensor& p_source, int p_padding)
+{
+	p_dest.fill(0);
+
+	if (p_source.rank() == 2)
+	{
+		float *sx = p_source._arr;
+		float *dx = p_dest._arr + (p_padding * p_dest.shape(1) + p_padding);
+
+		for(int i = 0; i < p_source.shape(0); i++)
+		{
+			memcpy(dx, sx, p_source.shape(1) * sizeof(float));
+			sx += p_source.shape(1);
+			dx += p_dest.shape(1);
+		}
+	}
+	if (p_source.rank() == 3)
+	{
+		float *sx = p_source._arr;
+		float *dx = p_dest._arr + (p_padding * p_dest.shape(2) + p_padding);
+
+		for (int c = 0; c < p_source.shape(0); c++)
+		{
+			for (int i = 0; i < p_source.shape(1); i++)
+			{
+				memcpy(dx, sx, p_source.shape(2) * sizeof(float));
+				sx += p_source.shape(2);
+				dx += p_dest.shape(2);
+			}
+			dx += 2 * p_dest.shape(2);
+		}
+	}
+	if (p_source.rank() == 4)
+	{
+		float *sx = p_source._arr;
+		float *dx = p_dest._arr + (p_padding * p_dest.shape(3) + p_padding);
+
+		for (int n = 0; n < p_source.shape(0); n++)
+		{
+			for (int c = 0; c < p_source.shape(1); c++)
+			{
+				for (int i = 0; i < p_source.shape(2); i++)
+				{
+					memcpy(dx, sx, p_source.shape(3) * sizeof(float));
+					sx += p_source.shape(3);
+					dx += p_dest.shape(3);
+				}
+				dx += 2 * p_dest.shape(3);
+			}
+		}
+	}
+}
+
 void Tensor::padding(const int p_padding)
 {
 	float* arr = nullptr;
@@ -967,7 +1055,7 @@ void Tensor::reshape(const initializer_list<int> p_shape)
 Tensor Tensor::slice(const int p_index) const
 {
 	const int rank = 2;
-	float* arr = alloc_arr(_shape[1] * _shape[2]);
+	float* arr = nullptr;
 	int* shape = alloc_shape(rank);
 
 	if (_rank == 3)
@@ -976,7 +1064,17 @@ Tensor Tensor::slice(const int p_index) const
 		shape[1] = _shape[2];
 
 		const int index = p_index * _shape[1] * _shape[2];
+		arr = alloc_arr(_shape[1] * _shape[2]);
 		memcpy(arr, _arr + index, sizeof(float) * _shape[1] * _shape[2]);
+	}
+	if (_rank == 4)
+	{
+		shape[0] = _shape[2];
+		shape[1] = _shape[3];
+
+		const int index = p_index * _shape[2] * _shape[3];
+		arr = alloc_arr(_shape[2] * _shape[3]);
+		memcpy(arr, _arr + index, sizeof(float) * _shape[2] * _shape[3]);
 	}
 
 	return Tensor(rank, shape, arr);
@@ -1128,6 +1226,38 @@ void Tensor::subregion(Tensor* p_dest, Tensor* p_source, const int p_z, const in
 	}
 }
 
+void Tensor::subregion(Tensor* p_dest, Tensor* p_source, int p_n, int p_z, int p_y, int p_x, int p_h, int p_w)
+{
+#ifdef _DEBUG
+	if (p_dest->_size != p_h * p_w)
+	{
+		assert(("Invalid size", 0));
+	}
+	if (p_source->_shape[0] < p_n)
+	{
+		assert(("Invalid batch index", 0));
+	}
+	if (p_source->_shape[1] < p_z)
+	{
+		assert(("Invalid depth", 0));
+	}
+	if (p_source->_shape[2] < p_y + p_h)
+	{
+		assert(("Invalid height", 0));
+	}
+	if (p_source->_shape[3] < p_x + p_w)
+	{
+		assert(("Invalid width", 0));
+	}
+#endif
+
+	for (int i = 0; i < p_h; i++)
+	{
+		const int index = (p_n * p_source->_shape[1] * p_source->_shape[2] * p_source->_shape[3]) + (p_z * p_source->_shape[2] * p_source->_shape[3]) + (p_y + i) * p_source->_shape[3] + p_x;
+		memcpy(p_dest->_arr + (i * p_w), p_source->_arr + index, sizeof(float) * p_w);
+	}
+}
+
 void Tensor::add_subregion(Tensor* p_dest, int p_yd, int p_xd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w)
 {
 #ifdef _DEBUG
@@ -1189,7 +1319,6 @@ void Tensor::add_subregion(Tensor* p_dest, int p_zd, int p_yd, int p_xd, int p_h
 	{
 		for (int j = 0; j < p_w; j++)
 		{
-			//p_dest->_arr[p_zd * p_dest->_shape[1] * p_dest->_shape[2] + (p_yd + id) * p_dest->_shape[2] + p_xd + jd] += p_source->_arr[(p_y + i) * p_source->_shape[1] + p_x + j];
 			*y++ += *x++;
 			jd++;
 
@@ -1198,6 +1327,63 @@ void Tensor::add_subregion(Tensor* p_dest, int p_zd, int p_yd, int p_xd, int p_h
 				jd = 0;
 				id++;
 				y += p_dest->_shape[2] - p_wd;
+			}
+		}
+		x += p_source->_shape[1] - p_w;
+	}
+}
+
+void Tensor::add_subregion(Tensor* p_dest, int p_nd, int p_zd, int p_yd, int p_xd, int p_hd, int p_wd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w)
+{
+#ifdef _DEBUG
+	if (p_hd * p_wd != p_h * p_w)
+	{
+		assert(("Invalid shape dimension", 0));
+	}
+	if (p_source->_shape[0] < p_y + p_h)
+	{
+		assert(("Invalid source position (rows)", 0));
+	}
+	if (p_source->_shape[1] < p_x + p_w)
+	{
+		assert(("Invalid source position (cols)", 0));
+	}
+	if (p_dest->_shape[0] < p_nd)
+	{
+		assert(("Invalid destination position (batch)", 0));
+	}
+	if (p_dest->_shape[1] < p_zd)
+	{
+		assert(("Invalid destination position (depth)", 0));
+	}
+	if (p_dest->_shape[2] < p_yd + p_hd)
+	{
+		assert(("Invalid destination position (rows)", 0));
+	}
+	if (p_dest->_shape[3] < p_xd + p_wd)
+	{
+		assert(("Invalid destination position (cols)", 0));
+	}
+#endif
+
+	int id = 0;
+	int jd = 0;
+
+	float* x = &p_source->_arr[p_y * p_source->_shape[1] + p_x];
+	float* y = &p_dest->_arr[p_nd * p_dest->_shape[1] * p_dest->_shape[2] * p_dest->_shape[3] + p_zd * p_dest->_shape[2] * p_dest->_shape[3] + p_yd * p_dest->_shape[3] + p_xd];
+
+	for (int i = 0; i < p_h; i++)
+	{
+		for (int j = 0; j < p_w; j++)
+		{
+			*y++ += *x++;
+			jd++;
+
+			if (jd == p_wd)
+			{
+				jd = 0;
+				id++;
+				y += p_dest->_shape[3] - p_wd;
 			}
 		}
 		x += p_source->_shape[1] - p_w;
@@ -1231,6 +1417,74 @@ void Tensor::slice(Tensor* p_dest, Tensor* p_source, const int p_index)
 	{
 		const int index = p_index * p_source->shape(1) * p_source->shape(2);
 		memcpy(p_dest->_arr, p_source->_arr + index, sizeof(float) * p_source->shape(1) * p_source->shape(2));
+	}
+}
+
+void Tensor::im2col(Tensor* p_image, Tensor* p_column, const int p_extent, const int p_padding, const int p_stride)
+{
+	const int batch_size = p_image->shape(0);
+	const int d1 = p_image->shape(1);
+	const int h1 = p_image->shape(2);
+	const int w1 = p_image->shape(3);
+
+	float *dx = p_column->arr();
+
+	for (int n = 0; n < batch_size; n++)
+	{
+		const int batch = n * d1 * h1 * w1;
+		for (int h = 0; h < h1 - p_extent + 1; h++)
+		{
+			for (int w = 0; w < w1 - p_extent + 1; w++)
+			{
+				for (int d = 0; d < d1; d++)
+				{
+					const int channel = d * h1 * w1;
+					float *sx = p_image->arr() + batch + channel + h * w1 + w;
+					for (int e = 0; e < p_extent; e++)
+					{
+						memcpy(dx, sx, sizeof(float) * p_extent);
+						sx += w1;
+						dx += p_extent;
+					}
+				}
+			}
+		}
+	}
+}
+
+void Tensor::col2im(Tensor* p_column, Tensor* p_image, const int p_extent, const int p_padding, const int p_stride)
+{
+	const int batch_size = p_image->shape(0);
+	const int d1 = p_image->shape(1);
+	const int h1 = p_image->shape(2);
+	const int w1 = p_image->shape(3);
+
+	int h2 = (h1 - p_extent + 2 * p_padding) / p_stride + 1;
+	int w2 = (w1 - p_extent + 2 * p_padding) / p_stride + 1;
+
+	float *dx = p_column->arr();
+
+	for(int n = 0; n < batch_size; n++)
+	{
+		const int batch = n * d1 * h1 * w1;
+		for(int h = 0; h < h1 - p_extent + 1; h++)
+		{
+			for(int w = 0; w < w1 - p_extent + 1; w++)
+			{
+				for (int c = 0; c < d1; c++)
+				{
+					const int channel = c * h1 * w1;
+					for (int ey = 0; ey < p_extent; ey++)
+					{
+						for (int ex = 0; ex < p_extent; ex++)
+						{						
+							float *sx = p_image->arr() + batch + channel + (h + ey) * w1 + w + ex;
+							*sx += *dx++;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -1282,6 +1536,9 @@ void Tensor::fill(const INIT p_init, const float p_value) const {
 			break;
 		case RANDOM:
 			for (int i = 0; i < _size; i++) _arr[i] = RandomGenerator::get_instance().random(-p_value, p_value);
+			break;
+		case INCREMENTAL:
+			for (int i = 0; i < _size; i++) _arr[i] = i;
 			break;
 	}
 }

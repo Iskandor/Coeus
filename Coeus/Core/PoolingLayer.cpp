@@ -1,5 +1,6 @@
 #include "PoolingLayer.h"
 #include "NeuronOperator.h"
+#include "TensorFactory.h"
 
 using namespace Coeus;
 
@@ -97,13 +98,13 @@ void PoolingLayer::integrate(Tensor* p_input)
 	if (p_input->rank() == 3)
 	{
 		_batch_size = 1;
-		_input = NeuronOperator::init_auxiliary_parameter(_input, _batch_size, p_input->shape(0), p_input->shape(1), p_input->shape(2));
+		_input = TensorFactory::tensor(_batch_size, p_input->shape(0), p_input->shape(1), p_input->shape(2), _input);
 		_batch = false;
 	}
 	if (p_input->rank() == 4)
 	{
 		_batch_size = p_input->shape(0);
-		_input = NeuronOperator::init_auxiliary_parameter(_input, _batch_size, p_input->shape(0), p_input->shape(1), p_input->shape(2));
+		_input = TensorFactory::tensor(_batch_size, p_input->shape(1), p_input->shape(2), p_input->shape(3), _input);
 		_batch = true;
 	}
 
@@ -115,27 +116,42 @@ void PoolingLayer::activate()
 	_input->reset_index();
 	_max_index.clear();
 
-	int d1 = _input->shape(0);
-	int h1 = _input->shape(1);
-	int w1 = _input->shape(2);
+	int d1 = _in_dim_tensor->at(0);
+	int h1 = _in_dim_tensor->at(1);
+	int w1 = _in_dim_tensor->at(2);
 
 	int d2 = d1;
 	int h2 = (h1 - _extent) / _stride + 1;
 	int w2 = (w1 - _extent) / _stride + 1;
 
-	_output = NeuronOperator::init_auxiliary_parameter(_output, d2, h2, w2);
+	_output = TensorFactory::tensor(_batch_size, d2, h2, w2, _output);
 
-	for(int d = 0; d < d2; d++)
+	for(int n = 0; n < _batch_size; n++)
 	{
-		Tensor input_slice = _input->slice(d);
-
-		for (int h = 0; h < h2; h++)
+		for (int d = 0; d < d2; d++)
 		{
-			for (int w = 0; w < w2; w++)
+			for (int h = 0; h < h2; h++)
 			{
-				int index = d * h1 * w1 + Tensor::subregion_max_index(&input_slice, h * _stride, w * _stride, _extent, _extent);
-				_max_index.push_back(index);
-				_output->set(d, h, w, _input->at(index));
+				for (int w = 0; w < w2; w++)
+				{
+					//int index = d * h1 * w1 + Tensor::subregion_max_index(&input_slice, h * _stride, w * _stride, _extent, _extent);
+					const int index = n * d1 * h1 * w1 + d * h1 * w1 + h * _stride * w1 + w * _stride;
+					int max = index;
+
+					for(int i = 0; i < _extent; i++)
+					{
+						for(int j = 0; j < _extent; j++)
+						{
+							if (_input->arr()[index + i * w1 + j] > _input->arr()[max])
+							{
+								max = index + i * w1 + j;
+							}
+						}
+					}
+					
+					_max_index.push_back(max);
+					_output->set(n, d, h, w, _input->at(max));
+				}
 			}
 		}
 	}
@@ -153,14 +169,12 @@ void PoolingLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>&
 	int h1 = _in_dim_tensor->at(1);
 	int w1 = _in_dim_tensor->at(2);
 
-	Tensor*	 delta_in = nullptr;
-
 	if (!_input_layer.empty())
 	{
-		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, d1, h1, w1);
+		Tensor* delta_in = TensorFactory::tensor(_batch_size, d1 * h1 * w1);
 		delta_in->fill(0);
 
-		for(int i = 0; i < _delta_out->size(); i++)
+		for(int i = 0; i < _batch_size * _delta_out->size(); i++)
 		{
 			delta_in->set(_max_index[i], _delta_out->at(i));
 		}
@@ -169,7 +183,7 @@ void PoolingLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>&
 
 		for (auto it : _input_layer)
 		{
-			_delta_in[it->get_id()] = NeuronOperator::init_auxiliary_parameter(_delta_in[it->get_id()], _batch_size, it->get_dim());
+			_delta_in[it->get_id()] = TensorFactory::tensor(_batch_size, it->get_dim(), _delta_in[it->get_id()]);
 			delta_in->splice(index, _delta_in[it->get_id()]);
 			index += it->get_dim();
 		}

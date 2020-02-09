@@ -28,9 +28,6 @@ namespace Coeus
 
 	protected:
 		Tensor* get_dim_tensor() override;
-
-		void im2col(Tensor* p_image, Tensor* column) const;
-		void col2im(Tensor* column, Tensor* p_image) const;
 		
 	private:
 		int _filters;
@@ -42,7 +39,6 @@ namespace Coeus
 		Param*			 _W;
 		TensorInitializer *_initializer;
 
-		Tensor* _filter_input;
 		Tensor* _column_input;
 		Tensor* _padded_input;
 	};

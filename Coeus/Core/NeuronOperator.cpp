@@ -143,7 +143,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_ro
 
 Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_depth, const int p_rows, const int p_cols)
 {
-	if (p_depth == 1)
+	if (p_param == nullptr || p_param->rank() != 3)
 	{
 		if (p_param == nullptr || p_param->rank() != 2 || p_param->size() != p_rows * p_cols)
 		{
@@ -165,7 +165,7 @@ Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, const int p_de
 
 Tensor* NeuronOperator::init_auxiliary_parameter(Tensor* p_param, int p_batch, int p_depth, int p_rows, int p_cols)
 {
-	if (p_batch == 1)
+	if (p_param == nullptr || p_param->rank() != 4)
 	{
 		if (p_param == nullptr || p_param->rank() != 3 || p_param->size() != p_depth * p_rows * p_cols)
 		{

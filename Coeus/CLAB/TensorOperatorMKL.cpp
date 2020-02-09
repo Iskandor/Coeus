@@ -179,6 +179,27 @@ void TensorOperatorMKL::gru_state(int p_batch, float* p_state, float* p_zg, floa
 	}
 }
 
+void TensorOperatorMKL::conv_b_gradient(int p_batch, float* p_delta1, float* p_grad, int p_filters, int p_h, int p_w)
+{
+	float* dx = p_delta1;
+
+	memset(p_grad, 0, sizeof(float) * p_filters);
+
+	for (int n = 0; n < p_batch; n++)
+	{
+		for(int h = 0; h < p_h; h++)
+		{
+			for(int w = 0; w < p_w; w++)
+			{
+				for (int f = 0; f < p_filters; f++)
+				{
+					p_grad[f] += *dx++;
+				}
+			}
+		}
+	}
+}
+
 void TensorOperatorMKL::full_delta(const int p_batch, float* p_delta0, float* p_delta1, float* p_w, const int p_rows, const int p_cols)
 {
 	MM_prod(p_delta1, false, p_w, false, p_delta0, p_batch, p_rows, p_cols);

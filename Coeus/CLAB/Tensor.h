@@ -12,7 +12,8 @@ public:
 		ZERO = 0,
 		ONES = 1,
 		VALUE = 2,
-		RANDOM = 3
+		RANDOM = 3,
+		INCREMENTAL = 4
 	};
 
 	Tensor();
@@ -84,9 +85,11 @@ public:
 	float at(int p_x) const;
 	float at(int p_y, int p_x) const;
 	float at(int p_z, int p_y, int p_x) const;
+	float at(int p_n, int p_z, int p_y, int p_x) const;
 	void set(int p_x, float p_val) const;
 	void set(int p_y, int p_x, float p_val) const;
 	void set(int p_z, int p_y, int p_x, float p_val) const;
+	void set(int p_n, int p_z, int p_y, int p_x, float p_val) const;
 
 	float element_prod() const;
 	float trace() const;
@@ -104,6 +107,7 @@ public:
 	void reset_index();
 	static Tensor*	concat(vector<Tensor*> &p_input);
 	static Tensor	concat(vector<Tensor>& p_vector);
+	static void padding(Tensor& p_dest, Tensor& p_source, int p_padding);
 
 	void padding(int p_padding);
 	void reshape(initializer_list<int> p_shape);
@@ -116,11 +120,16 @@ public:
 
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 	static void subregion(Tensor* p_dest, Tensor* p_source, int p_z, int p_y, int p_x, int p_h, int p_w);
+	static void subregion(Tensor* p_dest, Tensor* p_source, int p_n, int p_z, int p_y, int p_x, int p_h, int p_w);
 	static void add_subregion(Tensor* p_dest, int p_yd, int p_xd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 	static void add_subregion(Tensor* p_dest, int p_zd, int p_yd, int p_xd, int p_hd, int p_wd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
+	static void add_subregion(Tensor* p_dest, int p_nd, int p_zd, int p_yd, int p_xd, int p_hd, int p_wd, Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 	static int subregion_max_index(Tensor* p_source, int p_y, int p_x, int p_h, int p_w);
 
 	static void slice(Tensor* p_dest, Tensor* p_source, int p_index);
+
+	static void im2col(Tensor* p_image, Tensor* p_column, int p_extent, int p_padding, int p_stride);
+	static void col2im(Tensor* p_column, Tensor* p_image, int p_extent, int p_padding, int p_stride);
 
 
 	static int kronecker_delta(const int i, const int j) {
@@ -154,7 +163,10 @@ public:
 		{
 			print_volume(output, p_tensor);
 		}
-
+		if (p_tensor.rank() == 4)
+		{
+			print_batch_volume(output, p_tensor);
+		}
 		return output;
 	}
 
@@ -167,6 +179,7 @@ private:
 	static void print_vector(ostream &output, const Tensor &p_tensor, bool p_cm);
 	static void print_matrix(ostream &output, const Tensor &p_tensor, bool p_cm);
 	static void print_volume(ostream &output, const Tensor &p_tensor);
+	static void print_batch_volume(ostream &output, const Tensor &p_tensor);
 
 	void free_arr() const;
 	void free_shape() const;

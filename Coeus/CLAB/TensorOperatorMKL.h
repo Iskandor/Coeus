@@ -41,6 +41,8 @@ public:
 
 	void gru_state(int p_batch, float* p_state, float* p_zg, float* p_hcan, int p_size) override;
 
+	void conv_b_gradient(int p_batch, float* p_delta1, float* p_grad, int p_filters, int p_h, int p_w) override;
+
 	void v_reduce(float* p_x, float* p_y, int p_size) override;
 	void M_reduce(float* p_x, float* p_A, bool p_row_major, int p_rows, int p_cols, bool p_accumulate) override;
 	void V_reduce(float* p_A, float* p_V, int p_batch, int p_rows, int p_cols, int p_axis) override;
