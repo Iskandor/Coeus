@@ -163,29 +163,33 @@ void MotivationTest::cart_pole_icm2(int p_episodes, bool p_log)
 	network_forward_model.add_connection("fm_input", "fm_output");
 	network_forward_model.init();
 
-	ForwardModel forward_model(&network_forward_model, RADAM_RULE, 1e-3f);
+	ForwardModel forward_model(&network_forward_model, ADAM_RULE, 1e-3f);
 
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE + CartPole::ACTION));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
-	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden2", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
-	network_critic.add_connection("hidden1", "output");
+	network_critic.add_connection("hidden1", "hidden2");
+	network_critic.add_connection("hidden2", "output");
 	network_critic.init();
 
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden2", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
-	network_actor.add_connection("hidden1", "output");
+	network_actor.add_connection("hidden1", "hidden2");
+	network_actor.add_connection("hidden2", "output");
 	network_actor.init();
 
-	const DDPG agent(&network_critic, RADAM_RULE, 1e-4f, 0.99f, &network_actor, RADAM_RULE, 1e-4f, 10000, 64);
+	const DDPG agent(&network_critic, ADAM_RULE, 1e-4f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
 
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
@@ -219,6 +223,8 @@ void MotivationTest::cart_pole_icm2(int p_episodes, bool p_log)
 			cre += re;
 			const float reward = re + ri;
 			agent.train(&state0, &action, &state1, reward, env.is_finished());
+
+			//cout << *network_forward_model.get_output() << " " << state1 << endl;
 
 			state0 = state1;
 

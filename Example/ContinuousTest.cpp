@@ -312,7 +312,7 @@ void ContinuousTest::run_simple_cacer(int p_episodes)
 	printf("CACER SimpleEnv steps %i total reward %0.4f\n", step, total_reward);
 }
 
-void ContinuousTest::run_cacla(const int p_episodes)
+void ContinuousTest::run_cacla(const int p_episodes, bool p_log)
 {
 	const int hidden = 512;
 
@@ -339,7 +339,8 @@ void ContinuousTest::run_cacla(const int p_episodes)
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
 	Tensor state1({ CartPole::STATE }, Tensor::ZERO);
 
-	LinearInterpolation interpolation(0.1, 0.1, p_episodes);
+
+	if (p_log) Logger::instance().init();
 
 	for (int e = 0; e < p_episodes; ++e) {
 		//printf("CartPole episode %i...\n", e);
@@ -347,7 +348,7 @@ void ContinuousTest::run_cacla(const int p_episodes)
 
 		copy_state(_cart_pole.get_state(true), state0);
 
-		float total_reward = 0;
+		float total_reward = test_cart_pole(network_actor, network_critic, 195);
 		int total_steps = 0;
 
 		const float sigma = 1; //interpolation.interpolate(e);
@@ -360,7 +361,6 @@ void ContinuousTest::run_cacla(const int p_episodes)
 			//cout << state0 << endl;
 			copy_state(_cart_pole.get_state(true), state1);
 
-			total_reward += _cart_pole.get_reward();
 			total_steps += 1;
 
 			actor.train(&state0, &action, &state1, _cart_pole.get_reward(), _cart_pole.is_finished());
@@ -378,10 +378,13 @@ void ContinuousTest::run_cacla(const int p_episodes)
 
 		cout << "CACLA Episode " << e << " ";
 
-		if (evaluate_cart_pole(total_reward) >= 195)
+		const float avg_reward = evaluate_cart_pole(total_reward);
+
+		if (avg_reward >= 195)
 		{
-			break;
+			//break;
 		}
+		if (p_log) Logger::instance().log(to_string(avg_reward));
 		/*
 		if (e % 10 == 0) {
 			if (test_cart_pole(network_actor, network_critic, 6000) == 6000) {
@@ -395,35 +398,39 @@ void ContinuousTest::run_cacla(const int p_episodes)
 		
 	}
 
-	test_cart_pole(network_actor, network_critic, 6000);
+	if (p_log) Logger::instance().close();
 }
 
 void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
 {
 	_rewards.clear();
-	const int hidden = 256;
+	const int hidden = 128;
 
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE + CartPole::ACTION));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden2", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
-	network_critic.add_connection("hidden1", "output");
+	network_critic.add_connection("hidden1", "hidden2");
+	network_critic.add_connection("hidden2", "output");
 	network_critic.init();
 
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden2", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
-	network_actor.add_connection("hidden1", "output");
+	network_actor.add_connection("hidden1", "hidden2");
+	network_actor.add_connection("hidden2", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, ADAM_RULE, 1e-4f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
+	DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
 
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
@@ -559,7 +566,7 @@ float ContinuousTest::evaluate_cart_pole(float p_reward)
 		r_sum += r;
 	}
 
-	r_sum /= _rewards.size();
+	r_sum /= 100;
 
 	printf("CartPole evaluation with average reward %0.4f\n", r_sum);
 
