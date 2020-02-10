@@ -35,31 +35,44 @@ void RADAMRule::calc_update(Gradient& p_gradient, float p_alpha)
 	_denb2 = 1 - powb2;
 
 	_rho = _rho_inf - 2.f * _t * powb2 / _denb2;
-	
-	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
-		Tensor* g = &(p_gradient)[it->first];
-		Tensor* m = &_m[it->first];
-		Tensor* v = &_v[it->first];
-		Tensor* m_mean = &_m_mean[it->first];
-		Tensor* v_mean = &_v_mean[it->first];
-		Tensor* update = &_update[it->first];
 
-		for (int i = 0; i < it->second.size(); i++) {
-			(*m)[i] = _beta1 * (*m)[i] + (1 - _beta1) * (*g)[i];
-			(*v)[i] = _beta2 * (*v)[i] + (1 - _beta2) * pow((*g)[i], 2);
+	if (_rho > 4)
+	{
+		_r = sqrt(((_rho - 4) * (_rho - 2) * _rho_inf) / ((_rho_inf - 4) * (_rho_inf - 2) * _rho));
+		const float alpha = -_alpha * _r;
 
-			(*m_mean)[i] = (*m)[i] / _denb1;
-			
-			if (_rho > 4)
-			{
+		for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
+			Tensor* g = &(p_gradient)[it->first];
+			Tensor* m = &_m[it->first];
+			Tensor* v = &_v[it->first];
+			Tensor* m_mean = &_m_mean[it->first];
+			Tensor* v_mean = &_v_mean[it->first];
+			Tensor* update = &_update[it->first];
+
+			for (int i = 0; i < it->second.size(); i++) {
+				(*m)[i] = _beta1 * (*m)[i] + (1 - _beta1) * (*g)[i];
+				(*v)[i] = _beta2 * (*v)[i] + (1 - _beta2) * pow((*g)[i], 2);
+
+				(*m_mean)[i] = (*m)[i] / _denb1;
 				(*v_mean)[i] = sqrt((*v)[i] / _denb2);
-				_r = sqrt(((_rho - 4) * (_rho - 2) * _rho_inf) / ((_rho_inf - 4) * (_rho_inf - 2) * _rho));
-				(*update)[i] = -_alpha * _r * (*m_mean)[i] / ((*v_mean)[i] + 1e-8f);
+				(*update)[i] = alpha * (*m_mean)[i] / ((*v_mean)[i] + 1e-8f);
 			}
-			else
-			{
+		}
+	}
+	else
+	{
+		for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {
+			Tensor* g = &(p_gradient)[it->first];
+			Tensor* m = &_m[it->first];
+			Tensor* m_mean = &_m_mean[it->first];
+			Tensor* update = &_update[it->first];
+
+			for (int i = 0; i < it->second.size(); i++) {
+				(*m)[i] = _beta1 * (*m)[i] + (1 - _beta1) * (*g)[i];
+				(*m_mean)[i] = (*m)[i] / _denb1;
 				(*update)[i] = -_alpha * (*m_mean)[i];
 			}
 		}
+
 	}
 }

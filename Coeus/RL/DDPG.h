@@ -14,11 +14,11 @@ public:
 		 NeuralNetwork* p_network_actor, GRADIENT_RULE p_actor_rule, float p_actor_alpha, int p_buffer_size, int p_sample_size);
 	virtual ~DDPG();
 
-	void train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p_reward, bool p_final) const;
+	void train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p_reward, bool p_final);
 	Tensor get_action(Tensor* p_state, float p_sigma) const;
 
 private:	
-	float calc_max_qa(Tensor* p_state) const;
+	Tensor* calc_max_qa();
 
 	NeuralNetwork* _network_actor;
 	NetworkGradient* _network_actor_gradient;
@@ -35,10 +35,11 @@ private:
 	ReplayBuffer<DQItem>* _buffer;
 	int _sample_size;
 
-	Tensor* _critic_input;
-	Tensor* _critic_input2;
-	Tensor* _actor_input;
-	Tensor* _target;
+	Tensor _critic_input_a0;
+	Tensor _critic_input_a;
+	Tensor _batch_input_s0;
+	Tensor _batch_input_s1;
+	Tensor _target;
 };
 }
 

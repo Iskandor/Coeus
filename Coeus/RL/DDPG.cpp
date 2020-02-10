@@ -34,21 +34,20 @@ DDPG::DDPG(	NeuralNetwork* p_network_critic, GRADIENT_RULE p_critic_rule, float 
 
 	_buffer = new ReplayBuffer<DQItem>(p_buffer_size);
 
-	_target = new Tensor({ p_sample_size, p_network_critic->get_output_dim() }, Tensor::ZERO);
-	_actor_input = new Tensor({ p_sample_size, p_network_actor->get_input_dim() }, Tensor::ZERO);
-	_critic_input = new Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
-	_critic_input2 = new Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
+	_target = Tensor({ p_sample_size, p_network_critic->get_output_dim() }, Tensor::ZERO);
+	_batch_input_s0 = Tensor({ p_sample_size, p_network_actor->get_input_dim() }, Tensor::ZERO);
+	_batch_input_s1 = Tensor({ p_sample_size, p_network_actor->get_input_dim() }, Tensor::ZERO);
+	_critic_input_a0 = Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
+	_critic_input_a = Tensor({ p_sample_size, p_network_critic->get_input_dim() }, Tensor::ZERO);
 }
 
 DDPG::~DDPG()
 {
 	delete _network_actor_gradient;
 	delete _network_critic_gradient;
+	delete _update_rule_actor;
+	delete _update_rule_critic;
 	delete _buffer;
-	delete _actor_input;
-	delete _target;
-	delete _critic_input;
-	delete _critic_input2;
 }
 
 /**
@@ -59,54 +58,59 @@ DDPG::~DDPG()
  * \param p_reward reward taken from transition state0 - action0 - state1
  * \param p_final flag indicating that state1 is terminal
  */
-void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, bool p_final) const
+void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, bool p_final)
 {
 	_buffer->add_item(new DQItem(p_state0, p_action0, p_state1, p_reward, p_final));
 
 	if (_buffer->get_size() >= _sample_size) {
+		Tensor actor_output_row({ _network_actor->get_output_dim() }, Tensor::ZERO);
 		vector<DQItem*>* sample = _buffer->get_sample(_sample_size);
 
-		_actor_input->reset_index();
-		_critic_input->reset_index();
-		_critic_input2->reset_index();
-		_target->reset_index();
+		_batch_input_s0.reset_index();
+		_batch_input_s1.reset_index();
+		_critic_input_a0.reset_index();
+		_critic_input_a.reset_index();
 
 		for (auto& s : *sample)
 		{
-			_actor_input->push_back(&s->s0);
-			_critic_input->push_back(&s->s0);
-			_critic_input->push_back(&s->a);
-			_network_actor->activate(&s->s0);
-			_critic_input2->push_back(&s->s0);
-			_critic_input2->push_back(_network_actor->get_output());
+			_batch_input_s0.insert_row(&s->s0);
+			_batch_input_s1.insert_row(&s->s1);
+			_critic_input_a0.push_back(&s->s0);
+			_critic_input_a0.push_back(&s->a);
 		}
+		
+		_network_actor->activate(&_batch_input_s0);
+		_network_critic->activate(&_critic_input_a0);
 
-		_network_critic->activate(_critic_input);
-
+		_critic_input_a.push_back(&_batch_input_s0);
+		_critic_input_a.push_back(_network_actor->get_output());
+		
+		const Tensor* maxQs1a = calc_max_qa();
+		
 		for (size_t i = 0; i < sample->size(); i++)
 		{
 			DQItem* s = (*sample)[i];
+
 			if (s->final) {
-				_target->push_back(s->r);
+				_target[i] = s->r;
 			}
 			else {
-				const float maxQs1a = calc_max_qa(&s->s1);
-				_target->push_back(s->r + _gamma * maxQs1a - _network_critic->get_output()->at(i));
+				
+				_target[i] = s->r + _gamma * (*maxQs1a)[i] - _network_critic->get_output()->at(i);
 			}
 		}
 		
-		Tensor critic_loss = *_network_critic->get_output() - *_target;
+		Tensor critic_loss = *_network_critic->get_output() - _target;
 		
 		_network_critic_gradient->calc_gradient(&critic_loss);
 		_update_rule_critic->calc_update(_network_critic_gradient->get_gradient());
 
-		_network_critic->activate(_critic_input2);
+		_network_critic->activate(&_critic_input_a);
 		critic_loss.fill(-1);
 		_network_critic_gradient->calc_gradient(&critic_loss);
-		_network_actor->activate(_actor_input);
+		_network_actor->activate(&_batch_input_s0);
 		
 		Tensor actor_loss = _network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
-		//Tensor actor_loss = -(*_network_critic->get_output());
 		
 		_network_actor_gradient->calc_gradient(&actor_loss);
 		_update_rule_actor->calc_update(_network_actor_gradient->get_gradient());
@@ -139,14 +143,14 @@ Tensor DDPG::get_action(Tensor* p_state, const float p_sigma) const
 	return output;
 }
 
-float DDPG::calc_max_qa(Tensor* p_state) const {
-	_network_actor_target->activate(p_state);
+Tensor* DDPG::calc_max_qa() {
+	_network_actor_target->activate(&_batch_input_s1);
 
-	Tensor i({ _network_critic_target->get_input_dim() }, Tensor::ZERO);
-	i.push_back(p_state);
+	Tensor i({ _sample_size, _network_critic_target->get_input_dim() }, Tensor::ZERO);
+	i.push_back(&_batch_input_s1);
 	i.push_back(_network_actor_target->get_output());
 
 	_network_critic_target->activate(&i);
 
-	return _network_critic_target->get_output()->at(0);
+	return _network_critic_target->get_output();
 }
