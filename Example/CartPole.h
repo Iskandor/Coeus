@@ -23,30 +23,32 @@ public:
     void reset();
 
     string to_string() const;
-	bool is_finished() const;
-	float get_reward();
+	bool is_finished();
+	float get_reward() const;
 
 	static const int STATE = 4;
 	static const int ACTION = 1;
 
 private:
 
-	float _gravity = 9.8;
-	float _masscart = 1.0;
-	float _masspole = 0.1;
+	float _gravity = 9.8f;
+	float _masscart = 1.0f;
+	float _masspole = 0.1f;
 	float _total_mass = (_masspole + _masscart);
-	float _length = 0.5;
+	float _length = 0.5f;
 	float _polemass_length = (_masspole * _length);
-	float _force_mag = 10.0;
-	float _tau = 0.02;
+	float _force_mag = 10.0f;
+	float _tau = 0.02f;
 
 	float _theta_threshold_radians = 12 * Coeus::PI / 180;
-	float _x_threshold = 2.4;
+	float _x_threshold = 2.4f;
 
 	float _x;
 	float _x_dot;
 	float _theta;
 	float _theta_dot;
+	int	_episode_length;
+	bool _failed;
 };
 
 

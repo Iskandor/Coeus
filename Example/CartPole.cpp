@@ -4,57 +4,9 @@
 
 #include "CartPole.h"
 #include "RandomGenerator.h"
-#include "rk4.hpp"
-#include <iostream>
 
-float *derivs(float t, int n, float sensors[], float params[]) {
-    /*
-     * This function is needed for the Runge-Kutta integration approximation method. It calculates the
-    derivatives of the state variables given in x. for each variable in x, it returns the first order
-    derivative at time t.
-    F = self.action
-    (theta, theta_, _s, s_) = x
-    u = theta_
-    sin_theta = sin(theta)
-    cos_theta = cos(theta)
-    mp = self.mp
-    mc = self.mc
-    l = self.l
-    u_ = (self.g * sin_theta * (mc + mp) - (F + mp * l * theta_ ** 2 * sin_theta) * cos_theta) / (4 / 3 * l * (mc + mp) - mp * l * cos_theta ** 2)
-    v = s_
-    v_ = (F - mp * l * (u_ * cos_theta - (theta_ ** 2 * sin_theta))) / (mc + mp)
-    return (u, u_, v, v_)
-     */
-
-    float *result = new float[n];
-    float F = params[0] * 10;
-    float mp = params[1];
-    float mc = params[2];
-    float l = params[3];
-    float g = params[4];
-
-    float s = sensors[0];
-    float ds = sensors[1];
-    float theta = sensors[2];
-    float dtheta = sensors[3];
-
-    float sin_theta = (float)sin(theta);
-    float cos_theta = (float)cos(theta);
-
-    float u = dtheta;
-    float du = (g * sin_theta * (mc + mp) - (F + mp * l * pow(dtheta, 2) * sin_theta) * cos_theta) / (4 / 3 * l * (mc + mp) - mp * l * pow(cos_theta, 2));
-    float v = ds;
-    float dv = (F - mp * l * (du * cos_theta - (pow(dtheta, 2) * sin_theta))) / (mc + mp);
-
-    result[0] = v;
-    result[1] = dv;
-    result[2] = u;
-    result[3] = du;
-
-    return result;
-}
-
-CartPole::CartPole() {
+CartPole::CartPole(): _x(0), _x_dot(0), _theta(0), _theta_dot(0), _episode_length(0), _failed(false)
+{
 }
 
 CartPole::~CartPole() = default;
@@ -80,6 +32,7 @@ void CartPole::perform_action(const float p_action)
 	const float thetaacc = (_gravity * sintheta - costheta * temp) / (_length * (4.0 / 3.0 - _masspole * costheta * costheta / _total_mass));
 	const float _xacc = temp - _polemass_length * thetaacc * costheta / _total_mass;
 
+	_episode_length++;
 	_x = _x + _tau * _x_dot;
 	_x_dot = _x_dot + _tau * _xacc;
 	_theta = _theta + _tau * _theta_dot;
@@ -88,13 +41,8 @@ void CartPole::perform_action(const float p_action)
 
 
 void CartPole::reset() {
-	/*
-	_x = 0;
-	_x_dot = 0;
-	_theta = 0;
-	_theta_dot = 0.1f;
-	*/
-
+	_failed = false;
+	_episode_length = 0;
 	_x = RandomGenerator::get_instance().random(-0.05f, 0.05f);
 	_x_dot = RandomGenerator::get_instance().random(-0.05f, 0.05f);
 	_theta = RandomGenerator::get_instance().random(-0.05f, 0.05f);
@@ -116,7 +64,7 @@ string CartPole::to_string() const
     return s;
 }
 
-bool CartPole::is_finished() const
+bool CartPole::is_finished()
 {
 	bool done = false;
 	
@@ -125,14 +73,18 @@ bool CartPole::is_finished() const
 	done |= _theta < -_theta_threshold_radians;
 	done |= _theta > _theta_threshold_radians;
 
+	if (done) _failed = true;
+	
+	done |= _episode_length > 200;
+
 	return done;
 }
 
-float CartPole::get_reward()
+float CartPole::get_reward() const
 {
 	float reward = 1;
 
-	if (is_finished()) reward = -1.0;
+	if (_failed) reward = -1.0;
 
 	return reward;
 }
