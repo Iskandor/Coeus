@@ -426,7 +426,7 @@ void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-4f, 10000, 64);
+	DDPG agent(&network_critic, RADAM_RULE, 1e-4f, 0.99f, &network_actor, RADAM_RULE, 2e-4f, 10000, 64);
 
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
