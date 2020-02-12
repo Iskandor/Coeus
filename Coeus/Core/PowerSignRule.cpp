@@ -12,7 +12,7 @@ PowerSignRule::~PowerSignRule()
 
 void PowerSignRule::calc_update(Gradient& p_gradient, const float p_alpha)
 {
-	const float beta1 = 0.9;
+	const float beta1 = 0.9f;
 	IUpdateRule::calc_update(p_gradient, p_alpha);
 
 	for (auto it = p_gradient.begin(); it != p_gradient.end(); ++it) {

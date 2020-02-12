@@ -151,7 +151,7 @@ void RNN::run_sin_prediction()
 		cout << error << endl;
 	}
 
-	Logger::instance().init("sin.csv");
+	LoggerInstance logger("sin.csv");
 	network.reset();
 	for (int i = 0; i < input.size(); i++)
 	{
@@ -162,7 +162,7 @@ void RNN::run_sin_prediction()
 	{
 		network.activate(input[i]);
 		cout << *network.get_output() << " " << *target[i] << endl;
-		Logger::instance().log(to_string(network.get_output()->at(0)) + ";" + to_string(target[i]->at(0)));
+		logger.log(to_string(network.get_output()->at(0)) + ";" + to_string(target[i]->at(0)));
 	}
 	
 	/*
@@ -178,7 +178,7 @@ void RNN::run_sin_prediction()
 		Logger::instance().log(to_string(network.get_output()->at(0)));
 	}
 	*/
-	Logger::instance().close();
+	logger.close();
 }
 
 void RNN::run_add_problem_gru()
@@ -311,7 +311,7 @@ void RNN::run_pack()
 	
 	vector<PackDataSequence2>* test = dataset.data();
 
-	Logger::instance().init("log.log");
+	LoggerInstance logger("log.log");
 	while (mcc < 1) {
 		vector<PackDataSequence2>* train = dataset.permute(true);
 
@@ -336,14 +336,14 @@ void RNN::run_pack()
 			}
 		}
 
-		Logger::instance().log(to_string(error) + " " + to_string(mcc));
+		logger.log(to_string(error) + " " + to_string(mcc));
 
 		cout << error << endl;
 		cout << "Time: " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 		epoch++;
 	}
 	
-	Logger::instance().close();
+	logger.close();
 
 	IOUtils::save_network(*network, "predictor.net");
 
@@ -352,8 +352,8 @@ void RNN::run_pack()
 
 void RNN::run_pack2()
 {
-	Logger::instance().init("log.log");
-	Logger::instance().log("Start");
+	LoggerInstance logger("log.log");
+	logger.log("Start");
 	cout << "Loading config..." << endl;
 	json config = load_config("config.json");
 	cout << config << endl;
@@ -486,15 +486,15 @@ void RNN::run_pack2()
 			}
 		}
 
-		Logger::instance().log(to_string(error) + " " + to_string(mcc));
+		logger.log(to_string(error) + " " + to_string(mcc));
 
 		cout << error << endl;
 		cout << "Time: " << (end - start).count() * ((float)chrono::high_resolution_clock::period::num / chrono::high_resolution_clock::period::den) << endl;
 		epoch++;
 	}
 
-	Logger::instance().log("Finish");
-	Logger::instance().close();
+	logger.log("Finish");
+	logger.close();
 
 	IOUtils::save_network(*network, "predictor.net");
 
@@ -528,7 +528,7 @@ void RNN::test_pack_alt() const
 	cout << "Testing..." << endl;
 	vector<PackDataSequence2>* test = dataset.data();
 
-	Logger::instance().init("probabilities.txt");
+	LoggerInstance logger("probabilities.txt");
 
 	for (auto sequence : *test)
 	{
@@ -552,7 +552,7 @@ void RNN::test_pack_alt() const
 		for(int i = 0; i < index; i++)
 		{
 			string s = to_string(sequence.player_id) + "," + to_string(sequence.pack_id[sequence.pack_id.size() - 1]) + "," + to_string(pack_id[i]) + "," + to_string(prob[i]);
-			Logger::instance().log(s);
+			logger.log(s);
 		}
 
 		delete[] prob;
@@ -561,7 +561,7 @@ void RNN::test_pack_alt() const
 	}
 
 	
-	Logger::instance().close();
+	logger.close();
 }
 
 json RNN::load_config(const string& p_filename) const

@@ -22,8 +22,8 @@ float CrossEntropyCost::cost(Tensor * p_prediction, Tensor * p_target)
 		float e = p_target->at(i);
 		float a = p_prediction->at(i);
 
-		if (a == 1) a -= 1e-6;
-		if (a == 0) a += 1e-6;
+		if (a == 1) a -= 1e-6f;
+		if (a == 0) a += 1e-6f;
 		
 		r += e * log(a) + (1 - e) * log(1 - a);
 	}
@@ -40,8 +40,8 @@ Tensor CrossEntropyCost::cost_deriv(Tensor * p_prediction, Tensor * p_target)
 		float e = p_target->at(i);
 		float a = p_prediction->at(i);
 
-		if (a == 1) a -= 1e-6;
-		if (a == 0) a += 1e-6;
+		if (a == 1) a -= 1e-6f;
+		if (a == 0) a += 1e-6f;
 
 		data[i] = -(e / a - (1 - e) / (1 - a));
 	}

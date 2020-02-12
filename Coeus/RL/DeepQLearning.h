@@ -12,7 +12,7 @@ namespace Coeus
 		DeepQLearning(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, int p_size, int p_sample, int p_target_network_update);
 		~DeepQLearning();
 
-		float train(Tensor* p_state0, int p_action0, Tensor* p_state1, float p_reward, bool p_final) override;
+		float train(Tensor* p_state0, Tensor* p_action, Tensor* p_state1, float p_reward, bool p_final) override;
 
 	protected:
 		Tensor	_input_s0;
@@ -29,6 +29,7 @@ namespace Coeus
 
 	private:
 		void calc_max_qa(int p_sample);
+	
 	};
 }
 

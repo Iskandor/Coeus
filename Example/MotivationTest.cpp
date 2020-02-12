@@ -91,7 +91,7 @@ void MotivationTest::cart_pole_icm(int p_episodes)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	const DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-4f, 10000, 64);
+	DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-4f, 10000, 64);
 
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
@@ -189,13 +189,14 @@ void MotivationTest::cart_pole_icm2(int p_episodes, bool p_log)
 	network_actor.add_connection("hidden2", "output");
 	network_actor.init();
 
-	const DDPG agent(&network_critic, ADAM_RULE, 1e-4f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
+	DDPG agent(&network_critic, ADAM_RULE, 1e-4f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
 
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
 	Tensor state1({ CartPole::STATE }, Tensor::ZERO);
+	LoggerInstance logger;
 
-	if (p_log) Logger::instance().init();
+	if (p_log) logger = Logger::instance().init();
 	
 	for (int e = 0; e < p_episodes; ++e) {
 		//printf("CartPole episode %i...\n", e);
@@ -236,10 +237,10 @@ void MotivationTest::cart_pole_icm2(int p_episodes, bool p_log)
 		printf("CartPole ICM Episode %i internal reward %0.4f ", e, cri);
 
 		const float avg_reward = evaluate_cart_pole(total_reward);
-		if (p_log) Logger::instance().log(to_string(avg_reward) + ";" + to_string(cri));
+		if (p_log) logger.log(to_string(avg_reward) + ";" + to_string(cri));
 	}
 
-	if (p_log) Logger::instance().close();
+	if (p_log) logger.close();
 	//test_cart_pole(network_actor, network_critic, 6000);	
 }
 
@@ -268,7 +269,7 @@ void MotivationTest::test_icm(const int p_episodes)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	const ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f);
+	const ActorCritic agent(new TD(&network_critic, ADAM_RULE, 1e-3f, 0.99f), &network_actor, ADAM_RULE, 1e-4f);
 
 	NeuralNetwork network_feature;
 
@@ -290,7 +291,7 @@ void MotivationTest::test_icm(const int p_episodes)
 	network_inverse_model.add_connection("im_input", "im_output");
 	network_inverse_model.init();
 
-	ICM icm(&network_forward_model, &network_inverse_model, &network_feature, RADAM_RULE, 1e-4f, 1e5);
+	ICM icm(&network_forward_model, &network_inverse_model, &network_feature, RADAM_RULE, 1e-4f, 100000);
 	
 	train_icm(icm);
 	system("pause");
@@ -386,7 +387,7 @@ void MotivationTest::test_gm2(int p_episodes)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	const ActorCritic agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f);
+	const ActorCritic agent(new TD(&network_critic, ADAM_RULE, 1e-3f, 0.99f), &network_actor, ADAM_RULE, 1e-4f);
 
 	NeuralNetwork network_autoencoder;
 

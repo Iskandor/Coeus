@@ -72,7 +72,8 @@ void NeuronOperator::integrate(Tensor* p_input, Tensor* p_weights)
 	{
 		_net = init_auxiliary_parameter(_net, 1, _dim);
 		_int = init_auxiliary_parameter(_int, 1, _dim);
-		TensorOperator::instance().full_int_s(_int->arr(), p_input->arr(), p_weights->arr(), p_weights->shape(0), p_weights->shape(1));
+		//TensorOperator::instance().full_int_s(_int->arr(), p_input->arr(), p_weights->arr(), p_weights->shape(0), p_weights->shape(1));
+		TensorOperator::instance().full_int_b(1, _int->arr(), p_input->arr(), p_weights->arr(), p_weights->shape(0), p_weights->shape(1));
 		TensorOperator::instance().vv_add(_net->arr(), _int->arr(), _net->arr(), _dim);
 	}
 	if (p_input->rank() == 2)

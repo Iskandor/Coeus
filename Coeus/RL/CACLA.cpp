@@ -26,13 +26,13 @@ CACLA::~CACLA()
 
 void CACLA::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, const bool p_final)
 {
-	const float delta = _critic->train(p_state0, p_state1, p_reward, p_final);
+	const float delta = _critic->train(p_state0, p_action0, p_state1, p_reward, p_final);
 	
 	if (_beta > 0) _var = (1 - _beta) * _var + _beta * delta * delta;
 
 	if (delta > 0)
 	{
-		int v = ceil(delta / sqrt(_var));
+		const float v = ceil(delta / sqrt(_var));
 		_actor->activate(p_state0);
 
 		Tensor loss = _mse.cost_deriv(_actor->get_output(), p_action0);

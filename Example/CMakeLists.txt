@@ -24,6 +24,7 @@ set(INCLUDE_FILES
 	Maze.h
 	MazeAction.h
 	MazeExample.h
+	MountainCar.h
 	MotivationTest.h
 	)
 
@@ -44,6 +45,7 @@ set(SOURCE_FILES
 	Maze.cpp
 	MazeAction.cpp
 	MazeExample.cpp
+	MountainCar.cpp
 	MotivationTest.cpp
 	main.cpp
 	)

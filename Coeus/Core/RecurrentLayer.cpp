@@ -118,23 +118,26 @@ void RecurrentLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*
 	}
 
 	Tensor*	 delta_in = nullptr;
-	
-	if (!_input_layer.empty())
+
+	if (df != nullptr)
 	{
-		delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
-
-		TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), df->arr(), _W->get_data()->arr(), _dim, _in_dim);
-
-		int index = _input_dim;
-
-		for (auto it : _input_layer)
+		if (!_input_layer.empty())
 		{
-			_delta_in[it->get_id()] = NeuronOperator::init_auxiliary_parameter(_delta_in[it->get_id()], _batch_size, it->get_dim());
-			delta_in->splice(index, _delta_in[it->get_id()]);
-			index += it->get_dim();
-		}
+			delta_in = NeuronOperator::init_auxiliary_parameter(delta_in, _batch_size, _in_dim);
 
-		delete delta_in;
+			TensorOperator::instance().full_delta(_batch_size, delta_in->arr(), df->arr(), _W->get_data()->arr(), _dim, _in_dim);
+
+			int index = _input_dim;
+
+			for (auto it : _input_layer)
+			{
+				_delta_in[it->get_id()] = NeuronOperator::init_auxiliary_parameter(_delta_in[it->get_id()], _batch_size, it->get_dim());
+				delta_in->splice(index, _delta_in[it->get_id()]);
+				index += it->get_dim();
+			}
+
+			delete delta_in;
+		}
 	}
 }
 

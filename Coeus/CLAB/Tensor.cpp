@@ -405,11 +405,7 @@ void Tensor::get_row(Tensor& p_tensor, const int p_row) const
 	{
 		assert(0);
 	}
-
-	for(int i = 0; i < _shape[1]; i++)
-	{
-		p_tensor[i] = _arr[p_row * _shape[1] + i];
-	}
+	memcpy(p_tensor._arr, _arr + p_row * _shape[1], sizeof(float) * _shape[1]);
 }
 
 void Tensor::set_row(Tensor& p_tensor, const int p_row) const

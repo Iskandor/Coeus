@@ -30,7 +30,8 @@ set(INCLUDE_FILES
 	ForwardModel.h
 	GAE.h
 	GM2.h
-	IActorCritic.h
+	IActor.h
+	ICritic.h
 	ICM.h
 	IEnvironment.h
 	IMotivationModule.h
@@ -57,7 +58,6 @@ set(SOURCE_FILES
 	ForwardModel.cpp
 	GAE.cpp
 	GM2.cpp
-	IActorCritic.cpp
 	ICM.cpp
 	IMotivationModule.cpp
 	NAC.cpp

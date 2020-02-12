@@ -30,8 +30,8 @@ namespace Coeus {
 				_buffer.push_back(p_item);
 			}
 
-			vector<T*>* get_sample(const int p_size) {
-				int size = p_size;
+			vector<T*>* get_sample(const size_t p_size) {
+				size_t size = p_size;
 				_sample.clear();
 
 				if (size > _buffer.size()) size = _buffer.size();

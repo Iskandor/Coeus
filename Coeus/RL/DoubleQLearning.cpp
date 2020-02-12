@@ -5,7 +5,7 @@
 
 using namespace Coeus;
 
-DoubleQLearning::DoubleQLearning(NeuralNetwork* p_network_a, NeuralNetwork* p_network_b, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda):
+DoubleQLearning::DoubleQLearning(NeuralNetwork* p_network_a, NeuralNetwork* p_network_b, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma):
 	_alpha(p_alpha),
 	_gamma(p_gamma)
 {

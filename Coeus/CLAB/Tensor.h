@@ -99,6 +99,7 @@ public:
 	static int* copy_shape(int p_rank, const int* p_shape);
 
 	void push_back(Tensor* p_tensor);
+	void push_back(Tensor* p_tensor, int p_y, int p_x, int p_size);
 	void push_back(float p_value);
 	void insert_row(Tensor* p_tensor);
 	void insert_column(Tensor* p_tensor);
@@ -173,7 +174,7 @@ public:
 	static void enable_pooling(bool p_value);
 	static bool is_enabled_pooling();
 
-private:
+private:	
 	static bool _pooling;
 	
 	static void print_vector(ostream &output, const Tensor &p_tensor, bool p_cm);

@@ -3,8 +3,6 @@
 
 using namespace Coeus;
 
-
-
 Logger::Logger()
 = default;
 
@@ -18,26 +16,48 @@ Logger& Logger::instance()
 	return logger;
 }
 
-void Logger::init(const string& p_name)
+LoggerInstance Logger::init(const string& p_name) const
 {
+	string name = p_name;
+	
 	if (p_name.empty())
 	{
-		const int timestamp = std::time(nullptr);
-		_file.open("log" + to_string(timestamp) + ".log");
+		const time_t timestamp = std::time(nullptr);
+		name = "log" + to_string(timestamp) + ".log";
 	}
-	else
-	{
-		_file.open(p_name);
-	}
-	
+
+	LoggerInstance instance(name);
+	return instance;
 }
 
-void Logger::log(const string& p_msg) 
+LoggerInstance::LoggerInstance()
+= default;
+
+LoggerInstance::LoggerInstance(const string & p_name)
+{
+	_filename = p_name;
+	_file.open(p_name);
+}
+
+LoggerInstance::LoggerInstance(LoggerInstance& p_copy)
+{
+	_filename = p_copy._filename;
+	_file.open(p_copy._filename);
+}
+
+LoggerInstance& LoggerInstance::operator=(const LoggerInstance& p_copy)
+{
+	_filename = p_copy._filename;
+	_file.open(p_copy._filename);
+	return *this;
+}
+
+void LoggerInstance::log(const string& p_msg)
 {
 	_file << p_msg << endl;
 }
 
-void Logger::close() 
+void LoggerInstance::close()
 {
 	_file.close();
 }

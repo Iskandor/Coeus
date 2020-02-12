@@ -12,6 +12,7 @@
 #include "CACER.h"
 #include "Logger.h"
 #include "ExponentialInterpolation.h"
+#include "MountainCar.h"
 
 using namespace Coeus;
 
@@ -312,7 +313,7 @@ void ContinuousTest::run_simple_cacer(int p_episodes)
 	printf("CACER SimpleEnv steps %i total reward %0.4f\n", step, total_reward);
 }
 
-void ContinuousTest::run_cacla(const int p_episodes, bool p_log)
+void ContinuousTest::run_cacla_cart_pole(const int p_episodes, bool p_log)
 {
 	const int hidden = 512;
 
@@ -339,8 +340,9 @@ void ContinuousTest::run_cacla(const int p_episodes, bool p_log)
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
 	Tensor state1({ CartPole::STATE }, Tensor::ZERO);
 
+	LoggerInstance logger;
 
-	if (p_log) Logger::instance().init();
+	if (p_log) logger = Logger::instance().init();
 
 	for (int e = 0; e < p_episodes; ++e) {
 		//printf("CartPole episode %i...\n", e);
@@ -384,7 +386,7 @@ void ContinuousTest::run_cacla(const int p_episodes, bool p_log)
 		{
 			//break;
 		}
-		if (p_log) Logger::instance().log(to_string(avg_reward));
+		if (p_log) logger.log(to_string(avg_reward));
 		/*
 		if (e % 10 == 0) {
 			if (test_cart_pole(network_actor, network_critic, 6000) == 6000) {
@@ -398,10 +400,10 @@ void ContinuousTest::run_cacla(const int p_episodes, bool p_log)
 		
 	}
 
-	if (p_log) Logger::instance().close();
+	if (p_log) logger.close();
 }
 
-void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
+void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 {
 	_rewards.clear();
 	const int hidden = 24;
@@ -432,7 +434,9 @@ void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
 	Tensor state1({ CartPole::STATE }, Tensor::ZERO);
 
-	if (p_log) Logger::instance().init();
+	LoggerInstance logger;
+
+	if (p_log) logger = Logger::instance().init();
 
 	float sigma = 1.f;
 	LinearInterpolation interpolation(sigma, 0.f, p_episodes);
@@ -483,7 +487,7 @@ void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
 			//break;
 		}
 
-		if (p_log) Logger::instance().log(to_string(avg_reward));
+		if (p_log) logger.log(to_string(avg_reward));
 
 		/*
 		if (e % 10 == 0) {
@@ -499,9 +503,77 @@ void ContinuousTest::run_ddpg(int p_episodes, bool p_log)
 
 	}
 
-	if (p_log) Logger::instance().close();
+	if (p_log) logger.close();
 
 	test_cart_pole(network_actor, network_critic, 195);
+}
+
+void ContinuousTest::run_ddpg_mountain_car(int p_episodes, bool p_log)
+{
+	const int hidden = 10;
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("output", _mountain_car.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	DDPG agent(&network_critic, ADAM_RULE, 2e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-3f, 10000, 64);
+
+	Tensor action;
+	Tensor state0;
+	Tensor state1;
+
+	LoggerInstance logger;
+	LoggerInstance test_logger;
+	if (p_log) logger = Logger::instance().init();
+	//if (p_log) test_logger = Logger::instance().init();
+	
+
+	float sigma = 1.f;
+
+	for (int e = 0; e < p_episodes; ++e) {
+		int total_steps = 0;
+
+		_mountain_car.reset();
+		state0  = _mountain_car.get_state();
+
+		while (!_mountain_car.is_finished()) {
+			total_steps++;
+			action = agent.get_action(&state0, sigma);
+
+			_mountain_car.do_action(action);
+			state1 = _mountain_car.get_state();
+			agent.train(&state0, &action, &state1, _mountain_car.get_reward(), _mountain_car.is_finished());
+
+			state0 = state1;
+		}
+
+		//test_logger.log(to_string(e));
+		cout << "DDPG Mountain car Episode " << e << " ";
+		float reward = test_mountain_car(network_actor);
+		
+		if (p_log) logger.log(to_string(reward));		
+	}
+
+	//if (p_log) test_mountain_car(network_actor, &test_logger);
+	
+	if (p_log) logger.close();
+	//if (p_log) test_logger.close();
 }
 
 float ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralNetwork& p_critic, int p_episodes)
@@ -545,6 +617,35 @@ float ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::Neura
 	printf("CartPole test finished in %i steps with reward %0.2f\n", total_steps, total_reward);
 
 	return total_reward;
+}
+
+float ContinuousTest::test_mountain_car(Coeus::NeuralNetwork& p_actor, Coeus::LoggerInstance* p_logger)
+{
+	Tensor action({_mountain_car.ACTION_DIM()}, Tensor::ZERO);
+	Tensor state0;
+	int total_steps = 0;
+
+	_mountain_car.reset();
+	state0 = _mountain_car.get_state();
+
+	while (!_mountain_car.is_finished()) {
+		p_actor.activate(&state0);
+		action[0] = p_actor.get_output()->at(0);
+		_mountain_car.do_action(action);
+		total_steps++;
+
+		if (p_logger != nullptr)
+		{
+			string record = to_string(state0[0]) + ";" + to_string(state0[1]) + ";" + to_string(action[0]);
+			p_logger->log(record);
+		}
+
+		state0 = _mountain_car.get_state();
+	}
+	
+	printf("Mountain Car test finished in %i steps with reward %0.2f\n", total_steps, _mountain_car.get_reward());
+
+	return _mountain_car.get_reward();
 }
 
 float ContinuousTest::evaluate_cart_pole(float p_reward)

@@ -2,27 +2,21 @@
 #include "NeuralNetwork.h"
 #include "GradientAlgorithm.h"
 #include "BufferItems.h"
+#include "ICritic.h"
 
 namespace Coeus
 {
 
-	class __declspec(dllexport) TD
+	class __declspec(dllexport) TD : public ICritic
 	{
 	public:
-		TD(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma, float p_lambda = 0);
+		TD(NeuralNetwork* p_network, GRADIENT_RULE p_grad_rule, float p_alpha, float p_gamma);
 		~TD();
 
-		float train(Tensor* p_state0, Tensor* p_state1, float p_reward, bool p_finished) const;
+		float train(Tensor* p_state0, Tensor* p_action, Tensor* p_state1, float p_reward, bool p_final) override;
 		Tensor train(vector<DQItem*>* p_sample) const;
 
-		float get_delta(Tensor* p_state0, Tensor* p_state1, float p_reward, bool p_finished) const;
-
 	private:
-		NeuralNetwork*		_network;
-		NetworkGradient*	_network_gradient;
-		IUpdateRule*		_update_rule;
-
-		float _alpha;
 		float _gamma;
 	};
 

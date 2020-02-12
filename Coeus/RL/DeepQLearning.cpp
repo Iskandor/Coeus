@@ -25,11 +25,11 @@ DeepQLearning::~DeepQLearning()
 	delete _target_network;
 }
 
-float DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_state1, const float p_reward, const bool p_final) {
-	Tensor action({ 1 }, Tensor::VALUE, p_action0);
+float DeepQLearning::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, const bool p_final) {
+	Tensor action({ 1 }, Tensor::VALUE, p_action0->max_value_index());
 	_replay_buffer->add_item(new DQItem(p_state0, &action, p_state1, p_reward, p_final));
 
-	float error = 0;
+	const float error = 0;
 
 	if (_replay_buffer->get_size() >= _sample_size) {
 		_target_network_update_t++;
@@ -62,7 +62,7 @@ float DeepQLearning::train(Tensor* p_state0, const int p_action0, Tensor* p_stat
 		Tensor loss = mse.cost_deriv(_network->get_output(), &_target);
 
 		_network_gradient->calc_gradient(&loss);
-		_update_rule->calc_update(_network_gradient->get_gradient(), _alpha);
+		_update_rule->calc_update(_network_gradient->get_gradient());
 		_network->update(_update_rule->get_update());
 
 		if (_target_network_update_t == _target_network_update)

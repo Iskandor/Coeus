@@ -118,8 +118,8 @@ void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const fl
 		_network_critic->update(_update_rule_critic->get_update());
 		_network_actor->update(_update_rule_actor->get_update());
 
-		_network_critic_target->polyak_averaging(0.99, _network_critic);
-		_network_actor_target->polyak_averaging(0.99, _network_actor);
+		_network_critic_target->polyak_averaging(0.999, _network_critic);
+		_network_actor_target->polyak_averaging(0.999, _network_actor);
 	}
 }
 
