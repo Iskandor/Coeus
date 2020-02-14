@@ -15,7 +15,7 @@ namespace Coeus
 		virtual ~CACLA();
 
 		virtual void train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p_reward, bool p_final);
-		Tensor get_action(Tensor* p_state, float p_sigma = 1.0f) const;
+		Tensor* get_action(Tensor* p_state) const;
 
 	protected:
 		TD*	_critic;

@@ -5,6 +5,7 @@
 #include "MazeExample.h"
 #include "MotivationTest.h"
 #include <omp.h>
+#include "OUNoise.h"
 
 using namespace std;
 
@@ -97,9 +98,8 @@ int main()
 	//test.run_simple_ddpg(1000);
 	//test.run_cacla(50000, true);
 	//for(int i = 0; i < 3; i++) test.run_ddpg_cart_pole(25000, true);
-	for (int i = 0; i < 6; i++) {		
-		test.run_ddpg_mountain_car(1000, true);
-	}
+	//for (int i = 0; i < 6; i++) test.run_ddpg_mountain_car(1000, true);
+	for (int i = 0; i < 6; i++) test.run_ddpg_mountain_car_icm(1000, true);
 
 	/*
 	IrisTest iris;

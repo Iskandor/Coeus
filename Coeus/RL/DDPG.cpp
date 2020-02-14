@@ -124,23 +124,14 @@ void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const fl
 }
 
 /**
- * \brief Return action as output from the actor network modified by gaussian noise with variance sigma
+ * \brief Return action as output from the actor network
  * \param p_state actual state where the agent is choosing its next action
- * \param p_sigma variance of gaussian noise added to action
  * \return 
  */
-Tensor DDPG::get_action(Tensor* p_state, const float p_sigma) const
+Tensor* DDPG::get_action(Tensor* p_state) const
 {
-	Tensor output({ _network_actor->get_output_dim() }, Tensor::ZERO);
 	_network_actor->activate(p_state);
-
-	for (int i = 0; i < _network_actor->get_output_dim(); i++)
-	{
-		const float rand = p_sigma > 0 ? RandomGenerator::get_instance().normal_random(0, p_sigma) : 0;
-		output[i] = _network_actor->get_output()->at(i) + rand;
-	}
-
-	return output;
+	return _network_actor->get_output();
 }
 
 Tensor* DDPG::calc_max_qa() {

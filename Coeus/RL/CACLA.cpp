@@ -43,16 +43,8 @@ void CACLA::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const f
 	}
 }
 
-Tensor CACLA::get_action(Tensor* p_state, const float p_sigma) const
+Tensor* CACLA::get_action(Tensor* p_state) const
 {
-	Tensor output({ _actor->get_output_dim() }, Tensor::ZERO);
 	_actor->activate(p_state);
-
-	for(int i = 0; i < _actor->get_output_dim(); i++)
-	{
-		const float rand = p_sigma > 0.f ? RandomGenerator::get_instance().normal_random(0, p_sigma) : 0.f;
-		output[i] = _actor->get_output()->at(i) + rand;
-	}
-
-	return output;
+	return _actor->get_output();
 }

@@ -12,6 +12,7 @@
 #include "DDPG.h"
 #include "ForwardModel.h"
 #include "Logger.h"
+#include "ContinuousExploration.h"
 
 MotivationTest::MotivationTest()
 {
@@ -97,6 +98,10 @@ void MotivationTest::cart_pole_icm(int p_episodes)
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
 	Tensor state1({ CartPole::STATE }, Tensor::ZERO);
 
+	const float sigma = 1.f;
+	ContinuousExploration exploration;
+	exploration.init_gaussian(sigma);
+	
 	for (int e = 0; e < p_episodes; ++e) {
 		//printf("CartPole episode %i...\n", e);
 		float cri = 0;
@@ -109,7 +114,7 @@ void MotivationTest::cart_pole_icm(int p_episodes)
 
 
 		while (true) {
-			action = agent.get_action(&state0, 1.f);
+			action = exploration.explore(agent.get_action(&state0));
 
 			env.perform_action(action[0]);
 			copy_state(env.get_state(true), state1);
@@ -197,6 +202,10 @@ void MotivationTest::cart_pole_icm2(int p_episodes, bool p_log)
 	LoggerInstance logger;
 
 	if (p_log) logger = Logger::instance().init();
+
+	const float sigma = 1.f;
+	ContinuousExploration exploration;
+	exploration.init_gaussian(sigma);
 	
 	for (int e = 0; e < p_episodes; ++e) {
 		//printf("CartPole episode %i...\n", e);
@@ -211,7 +220,7 @@ void MotivationTest::cart_pole_icm2(int p_episodes, bool p_log)
 
 
 		while (true) {
-			action = agent.get_action(&state0, 1.f);
+			action = exploration.explore(agent.get_action(&state0));
 
 			env.perform_action(action[0]);
 			copy_state(env.get_state(true), state1);

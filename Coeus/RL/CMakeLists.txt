@@ -18,15 +18,15 @@ set(INCLUDE_FILES
 	A2C.h
 	A3C.h
 	ActorCritic.h
-	BoltzmanExploration.h
 	BufferItems.h
 	CACER.h
 	CACLA.h
+	ContinuousExploration.h
 	CountModule.h
 	DDPG.h
 	DeepQLearning.h
+	DiscreteExploration.h
 	DoubleQLearning.h
-	EGreedyExploration.h
 	ForwardModel.h
 	GAE.h
 	GM2.h
@@ -47,14 +47,14 @@ set(SOURCE_FILES
 	A2C.cpp
 	A3C.cpp
 	ActorCritic.cpp
-	BoltzmanExploration.cpp
 	CACER.cpp
 	CACLA.cpp
+	ContinuousExploration.cpp
 	CountModule.cpp
 	DDPG.cpp
 	DeepQLearning.cpp
+	DiscreteExploration.cpp
 	DoubleQLearning.cpp
-	EGreedyExploration.cpp
 	ForwardModel.cpp
 	GAE.cpp
 	GM2.cpp

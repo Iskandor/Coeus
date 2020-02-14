@@ -16,8 +16,8 @@ Tensor MountainCar::get_state()
 {
 	Tensor state({ _state_dim }, Tensor::ZERO);
 
-	state[0] = _position;
-	state[1] = _velocity;
+	state[0] = _position / POSITION_LIMIT;
+	state[1] = _velocity / VELOCITY_LIMIT;
 	
 	return state;
 }

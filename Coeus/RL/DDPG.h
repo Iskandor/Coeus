@@ -3,10 +3,10 @@
 #include "GradientAlgorithm.h"
 #include "ReplayBuffer.h"
 #include "BufferItems.h"
+#include "OUNoise.h"
 
 namespace Coeus
 {
-// deep deterministic policy gradient
 class __declspec(dllexport) DDPG
 {
 public:
@@ -15,7 +15,7 @@ public:
 	virtual ~DDPG();
 
 	void train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, float p_reward, bool p_final);
-	Tensor get_action(Tensor* p_state, float p_sigma) const;
+	Tensor* get_action(Tensor* p_state) const;
 
 private:	
 	Tensor* calc_max_qa();

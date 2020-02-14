@@ -16,8 +16,6 @@
 #include "CountModule.h"
 #include "Nadam.h"
 #include "BackProph.h"
-#include "BoltzmanExploration.h"
-#include "EGreedyExploration.h"
 #include "LinearInterpolation.h"
 #include "ExponentialInterpolation.h"
 #include "Logger.h"
@@ -30,6 +28,7 @@
 #include "ActorCritic.h"
 #include "A3C.h"
 #include "PPO.h"
+#include "DiscreteExploration.h"
 
 using namespace Coeus;
 
@@ -88,7 +87,7 @@ int MazeExample::example_q(int p_epochs, const bool p_verbose) {
 	float reward = 0;
 	const int epochs = p_epochs;
 
-	EGreedyExploration exploration(0.9f, new ExponentialInterpolation(0.9f, 0.1f, epochs));
+	DiscreteExploration exploration(DiscreteExploration::EGREEDY, 0.9f, new ExponentialInterpolation(0.9f, 0.1f, epochs));
 	//BoltzmanExploration exploration(1, new ExponentialInterpolation(1, 0.1, epochs));
 
 	int wins = 0, loses = 0;	
@@ -104,8 +103,7 @@ int MazeExample::example_q(int p_epochs, const bool p_verbose) {
 		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
 			network.activate(&state0);
-			const int action0 = exploration.get_action(network.get_output());
-			Encoder::one_hot(action, action0);
+			action = exploration.explore(network.get_output());
 			_maze->do_action(action);
 
 			state1 = _maze->get_state();
@@ -178,7 +176,7 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 	const int epochs = p_epochs;
 
 	//EGreedyExploration exploration(0.9, new ExponentialInterpolation(0.9, 0.1, epochs));
-	BoltzmanExploration exploration(1, new ExponentialInterpolation(1, 1, epochs));
+	DiscreteExploration exploration(DiscreteExploration::BOLTZMAN, 1);
 
 	int wins = 0, loses = 0;
 	SetConsoleActiveScreenBuffer(_hConsole_c);
@@ -192,14 +190,13 @@ void MazeExample::example_double_q(int p_epochs, const bool p_verbose) {
 
 		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
-			const int action0 = exploration.get_action(agent.get_output(&state0));
-			Encoder::one_hot(action, action0);
+			action = exploration.explore(agent.get_output(&state0));
 			_maze->do_action(action);
 
 			state1 = _maze->get_state();
 			reward = _maze->get_reward();
 
-			agent.train(&state0, action0, &state1, reward, _maze->is_finished());
+			agent.train(&state0, action.max_value_index(), &state1, reward, _maze->is_finished());
 			state0.override(&state1);
 		}
 
@@ -316,7 +313,7 @@ int MazeExample::example_sarsa(int p_epochs, const bool p_verbose) {
 	float reward = 0;
 	const int epochs = p_epochs;
 
-	EGreedyExploration exploration(0.9f, new LinearInterpolation(0.9f, 0.1f, epochs));
+	DiscreteExploration exploration(DiscreteExploration::EGREEDY, 0.9f, new LinearInterpolation(0.9f, 0.1f, epochs));
 	//BoltzmanExploration exploration(1, new ExponentialInterpolation(1, 1, epochs));
 
 	int wins = 0, loses = 0;
@@ -329,19 +326,18 @@ int MazeExample::example_sarsa(int p_epochs, const bool p_verbose) {
 
 		state0 = _maze->get_state();
 		network.activate(&state0);
-		int action0 = exploration.get_action(network.get_output());
+		Tensor action0 = exploration.explore(network.get_output());
 
 		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
-			Encoder::one_hot(action, action0);
 			_maze->do_action(action);
 			state1 = _maze->get_state();
 			reward = _maze->get_reward();
 			
 			network.activate(&state1);
-			const int action1 = exploration.get_action(network.get_output());
+			Tensor action1 = exploration.explore(network.get_output());
 
-			agent.train(&state0, action0, &state1, action1, reward, _maze->is_finished());
+			agent.train(&state0, action0.max_value_index(), &state1, action1.max_value_index(), reward, _maze->is_finished());
 			state0.override(&state1);
 			action0 = action1;
 		}
@@ -666,7 +662,7 @@ void MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 	float reward = 0;
 	const int epochs = p_epochs;
 
-	EGreedyExploration exploration(0.9f, new ExponentialInterpolation(0.9f, 0.1f, epochs));
+	DiscreteExploration exploration(DiscreteExploration::EGREEDY, 0.9f, new ExponentialInterpolation(0.9f, 0.1f, epochs));
 	//BoltzmanExploration exploration(1, new ExponentialInterpolation(1, 0.1, epochs));
 
 	int wins = 0, loses = 0;
@@ -681,8 +677,7 @@ void MazeExample::example_deep_q(int p_epochs, const bool p_verbose) {
 		while (!_maze->is_finished()) {
 			//cout << maze->toString() << endl;
 			network.activate(&state0);
-			const int action0 = exploration.get_action(network.get_output());
-			Encoder::one_hot(action, action0);
+			action = exploration.explore(network.get_output());
 			_maze->do_action(action);
 
 			state1 = _maze->get_state();
@@ -1262,11 +1257,12 @@ void MazeExample::binary_encoding(const int p_value, Tensor* p_vector) {
 
 void MazeExample::console_print(string & p_s, int p_x, int p_y)
 {
-	LPCSTR str = p_s.c_str();
-	DWORD len = p_s.size();
+	wstring stemp = wstring(p_s.begin(), p_s.end());
+	LPCWSTR str = stemp.c_str();
+	DWORD len = wcslen(str);
 	DWORD dwBytesWritten = 0;
 	COORD pos = { p_x, p_y };
-	//WriteConsoleOutputCharacter(_hConsole_c, str, len, pos, &dwBytesWritten);
+	WriteConsoleOutputCharacter(_hConsole_c, str, len, pos, &dwBytesWritten);
 }
 
 void MazeExample::console_clear()

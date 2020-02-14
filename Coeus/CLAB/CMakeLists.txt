@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 include_directories(${MKL_INCLUDE_DIR})
 
 set(INCLUDE_FILES
+	IInterpolation.h
 	ExponentialInterpolation.h
 	LinearInterpolation.h
 	Tensor.h
@@ -15,6 +16,7 @@ set(INCLUDE_FILES
 	TensorOperatorMKL.h
 	TensorPool.h
 	RandomGenerator.h
+	OUNoise.h
 	)
 
 set(SOURCE_FILES 
@@ -25,6 +27,7 @@ set(SOURCE_FILES
 	TensorOperatorMKL.cpp
 	TensorPool.cpp
 	RandomGenerator.cpp
+	OUNoise.cpp
 	)
 	
 add_library(CLAB STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
