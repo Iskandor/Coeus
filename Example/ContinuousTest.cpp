@@ -525,7 +525,7 @@ void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 	test_cart_pole(network_actor, network_critic, 195);
 }
 
-void ContinuousTest::run_ddpg_mountain_car(int p_episodes, int p_hidden, float clr, float alr, bool p_log)
+void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, int p_hidden, float clr, float alr, bool p_log)
 {
 	const int hidden = p_hidden;
 
@@ -557,7 +557,9 @@ void ContinuousTest::run_ddpg_mountain_car(int p_episodes, int p_hidden, float c
 
 	LoggerInstance logger;
 	LoggerInstance test_logger;
-	if (p_log) logger = Logger::instance().init();
+	if (p_log) {
+		logger.init(p_dir);
+	}
 	//if (p_log) test_logger = Logger::instance().init();
 
 	ContinuousExploration exploration;

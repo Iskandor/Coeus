@@ -4,9 +4,7 @@
 #include "ContinuousTest.h"
 #include "MazeExample.h"
 #include "MotivationTest.h"
-#include <omp.h>
-#include "OUNoise.h"
-
+#include <experimental/filesystem>
 using namespace std;
 
 int main()
@@ -110,19 +108,22 @@ int main()
 		for (int a = 0; a < 5; a++)
 		{
 			const float alr = RandomGenerator::get_instance().random(1e-4f, 5e-3f);
-			for (int e = 0; e < 5; e++)
+			for (int e = 0; e < 1; e++)
 			{
-				const int episode = episodes[e];
-				for (int h = 0; h < 3; h++)
+				const int episode = episodes[0];
+				for (int h = 0; h < 1; h++)
 				{
-					const int hidden = hiddens[h];
+					string dir = "setup_" + to_string(setup_index) + "/";
+					experimental::filesystem::create_directory(dir);
+					const int hidden = hiddens[1];
 					LoggerInstance logger("setup_" + to_string(setup_index) + ".log");
+					logger.init(dir);
 					logger.log("clr=" + to_string(clr));
 					logger.log("alr=" + to_string(alr));
 					logger.log("episode=" + to_string(episode));
 					logger.log("hidden=" + to_string(hidden));
 					logger.close();
-					for (int i = 0; i < 3; i++) test.run_ddpg_mountain_car(episode, hidden, clr, alr, true);
+					for (int i = 0; i < 3; i++) test.run_ddpg_mountain_car(dir, episode, hidden, clr, alr, true);
 					setup_index++;
 				}
 			}
