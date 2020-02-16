@@ -525,9 +525,9 @@ void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 	test_cart_pole(network_actor, network_critic, 195);
 }
 
-void ContinuousTest::run_ddpg_mountain_car(int p_episodes, bool p_log)
+void ContinuousTest::run_ddpg_mountain_car(int p_episodes, int p_hidden, float clr, float alr, bool p_log)
 {
-	const int hidden = 10;
+	const int hidden = p_hidden;
 
 	NeuralNetwork network_critic;
 
@@ -549,7 +549,7 @@ void ContinuousTest::run_ddpg_mountain_car(int p_episodes, bool p_log)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 100000, 64);
+	DDPG agent(&network_critic, ADAM_RULE, clr, 0.99f, &network_actor, ADAM_RULE, alr, 100000, 64);
 
 	Tensor action;
 	Tensor state0;
@@ -561,8 +561,8 @@ void ContinuousTest::run_ddpg_mountain_car(int p_episodes, bool p_log)
 	//if (p_log) test_logger = Logger::instance().init();
 
 	ContinuousExploration exploration;
-	//exploration.init_ounoise(_mountain_car.ACTION_DIM(), 0.4f);
-	exploration.init_gaussian(0.2f);
+	exploration.init_ounoise(_mountain_car.ACTION_DIM(), 0.4f);
+	//exploration.init_gaussian(0.2f);
 
 	for (int e = 0; e < p_episodes; ++e) {
 		int total_steps = 0;

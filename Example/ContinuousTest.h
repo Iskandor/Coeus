@@ -17,7 +17,7 @@ public:
 	void run_cacla_cart_pole(int p_episodes, bool p_log = false);
 	void run_ddpg_cart_pole(int p_episodes, bool p_log = false);
 	
-	void run_ddpg_mountain_car(int p_episodes, bool p_log = false);
+	void run_ddpg_mountain_car(int p_episodes, int p_hidden, float clr, float alr, bool p_log = false);
 	void run_ddpg_mountain_car_icm(int p_episodes, bool p_log = false);
 	
 	float test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralNetwork& p_critic, int p_episodes);

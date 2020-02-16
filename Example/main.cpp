@@ -98,8 +98,41 @@ int main()
 	//test.run_simple_ddpg(1000);
 	//test.run_cacla(50000, true);
 	//for(int i = 0; i < 3; i++) test.run_ddpg_cart_pole(25000, true);
-	//for (int i = 0; i < 6; i++) test.run_ddpg_mountain_car(1000, true);
-	for (int i = 0; i < 6; i++) test.run_ddpg_mountain_car_icm(1000, true);
+
+	vector<int> episodes = {1000, 2500, 5000, 10000, 50000};
+	vector<int> hiddens = { 5, 10, 30 };
+	int setup_index = 0;
+
+
+	for (int c = 0; c < 5; c++)
+	{
+		const float clr = RandomGenerator::get_instance().random(1e-4f, 5e-3f);
+		for (int a = 0; a < 5; a++)
+		{
+			const float alr = RandomGenerator::get_instance().random(1e-4f, 5e-3f);
+			for (int e = 0; e < 5; e++)
+			{
+				const int episode = episodes[e];
+				for (int h = 0; h < 3; h++)
+				{
+					const int hidden = hiddens[h];
+					LoggerInstance logger("setup_" + to_string(setup_index) + ".log");
+					logger.log("clr=" + to_string(clr));
+					logger.log("alr=" + to_string(alr));
+					logger.log("episode=" + to_string(episode));
+					logger.log("hidden=" + to_string(hidden));
+					logger.close();
+					for (int i = 0; i < 3; i++) test.run_ddpg_mountain_car(episode, hidden, clr, alr, true);
+					setup_index++;
+				}
+			}
+		}
+	}
+			
+
+
+	
+	//for (int i = 0; i < 6; i++) test.run_ddpg_mountain_car_icm(1000, true);
 
 	/*
 	IrisTest iris;
