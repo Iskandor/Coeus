@@ -15,6 +15,7 @@
 #include "MountainCar.h"
 #include "ContinuousExploration.h"
 #include "ForwardModel.h"
+#include "ForwardMetaLearner.h"
 
 using namespace Coeus;
 
@@ -531,9 +532,9 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
-	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden * 4, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden * 4, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
 	network_critic.add_connection("hidden1", "output");
@@ -542,7 +543,7 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM()));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", _mountain_car.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
@@ -554,6 +555,7 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 	Tensor action;
 	Tensor state0;
 	Tensor state1;
+	Tensor start_state;
 
 	LoggerInstance logger;
 	LoggerInstance test_logger;
@@ -562,7 +564,7 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 	}
 	//if (p_log) test_logger = Logger::instance().init();
 
-	ContinuousExploration exploration;
+	ContinuousExploration exploration; // new LinearInterpolation(0.2f, 0.01f, p_episodes)
 	exploration.init_ounoise(_mountain_car.ACTION_DIM(), 0.4f);
 	//exploration.init_gaussian(0.2f);
 
@@ -570,7 +572,7 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 		int total_steps = 0;
 
 		_mountain_car.reset();
-		state0  = _mountain_car.get_state();
+		start_state = state0  = _mountain_car.get_state();
 
 		while (!_mountain_car.is_finished()) {
 			total_steps++;
@@ -578,17 +580,18 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 
 			_mountain_car.do_action(action);
 			state1 = _mountain_car.get_state();
-			agent.train(&state0, &action, &state1, _mountain_car.get_reward(), _mountain_car.is_finished());
+			agent.train(&state0, &action, &state1, _mountain_car.get_reward() / 100, _mountain_car.is_finished());
 
 			state0 = state1;
 		}
+		exploration.update(e);
 		exploration.reset();
 
 		//test_logger.log(to_string(e));
-		cout << "DDPG Mountain car Episode " << e << " ";
+		cout << "DDPG Mountain car Episode " << e << " train reward " << _mountain_car.get_reward() << " ";
 		float reward = test_mountain_car(network_actor);
 		
-		if (p_log) logger.log(to_string(reward));		
+		if (p_log) logger.log(to_string(reward) + ";" + to_string(start_state[0]) + ";" + to_string(start_state[1]));
 	}
 
 	//if (p_log) test_mountain_car(network_actor, &test_logger);
@@ -597,15 +600,15 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 	//if (p_log) test_logger.close();
 }
 
-void ContinuousTest::run_ddpg_mountain_car_icm(int p_episodes, bool p_log)
+void ContinuousTest::run_ddpg_mountain_car_icm(const string& p_dir, int p_episodes, int p_hidden, float clr, float alr, bool p_log)
 {
-	const int hidden = 10;
+	const int hidden = p_hidden;
 
 	NeuralNetwork network_critic;
 
 	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
-	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
 	network_critic.add_connection("hidden1", "output");
@@ -614,14 +617,14 @@ void ContinuousTest::run_ddpg_mountain_car_icm(int p_episodes, bool p_log)
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM()));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", _mountain_car.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 100000, 64);
+	DDPG agent(&network_critic, ADAM_RULE, clr, 0.99f, &network_actor, ADAM_RULE, alr, 100000, 64);
 
 	NeuralNetwork network_forward_model;
 	network_forward_model.add_layer(new CoreLayer("fm_input", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
@@ -637,7 +640,9 @@ void ContinuousTest::run_ddpg_mountain_car_icm(int p_episodes, bool p_log)
 
 	LoggerInstance logger;
 	LoggerInstance test_logger;
-	if (p_log) logger = Logger::instance().init();
+	if (p_log) {
+		logger.init(p_dir);
+	}
 
 	ContinuousExploration exploration;
 	exploration.init_ounoise(_mountain_car.ACTION_DIM(), 0.4f);
@@ -658,9 +663,9 @@ void ContinuousTest::run_ddpg_mountain_car_icm(int p_episodes, bool p_log)
 			_mountain_car.do_action(action);
 			state1 = _mountain_car.get_state();
 
-			const float ri = forward_model.train(&state0, &action, &state1);
+			const float ri = forward_model.train(&state0, &action, &state1) * 2;
 			cri += ri;
-			const float re = _mountain_car.get_reward();
+			const float re = _mountain_car.get_reward() / 100;
 			cre += re;
 
 			agent.train(&state0, &action, &state1, re + ri, _mountain_car.is_finished());
@@ -668,13 +673,104 @@ void ContinuousTest::run_ddpg_mountain_car_icm(int p_episodes, bool p_log)
 		}
 		exploration.reset();
 
-		cout << "DDPG Mountain car Episode " << e << " ri " << cri << " ";
+		cout << "DDPG Mountain car Episode " << e << " ri " << cri / total_steps << " ";
 		float reward = test_mountain_car(network_actor);
 
 		if (p_log) logger.log(to_string(reward));
 	}
 
 	if (p_log) logger.close();	
+}
+
+void ContinuousTest::run_ddpg_mountain_car_scm(const string& p_dir, int p_episodes, int p_hidden, float clr, float alr, bool p_log)
+{
+	const int hidden = p_hidden;
+
+	NeuralNetwork network_critic;
+
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_critic.add_connection("hidden0", "hidden1");
+	network_critic.add_connection("hidden1", "output");
+	network_critic.init();
+
+	NeuralNetwork network_actor;
+
+	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM()));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("output", _mountain_car.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	// feed-forward connections
+	network_actor.add_connection("hidden0", "hidden1");
+	network_actor.add_connection("hidden1", "output");
+	network_actor.init();
+
+	DDPG agent(&network_critic, ADAM_RULE, clr, 0.99f, &network_actor, ADAM_RULE, alr, 100000, 64);
+
+	NeuralNetwork network_forward_model;
+	network_forward_model.add_layer(new CoreLayer("fm_input", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
+	network_forward_model.add_layer(new CoreLayer("fm_output", _mountain_car.STATE_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_forward_model.add_connection("fm_input", "fm_output");
+	network_forward_model.init();
+
+	ForwardModel forward_model(&network_forward_model, ADAM_RULE, 1e-4f);
+
+	NeuralNetwork network_metalearner;
+
+	network_metalearner.add_layer(new CoreLayer("ml_input", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
+	network_metalearner.add_layer(new CoreLayer("ml_output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_metalearner.add_connection("ml_input", "ml_output");
+	network_metalearner.init();
+
+	ForwardMetaLearner metalearner(&forward_model, &network_metalearner, ADAM_RULE, 1e-4f);
+
+	Tensor action;
+	Tensor state0;
+	Tensor state1;
+
+	LoggerInstance logger;
+	LoggerInstance test_logger;
+	if (p_log) {
+		logger.init(p_dir);
+	}
+
+	ContinuousExploration exploration;
+	exploration.init_ounoise(_mountain_car.ACTION_DIM(), 0.4f);
+	//exploration.init_gaussian(0.2f);
+
+	for (int e = 0; e < p_episodes; ++e) {
+		int total_steps = 0;
+		float cri = 0;
+		float cre = 0;
+
+		_mountain_car.reset();
+		state0 = _mountain_car.get_state();
+
+		while (!_mountain_car.is_finished()) {
+			total_steps++;
+			action = exploration.explore(agent.get_action(&state0));
+
+			_mountain_car.do_action(action);
+			state1 = _mountain_car.get_state();
+
+			const float ri = metalearner.train(&state0, &action, &state1) * 2;
+			cri += ri;
+			const float re = _mountain_car.get_reward() / 100;
+			cre += re;
+
+			agent.train(&state0, &action, &state1, re + ri, _mountain_car.is_finished());
+			state0 = state1;
+		}
+		exploration.reset();
+
+		cout << "DDPG Mountain car Episode " << e << " ri " << cri / total_steps << " ";
+		float reward = test_mountain_car(network_actor);
+
+		if (p_log) logger.log(to_string(reward));
+	}
+
+	if (p_log) logger.close();
 }
 
 float ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralNetwork& p_critic, int p_episodes)

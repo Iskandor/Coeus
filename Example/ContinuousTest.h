@@ -18,7 +18,8 @@ public:
 	void run_ddpg_cart_pole(int p_episodes, bool p_log = false);
 	
 	void run_ddpg_mountain_car(const string& p_dir, int p_episodes, int p_hidden, float clr, float alr, bool p_log = false);
-	void run_ddpg_mountain_car_icm(int p_episodes, bool p_log = false);
+	void run_ddpg_mountain_car_icm(const string& p_dir, int p_episodes, int p_hidden, float clr, float alr, bool p_log = false);
+	void run_ddpg_mountain_car_scm(const string& p_dir, int p_episodes, int p_hidden, float clr, float alr, bool p_log = false);
 	
 	float test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::NeuralNetwork& p_critic, int p_episodes);
 	float test_mountain_car(Coeus::NeuralNetwork& p_actor, Coeus::LoggerInstance* p_logger = nullptr);

@@ -97,6 +97,18 @@ int main()
 	//test.run_cacla(50000, true);
 	//for(int i = 0; i < 3; i++) test.run_ddpg_cart_pole(25000, true);
 
+	string dir;
+	dir = "test_6/";
+	experimental::filesystem::create_directory(dir);
+	for (int i = 0; i < 3; i++) test.run_ddpg_mountain_car(dir, 4000, 8, 1e-3, 1e-4, true);
+
+	//dir = "test_5/";
+	//experimental::filesystem::create_directory(dir);
+	//for (int i = 0; i < 10; i++) test.run_ddpg_mountain_car_icm(dir, 1000, 10, 3e-3f, 1e-4f, true);
+	//dir = "test_6/";
+	//experimental::filesystem::create_directory(dir);
+	//for (int i = 0; i < 10; i++) test.run_ddpg_mountain_car_scm(dir, 1000, 10, 3e-3f, 1e-4f, true);
+	/*
 	vector<int> episodes = {1000, 2500, 5000, 10000, 50000};
 	vector<int> hiddens = { 5, 10, 30 };
 	int setup_index = 0;
@@ -104,10 +116,10 @@ int main()
 
 	for (int c = 0; c < 5; c++)
 	{
-		const float clr = RandomGenerator::get_instance().random(1e-4f, 5e-3f);
+		const float clr = RandomGenerator::get_instance().random(5e-5f, 5e-3f);
 		for (int a = 0; a < 5; a++)
 		{
-			const float alr = RandomGenerator::get_instance().random(1e-4f, 5e-3f);
+			const float alr = RandomGenerator::get_instance().random(5e-5f, 5e-3f);
 			for (int e = 0; e < 1; e++)
 			{
 				const int episode = episodes[0];
@@ -129,12 +141,8 @@ int main()
 			}
 		}
 	}
+	*/
 			
-
-
-	
-	//for (int i = 0; i < 6; i++) test.run_ddpg_mountain_car_icm(1000, true);
-
 	/*
 	IrisTest iris;
 

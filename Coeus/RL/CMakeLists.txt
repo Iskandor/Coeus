@@ -28,6 +28,7 @@ set(INCLUDE_FILES
 	DiscreteExploration.h
 	DoubleQLearning.h
 	ForwardModel.h
+	ForwardMetaLearner.h
 	GAE.h
 	GM2.h
 	IActor.h
@@ -56,6 +57,7 @@ set(SOURCE_FILES
 	DiscreteExploration.cpp
 	DoubleQLearning.cpp
 	ForwardModel.cpp
+	ForwardMetaLearner.cpp
 	GAE.cpp
 	GM2.cpp
 	ICM.cpp
