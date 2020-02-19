@@ -25,6 +25,6 @@ private:
 	const float MAX_POSITION = 0.6f;
 	
 	const float POSITION_LIMIT = 1.2f;
-	const float VELOCITY_LIMIT = 0.7f;
+	const float VELOCITY_LIMIT = 0.07f;
 };
 

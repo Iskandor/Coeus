@@ -3,7 +3,7 @@
 #include <algorithm>
 
 
-MountainCar::MountainCar(): _position(0), _velocity(0)
+MountainCar::MountainCar(): _done(false), _reward(0), _position(0), _velocity(0), _steps(0)
 {
 	_state_dim = 2;
 	_action_dim = 1;
@@ -16,8 +16,8 @@ Tensor MountainCar::get_state()
 {
 	Tensor state({ _state_dim }, Tensor::ZERO);
 
-	state[0] = _position / POSITION_LIMIT;
-	state[1] = _velocity / VELOCITY_LIMIT;
+	state[0] = _position;
+	state[1] = _velocity;
 	
 	return state;
 }
@@ -38,7 +38,7 @@ void MountainCar::do_action(Tensor& p_action)
 	if (_position < MIN_POSITION) _position = MIN_POSITION;
 	if (_position == MIN_POSITION && _velocity < 0) _velocity = 0;
 
-	_reward -= pow(p_action[0], 2) * 0.1f;
+	_reward = -pow(p_action[0], 2) * 0.1f;
 
 	_done = _position >= 0.45f && _velocity >= 0;
 

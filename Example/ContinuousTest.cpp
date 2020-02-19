@@ -532,9 +532,9 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden * 4, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden * 4, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
-	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
 	network_critic.add_connection("hidden1", "output");
@@ -543,7 +543,7 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM()));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", _mountain_car.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
@@ -570,17 +570,19 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 
 	for (int e = 0; e < p_episodes; ++e) {
 		int total_steps = 0;
+		float total_reward = 0;
 
 		_mountain_car.reset();
 		start_state = state0  = _mountain_car.get_state();
 
 		while (!_mountain_car.is_finished()) {
-			total_steps++;
-			action = exploration.explore(agent.get_action(&state0));
 
+			action = exploration.explore(agent.get_action(&state0));
 			_mountain_car.do_action(action);
+			total_steps++;
+			total_reward += _mountain_car.get_reward();
 			state1 = _mountain_car.get_state();
-			agent.train(&state0, &action, &state1, _mountain_car.get_reward() / 100, _mountain_car.is_finished());
+			agent.train(&state0, &action, &state1, _mountain_car.get_reward(), _mountain_car.is_finished());
 
 			state0 = state1;
 		}
@@ -588,10 +590,11 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 		exploration.reset();
 
 		//test_logger.log(to_string(e));
-		cout << "DDPG Mountain car Episode " << e << " train reward " << _mountain_car.get_reward() << " ";
+		cout << "DDPG Mountain car Episode " << e << " train reward " << total_reward << " ";
 		float reward = test_mountain_car(network_actor);
 		
-		if (p_log) logger.log(to_string(reward) + ";" + to_string(start_state[0]) + ";" + to_string(start_state[1]));
+		//if (p_log) logger.log(to_string(reward) + ";" + to_string(start_state[0]) + ";" + to_string(start_state[1]));
+		if (p_log) logger.log(to_string(reward));
 	}
 
 	//if (p_log) test_mountain_car(network_actor, &test_logger);
@@ -821,6 +824,7 @@ float ContinuousTest::test_mountain_car(Coeus::NeuralNetwork& p_actor, Coeus::Lo
 	Tensor action({_mountain_car.ACTION_DIM()}, Tensor::ZERO);
 	Tensor state0;
 	int total_steps = 0;
+	float total_reward = 0;
 
 	_mountain_car.reset();
 	state0 = _mountain_car.get_state();
@@ -830,6 +834,7 @@ float ContinuousTest::test_mountain_car(Coeus::NeuralNetwork& p_actor, Coeus::Lo
 		action[0] = p_actor.get_output()->at(0);
 		_mountain_car.do_action(action);
 		total_steps++;
+		total_reward += _mountain_car.get_reward();
 
 		if (p_logger != nullptr)
 		{
@@ -840,9 +845,9 @@ float ContinuousTest::test_mountain_car(Coeus::NeuralNetwork& p_actor, Coeus::Lo
 		state0 = _mountain_car.get_state();
 	}
 	
-	printf("test finished in %i steps with reward %0.2f\n", total_steps, _mountain_car.get_reward());
+	printf("test finished in %i steps with reward %0.2f\n", total_steps, total_reward);
 
-	return _mountain_car.get_reward();
+	return total_reward;
 }
 
 float ContinuousTest::evaluate_cart_pole(float p_reward)

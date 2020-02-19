@@ -98,9 +98,9 @@ int main()
 	//for(int i = 0; i < 3; i++) test.run_ddpg_cart_pole(25000, true);
 
 	string dir;
-	dir = "test_6/";
+	dir = "test_0/";
 	experimental::filesystem::create_directory(dir);
-	for (int i = 0; i < 3; i++) test.run_ddpg_mountain_car(dir, 4000, 8, 1e-3, 1e-4, true);
+	for (int i = 0; i < 1; i++) test.run_ddpg_mountain_car(dir, 1000, 128, 1e-3, 2e-4, false);
 
 	//dir = "test_5/";
 	//experimental::filesystem::create_directory(dir);
