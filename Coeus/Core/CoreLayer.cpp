@@ -26,7 +26,7 @@ CoreLayer::CoreLayer(const json& p_data) : BaseLayer(p_data)
 	_initializer = nullptr;
 }
 
-CoreLayer::CoreLayer(CoreLayer &p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
+CoreLayer::CoreLayer(CoreLayer &p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._input_dim }) {
 	_type = CORE;
 	_y = new NeuronOperator(*p_copy._y, p_clone);
 	add_param(_y);	

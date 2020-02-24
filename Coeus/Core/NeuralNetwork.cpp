@@ -104,7 +104,7 @@ void NeuralNetwork::init()
 	}
 
 	for (auto it = _layers.begin(); it != _layers.end(); ++it) {
-		if (_graph.find(it->first) == _graph.end() || _graph[it->first].empty())
+		if (it->second->get_in_dim() != 0)
 		{
 			_input_layer.push_back(it->first);
 		}

@@ -24,7 +24,7 @@ ConvLayer::ConvLayer(const string& p_id, const ACTIVATION p_activation, TensorIn
 	_W = nullptr;
 }
 
-ConvLayer::ConvLayer(ConvLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim })
+ConvLayer::ConvLayer(ConvLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._input_dim })
 {
 	_type = CONV;
 	_filters = p_copy._filters;

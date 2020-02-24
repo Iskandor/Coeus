@@ -65,7 +65,7 @@ LSTMLayer::LSTMLayer(json p_data) : BaseLayer(p_data)
 	_context = nullptr;
 }
 
-LSTMLayer::LSTMLayer(LSTMLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim })
+LSTMLayer::LSTMLayer(LSTMLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._input_dim })
 {
 	_type = LSTM;
 	_is_recurrent = true;

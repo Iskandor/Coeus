@@ -19,7 +19,7 @@ RecurrentLayer::RecurrentLayer(const string& p_id, const int p_dim, const ACTIVA
 	_context = nullptr;	
 }
 
-RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._in_dim }) {
+RecurrentLayer::RecurrentLayer(RecurrentLayer& p_copy, const bool p_clone) : BaseLayer(p_copy._id, p_copy._dim, { p_copy._input_dim }) {
 	_type = RECURRENT;
 	_is_recurrent = true;
 	_y = new NeuronOperator(*p_copy._y, p_clone);
