@@ -1,6 +1,7 @@
 #include "DDPG.h"
 #include "RuleFactory.h"
 #include "QuadraticCost.h"
+#include <omp.h>
 
 using namespace Coeus;
 
@@ -61,6 +62,7 @@ DDPG::~DDPG()
  */
 void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const float p_reward, bool p_final)
 {
+	
 	_buffer->add_item(new DQItem(p_state0, p_action0, p_state1, p_reward, p_final));
 
 	if (_buffer->get_size() >= _sample_size) {
@@ -111,7 +113,7 @@ void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const fl
 		_network_critic->activate(&_critic_input_a);
 		critic_loss.fill(-1);
 		_network_critic_gradient->calc_gradient(&critic_loss);
-		_network_actor->activate(&_batch_input_s0);
+		//_network_actor->activate(&_batch_input_s0);
 		
 		Tensor actor_loss = _network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
 		
