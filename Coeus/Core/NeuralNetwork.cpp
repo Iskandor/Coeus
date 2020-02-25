@@ -154,6 +154,15 @@ void NeuralNetwork::activate(vector<Tensor*>* p_input)
 	}
 }
 
+void NeuralNetwork::activate(map<string, Tensor*>& p_input)
+{
+	for (auto& it : p_input)
+	{
+		_layers[it.first]->integrate(it.second);
+	}
+	activate();
+}
+
 void NeuralNetwork::reset()
 {
 	for (auto& _layer : _layers)

@@ -8,7 +8,7 @@ BaseLayer::BaseLayer(const string& p_id, const int p_dim, const initializer_list
 {
 	_id = p_id;
 	_dim = p_dim;
-	_in_dim = sum_input_dim(p_in_dim);
+	_in_dim = 0;
 	_input_dim = sum_input_dim(p_in_dim);
 	_valid = false;
 	_batch_size = 0;
@@ -73,10 +73,9 @@ BaseLayer::~BaseLayer()
 
 void BaseLayer::init(vector<BaseLayer*>& p_input_layers, vector<BaseLayer*>& p_output_layers)
 {
+	_in_dim = _input_dim;
 	if (!p_input_layers.empty())
 	{
-		_in_dim = 0;
-
 		for (auto it : p_input_layers)
 		{
 			_in_dim += it->get_dim();
@@ -121,7 +120,14 @@ void BaseLayer::integrate(Tensor* p_input)
 
 	_input = NeuronOperator::init_auxiliary_parameter(_input, _batch_size, _in_dim);
 
-	_input->push_back(p_input);
+	if (p_input->rank() == 2)
+	{
+		_input->insert_column(p_input);
+	}
+	else
+	{
+		_input->push_back(p_input);
+	}
 }
 
 void BaseLayer::calc_gradient(Gradient& p_gradient_map, map<string, Tensor*>& p_derivative_map)

@@ -4,7 +4,7 @@
 
 using namespace  Coeus;
 
-ADAMRule::ADAMRule(ParamModel* p_model, float p_alpha, float p_beta1, float p_beta2, float p_epsilon) :
+ADAMRule::ADAMRule(ParamModel* p_model, const float p_alpha, const float p_beta1, const float p_beta2, const float p_epsilon) :
 	IUpdateRule(p_model, p_alpha), _t(0),
 	_beta1(p_beta1), _denb1(0), _beta2(p_beta2), _denb2(0), _epsilon(p_epsilon)
 {
@@ -57,8 +57,9 @@ void ADAMRule::calc_update(Gradient& p_gradient, float p_alpha) {
 		float *m_mean = (_m_mean[it->first].arr());
 		float *v_mean = (_v_mean[it->first].arr());
 		float *update = (_update[it->first].arr());
-
+		
 		int size = it->second.size() / 4 * 4;
+		//int size = 0;
 		
 		for (int i = 0; i < size; i+=4) {
 			__m128 gx = _mm_load_ps(g);

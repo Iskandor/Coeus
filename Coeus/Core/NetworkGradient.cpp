@@ -131,6 +131,11 @@ Tensor NetworkGradient::get_input_gradient(const int p_batch_size, const int p_c
 	return result;
 }
 
+Tensor* NetworkGradient::get_input_gradient(string& p_layer)
+{
+	return _input_gradient[p_layer];
+}
+
 void NetworkGradient::calc_derivative()
 {
 	for (auto& it : _network->_backward_graph)

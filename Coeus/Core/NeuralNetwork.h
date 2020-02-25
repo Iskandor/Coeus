@@ -22,6 +22,7 @@ public:
 	void init();
 	virtual void activate(Tensor* p_input);
 	virtual void activate(vector<Tensor*>* p_input);
+	virtual void activate(map<string, Tensor*>& p_input);
 	void reset();
 	//void copy_params(const NeuralNetwork* p_model);
 

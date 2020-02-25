@@ -35,8 +35,7 @@ private:
 	ReplayBuffer<DQItem>* _buffer;
 	int _sample_size;
 
-	Tensor _critic_input_a0;
-	Tensor _critic_input_a;
+	Tensor _batch_input_a0;
 	Tensor _batch_input_s0;
 	Tensor _batch_input_s1;
 	Tensor _target;
