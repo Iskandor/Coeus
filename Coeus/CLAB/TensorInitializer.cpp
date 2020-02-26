@@ -48,7 +48,7 @@ void TensorInitializer::init(Tensor* p_tensor, const INIT p_init, const float p_
 			uniform(p_tensor, p_arg1, p_arg2);
 			break;
 		case LECUN_UNIFORM:
-			uniform(p_tensor , -pow(in_dim, -.5f), pow(in_dim, -.5f));
+			uniform(p_tensor , -sqrt(3.f / in_dim), sqrt(3.f / in_dim));
 			break;
 		case GLOROT_UNIFORM:
 			uniform(p_tensor , -2.f / (in_dim + out_dim), 2.f / (in_dim + out_dim));
