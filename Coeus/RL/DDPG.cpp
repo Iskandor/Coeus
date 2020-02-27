@@ -101,7 +101,7 @@ void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const fl
 
 		QuadraticCost cost_function;
 		
-		Tensor critic_loss = cost_function.cost_deriv(_network_critic->get_output(), &_target);
+		Tensor critic_loss = cost_function.cost_deriv(_network_critic->get_output(), &_target) * 1.f / _sample_size;
 		
 		_network_critic_gradient->calc_gradient(&critic_loss);
 		_update_rule_critic->calc_update(_network_critic_gradient->get_gradient());
@@ -112,9 +112,9 @@ void DDPG::train(Tensor* p_state0, Tensor* p_action0, Tensor* p_state1, const fl
 
 
 		string action_layer = "hidden1";
-		Tensor *actor_loss = _network_critic_gradient->get_input_gradient(action_layer); //_network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
+		Tensor actor_loss = *_network_critic_gradient->get_input_gradient(action_layer) * 1.f / _sample_size; //_network_critic_gradient->get_input_gradient(_sample_size, _network_critic->get_input_dim() - _network_actor->get_output_dim(), _network_actor->get_output_dim());
 		
-		_network_actor_gradient->calc_gradient(actor_loss);
+		_network_actor_gradient->calc_gradient(&actor_loss);
 		_update_rule_actor->calc_update(_network_actor_gradient->get_gradient());
 
 		_network_critic->update(_update_rule_critic->get_update());

@@ -78,6 +78,9 @@ NeuralNetwork::~NeuralNetwork()
 	}
 }
 
+/**
+ * \brief Initialization of neural network model. Creates directed graph of layers (forward and backward), identifies input and output layers and populates parametric model class
+ */
 void NeuralNetwork::init()
 {
 	set<string> control_set;
@@ -136,16 +139,22 @@ void NeuralNetwork::init()
 	ParamModelStorage::instance().add(_id, this);
 }
 
+/**
+ * \brief Activate network on the input (single, minibatch, batch). Used in feed-froward architectures.
+ * \param p_input input tensor
+ */
 void NeuralNetwork::activate(Tensor* p_input)
 {
-	// single input
 	_layers[_input_layer[0]]->integrate(p_input);
 	activate();
 }
 
+/**
+ * \brief Activate network on the input sequence. Used in recurrent architectures. 
+ * \param p_input input sequence of tensors
+ */
 void NeuralNetwork::activate(vector<Tensor*>* p_input)
 {
-	// sequence
 	reset();
 	for (auto& it : *p_input)
 	{
@@ -154,6 +163,10 @@ void NeuralNetwork::activate(vector<Tensor*>* p_input)
 	}
 }
 
+/**
+ * \brief Activate network with more input layers on the input, where the keys of the map are names of the input layers
+ * \param p_input map of input tensors
+ */
 void NeuralNetwork::activate(map<string, Tensor*>& p_input)
 {
 	for (auto& it : p_input)
@@ -163,6 +176,9 @@ void NeuralNetwork::activate(map<string, Tensor*>& p_input)
 	activate();
 }
 
+/**
+ * \brief Resets context variables of recurrent layers. Called after the end of sequence
+ */
 void NeuralNetwork::reset()
 {
 	for (auto& _layer : _layers)
@@ -171,21 +187,10 @@ void NeuralNetwork::reset()
 	}
 }
 
-/*
-void NeuralNetwork::copy_params(const NeuralNetwork* p_model)
-{
-	if (ParamModelStorage::instance().is_bound(_id))
-	{
-		assert(0, "NeuralNetwork::copy_params : This model is bound");
-	}
-
-	for (const auto& layer : p_model->_layers)
-	{
-		_layers[layer.first]->copy_params(layer.second);
-	}
-}
-*/
-
+/**
+ * \brief Returns input tensors form the input layers
+ * \return vector of input tensors
+ */
 vector<Tensor*> NeuralNetwork::get_input() {
 	vector<Tensor*> result;
 
@@ -197,11 +202,19 @@ vector<Tensor*> NeuralNetwork::get_input() {
 	return vector<Tensor*>(result);
 }
 
+/**
+ * \brief Return dimension of the output layer
+ * \return number of output neurons
+ */
 int NeuralNetwork::get_output_dim()
 {
 	return _layers[_output_layer]->get_dim();
 }
 
+/**
+ * \brief WRONG implementation
+ * \return 
+ */
 int NeuralNetwork::get_input_dim()
 {
 	int dim = 0;
@@ -213,6 +226,9 @@ int NeuralNetwork::get_input_dim()
 	return dim;
 }
 
+/**
+ * \brief Internal function which activates the rest of the network after activation of the input layers
+ */
 void NeuralNetwork::activate()
 {
 	for (auto& layer : _forward_graph)
@@ -224,16 +240,31 @@ void NeuralNetwork::activate()
 	}
 }
 
+/**
+ * \brief Adds layer to the network
+ * \param p_layer layer class
+ * \return pointer to the added layer (the same is on the input)
+ */
 BaseLayer* NeuralNetwork::add_layer(BaseLayer* p_layer) {
 	_layers[p_layer->get_id()] = p_layer;
 
 	return p_layer;
 }
 
+/**
+ * \brief Returns pointer to the layer
+ * \param p_layer name of the layer
+ * \return pointer to layer class
+ */
 BaseLayer* NeuralNetwork::get_layer(const string& p_layer) {
 	return _layers[p_layer];
 }
 
+/**
+ * \brief Adds directed edge to the network graph connecting two layers
+ * \param p_input_layer layer where connection begins
+ * \param p_output_layer layer where connection ends
+ */
 void NeuralNetwork::add_connection(const string& p_input_layer, const string& p_output_layer) {
 	BaseLayer* in_layer = _layers[p_input_layer];
 	BaseLayer* out_layer = _layers[p_output_layer];
@@ -248,17 +279,18 @@ void NeuralNetwork::add_connection(const string& p_input_layer, const string& p_
 	}
 }
 
-vector<BaseLayer*> NeuralNetwork::get_input_layers(const string& p_layer) {
-	vector<BaseLayer*> result;
-
-	for (auto& it : _graph[p_layer])
-	{
-		result.push_back(_layers[it]);
-	}
-
-	return result;
+/**
+ * \brief Return pointer to the output tensor of the output layer
+ * \return tensor pointer
+ */
+Tensor* NeuralNetwork::get_output()
+{
+	return _layers[_output_layer]->get_output();
 }
 
+/**
+ * \brief Creates forward graph using breadth search tree method on network graph. Backward graph is then created by reversing forward graph.
+ */
 void NeuralNetwork::create_directed_graph()
 {
 	_forward_graph.clear();
@@ -304,6 +336,10 @@ void NeuralNetwork::create_directed_graph()
 	}
 }
 
+/**
+ * \brief Serialize structure and data into json form, which can be saved to file
+ * \return json class
+ */
 json NeuralNetwork::get_json() const
 {
 	json data;

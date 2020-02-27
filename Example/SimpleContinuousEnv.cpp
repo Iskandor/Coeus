@@ -35,11 +35,11 @@ float SimpleContinuousEnv::get_reward()
 
 	if (is_failed())
 	{
-		reward = -1;
+		reward = 0;
 	}
 	else
 	{
-		reward = Coeus::Metrics::gaussian_distance(_position, 1, _target);
+		reward = Coeus::Metrics::gaussian_distance(_position, 0.2f, _target);
 	}
 
 	return reward;

@@ -30,11 +30,11 @@ ContinuousTest::~ContinuousTest()
 
 void ContinuousTest::run_simple_ddpg(int p_episodes)
 {
-	int hidden = 4;
+	int hidden = 16;
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM() + _environment.ACTION_DIM()));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _environment.ACTION_DIM()));
 	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections	
 	network_critic.add_connection("hidden0", "hidden1");
@@ -51,7 +51,7 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, RADAM_RULE, 1e-3f, 0.99f, &network_actor, RADAM_RULE, 1e-2f, 10000, 64);
+	DDPG agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 10000, 64);
 
 
 	float reward = 0;
@@ -60,11 +60,12 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 	Tensor state1;
 	float total_reward = 0;
 	
-	Tensor input({ _environment.STATE_DIM() + _environment.ACTION_DIM() }, Tensor::ZERO);
+	map<string, Tensor*> critic_input;
 
 	const float sigma = 1.f;
 	ContinuousExploration exploration;
 	exploration.init_gaussian(sigma);
+	//exploration.init_ounoise(_environment.ACTION_DIM(), 0.4f);
 	
 	for(int e = 0; e < p_episodes; e++)
 	{
@@ -76,8 +77,7 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 		{			
 			action = exploration.explore(agent.get_action(&state0));
 
-			_environment.do_action(action);			
-			total_reward += _environment.get_reward();
+			_environment.do_action(action);
 			state1 = _environment.get_state();
 			reward = _environment.get_reward();
 
@@ -85,36 +85,49 @@ void ContinuousTest::run_simple_ddpg(int p_episodes)
 
 			state0 = state1;
 		}
+
+		exploration.reset();
+		
+		_environment.reset();
+		state0 = _environment.get_state();
+		while (!_environment.is_finished())
+		{
+			action = *agent.get_action(&state0);
+			_environment.do_action(action);
+			reward = _environment.get_reward();
+			total_reward += reward;
+			state0 = _environment.get_state();
+		}
+
 		printf("DDPG SimpleEnv episode %i total reward %0.4f\n", e, total_reward);
 
-		if (e % 100 == 0 && false)
+		if (e % 50 == 0 && false)
 		{
 			for (int i = 0; i < 21; i++)
 			{
 				state0[0] = i * 0.5f;
 
 				network_actor.activate(&state0);
-				input.reset_index();
-				input.push_back(&state0);
-				input.push_back(network_actor.get_output()->at(0));
-				network_critic.activate(&input);
+				critic_input["hidden0"] = &state0;
+				critic_input["hidden1"] = network_actor.get_output();
+				network_critic.activate(critic_input);
 
 				reward = _environment.get_reward(state0);
 				printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
 			}
-			system("pause");
-		}
-	}
+			cout << endl;
+			getchar();
+		}		
+	}	
 
 	for (int i = 0; i < 21; i++)
 	{
 		state0[0] = i * 0.5f;
 
 		network_actor.activate(&state0);
-		input.reset_index();
-		input.push_back(&state0);
-		input.push_back(network_actor.get_output()->at(0));
-		network_critic.activate(&input);
+		critic_input["hidden0"] = &state0;
+		critic_input["hidden1"] = network_actor.get_output();
+		network_critic.activate(critic_input);
 
 		reward = _environment.get_reward(state0);
 		printf("State %0.4f value %0.4f reward %0.4f policy %0.4f\n", state0[0], (*network_critic.get_output())[0], reward, (*network_actor.get_output())[0]);
@@ -426,25 +439,26 @@ void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE + CartPole::ACTION));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
-	network_critic.add_layer(new CoreLayer("output", 1, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden0", 400, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
+	network_critic.add_layer(new CoreLayer("hidden1", 300, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::ACTION));
+	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(TensorInitializer::UNIFORM, -3e-3f, 3e-3f)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
 	network_critic.add_connection("hidden1", "output");
 	network_critic.init();
+	network_critic.set_weight_decay(1e-4f);
 
 	NeuralNetwork network_actor;
 
-	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
-	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden0", 400, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), CartPole::STATE));
+	network_actor.add_layer(new CoreLayer("hidden1", 300, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("output", CartPole::ACTION, TANH, new TensorInitializer(TensorInitializer::UNIFORM, -3e-3f, 3e-3f)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, RADAM_RULE, 1e-4f, 0.99f, &network_actor, RADAM_RULE, 2e-4f, 10000, 64);
+	DDPG agent(&network_critic, ADAM_RULE, 1e-3f, 0.99f, &network_actor, ADAM_RULE, 1e-4f, 1000000, 64);
 
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
@@ -454,18 +468,22 @@ void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 
 	if (p_log) logger = Logger::instance().init();
 
-	float sigma = 1.f;
+	float sigma = 0.2f;
 	ContinuousExploration exploration;
-	exploration.init_gaussian(sigma);
+	//exploration.init_gaussian(sigma);
+	exploration.init_ounoise(CartPole::ACTION, 0.4f);
 	
-	
+	int no195 = 0;
+	int e = 0;
 	for (int e = 0; e < p_episodes; ++e) {
+	//while(no195 < 500) {
+		//e++;
 		//printf("CartPole episode %i...\n", e);
 		const float total_reward = test_cart_pole(network_actor, network_critic, 195);
 		int total_steps = 0;
 
 		_cart_pole.reset();
-		copy_state(_cart_pole.get_state(true), state0);
+		copy_state(_cart_pole.get_state(false), state0);
 		
 		while (true) {
 			action = exploration.explore(agent.get_action(&state0));
@@ -474,7 +492,7 @@ void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 			//network_critic.activate(&state0);
 			//cout << network_critic.get_output()->at(0) << " " << network_actor.get_output()->at(0) << " " << action[0] << " " << _cart_pole.to_string() << endl;
 			//cout << state0 << endl;
-			copy_state(_cart_pole.get_state(true), state1);
+			copy_state(_cart_pole.get_state(false), state1);
 
 			//total_reward += _cart_pole.get_reward();
 			total_steps += 1;
@@ -483,15 +501,11 @@ void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 
 			state0 = state1;
 
-			if (e % 1000 == 0) {
-				//cout << network_critic.get_output()->at(0) << " " << delta << endl;
-			}
-
 			if (_cart_pole.is_finished()) {
 				break;
 			}
 		}
-
+		exploration.reset();
 		
 
 		//sigma = interpolation.interpolate(e);
@@ -502,7 +516,12 @@ void ContinuousTest::run_ddpg_cart_pole(int p_episodes, bool p_log)
 		
 		if (avg_reward >= 195)
 		{
+			no195++;
 			//break;
+		}
+		else
+		{
+			no195 = 0;
 		}
 
 		if (p_log) logger.log(to_string(avg_reward));
@@ -532,8 +551,8 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 
 	NeuralNetwork network_critic;
 
-	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM() + _mountain_car.ACTION_DIM()));
-	network_critic.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_critic.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM()));
+	network_critic.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.ACTION_DIM()));
 	network_critic.add_layer(new CoreLayer("output", 1, LINEAR, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_critic.add_connection("hidden0", "hidden1");
@@ -543,14 +562,14 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 	NeuralNetwork network_actor;
 
 	network_actor.add_layer(new CoreLayer("hidden0", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM), _mountain_car.STATE_DIM()));
-	network_actor.add_layer(new CoreLayer("hidden1", hidden / 2, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
+	network_actor.add_layer(new CoreLayer("hidden1", hidden, RELU, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	network_actor.add_layer(new CoreLayer("output", _mountain_car.ACTION_DIM(), TANH, new TensorInitializer(TensorInitializer::LECUN_UNIFORM)));
 	// feed-forward connections
 	network_actor.add_connection("hidden0", "hidden1");
 	network_actor.add_connection("hidden1", "output");
 	network_actor.init();
 
-	DDPG agent(&network_critic, ADAM_RULE, clr, 0.99f, &network_actor, ADAM_RULE, alr, 100000, 64);
+	DDPG agent(&network_critic, ADAM_RULE, clr, 0.99f, &network_actor, ADAM_RULE, alr, 10000, 40);
 
 	Tensor action;
 	Tensor state0;
@@ -590,8 +609,9 @@ void ContinuousTest::run_ddpg_mountain_car(const string& p_dir, int p_episodes, 
 		exploration.reset();
 
 		//test_logger.log(to_string(e));
-		cout << "DDPG Mountain car Episode " << e << " train reward " << total_reward << " ";
+		cout << "DDPG Mountain car Episode " << e << " train (r=" << total_reward << ",s=" << total_steps << ") ";
 		float reward = test_mountain_car(network_actor);
+		cout << endl;
 		
 		//if (p_log) logger.log(to_string(reward) + ";" + to_string(start_state[0]) + ";" + to_string(start_state[1]));
 		if (p_log) logger.log(to_string(reward));
@@ -780,10 +800,9 @@ float ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::Neura
 {
 	Tensor action({ CartPole::ACTION }, Tensor::ZERO);
 	Tensor state0({ CartPole::STATE }, Tensor::ZERO);
-	Tensor critic_input({ CartPole::STATE + CartPole::ACTION }, Tensor::ZERO);
 
 	_cart_pole.reset();
-	copy_state(_cart_pole.get_state(true), state0);
+	copy_state(_cart_pole.get_state(false), state0);
 
 	float total_reward = 0;
 	int total_steps = 0;
@@ -793,7 +812,7 @@ float ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::Neura
 	for (int e = 0; e < p_episodes; ++e) {
 		
 		p_actor.activate(&state0);		
-		action[0] = p_actor.get_output()->at(0);
+		action = *p_actor.get_output();
 		_cart_pole.perform_action(action[0]);
 
 		/*
@@ -805,7 +824,7 @@ float ContinuousTest::test_cart_pole(Coeus::NeuralNetwork& p_actor, Coeus::Neura
 		cout << p_actor.get_output()->at(0) << " " << p_critic.get_output()->at(0) << " state: " << state0 << " reward: " << _cart_pole.get_reward() << endl;
 		*/
 		
-		copy_state(_cart_pole.get_state(true), state0);
+		copy_state(_cart_pole.get_state(false), state0);
 
 		total_reward += _cart_pole.get_reward();
 		total_steps += 1;
@@ -845,7 +864,7 @@ float ContinuousTest::test_mountain_car(Coeus::NeuralNetwork& p_actor, Coeus::Lo
 		state0 = _mountain_car.get_state();
 	}
 	
-	printf("test finished in %i steps with reward %0.2f\n", total_steps, total_reward);
+	cout << " test (r=" << total_reward << ",s=" << total_steps << ") ";
 
 	return total_reward;
 }

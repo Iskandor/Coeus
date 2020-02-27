@@ -44,6 +44,8 @@ class __declspec(dllexport) ParamModel
 		void	update(map<string, Tensor> *p_update) const;
 		void	override(map<string, Tensor>& p_source);
 
+		void	set_weight_decay(float p_weight_decay);
+
 	protected:
 		string				 _id;
 		map<string, Tensor*> _params;
@@ -51,6 +53,7 @@ class __declspec(dllexport) ParamModel
 
 	private:
 		int		_size;
+		float	_weight_decay;
 };
 }
 

@@ -6,7 +6,7 @@
 
 using namespace Coeus;
 
-ParamModel::ParamModel(): _size(0)
+ParamModel::ParamModel(): _size(0), _weight_decay(0)
 {
 	_id = IDGen::instance().next();
 }
@@ -39,7 +39,7 @@ void ParamModel::DEBUG_compare(ParamModel* p_model)
 }
 
 /**
- * \brief Copy parameters from p_model and override them in this model. There must exist a mapping between model parameter keys (the models are clones of each other)
+ * \brief Copy parameters from p_model and override them in this model. There must exist a mapping between model parameter keys (this model is the clone of the model in argument)
  * \param p_model source of parameters
  */
 void ParamModel::copy_params(ParamModel* p_model)
@@ -117,7 +117,11 @@ void ParamModel::update(map<string, Tensor>* p_update) const
 {
 	for (const auto& param : _params)
 	{
-		TensorOperator::instance().vv_add(param.second->arr(), (*p_update)[param.first].arr(), param.second->arr(), param.second->size());
+		if (_weight_decay > 0)
+		{
+			TensorOperator::instance().vc_prod(param.second->arr(), (1 - _weight_decay), param.second->arr(), param.second->size());
+		}
+		TensorOperator::instance().vv_add(param.second->arr(), (*p_update)[param.first].arr(), param.second->arr(), param.second->size());		
 	}
 }
 
@@ -127,6 +131,11 @@ void ParamModel::override(map<string, Tensor>& p_source)
 	{
 		param.second->override(&p_source[param.first]);
 	}
+}
+
+void ParamModel::set_weight_decay(const float p_weight_decay)
+{
+	_weight_decay = p_weight_decay;
 }
 
 map<string, Tensor> ParamModel::get_empty_params() const
