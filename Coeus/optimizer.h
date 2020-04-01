@@ -7,7 +7,7 @@ public:
 	optimizer(neural_network* p_model, float p_alpha, float p_weight_decay = 0.f);
 	virtual ~optimizer();
 
-	virtual void update(tensor& p_loss);
+	virtual void update();
 
 protected:
 	float			_alpha;

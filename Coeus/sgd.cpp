@@ -16,9 +16,9 @@ sgd::sgd(neural_network* p_model, const float p_alpha, const float p_momentum, c
 sgd::~sgd()
 = default;
 
-void sgd::update(tensor& p_loss)
+void sgd::update()
 {	
-	optimizer::update(p_loss);
+	optimizer::update();
 
 	const __m256 alpha256 = _mm256_broadcast_ss(&_alpha);
 

@@ -177,17 +177,57 @@ void tensor::resize(std::initializer_list<int> p_shape, const INIT p_init, const
 	_transpose_flag = false;
 }
 
-void tensor::override(tensor& p_copy) const
+void tensor::resize(const int p_rank, int* p_shape, const INIT p_init, const float p_value)
+{
+	const int shape_check = check_shape(p_rank, p_shape);
+	if (shape_check == SHAPE_DIFF)
+	{
+		_rank = p_rank;
+	}
+	if (shape_check == SHAPE_DIFF || shape_check == SHAPE_EQUAL_DIFF_SIZE)
+	{
+		free(_shape);
+		_shape = init_shape(_rank, p_shape);
+		free(_stride);
+		_stride = init_stride(_rank, _shape);
+		_size = init_size(_rank, _shape);
+		free(_data);
+		_data = init_data(_size, p_init, p_value);
+		_end = 0;
+
+		if (_gpu_flag)
+		{
+			delete _gpu_data;
+		}
+	}
+
+	_gpu_flag = false;
+	_transpose_flag = false;
+}
+
+
+void tensor::override(tensor& p_copy)
 {
 	if (_size == p_copy._size)
 	{
+		memcpy(_data, p_copy._data, sizeof(float) * p_copy._size);
+	}
+	else
+	{
+		resize(p_copy._rank, p_copy._shape, ZERO, 0.f);
 		memcpy(_data, p_copy._data, sizeof(float) * p_copy._size);
 	}
 }
 
 void tensor::concat(std::vector<tensor*> &p_source, tensor& p_dest)
 {
-	if (p_dest._rank == 1)
+	int rank = 0;
+	for (auto t : p_source)
+	{
+		rank = t->_rank;
+	}
+
+	if (rank == 1)
 	{
 		int size = 0;
 		for (auto t : p_source)
@@ -202,7 +242,7 @@ void tensor::concat(std::vector<tensor*> &p_source, tensor& p_dest)
 			index += t->_size;
 		}
 	}
-	if (p_dest._rank == 2)
+	if (rank == 2)
 	{
 		int rows = 0;
 		int cols = 0;
@@ -229,17 +269,24 @@ void tensor::split(tensor& p_source, std::vector<tensor*>& p_dest)
 {
 	float* sx = p_source._data;
 
-	for (auto& dest : p_dest)
+	if (p_source._rank == 1)
 	{
-		dest->resize({ p_source._shape[0], dest->_shape[1] });
 	}
 
-	for(int i = 0; i < p_source._shape[0]; i++)
+	if (p_source._rank == 2)
 	{
-		for (const auto& dest : p_dest)
+		for (auto& dest : p_dest)
 		{
-			memcpy(dest->_data + i * dest->_shape[1], sx, sizeof(float) * dest->_shape[1]);
-			sx += dest->_shape[1];
+			dest->resize({ p_source._shape[0], dest->_shape[1] });
+		}
+
+		for (int i = 0; i < p_source._shape[0]; i++)
+		{
+			for (const auto& dest : p_dest)
+			{
+				memcpy(dest->_data + i * dest->_shape[1], sx, sizeof(float) * dest->_shape[1]);
+				sx += dest->_shape[1];
+			}
 		}
 	}
 }
@@ -533,6 +580,27 @@ int tensor::check_shape(std::initializer_list<int>& p_shape) const
 	return result;
 }
 
+int tensor::check_shape(const int p_rank, const int* p_shape) const
+{
+	int result = SHAPE_EQUAL;
+	if (_rank != p_rank)
+	{
+		result = SHAPE_DIFF;
+	}
+	else
+	{
+		for (int i = 0; i < p_rank; i++)
+		{
+			if (_shape[i] != p_shape[i])
+			{
+				result = SHAPE_EQUAL_DIFF_SIZE;
+			}
+		}
+	}
+
+	return result;
+}
+
 int* tensor::init_shape(int &p_rank, std::initializer_list<int>& p_shape)
 {
 	int *result = nullptr;
@@ -553,6 +621,14 @@ int* tensor::init_shape(int &p_rank, std::initializer_list<int>& p_shape)
 
 	return result;
 
+}
+
+int* tensor::init_shape(int& p_rank, int* p_shape)
+{
+	int *result = static_cast<int*>(malloc(sizeof(int) * p_rank));
+	memcpy(result, p_shape, sizeof(int) * p_rank);
+
+	return result;
 }
 
 int tensor::init_size(int& p_rank, const int* p_shape)

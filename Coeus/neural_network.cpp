@@ -4,9 +4,8 @@
 #include <set>
 
 
-neural_network::neural_network() : param_model()
-{
-}
+neural_network::neural_network()
+= default;
 
 
 neural_network::~neural_network()
@@ -21,20 +20,20 @@ tensor& neural_network::forward(tensor* p_input)
 {
 	for (const auto& layer : _input_layer)
 	{
-		_layers[layer]->forward(*p_input);
+		_input[layer].value() = *p_input;
 	}
 
 	for(auto layer : _forward_graph)
 	{
-		if (_graph[layer->id()].size() == 1)
+		if (_layer_variables[layer->id()].input_list.size() > 1)
 		{
-			layer->forward(*_layers[_graph[layer->id()][0]]->output());
+			tensor::concat(_layer_variables[layer->id()].input_list, _layer_variables[layer->id()].input);
 		}
-		else if (_graph[layer->id()].size() > 1)
+		else
 		{
-			tensor::concat(_layer_input_list[layer->id()], _layer_input_tensor[layer->id()]);
-			layer->forward(_layer_input_tensor[layer->id()]);
+			_layer_variables[layer->id()].input.override(*_layer_variables[layer->id()].input_list[0]);
 		}
+		layer->forward(_layer_variables[layer->id()].input);		
 	}
 
 	return *_layers[_output_layer]->output();
@@ -49,45 +48,55 @@ tensor& neural_network::forward(std::map<std::string, tensor*>& p_input)
 
 	for (auto layer : _forward_graph)
 	{
-		if (_layer_input_list[layer->id()].size() <= 1)
+		if (_layer_variables[layer->id()].input_list.size() > 1)
 		{
-			layer->forward(*_layer_input_list[layer->id()][0]);
+			tensor::concat(_layer_variables[layer->id()].input_list, _layer_variables[layer->id()].input);
 		}
-		else if (_layer_input_list[layer->id()].size() > 1)
+		else
 		{
-			tensor::concat(_layer_input_list[layer->id()], _layer_input_tensor[layer->id()]);
-			layer->forward(_layer_input_tensor[layer->id()]);
+			_layer_variables[layer->id()].input.override(*_layer_variables[layer->id()].input_list[0]);
 		}
+		layer->forward(_layer_variables[layer->id()].input);
 	}
 
 	return *_layers[_output_layer]->output();
 }
 
 
-tensor& neural_network::backward(tensor& p_delta)
+std::map<std::string, tensor*>& neural_network::backward(tensor& p_delta)
 {
-	tensor& delta = p_delta;
+	_layer_variables[_output_layer].delta = p_delta;
 
 	for (auto layer : _backward_graph)
 	{
-		delta = layer->backward(delta);
-		if (_layer_input_list[layer->id()].size() > 1)
+		tensor& delta = layer->backward(_layer_variables[layer->id()].delta);
+		if (_layer_variables[layer->id()].delta_list.size() > 1)
 		{
-			//tensor::split(delta, _layer_delta_list);
+			tensor::split(delta, _layer_variables[layer->id()].delta_list);
 		}
 		else
 		{
-			
+			_layer_variables[layer->id()].delta_list[0]->override(delta);
 		}
 	}
 
-	return delta;
+	return _delta;
 }
 
 dense_layer* neural_network::add_layer(dense_layer* p_layer)
 {
 	_layers[p_layer->id()] = p_layer;
 	_graph[p_layer->id()] = {};
+
+	if (p_layer->input_dim() > 0)
+	{
+		_input[p_layer->id()] = variable();
+		_input[p_layer->id()].delta().resize({ 1, p_layer->input_dim() });
+		_delta[p_layer->id()] = &_input[p_layer->id()].delta();
+	}
+	_layer_variables[p_layer->id()] = layer_variable();
+	_layer_variables[p_layer->id()].delta.resize({ 1, p_layer->dim() });
+
 	return p_layer;
 }
 
@@ -142,38 +151,34 @@ void neural_network::init()
 
 	create_directed_graph();
 
-	_layer_input_list.clear();
-	_layer_input_tensor.clear();
-
 	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {
 		std::vector<dense_layer*> input;
 		//std::vector<dense_layer*> output;
 
 		for (auto n = _graph[(*layer)->id()].begin(); n != _graph[(*layer)->id()].end(); ++n) {
 			input.push_back(_layers[*n]);
-			_layer_input_list[(*layer)->id()].push_back(_layers[*n]->output());
-			_layer_delta_list[(*layer)->id()].push_back(tensor({ 1,_layers[*n]->dim() }));
+			_layer_variables[(*layer)->id()].input_list.push_back(_layers[*n]->output());
+			_layer_variables[(*layer)->id()].delta_list.push_back(&_layer_variables[*n].delta);
 		}
 
-		if (_input.find((*layer)->id()) != _input.end())
-		{
-			_layer_input_list[(*layer)->id()].push_back(&_input[(*layer)->id()].value());
-			_layer_delta_list[(*layer)->id()].push_back(tensor({ 1,(*layer)->input_dim() }));
-		}
-		/*
 		for (auto o = _graph.begin(); o != _graph.end(); ++o) {
 			for (auto i = _graph[o->first].begin(); i != _graph[o->first].end(); ++i)
 			{
 				if (*i == (*layer)->id())
 				{
-					output.push_back(_layers[o->first]);
+					
 				}
 			}
 		}
-		*/
+
+		if (_input.find((*layer)->id()) != _input.end())
+		{
+			_layer_variables[(*layer)->id()].input_list.push_back(&_input[(*layer)->id()].value());
+			_layer_variables[(*layer)->id()].delta_list.push_back(&_input[(*layer)->id()].delta());
+		}
+
 
 		_layers[(*layer)->id()]->init(this, input);
-		_layer_input_tensor[(*layer)->id()] = tensor::zero({ 1,1 });
 	}
 }
 

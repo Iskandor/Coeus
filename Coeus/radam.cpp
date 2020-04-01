@@ -13,9 +13,9 @@ radam::radam(neural_network* p_model, const float p_alpha, const float p_weight_
 radam::~radam()
 = default;
 
-void radam::update(tensor& p_loss)
+void radam::update()
 {
-	optimizer::update(p_loss);
+	optimizer::update();
 
 	float denb1 = 1;
 	float denb2 = 1;

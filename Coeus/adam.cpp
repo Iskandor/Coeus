@@ -15,9 +15,9 @@ adam::adam(neural_network* p_model, const float p_alpha, float p_weight_decay, c
 adam::~adam()
 = default;
 
-void adam::update(tensor& p_loss)
+void adam::update()
 {
-	optimizer::update(p_loss);
+	optimizer::update();
 
 	if (_t < 1e4)
 	{

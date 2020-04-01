@@ -17,3 +17,4 @@ x64
 /CLAB/*.vcxproj
 /CLAB/*.filters
 /CLAB/*.user
+Debug

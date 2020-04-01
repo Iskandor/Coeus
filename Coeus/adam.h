@@ -7,7 +7,7 @@ public:
 	adam(neural_network* p_model, float p_alpha, float p_weight_decay = 0.f, float p_beta1 = 0.9, float p_beta2 = 0.999, float p_epsilon = 1e-8);
 	~adam();
 
-	void update(tensor& p_loss) override;
+	void update() override;
 
 protected:
 	std::map<std::string, tensor> _v;

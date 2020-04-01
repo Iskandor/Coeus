@@ -11,9 +11,8 @@ optimizer::optimizer(neural_network* p_model, const float p_alpha, const float p
 optimizer::~optimizer()
 = default;
 
-void optimizer::update(tensor& p_loss)
+void optimizer::update()
 {
-	_model->backward(p_loss);
 	if (_weight_decay < 1.f)
 	{
 		for (auto& param : *_model)

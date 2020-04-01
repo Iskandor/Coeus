@@ -35,7 +35,8 @@ public:
 
 	void fill(float p_value) const;
 	void resize(std::initializer_list<int> p_shape, INIT p_init = ZERO, float p_value = 0.f);
-	void override(tensor& p_copy) const;
+	void resize(int p_rank, int* p_shape, INIT p_init = ZERO, float p_value = 0.f);
+	void override(tensor& p_copy);
 	static void concat(std::vector<tensor*> &p_source, tensor& p_dest);
 	static void split(tensor& p_source, std::vector<tensor*> &p_dest);
 
@@ -97,8 +98,10 @@ private:
 
 	static void check_gpu(const tensor& p_lhs, const tensor& p_rhs);
 	int check_shape(std::initializer_list<int> &p_shape) const;
+	int check_shape(int p_rank, const int* p_shape) const;
 
 	static int* init_shape(int &p_rank, std::initializer_list<int> &p_shape);
+	static int* init_shape(int &p_rank, int* p_shape);
 	static int	init_size(int &p_rank, const int* p_shape);
 	static int*	init_stride(int &p_rank, const int* p_shape);
 	static float* init_data(int &p_size, INIT p_init, float p_value);
