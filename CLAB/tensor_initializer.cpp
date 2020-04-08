@@ -10,6 +10,14 @@ tensor_initializer::tensor_initializer(const TYPE p_type, const float p_arg1, co
 	
 }
 
+tensor_initializer::tensor_initializer(tensor_initializer& p_copy) :
+	_type(p_copy._type),
+	_arg1(p_copy._arg1),
+	_arg2(p_copy._arg2)
+{
+	
+}
+
 tensor_initializer* tensor_initializer::uniform(const float p_lower_bound, const float p_upper_bound)
 {
 	return new tensor_initializer(UNIFORM, p_lower_bound, p_upper_bound);

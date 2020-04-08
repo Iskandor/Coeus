@@ -46,7 +46,7 @@ void sgd::update()
 					__m256 vx256 = _mm256_load_ps(vx);
 
 					__m256 v256 = _mm256_add_ps(_mm256_mul_ps(vx256, momentum256), _mm256_mul_ps(gx256, alpha256));
-					px256 = _mm256_add_ps(px256, _mm256_add_ps(_mm256_mul_ps(minus_momentum256, vx256), _mm256_mul_ps(one_plus_momentum256, v256)));
+					px256 = _mm256_sub_ps(px256, _mm256_add_ps(_mm256_mul_ps(minus_momentum256, vx256), _mm256_mul_ps(one_plus_momentum256, v256)));
 					vx256 = v256;
 
 					_mm256_storeu_ps(px, px256);
@@ -60,7 +60,7 @@ void sgd::update()
 
 				for (int i = size * segment; i < param.second->gradient().size(); i++) {
 					v = _momentum * *vx + _alpha * *gx++;
-					*px++ += -_momentum * *vx + (1 + _momentum) * v;
+					*px++ -= -_momentum * *vx + (1 + _momentum) * v;
 					*vx++ = v;
 				}
 			}
@@ -82,7 +82,7 @@ void sgd::update()
 					__m256 vx256 = _mm256_load_ps(vx);
 
 					vx256 = _mm256_add_ps(_mm256_mul_ps(vx256, momentum256), _mm256_mul_ps(gx256, alpha256));
-					px256 = _mm256_add_ps(px256, vx256);
+					px256 = _mm256_sub_ps(px256, vx256);
 
 					_mm256_storeu_ps(px, px256);
 					_mm256_storeu_ps(vx, vx256);
@@ -93,7 +93,7 @@ void sgd::update()
 
 				for (int i = size * segment; i < param.second->gradient().size(); i++) {
 					*vx = _momentum * *vx + _alpha * *gx++;
-					*px++ += *vx++;
+					*px++ -= *vx++;
 				}
 			}
 		}
@@ -111,7 +111,7 @@ void sgd::update()
 				const __m256 gx256 = _mm256_load_ps(gx);
 				__m256 px256 = _mm256_load_ps(px);
 
-				px256 = _mm256_add_ps(px256, _mm256_mul_ps(gx256, alpha256));
+				px256 = _mm256_sub_ps(px256, _mm256_mul_ps(gx256, alpha256));
 
 				_mm256_storeu_ps(px, px256);
 				px += segment;
@@ -119,7 +119,7 @@ void sgd::update()
 			}
 
 			for (int i = size * segment; i < param.second->gradient().size(); i++) {
-				*px++ += *gx++ * _alpha;
+				*px++ -= *gx++ * _alpha;
 			}
 		}
 	}

@@ -34,16 +34,16 @@ void FFN::run() {
 
 	neural_network network;
 
-	network.add_layer(new dense_layer("hidden0", 400, activation_function::sigmoid(), tensor_initializer::lecun_uniform(), { 1 }));
-	network.add_layer(new dense_layer("hidden1", 300, activation_function::sigmoid(), tensor_initializer::lecun_uniform(), { 1 }));
+	network.add_layer(new dense_layer("hidden0", 400, activation_function::sigmoid(), tensor_initializer::lecun_uniform(), { 2 }));
+	network.add_layer(new dense_layer("hidden1", 300, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
 	network.add_layer(new dense_layer("output", 1, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
 	network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden1", "output");
 	network.init();
 
 	mse_function loss;
-	sgd optimizer(&network, -0.5f, 0.9f, true);
-	//radam optimizer(&network, -1e-1);
+	sgd optimizer(&network, 0.5f, 0.9f, true);
+	//radam optimizer(&network, 1e-1);
 
 	map<string, tensor*> input_map;
 	input_map["hidden0"] = &input0;
@@ -51,7 +51,7 @@ void FFN::run() {
 
 	const double t0 = omp_get_wtime();
 	for (int t = 0; t < 500; t++) {
-		tensor& output = network.forward(input_map);
+		tensor& output = network.forward(&input);
 		const float error = loss.forward(output, target);
 		map<string, tensor*> delta = network.backward(loss.backward(output, target));
 		optimizer.update();
@@ -61,5 +61,5 @@ void FFN::run() {
 	}
 	cout << omp_get_wtime() - t0 << " s" << endl;
 
-	cout << network.forward(input_map) << endl;
+	cout << network.forward(&input) << endl;
 }

@@ -95,9 +95,7 @@ tensor& sigmoid_function::backward(tensor& p_delta)
 {
 	const int size = p_delta.size() / segment;
 
-	_input = forward(_input);
-
-	float* px = _input.data();
+	float* px = forward(_input).data();
 	float* pd = p_delta.data();
 
 	if (size > 0)
@@ -120,7 +118,7 @@ tensor& sigmoid_function::backward(tensor& p_delta)
 	}
 
 	for (int i = size * segment; i < p_delta.size(); i++) {
-		*pd = *pd * *px * (1 - *px);
+		*pd *= *px * (1 - *px);
 		pd++;
 		px++;
 	}
@@ -145,9 +143,7 @@ tensor& tanh_function::backward(tensor& p_delta)
 {
 	const int size = p_delta.size() / segment;
 
-	_input = forward(_input);
-
-	float* px = _input.data();
+	float* px = forward(_input).data();
 	float* pd = p_delta.data();
 
 	if (size > 0)
@@ -170,7 +166,7 @@ tensor& tanh_function::backward(tensor& p_delta)
 	}
 
 	for (int i = size * segment; i < p_delta.size(); i++) {
-		*pd = *pd * 1 - *px * *px;
+		*pd *= 1 - *px * *px;
 		pd++;
 		px++;
 	}
@@ -213,8 +209,6 @@ tensor& tanhexp_function::backward(tensor& p_delta)
 {
 	const int size = p_delta.size() / segment;
 
-	_input = forward(_input);
-
 	float* px = _input.data();
 	float* pd = p_delta.data();
 
@@ -234,6 +228,7 @@ tensor& tanhexp_function::backward(tensor& p_delta)
 			{
 				ex.m256_f32[j] = exp(xx.m256_f32[j]);
 				tanhex.m256_f32[j] = std::tanh(ex.m256_f32[j]);
+				if (tanhex.m256_f32[j] == 1.f) ex.m256_f32[j] = 0.f;
 			}
 			__m256 xx2;
 			xx2 = _mm256_mul_ps(tanhex, tanhex);
@@ -250,7 +245,12 @@ tensor& tanhexp_function::backward(tensor& p_delta)
 	}
 
 	for (int i = size * segment; i < p_delta.size(); i++) {
-		*pd = *pd * (std::tanh(exp(*px)) - *px * exp(*px) * (std::tanh(exp(*px)) * std::tanh(exp(*px)) - 1));
+		float ex = exp(*px);
+		float tanhex = std::tanh(ex);
+		if (tanhex < 1.f)
+		{
+			*pd *= tanhex - *px * ex * (tanhex * tanhex - 1.f);
+		}
 		pd++;
 		px++;
 	}

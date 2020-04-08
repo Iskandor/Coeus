@@ -66,7 +66,7 @@ void adam::update()
 				{
 					vxi = sqrt(vxi);
 				}
-				px256 = _mm256_add_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(m_meanx256, _mm256_add_ps(v_meanx256, epsilon256))));
+				px256 = _mm256_sub_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(m_meanx256, _mm256_add_ps(v_meanx256, epsilon256))));
 			}
 			else
 			{
@@ -75,7 +75,7 @@ void adam::update()
 				{
 					vxi = sqrt(vxi);
 				}
-				px256 = _mm256_add_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(mx256, _mm256_add_ps(sqrtvx256, epsilon256))));
+				px256 = _mm256_sub_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(mx256, _mm256_add_ps(sqrtvx256, epsilon256))));
 			}
 
 			_mm256_storeu_ps(px, px256);
@@ -97,11 +97,11 @@ void adam::update()
 				float m_meanx = *mx++ / denb1;
 				float v_meanx = *vx++ / denb2;
 
-				*px++ += _alpha * m_meanx++ / (sqrt(v_meanx++) + _epsilon);
+				*px++ -= _alpha * m_meanx++ / (sqrt(v_meanx++) + _epsilon);
 			}
 			else
 			{
-				*px++ += _alpha * *mx++ / (sqrt(*vx++) + _epsilon);
+				*px++ -= _alpha * *mx++ / (sqrt(*vx++) + _epsilon);
 			}
 
 			gx++;

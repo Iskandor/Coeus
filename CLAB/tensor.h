@@ -23,7 +23,7 @@ public:
 	~tensor();
 
 	static tensor zero(std::initializer_list<int> p_shape);
-	static tensor zero_like(tensor& p_copy);
+	static tensor zero_like(const tensor& p_copy);
 	static tensor value(std::initializer_list<int> p_shape, float p_value);
 	static tensor value_like(tensor& p_copy, float p_value);
 
@@ -37,8 +37,10 @@ public:
 	void resize(std::initializer_list<int> p_shape, INIT p_init = ZERO, float p_value = 0.f);
 	void resize(int p_rank, int* p_shape, INIT p_init = ZERO, float p_value = 0.f);
 	void override(tensor& p_copy);
-	static void concat(std::vector<tensor*> &p_source, tensor& p_dest);
+	static void concat(std::vector<tensor*> &p_source, tensor& p_dest, int p_dim);
 	static void split(tensor& p_source, std::vector<tensor*> &p_dest);
+
+	tensor mean(int p_dim) const;
 
 	// arithmetic operators
 	tensor& operator += (const tensor& p_rhs);
@@ -63,6 +65,10 @@ public:
 	// operators
 	float& operator[] (int p_index) const;
 	void T();
+	std::vector<int> max_index(int p_dim = 0) const;
+	tensor gather(std::vector<int> &p_index) const;
+	float max() const;
+	float min() const;
 
 	//gpu operations
 	void to_gpu();

@@ -6,6 +6,7 @@ class param
 {
 public:
 	param(std::initializer_list<int> p_shape);
+	param(param& p_copy);
 	~param();
 
 	std::string& id() { return _id; }

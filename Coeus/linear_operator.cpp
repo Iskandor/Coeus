@@ -25,6 +25,8 @@ tensor& linear_operator::backward(tensor& p_delta)
 {
 	_delta.resize({ p_delta.shape(0), _weights->params().shape(0) });
 
+	_weights->gradient().fill(0);
+
 	tensor_operator_cpu::mul(p_delta.data(), false, _weights->params().data(), true, _delta.data(), p_delta.shape(0), p_delta.shape(1), _weights->params().shape(0));
 	tensor_operator_cpu::mul(_input->data(), true, p_delta.data(), false, _weights->gradient().data(), _weights->params().shape(0), p_delta.shape(0), _weights->params().shape(1));
 	tensor_operator_cpu::reduce_sum(p_delta.data(), p_delta.shape(0), _bias->gradient().data(), _bias->gradient().size());

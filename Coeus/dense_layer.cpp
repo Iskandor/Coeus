@@ -7,10 +7,22 @@ dense_layer::dense_layer(const std::string p_id, const int p_dim, activation_fun
 	_dim(p_dim),
 	_weights(nullptr),
 	_bias(nullptr),
-	_af(p_activation_function),
-	_initializer(p_initializer)
+	_initializer(p_initializer),
+	_af(p_activation_function)
 {
 	_input_dim = get_input_dim(p_input_shape);	
+	_op = nullptr;
+}
+
+dense_layer::dense_layer(dense_layer& p_copy)
+{
+	_id = p_copy._id;
+	_dim = p_copy._dim;
+	_input_dim = p_copy._input_dim;
+	_weights = new param(*p_copy._weights);
+	_bias = new param(*p_copy._bias);
+	_initializer = new tensor_initializer(*p_copy._initializer);
+	_af = activation_function::create(p_copy._af->type());
 	_op = nullptr;
 }
 
@@ -40,16 +52,28 @@ tensor& dense_layer::backward(tensor& p_delta)
 
 void dense_layer::init(param_model* p_model, std::vector<dense_layer*>& p_input_layers)
 {
-	int input_dim = _input_dim;
+	if (_weights == nullptr) {
+		int input_dim = _input_dim;
 
-	for(auto layer : p_input_layers)
-	{
-		input_dim += layer->_dim;
+		for(auto layer : p_input_layers)
+		{
+			input_dim += layer->_dim;
+		}
+	
+		_weights = p_model->add_param({ input_dim, _dim });
+		_initializer->init(_weights->params());
 	}
-
-	_weights = p_model->add_param({ input_dim, _dim });
-	_bias = p_model->add_param({ _dim });
-	_initializer->init(_weights->params());
+	else
+	{
+		p_model->add_param(_weights);
+	}
+	if (_bias == nullptr) {
+		_bias = p_model->add_param({ _dim });
+	}
+	else
+	{
+		p_model->add_param(_bias);
+	}
 
 	_op = new linear_operator(_weights, _bias);
 }

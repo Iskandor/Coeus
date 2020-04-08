@@ -129,7 +129,7 @@ tensor tensor::zero(const std::initializer_list<int> p_shape)
 	return tensor(p_shape, ZERO, 0.f);
 }
 
-tensor tensor::zero_like(tensor& p_copy)
+tensor tensor::zero_like(const tensor& p_copy)
 {
 	return tensor(p_copy._rank, p_copy._shape);
 }
@@ -219,47 +219,90 @@ void tensor::override(tensor& p_copy)
 	}
 }
 
-void tensor::concat(std::vector<tensor*> &p_source, tensor& p_dest)
+void tensor::concat(std::vector<tensor*> &p_source, tensor& p_dest, int p_dim)
 {
 	int rank = 0;
 	for (auto t : p_source)
 	{
 		rank = t->_rank;
 	}
-
+	
 	if (rank == 1)
 	{
-		int size = 0;
-		for (auto t : p_source)
+		if (p_dim == 0)
 		{
-			size += t->_size;
+			int size = 0;
+			for (auto t : p_source)
+			{
+				size += t->_size;
+			}
+			p_dest.resize({ size });
+			int index = 0;
+			for (auto t : p_source)
+			{
+				memcpy(p_dest._data + index, t->_data, sizeof(float) * t->_size);
+				index += t->_size;
+			}
 		}
-		p_dest.resize({ size });
-		int index = 0;
-		for(auto t : p_source)
+		if (p_dim == 1)
 		{
-			memcpy(p_dest._data + index, t->_data, sizeof(float) * t->_size);
-			index += t->_size;
+			int rows = 0;
+			int cols = 0;
+
+			for (auto t : p_source)
+			{
+				rows++;
+				cols = t->_size;
+			}
+
+			p_dest.resize({ rows, cols });
+
+			int index = 0;
+			for (auto t : p_source)
+			{
+				memcpy(p_dest._data + index, t->_data, sizeof(float) * t->_size);
+				index += t->_size;
+			}
 		}
 	}
 	if (rank == 2)
 	{
 		int rows = 0;
 		int cols = 0;
-		for (auto t : p_source)
-		{
-			rows = t->_shape[0];
-			cols += t->_shape[1];
-		}
-		p_dest.resize({ rows, cols });
 
-		int index = 0;
-		for (int i = 0; i < p_dest._shape[0]; i++)
+		if (p_dim == 0)
 		{
 			for (auto t : p_source)
 			{
-				memcpy(p_dest._data + index, t->_data + i * t->_shape[1], sizeof(float) * t->_shape[1]);
-				index += t->_shape[1];
+				rows = t->_shape[0];
+				cols += t->_shape[1];
+			}
+			p_dest.resize({ rows, cols });
+
+			int index = 0;
+			for (int i = 0; i < p_dest._shape[0]; i++)
+			{
+				for (auto t : p_source)
+				{
+					memcpy(p_dest._data + index, t->_data + i * t->_shape[1], sizeof(float) * t->_shape[1]);
+					index += t->_shape[1];
+				}
+			}
+		}
+		if (p_dim == 1)
+		{
+			for (auto t : p_source)
+			{
+				rows += t->_shape[0];
+				cols = t->_shape[1];
+			}
+			p_dest.resize({ rows, cols });
+
+			int index = 0;
+			for (auto t : p_source)
+			{
+				memcpy(p_dest._data + index, t->_data, sizeof(float) * t->_size);
+				index += t->_size;
 			}
 		}
 	}
@@ -289,6 +332,62 @@ void tensor::split(tensor& p_source, std::vector<tensor*>& p_dest)
 			}
 		}
 	}
+}
+
+tensor tensor::mean(int p_dim) const
+{
+	tensor result;
+
+	if (_rank == 1)
+	{
+		result.resize({ 1 });
+
+		float* x = _data;
+		for (int i = 0; i < _shape[0]; i++)
+		{
+			result[i] += *x++;
+		}
+
+		result /= _shape[0];
+	}
+
+	if (_rank == 2)
+	{
+		if (p_dim == 0)
+		{
+			result.resize({ _shape[0], 1 });
+
+			float* x = _data;
+
+			for(int i = 0; i < _shape[0]; i++)
+			{
+				for (int j = 0; j < _shape[1]; j++)
+				{
+					result[i] += *x++;
+				}
+			}
+
+			result /= _shape[1];
+		}
+		if (p_dim == 1)
+		{
+			result.resize({ 1, _shape[1] });
+
+			float* x = _data;
+
+			for (int i = 0; i < _shape[0]; i++)
+			{
+				for (int j = 0; j < _shape[1]; j++)
+				{
+					result[j] += *x++;
+				}
+			}
+
+			result /= _shape[0];
+		}
+	}
+
+	return result;
 }
 
 tensor& tensor::operator+=(const tensor& p_rhs)
@@ -451,6 +550,117 @@ float& tensor::operator[](const int p_index) const
 void tensor::T()
 {
 	_transpose_flag = !_transpose_flag;
+}
+
+std::vector<int> tensor::max_index(const int p_dim) const
+{
+	std::vector<int> result;
+
+	if (_rank == 1)
+	{
+		result.resize(1);
+		result[0] = 0;
+		for(int i = 1; i < _size; i++)
+		{
+			if (_data[result[0]] < _data[i])
+			{
+				result[0] = i;
+			}
+		}		
+	}
+	if (_rank == 2)
+	{
+		if (p_dim == 0)
+		{
+			result.resize(_shape[0]);
+
+			for (int i = 0; i < _shape[0]; i++)
+			{
+				result[i] = i * _shape[1];
+			}
+
+			for (int i = 0; i < _shape[0]; i++)
+			{
+				for (int j = 1; j < _shape[1]; j++)
+				{
+					if (_data[result[i]] < _data[i * _shape[1] + j])
+					{
+						result[i] = i * _shape[1] + j;
+					}
+				}
+			}
+		}
+		if (p_dim == 1)
+		{
+			result.resize(_shape[1]);
+
+			for (int j = 0; j < _shape[1]; j++)
+			{
+				result[j] = j;
+			}
+
+			for (int i = 1; i < _shape[0]; i++)
+			{
+				for (int j = 0; j < _shape[1]; j++)
+				{
+					if (_data[result[j]] < _data[i * _shape[1] + j])
+					{
+						result[j] = i * _shape[1] + j;
+					}
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
+tensor tensor::gather(std::vector<int> &p_index) const
+{
+	tensor result({_shape[0]});
+
+	float *rx = result._data;
+
+	for(int i = 0; i < _shape[0]; i++)
+	{
+		*rx++ = _data[p_index[i]];
+	}
+
+	return result;
+}
+
+float tensor::max() const
+{
+	float max = _data[0];
+	float *x = &_data[1];
+
+	for(int i = 1; i < _size; i++)
+	{
+		if (max < *x)
+		{
+			max = *x;
+		}
+		x++;
+	}
+
+	return max;
+}
+
+float tensor::min() const
+{
+	float min = _data[0];
+	float *x = &_data[1];
+
+	for (int i = 1; i < _size; i++)
+	{
+		if (min > *x)
+		{
+			min = *x;
+		}
+		x++;
+	}
+
+	return min;
 }
 
 void tensor::to_gpu()

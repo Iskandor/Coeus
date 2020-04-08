@@ -14,6 +14,8 @@ public:
 		GLOROT_NORMAL
 	};
 
+	tensor_initializer(tensor_initializer& p_copy);
+
 	static tensor_initializer* uniform(float p_lower_bound, float p_upper_bound);
 	static tensor_initializer* normal(float p_mean, float p_sigma);
 	static tensor_initializer* lecun_uniform();

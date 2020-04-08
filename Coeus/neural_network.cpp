@@ -7,6 +7,18 @@
 neural_network::neural_network()
 = default;
 
+neural_network::neural_network(neural_network& p_copy)
+{
+	for (const auto& layer : p_copy._layers)
+	{
+		add_layer(new dense_layer(*layer.second));
+	}
+
+	_graph = p_copy._graph;
+
+	init();
+}
+
 
 neural_network::~neural_network()
 {
@@ -19,15 +31,22 @@ neural_network::~neural_network()
 tensor& neural_network::forward(tensor* p_input)
 {
 	for (const auto& layer : _input_layer)
-	{
-		_input[layer].value() = *p_input;
+	{		
+		if (p_input->rank() == 1)
+		{
+			_input[layer].value() = tensor({ 1, p_input->size() }, p_input->data());
+		}
+		else
+		{
+			_input[layer].value() = *p_input;
+		}
 	}
 
 	for(auto layer : _forward_graph)
 	{
 		if (_layer_variables[layer->id()].input_list.size() > 1)
 		{
-			tensor::concat(_layer_variables[layer->id()].input_list, _layer_variables[layer->id()].input);
+			tensor::concat(_layer_variables[layer->id()].input_list, _layer_variables[layer->id()].input, 0);
 		}
 		else
 		{
@@ -42,15 +61,22 @@ tensor& neural_network::forward(tensor* p_input)
 tensor& neural_network::forward(std::map<std::string, tensor*>& p_input)
 {
 	for (const auto& layer : _input_layer)
-	{
-		_input[layer].value() = *p_input[layer];
+	{		
+		if (p_input[layer]->rank() == 1)
+		{
+			_input[layer].value() = tensor({ 1, p_input[layer]->size() }, p_input[layer]->data());
+		}
+		else
+		{
+			_input[layer].value() = *p_input[layer];
+		}
 	}
 
 	for (auto layer : _forward_graph)
 	{
 		if (_layer_variables[layer->id()].input_list.size() > 1)
 		{
-			tensor::concat(_layer_variables[layer->id()].input_list, _layer_variables[layer->id()].input);
+			tensor::concat(_layer_variables[layer->id()].input_list, _layer_variables[layer->id()].input, 0);
 		}
 		else
 		{
@@ -153,7 +179,6 @@ void neural_network::init()
 
 	for (auto layer = _forward_graph.begin(); layer != _forward_graph.end(); ++layer) {
 		std::vector<dense_layer*> input;
-		//std::vector<dense_layer*> output;
 
 		for (auto n = _graph[(*layer)->id()].begin(); n != _graph[(*layer)->id()].end(); ++n) {
 			input.push_back(_layers[*n]);

@@ -73,7 +73,7 @@ void radam::update()
 					{
 						vxi = sqrt(vxi);
 					}
-					px256 = _mm256_add_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(m_meanx256, _mm256_add_ps(v_meanx256, epsilon256))));
+					px256 = _mm256_sub_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(m_meanx256, _mm256_add_ps(v_meanx256, epsilon256))));
 				}
 				else
 				{
@@ -82,7 +82,7 @@ void radam::update()
 					{
 						vxi = sqrt(vxi);
 					}
-					px256 = _mm256_add_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(mx256, _mm256_add_ps(sqrtvx256, epsilon256))));
+					px256 = _mm256_sub_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(mx256, _mm256_add_ps(sqrtvx256, epsilon256))));
 				}
 
 				_mm256_storeu_ps(px, px256);
@@ -104,11 +104,11 @@ void radam::update()
 					const float m_meanx = *mx++ / denb1;
 					const float v_meanx = *vx++ / denb2;
 
-					*px++ += _alpha * m_meanx / (sqrt(v_meanx) + _epsilon);
+					*px++ -= _alpha * m_meanx / (sqrt(v_meanx) + _epsilon);
 				}
 				else
 				{
-					*px++ += _alpha * *mx++ / (sqrt(*vx++) + _epsilon);
+					*px++ -= _alpha * *mx++ / (sqrt(*vx++) + _epsilon);
 				}
 
 				gx++;
@@ -136,11 +136,11 @@ void radam::update()
 				if (_t < 1e4)
 				{
 					const __m256 m_meanx256 = _mm256_div_ps(mx256, denb1256);
-					px256 = _mm256_add_ps(px256, _mm256_mul_ps(alpha256, m_meanx256));
+					px256 = _mm256_sub_ps(px256, _mm256_mul_ps(alpha256, m_meanx256));
 				}
 				else
 				{
-					px256 = _mm256_add_ps(px256, _mm256_mul_ps(alpha256, mx256));
+					px256 = _mm256_sub_ps(px256, _mm256_mul_ps(alpha256, mx256));
 				}
 
 				_mm256_storeu_ps(px, px256);
@@ -158,11 +158,11 @@ void radam::update()
 				{
 					const float m_meanx = *mx++ / denb1;
 
-					*px++ += _alpha * m_meanx;
+					*px++ -= _alpha * m_meanx;
 				}
 				else
 				{
-					*px++ += _alpha * *mx++;
+					*px++ -= _alpha * *mx++;
 				}
 
 				gx++;
