@@ -9,7 +9,8 @@ public:
 		LINEAR = 0,
 		SIGMOID = 1,
 		TANH = 2,
-		TANHEXP = 3
+		TANHEXP = 3,
+		RELU = 4
 	};
 
 	static activation_function* create(TYPE p_type);
@@ -18,6 +19,7 @@ public:
 	static activation_function* sigmoid();
 	static activation_function* tanh();
 	static activation_function* tanhexp();
+	static activation_function* relu();
 	~activation_function() = default;
 
 	TYPE type() const { return _type; }
@@ -65,6 +67,16 @@ class __declspec(dllexport) tanhexp_function : public activation_function
 public:
 	tanhexp_function() { _type = TANHEXP; }
 	~tanhexp_function() = default;
+
+	tensor& forward(tensor& p_input) override;
+	tensor& backward(tensor& p_delta) override;
+};
+
+class __declspec(dllexport) relu_function : public activation_function
+{
+public:
+	relu_function() { _type = RELU; }
+	~relu_function() = default;
 
 	tensor& forward(tensor& p_input) override;
 	tensor& backward(tensor& p_delta) override;

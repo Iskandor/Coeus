@@ -708,14 +708,13 @@ void tensor::print_vector(std::ostream& output, const tensor& p_tensor)
 
 void tensor::print_matrix(std::ostream& output, const tensor& p_tensor)
 {
+	float* x = p_tensor._data;
 	for (int i = 0; i < p_tensor._shape[0]; i++) {
 		for (int j = 0; j < p_tensor._shape[1]; j++)
 		{
-			if (j == p_tensor._shape[1] - 1) {
-				output << p_tensor._data[i * p_tensor._shape[1] + j];
-			}
-			else {
-				output << p_tensor._data[i * p_tensor._shape[1] + j] << ",";
+			output << *x++;
+			if (j < p_tensor._shape[1] - 1) {
+				output << ",";
 			}
 		}
 		output << std::endl;

@@ -23,7 +23,6 @@ void DQN::train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p
 	{
 		process_sample();
 
-		_critic->forward(&_batch_state);
 		_critic->backward(critic_loss_function(&_batch_state, &_batch_action, &_batch_next_state, &_batch_reward, &_batch_mask));
 		_critic_optimizer->update();
 

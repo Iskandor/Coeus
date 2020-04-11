@@ -66,12 +66,12 @@ void tensor_operator_cpu::add(float* p_x, const int p_x_size, float* p_y, const 
 
 void tensor_operator_cpu::const_add(float* p_x, const float p_y, float* p_z, const int p_size)
 {
-	const int size = p_size / segment * segment;
+	const int size = p_size / segment;
 	const __m256 y = _mm256_broadcast_ss(&p_y);
 
 	if (p_x == p_z)
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			__m256 zx = _mm256_load_ps(p_z);
 
@@ -82,14 +82,14 @@ void tensor_operator_cpu::const_add(float* p_x, const float p_y, float* p_z, con
 			p_z += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ += p_y;
 		}
 	}
 	else
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			const __m256 xx = _mm256_load_ps(p_x);
 			__m256 zx = _mm256_load_ps(p_z);
@@ -102,7 +102,7 @@ void tensor_operator_cpu::const_add(float* p_x, const float p_y, float* p_z, con
 			p_x += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ = *p_x++ + p_y;
 		}
@@ -132,7 +132,7 @@ void tensor_operator_cpu::sub(float* p_x, const int p_x_size, float* p_y, const 
 
 			for (int i = size * segment; i < p_x_size; i++)
 			{
-				*p_z++ += *p_y++;
+				*p_z++ -= *p_y++;
 			}
 		}
 		else
@@ -170,12 +170,12 @@ void tensor_operator_cpu::sub(float* p_x, const int p_x_size, float* p_y, const 
 
 void tensor_operator_cpu::const_sub(float* p_x, const float p_y, float* p_z, const int p_size)
 {
-	const int size = p_size / segment * segment;
+	const int size = p_size / segment;
 	const __m256 y = _mm256_broadcast_ss(&p_y);
 
 	if (p_x == p_z)
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			__m256 zx = _mm256_load_ps(p_z);
 
@@ -186,14 +186,14 @@ void tensor_operator_cpu::const_sub(float* p_x, const float p_y, float* p_z, con
 			p_z += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ -= p_y;
 		}
 	}
 	else
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			const __m256 xx = _mm256_load_ps(p_x);
 			__m256 zx = _mm256_load_ps(p_z);
@@ -206,7 +206,7 @@ void tensor_operator_cpu::const_sub(float* p_x, const float p_y, float* p_z, con
 			p_x += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ = *p_x++ - p_y;
 		}
@@ -215,12 +215,12 @@ void tensor_operator_cpu::const_sub(float* p_x, const float p_y, float* p_z, con
 
 void tensor_operator_cpu::const_sub(float p_x, float* p_y, float* p_z, const int p_size)
 {
-	const int size = p_size / segment * segment;
+	const int size = p_size / segment;
 	const __m256 x = _mm256_broadcast_ss(&p_x);
 
 	if (p_y == p_z)
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			__m256 zy = _mm256_load_ps(p_y);
 
@@ -232,7 +232,7 @@ void tensor_operator_cpu::const_sub(float p_x, float* p_y, float* p_z, const int
 			p_y += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z = p_x - *p_y;
 			p_z++;
@@ -240,7 +240,7 @@ void tensor_operator_cpu::const_sub(float p_x, float* p_y, float* p_z, const int
 	}
 	else
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			const __m256 yx = _mm256_load_ps(p_y);
 			__m256 zx = _mm256_load_ps(p_z);
@@ -250,10 +250,9 @@ void tensor_operator_cpu::const_sub(float p_x, float* p_y, float* p_z, const int
 			_mm256_storeu_ps(p_z, zx);
 
 			p_z += segment;
-			p_y += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ = p_x - *p_y++;
 		}
@@ -279,12 +278,12 @@ void tensor_operator_cpu::mul(float* p_x, bool p_transpose_x, float* p_y, bool p
 
 void tensor_operator_cpu::const_mul(float* p_x, const float p_y, float* p_z, const int p_size)
 {
-	const int size = p_size / segment * segment;
+	const int size = p_size / segment;
 	const __m256 y = _mm256_broadcast_ss(&p_y);
 
 	if (p_x == p_z)
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i ++)
 		{
 			__m256 zx = _mm256_load_ps(p_z);
 
@@ -295,14 +294,14 @@ void tensor_operator_cpu::const_mul(float* p_x, const float p_y, float* p_z, con
 			p_z += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ *= p_y;
 		}
 	}
 	else
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			const __m256 xx = _mm256_load_ps(p_x);
 			__m256 zx = _mm256_load_ps(p_z);
@@ -315,7 +314,7 @@ void tensor_operator_cpu::const_mul(float* p_x, const float p_y, float* p_z, con
 			p_x += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ = *p_x++ * p_y;
 		}
@@ -324,12 +323,12 @@ void tensor_operator_cpu::const_mul(float* p_x, const float p_y, float* p_z, con
 
 void tensor_operator_cpu::const_div(float p_x, float* p_y, float* p_z, const int p_size)
 {
-	const int size = p_size / segment * segment;
+	const int size = p_size / segment;
 	const __m256 x = _mm256_broadcast_ss(&p_x);
 
 	if (p_y == p_z)
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			__m256 zy = _mm256_load_ps(p_y);
 
@@ -341,7 +340,7 @@ void tensor_operator_cpu::const_div(float p_x, float* p_y, float* p_z, const int
 			p_y += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z = p_x / *p_y;
 			p_z++;
@@ -349,7 +348,7 @@ void tensor_operator_cpu::const_div(float p_x, float* p_y, float* p_z, const int
 	}
 	else
 	{
-		for (int i = 0; i < size / segment; i += segment)
+		for (int i = 0; i < size; i++)
 		{
 			const __m256 yx = _mm256_load_ps(p_y);
 			__m256 zx = _mm256_load_ps(p_z);
@@ -362,7 +361,7 @@ void tensor_operator_cpu::const_div(float p_x, float* p_y, float* p_z, const int
 			p_y += segment;
 		}
 
-		for (int i = size; i < p_size; i++)
+		for (int i = size * segment; i < p_size; i++)
 		{
 			*p_z++ = p_x / *p_y++;
 		}

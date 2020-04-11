@@ -12,12 +12,13 @@ int main()
 	//FFN model;
 	//model.run();
 
-	//mountain_car_experiment experiment;
+	mountain_car_experiment experiment;
 	//experiment.test_simple(1000);
+	experiment.run_ddpg(500);
 
-	maze_experiment experiment;
+	//maze_experiment experiment;
 
-	experiment.run_qlearning(5000);
+	//experiment.run_qlearning(5000);
 	//experiment.run_sarsa(5000);
 	//experiment.run_dqn(500);
 

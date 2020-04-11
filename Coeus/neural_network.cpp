@@ -2,6 +2,8 @@
 #include <queue>
 #include <cassert>
 #include <set>
+#include <iostream>
+#include <iomanip>
 
 
 neural_network::neural_network()

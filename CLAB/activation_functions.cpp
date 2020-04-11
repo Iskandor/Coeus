@@ -1,5 +1,6 @@
 #include "activation_functions.h"
 #include "CLAB.h"
+#include <algorithm>
 
 activation_function* activation_function::linear()
 {
@@ -21,6 +22,11 @@ activation_function* activation_function::tanhexp()
 	return new tanhexp_function();
 }
 
+activation_function* activation_function::relu()
+{
+	return new relu_function();
+}
+
 activation_function* activation_function::create(const TYPE p_type)
 {
 	activation_function* result = nullptr;
@@ -37,6 +43,9 @@ activation_function* activation_function::create(const TYPE p_type)
 		break;
 	case TANHEXP:
 		result = new tanhexp_function();
+		break;
+	case RELU:
+		result = new relu_function();
 		break;
 	default: ;
 	}
@@ -251,6 +260,34 @@ tensor& tanhexp_function::backward(tensor& p_delta)
 		{
 			*pd *= tanhex - *px * ex * (tanhex * tanhex - 1.f);
 		}
+		pd++;
+		px++;
+	}
+
+	return p_delta;
+}
+
+tensor& relu_function::forward(tensor& p_input)
+{
+	_input = p_input;
+
+	float* px = p_input.data();
+	for (int i = 0; i < p_input.size(); i++)
+	{
+		*px = std::max(*px, 0.f);
+		px++;
+	}
+
+	return p_input;
+}
+
+tensor& relu_function::backward(tensor& p_delta)
+{
+	float* px = _input.data();
+	float* pd = p_delta.data();
+
+	for (int i = 0; i < p_delta.size(); i++) {
+		if (*px < 0.f) *pd *= 0.f;
 		pd++;
 		px++;
 	}

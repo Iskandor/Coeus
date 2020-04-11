@@ -45,8 +45,8 @@ maze_experiment::~maze_experiment()
 void maze_experiment::run_qlearning(const int p_episodes)
 {
 	neural_network critic;
-	critic.add_layer(new dense_layer("hidden0", 64, activation_function::tanhexp(), tensor_initializer::lecun_uniform(), { _maze->STATE_DIM() }));
-	critic.add_layer(new dense_layer("hidden1", 16, activation_function::tanhexp(), tensor_initializer::lecun_uniform()));
+	critic.add_layer(new dense_layer("hidden0", 64, activation_function::relu(), tensor_initializer::lecun_uniform(), { _maze->STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 16, activation_function::relu(), tensor_initializer::lecun_uniform()));
 	critic.add_layer(new dense_layer("output", _maze->ACTION_DIM(), activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
 	critic.add_connection("hidden0", "hidden1");
 	critic.add_connection("hidden1", "output");
