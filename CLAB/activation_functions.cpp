@@ -27,6 +27,11 @@ activation_function* activation_function::relu()
 	return new relu_function();
 }
 
+activation_function* activation_function::softmax()
+{
+	return new softmax_function();
+}
+
 activation_function* activation_function::create(const TYPE p_type)
 {
 	activation_function* result = nullptr;
@@ -104,7 +109,9 @@ tensor& sigmoid_function::backward(tensor& p_delta)
 {
 	const int size = p_delta.size() / segment;
 
-	float* px = forward(_input).data();
+	tensor output = _input;
+
+	float* px = forward(output).data();
 	float* pd = p_delta.data();
 
 	if (size > 0)
@@ -152,7 +159,9 @@ tensor& tanh_function::backward(tensor& p_delta)
 {
 	const int size = p_delta.size() / segment;
 
-	float* px = forward(_input).data();
+	tensor output = _input;
+
+	float* px = forward(output).data();
 	float* pd = p_delta.data();
 
 	if (size > 0)
@@ -163,10 +172,9 @@ tensor& tanh_function::backward(tensor& p_delta)
 		for (int i = 0; i < size; i++)
 		{
 			__m256 dx = _mm256_load_ps(pd);
-			__m256 xx = _mm256_load_ps(px);
+			const __m256 xx = _mm256_load_ps(px);
 
-			xx = _mm256_sub_ps(plus_onex, _mm256_mul_ps(xx, xx));
-			dx = _mm256_mul_ps(dx, xx);
+			dx = _mm256_mul_ps(dx, _mm256_sub_ps(plus_onex, _mm256_mul_ps(xx, xx)));
 
 			_mm256_storeu_ps(pd, dx);
 			px += segment;
@@ -293,4 +301,65 @@ tensor& relu_function::backward(tensor& p_delta)
 	}
 
 	return p_delta;
+}
+
+tensor& softmax_function::forward(tensor& p_input)
+{
+	_input = p_input;
+
+	float* px = p_input.data();
+
+	for (int i = 0; i < p_input.shape(0); i++)
+	{
+		float esum = 0;
+		float max = 0;
+
+		for (int j = 0; j < p_input.shape(1); j++) {
+			if (max < p_input[i * p_input.shape(1) + j])
+			{
+				max = p_input[i * p_input.shape(1) + j];
+			}
+		}
+
+		for (int j = 0; j < p_input.shape(1); j++) {
+			p_input[i * p_input.shape(1) + j] = exp(p_input[i * p_input.shape(1) + j] - max);
+			esum += p_input[i * p_input.shape(1) + j];
+		}
+
+		for (int j = 0; j < p_input.shape(1); j++) {
+			p_input[i * p_input.shape(1) + j] /= esum;
+		}
+	}
+
+	return p_input;
+}
+
+tensor& softmax_function::backward(tensor& p_delta)
+{
+	Tensor tg({ p_input->shape(1) }, Tensor::ZERO);
+	Tensor ti({ p_input->shape(1) }, Tensor::ZERO);
+
+	_derivative.resize({ p_delta.shape(1) , p_delta.shape(1) });
+
+	for (int i = 0; i < p_delta.shape(0); i++)
+	{
+		for (int r = 0; r < p_delta.shape(1); r++) {
+			for (int c = 0; c < p_delta.shape(1); c++) {
+				_derivative[r * p_delta.shape(1) + c] = _input[i * p_delta.shape(1) + r] * (kronecker_delta(r, c) - _input[i * p_delta.shape(1) + c]);
+			}
+		}
+
+		p_input->get_row(ti, b);
+
+		TensorOperator::instance().vM_prod(ti.arr(), deriv, tg.arr(), _output->shape(1), _output->shape(1));
+
+		_gradient->push_back(&tg);
+	}
+
+	return p_delta;
+}
+
+float softmax_function::kronecker_delta(int p_i, int p_j) const
+{
+	return p_i == p_j ? 1.f : 0.f;
 }

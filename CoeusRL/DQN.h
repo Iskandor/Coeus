@@ -23,7 +23,7 @@ private:
 	replay_buffer<mdp_transition> *_memory;
 	int _sample_size;
 
-	neural_network* _critic_target;
+	neural_network _critic_target;
 	int _target_update_frequency;
 	int _target_update_step;
 };

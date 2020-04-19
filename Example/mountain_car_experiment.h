@@ -8,8 +8,12 @@ public:
 	mountain_car_experiment();
 	~mountain_car_experiment();
 
-	void test_simple(int p_epochs);
+	void simple_ddpg(int p_epochs);
+	void simple_cacla(int p_epochs);
+	void simple_dqn(int p_epochs);
+
 	void run_ddpg(int p_epochs);
+	void run_ddpg_fm(int p_epochs);
 
 private:
 	simple_continuous_env _simple_env;

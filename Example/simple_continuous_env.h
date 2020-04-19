@@ -22,6 +22,6 @@ private:
 	float	_target;
 	int		_steps;
 	
-	const int MAX_STEPS = 100;
+	const int MAX_STEPS = 200;
 };
 

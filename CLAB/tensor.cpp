@@ -149,6 +149,24 @@ void tensor::fill(const float p_value) const
 	fill(_data, _size, VALUE, p_value);
 }
 
+void tensor::reshape(std::initializer_list<int> p_new_shape)
+{
+	int rank = p_new_shape.size();
+	int* shape = init_shape(rank, p_new_shape);
+	int size = init_size(rank, shape);
+
+	if (_size != size)
+	{
+		assert(0);
+	}
+	else
+	{
+		_rank = rank;
+		delete _shape;
+		_shape = shape;
+	}
+}
+
 void tensor::resize(std::initializer_list<int> p_shape, const INIT p_init, const float p_value)
 {
 	const int shape_check = check_shape(p_shape);
@@ -171,6 +189,10 @@ void tensor::resize(std::initializer_list<int> p_shape, const INIT p_init, const
 		{
 			delete _gpu_data;
 		}
+	}
+	if (shape_check == SHAPE_EQUAL)
+	{
+		fill(_data, _size, p_init, p_value);
 	}
 
 	_gpu_flag = false;

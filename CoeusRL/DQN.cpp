@@ -6,13 +6,12 @@ DQN::DQN(neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma,
 	_target_update_step(0)
 {
 	_memory = new replay_buffer<mdp_transition>(p_memory_size);
-	_critic_target = new neural_network(*p_critic);
+	_critic_target = *p_critic;
 }
 
 DQN::~DQN()
 {
 	delete _memory;
-	delete _critic_target;
 }
 
 void DQN::train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final)
@@ -29,7 +28,7 @@ void DQN::train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p
 		_target_update_step++;
 		if (_target_update_step == _target_update_frequency)
 		{
-			_critic_target->copy_params(*_critic);
+			_critic_target.copy_params(*_critic);
 			_target_update_step = 0;
 		}
 	}
@@ -37,7 +36,7 @@ void DQN::train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p
 
 tensor& DQN::critic_loss_function(tensor* p_state, tensor* p_action, tensor* p_next_state, tensor* p_reward, tensor* p_mask)
 {
-	tensor& q_next_values = _critic_target->forward(p_next_state);
+	tensor& q_next_values = _critic_target.forward(p_next_state);
 	vector<int> a_max_index = q_next_values.max_index(0);
 	const tensor max_q_values = q_next_values.gather(a_max_index);
 

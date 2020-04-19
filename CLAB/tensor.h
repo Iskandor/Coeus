@@ -34,6 +34,7 @@ public:
 	float* data() const { return _data; }
 
 	void fill(float p_value) const;
+	void reshape(std::initializer_list<int> p_new_shape);
 	void resize(std::initializer_list<int> p_shape, INIT p_init = ZERO, float p_value = 0.f);
 	void resize(int p_rank, int* p_shape, INIT p_init = ZERO, float p_value = 0.f);
 	void override(tensor& p_copy);

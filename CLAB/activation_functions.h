@@ -10,7 +10,8 @@ public:
 		SIGMOID = 1,
 		TANH = 2,
 		TANHEXP = 3,
-		RELU = 4
+		RELU = 4,
+		SOFTMAX = 5
 	};
 
 	static activation_function* create(TYPE p_type);
@@ -20,6 +21,7 @@ public:
 	static activation_function* tanh();
 	static activation_function* tanhexp();
 	static activation_function* relu();
+	static activation_function* softmax();
 	~activation_function() = default;
 
 	TYPE type() const { return _type; }
@@ -80,4 +82,18 @@ public:
 
 	tensor& forward(tensor& p_input) override;
 	tensor& backward(tensor& p_delta) override;
+};
+
+class __declspec(dllexport) softmax_function : public activation_function
+{
+public:
+	softmax_function() { _type = RELU; }
+	~softmax_function() = default;
+
+	tensor& forward(tensor& p_input) override;
+	tensor& backward(tensor& p_delta) override;
+
+private:
+	tensor _derivative;
+	float kronecker_delta(int p_i, int p_j) const;
 };

@@ -21,6 +21,25 @@ neural_network::neural_network(neural_network& p_copy)
 	init();
 }
 
+neural_network& neural_network::operator=(const neural_network& p_copy)
+{
+	for (auto layer : _layers)
+	{
+		delete layer.second;
+	}
+
+	for (const auto& layer : p_copy._layers)
+	{
+		add_layer(new dense_layer(*layer.second));
+	}
+
+	_graph = p_copy._graph;
+
+	init();
+
+	return *this;
+}
+
 
 neural_network::~neural_network()
 {

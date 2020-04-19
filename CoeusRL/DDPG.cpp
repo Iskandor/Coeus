@@ -11,18 +11,17 @@ DDPG::DDPG(neural_network* p_actor, optimizer* p_actor_optimizer, neural_network
 	_tau(p_tau),
 	_actor_optimizer(p_actor_optimizer),
 	_critic_optimizer(p_critic_optimizer),
-	_sample_size(p_sample_size)
+	_sample_size(p_sample_size),
+	_motivation(nullptr)
 {
 	_memory = new replay_buffer<mdp_transition>(p_memory_size);
-	_actor_target = new neural_network(*p_actor);
-	_critic_target = new neural_network(*p_critic);
+	_actor_target = *p_actor;
+	_critic_target = *p_critic;
 }
 
 DDPG::~DDPG()
 {
 	delete _memory;
-	delete _actor_target;
-	delete _critic_target;
 }
 
 tensor& DDPG::get_action(tensor* p_state) const
@@ -44,9 +43,14 @@ void DDPG::train(tensor* p_state, tensor* p_action, tensor* p_next_state, const 
 		_actor->backward(actor_loss_function());
 		_actor_optimizer->update();
 
-		_actor_target->copy_params(*_actor, _tau);
-		_critic_target->copy_params(*_critic, _tau);
+		_actor_target.copy_params(*_actor, _tau);
+		_critic_target.copy_params(*_critic, _tau);
 	}
+}
+
+void DDPG::add_motivation(forward_model* p_motivation)
+{
+	_motivation = p_motivation;
 }
 
 void DDPG::process_sample()
@@ -72,6 +76,12 @@ void DDPG::process_sample()
 	tensor::concat(states, batch_state, 1);
 	tensor::concat(actions, batch_action, 1);
 	tensor::concat(next_states, batch_next_state, 1);
+
+	if (_motivation != nullptr)
+	{
+		tensor& internal_reward = _motivation->reward(&batch_state, &batch_action, &batch_next_state);
+		batch_reward += internal_reward;
+	}
 }
 
 tensor& DDPG::actor_loss_function()
@@ -97,9 +107,9 @@ tensor& DDPG::critic_loss_function()
 
 	map<string, tensor*> critic_target_input;
 	critic_target_input["hidden0"] = &batch_next_state;
-	critic_target_input["hidden1"] = &_actor_target->forward(&batch_next_state);
+	critic_target_input["hidden1"] = &_actor_target.forward(&batch_next_state);
 
-	tensor& max_q_value = _critic_target->forward(critic_target_input);
+	tensor& max_q_value = _critic_target.forward(critic_target_input);
 	_critic_loss = tensor::zero_like(q_value);
 
 	const int size = _sample_size / segment;
@@ -120,7 +130,8 @@ tensor& DDPG::critic_loss_function()
 		const __m256 rx256 = _mm256_load_ps(rx);
 		const __m256 qx256 = _mm256_load_ps(qx);
 		const __m256 maxqx256 = _mm256_load_ps(maxqx);
-		const __m256 lx256 = _mm256_div_ps(_mm256_sub_ps(qx256, _mm256_add_ps(rx256, _mm256_mul_ps(gamma256, _mm256_mul_ps(mx256, maxqx256)))), sample_size256);
+		//const __m256 lx256 = _mm256_div_ps(_mm256_sub_ps(qx256, _mm256_add_ps(rx256, _mm256_mul_ps(gamma256, _mm256_mul_ps(mx256, maxqx256)))), sample_size256);
+		const __m256 lx256 = _mm256_sub_ps(qx256, _mm256_add_ps(rx256, _mm256_mul_ps(gamma256, _mm256_mul_ps(mx256, maxqx256))));
 		_mm256_storeu_ps(lx, lx256);
 
 		mx += segment;
@@ -132,7 +143,8 @@ tensor& DDPG::critic_loss_function()
 
 	for (int i = size * segment; i < _sample_size; i++)
 	{
-		*lx++ = (*qx++ - (*rx++ + _gamma * *mx++ * *maxqx++)) / _sample_size;
+		//*lx++ = (*qx++ - (*rx++ + _gamma * *mx++ * *maxqx++)) / _sample_size;
+		*lx++ = *qx++ - (*rx++ + _gamma * *mx++ * *maxqx++);
 	}
 
 	return _critic_loss;

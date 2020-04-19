@@ -48,13 +48,31 @@ tensor_initializer* tensor_initializer::glorot_normal()
 	return new tensor_initializer(GLOROT_NORMAL, 0.f, 0.f);
 }
 
+tensor_initializer* tensor_initializer::xavier_uniform()
+{
+	return new tensor_initializer(XAVIER_UNIFORM, 0.f, 0.f);
+}
+
+tensor_initializer* tensor_initializer::xavier_normal()
+{
+	return new tensor_initializer(XAVIER_NORMAL, 0.f, 0.f);
+}
+
+tensor_initializer* tensor_initializer::debug(const float p_value)
+{
+	return new tensor_initializer(DEBUG, p_value, 0.f);
+}
+
 tensor_initializer::~tensor_initializer()
 = default;
 
-void tensor_initializer::init(tensor& p_tensor)
+void tensor_initializer::init(tensor& p_tensor) const
 {
 	switch(_type)
 	{
+	case DEBUG:
+		p_tensor.fill(_arg1);
+		break;
 	case UNIFORM:
 		init_uniform(p_tensor, _arg1, _arg2);
 		break;
@@ -72,6 +90,12 @@ void tensor_initializer::init(tensor& p_tensor)
 		break;
 	case GLOROT_NORMAL:
 		init_normal(p_tensor, 0.f, 2.f / (p_tensor.shape(0) + p_tensor.shape(1)));
+		break;
+	case XAVIER_UNIFORM:
+		init_uniform(p_tensor, -sqrt(6.f / (p_tensor.shape(0) + p_tensor.shape(1))), sqrt(6.f / (p_tensor.shape(0) + p_tensor.shape(1))));
+		break;
+	case XAVIER_NORMAL:
+		init_normal(p_tensor, 0.f, sqrt(3.f / (p_tensor.shape(0) + p_tensor.shape(1))));
 		break;
 	default: ;
 	}

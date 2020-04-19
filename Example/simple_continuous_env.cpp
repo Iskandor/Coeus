@@ -22,10 +22,13 @@ tensor simple_continuous_env::get_state()
 
 void simple_continuous_env::do_action(tensor& p_action)
 {
-	_position += p_action[0] * 0.1;
+	float action = p_action[0];
+	if (action > 1.f) action = 1.f;
+	if (action < -1.f) action = -1.f;
+	_position += action * 0.1f;
 
-	if (_position < 0) _position = 0;
-	if (_position > 10) _position = 10;
+	if (_position < 0.f) _position = 0.f;
+	if (_position > 10.f) _position = 10.f;
 	
 	_steps++;
 }
@@ -36,11 +39,11 @@ float simple_continuous_env::get_reward()
 
 	if (is_failed())
 	{
-		reward = 0;
+		reward = -1.f;
 	}
 	else
 	{
-		reward = metrics::gaussian_distance(_position, 0.2f, _target);
+		reward = metrics::gaussian_distance(_position, 0.4f, _target);
 	}
 
 	return reward;

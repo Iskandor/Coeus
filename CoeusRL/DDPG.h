@@ -3,6 +3,7 @@
 #include "optimizer.h"
 #include "replay_buffer.h"
 #include "loss_functions.h"
+#include "forward_model.h"
 
 class __declspec(dllexport) DDPG
 {
@@ -12,6 +13,7 @@ public:
 
 	tensor& get_action(tensor* p_state) const;
 	void train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
+	void add_motivation(forward_model* p_motivation);
 
 private:
 	void process_sample();
@@ -19,9 +21,9 @@ private:
 	tensor& critic_loss_function();
 
 	neural_network* _actor;
-	neural_network* _actor_target;
+	neural_network _actor_target;
 	neural_network* _critic;
-	neural_network* _critic_target;
+	neural_network _critic_target;
 
 	float _gamma;
 	float _tau;
@@ -38,8 +40,9 @@ private:
 	tensor batch_reward;
 	tensor batch_mask;
 
-	//mse_function _critic_loss_function;
 	tensor _critic_loss;
 	tensor _actor_loss;
+
+	forward_model* _motivation;
 };
 

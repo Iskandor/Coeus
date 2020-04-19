@@ -10,6 +10,7 @@ class __declspec(dllexport) neural_network : public param_model
 public:
 	neural_network();
 	neural_network(neural_network& p_copy);
+	neural_network& operator=(const neural_network& p_copy);
 	~neural_network();
 
 	tensor& forward(tensor* p_input);

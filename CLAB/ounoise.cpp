@@ -18,7 +18,7 @@ void ounoise::noise(tensor& p_action) const
 {
 	for(int i = 0; i < _dim; i++)
 	{
-		_state[i] += _theta * (_mu - _state[i]) + _sigma * random_generator::instance().normal_random();
+		_state[i] += _theta * (_mu - _state[i]) + _sigma * random_generator::instance().normal_random() * sqrt(1e-2f);
 		p_action[i] += _state[i];
 	}
 }
