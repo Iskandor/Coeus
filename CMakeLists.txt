@@ -1,11 +1,12 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.8)
 project(Coeus VERSION 1.0.0)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(CLAB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Coeus/CLAB")
-set(CORE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Coeus/Core")
-set(RL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Coeus/RL")
+set(CUCLAB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CUCLAB")
+set(CLAB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CLAB")
+set(CORE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Core")
+set(RL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/RL")
 set(EXAMPLE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Example")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -16,45 +17,24 @@ set(BUILD_SOM_MODULE TRUE CACHE BOOL "Build self-organizing maps module")
 
 include(GNUInstallDirs)
 
-if(MSVC)
-  set(pdb_output_dir "${CMAKE_CURRENT_BINARY_DIR}/pdb-files")
-
-  set(CMAKE_PDB_OUTPUT_DIRECTORY "${pdb_output_dir}")
-  set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY "${pdb_output_dir}")
-
-  get_cmake_property(is_multi GENERATOR_IS_MULTI_CONFIG)
-  if(is_multi)
-    set(config_suffix "$<CONFIG>")
-  else()
-    set(config_suffix "")
-  endif()
-
-  set(pdb_dst ${CMAKE_INSTALL_BINDIR})
-
-  install(
-      DIRECTORY "${pdb_output_dir}/${config_suffix}/"
-      DESTINATION ${pdb_dst}
-  )
-endif()
-
 find_package(MKL REQUIRED)
 
+add_subdirectory(${CUCLAB_DIR})
 add_subdirectory(${CLAB_DIR})
 add_subdirectory(${CORE_DIR})
 
-set(COEUS_TARGETS $<TARGET_OBJECTS:CLAB> $<TARGET_OBJECTS:CoeusCore>)
-set(COEUS_INCLUDE_DIRS ${CLAB_DIR}/ ${CORE_DIR}/)
+set(COEUS_TARGETS $<TARGET_OBJECTS:CuCLAB> $<TARGET_OBJECTS:CLAB> $<TARGET_OBJECTS:Core>)
+set(COEUS_INCLUDE_DIRS ${CUCLAB_DIR}/ ${CLAB_DIR}/ ${CORE_DIR}/)
 
 if(BUILD_RL_MODULE)
 	add_subdirectory(${RL_DIR})
-	set(COEUS_TARGETS ${COEUS_TARGETS} $<TARGET_OBJECTS:CoeusRL>)
+	set(COEUS_TARGETS ${COEUS_TARGETS} $<TARGET_OBJECTS:RL>)
 	set(COEUS_INCLUDE_DIRS ${COEUS_INCLUDE_DIRS} ${RL_DIR}/)
 endif(BUILD_RL_MODULE)
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(${EXAMPLE_DIR})
 endif(BUILD_EXAMPLES)
-
 
 add_library(Coeus SHARED ${COEUS_TARGETS})
 
@@ -67,14 +47,40 @@ endif(BUILD_EXAMPLES)
 
 target_link_libraries(Coeus PRIVATE
 	${MKL_LIBRARIES}
+	CuCLAB
 	)
+
+if(MSVC)
+	set_target_properties(CuCLAB PROPERTIES COMPILE_PDB_NAME CuCLAB)
+	set_target_properties(CLAB PROPERTIES COMPILE_PDB_NAME CLAB)
+	set_target_properties(Core PROPERTIES COMPILE_PDB_NAME Core)
+	set_target_properties(RL PROPERTIES COMPILE_PDB_NAME RL)
+
+	set(pdb_output_dir "${CMAKE_CURRENT_BINARY_DIR}/pdb-files")
+
+	set(CMAKE_PDB_OUTPUT_DIRECTORY "${pdb_output_dir}")
+	set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY "${pdb_output_dir}")
+
+	get_cmake_property(is_multi GENERATOR_IS_MULTI_CONFIG)
+	if(is_multi)
+		set(config_suffix "$<CONFIG>")
+	else()
+		set(config_suffix "")
+	endif()
+
+	set(pdb_dst ${CMAKE_INSTALL_BINDIR})
+
+	install(
+		DIRECTORY "${pdb_output_dir}/${config_suffix}/"
+		DESTINATION ${pdb_dst}
+	)
+endif()
 
 set(CMAKE_RELEASE_POSTFIX "")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "rd")
 set(CMAKE_DEBUG_POSTFIX "d")
 
-set_target_properties(Coeus
-    PROPERTIES
+set_target_properties(Coeus PROPERTIES
 	VERSION ${PROJECT_VERSION}
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     )

@@ -18,3 +18,4 @@ x64
 /CLAB/*.filters
 /CLAB/*.user
 Debug
+build

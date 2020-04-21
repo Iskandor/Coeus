@@ -336,6 +336,7 @@ tensor& softmax_function::forward(tensor& p_input)
 
 tensor& softmax_function::backward(tensor& p_delta)
 {
+	/*
 	Tensor tg({ p_input->shape(1) }, Tensor::ZERO);
 	Tensor ti({ p_input->shape(1) }, Tensor::ZERO);
 
@@ -355,6 +356,7 @@ tensor& softmax_function::backward(tensor& p_delta)
 
 		_gradient->push_back(&tg);
 	}
+	*/
 
 	return p_delta;
 }
