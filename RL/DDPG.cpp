@@ -1,5 +1,4 @@
 #include "DDPG.h"
-#include "loss_functions.h"
 #include <iostream>
 #include "CLAB.h"
 
@@ -130,8 +129,7 @@ tensor& DDPG::critic_loss_function()
 		const __m256 rx256 = _mm256_load_ps(rx);
 		const __m256 qx256 = _mm256_load_ps(qx);
 		const __m256 maxqx256 = _mm256_load_ps(maxqx);
-		//const __m256 lx256 = _mm256_div_ps(_mm256_sub_ps(qx256, _mm256_add_ps(rx256, _mm256_mul_ps(gamma256, _mm256_mul_ps(mx256, maxqx256)))), sample_size256);
-		const __m256 lx256 = _mm256_sub_ps(qx256, _mm256_add_ps(rx256, _mm256_mul_ps(gamma256, _mm256_mul_ps(mx256, maxqx256))));
+		const __m256 lx256 = _mm256_div_ps(_mm256_sub_ps(qx256, _mm256_add_ps(rx256, _mm256_mul_ps(gamma256, _mm256_mul_ps(mx256, maxqx256)))), sample_size256);
 		_mm256_storeu_ps(lx, lx256);
 
 		mx += segment;
@@ -143,8 +141,7 @@ tensor& DDPG::critic_loss_function()
 
 	for (int i = size * segment; i < _sample_size; i++)
 	{
-		//*lx++ = (*qx++ - (*rx++ + _gamma * *mx++ * *maxqx++)) / _sample_size;
-		*lx++ = *qx++ - (*rx++ + _gamma * *mx++ * *maxqx++);
+		*lx++ = (*qx++ - (*rx++ + _gamma * *mx++ * *maxqx++)) / _sample_size;
 	}
 
 	return _critic_loss;

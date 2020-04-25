@@ -35,7 +35,10 @@ set(SOURCE_FILES
 	)
 	
 include_directories(
+	${ZLIB_INCLUDE_DIRS}
+	${CNPY_DIR}
 	${CUCLAB_DIR}
 	)	
 	
 add_library(CLAB STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
+target_compile_options(CLAB PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/arch:AVX>)

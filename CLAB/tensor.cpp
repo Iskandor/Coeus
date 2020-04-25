@@ -2,6 +2,9 @@
 #include <cstring>
 #include <cstdlib>
 #include <cassert>
+#include <utility>
+
+#include "cnpy.h"
 #include "tensor_operator_cpu.h"
 #include "tensor_operator_gpu.cuh"
 
@@ -142,6 +145,33 @@ tensor tensor::value(const std::initializer_list<int> p_shape, const float p_val
 tensor tensor::value_like(tensor& p_copy, float p_value)
 {
 	return tensor(p_copy._rank, p_copy._shape);
+}
+
+std::vector<float> tensor::to_vector() const
+{
+	std::vector<float> result;
+	result.assign(_data, _data + _size);
+
+	return result;
+}
+
+std::vector<std::vector<float>> tensor::to_vector2d() const
+{
+	std::vector<std::vector<float>> result;
+
+	float* x = _data;
+
+	for (int i = 0; i < _shape[0]; i++)
+	{
+		std::vector<float> row;
+		for (int j = 0; j < _shape[1]; j++)
+		{
+			row.push_back(*x++);
+		}
+		result.push_back(row);
+	}
+
+	return result;
 }
 
 void tensor::fill(const float p_value) const
@@ -325,6 +355,95 @@ void tensor::concat(std::vector<tensor*> &p_source, tensor& p_dest, int p_dim)
 			{
 				memcpy(p_dest._data + index, t->_data, sizeof(float) * t->_size);
 				index += t->_size;
+			}
+		}
+	}
+}
+
+void tensor::concat(std::vector<tensor>& p_source, tensor& p_dest, int p_dim)
+{
+	int rank = 0;
+	for (auto t : p_source)
+	{
+		rank = t._rank;
+	}
+
+	if (rank == 1)
+	{
+		if (p_dim == 0)
+		{
+			int size = 0;
+			for (auto t : p_source)
+			{
+				size += t._size;
+			}
+			p_dest.resize({ size });
+			int index = 0;
+			for (auto t : p_source)
+			{
+				memcpy(p_dest._data + index, t._data, sizeof(float) * t._size);
+				index += t._size;
+			}
+		}
+		if (p_dim == 1)
+		{
+			int rows = 0;
+			int cols = 0;
+
+			for (auto t : p_source)
+			{
+				rows++;
+				cols = t._size;
+			}
+
+			p_dest.resize({ rows, cols });
+
+			int index = 0;
+			for (auto t : p_source)
+			{
+				memcpy(p_dest._data + index, t._data, sizeof(float) * t._size);
+				index += t._size;
+			}
+		}
+	}
+	if (rank == 2)
+	{
+		int rows = 0;
+		int cols = 0;
+
+		if (p_dim == 0)
+		{
+			for (auto t : p_source)
+			{
+				rows = t._shape[0];
+				cols += t._shape[1];
+			}
+			p_dest.resize({ rows, cols });
+
+			int index = 0;
+			for (int i = 0; i < p_dest._shape[0]; i++)
+			{
+				for (auto t : p_source)
+				{
+					memcpy(p_dest._data + index, t._data + i * t._shape[1], sizeof(float) * t._shape[1]);
+					index += t._shape[1];
+				}
+			}
+		}
+		if (p_dim == 1)
+		{
+			for (auto t : p_source)
+			{
+				rows += t._shape[0];
+				cols = t._shape[1];
+			}
+			p_dest.resize({ rows, cols });
+
+			int index = 0;
+			for (auto t : p_source)
+			{
+				memcpy(p_dest._data + index, t._data, sizeof(float) * t._size);
+				index += t._size;
 			}
 		}
 	}
@@ -699,6 +818,36 @@ void tensor::to_cpu()
 {
 	_gpu_data->to_cpu(_data);
 	_gpu_flag = false;
+}
+
+void tensor::save_numpy(std::string p_filename, tensor& p_tensor)
+{
+	std::vector<size_t> shape;
+	shape.assign(p_tensor._shape, p_tensor._shape + p_tensor._rank);
+	const float* data = p_tensor._data;
+	cnpy::npy_save(std::move(p_filename), data, shape);
+}
+
+tensor tensor::load_numpy(std::string p_filename)
+{	
+	cnpy::NpyArray a = cnpy::npy_load(std::move(p_filename));
+
+	return tensor(a.shape, a.data<float>());
+}
+
+tensor::tensor(std::vector<size_t> p_shape, float* p_data)
+{
+	_rank = p_shape.size();
+	_shape = static_cast<int*>(malloc(sizeof(int) * _rank));
+	memcpy(_shape, &p_shape[0], sizeof(int) * _rank);
+	_stride = init_stride(_rank, _shape);
+	_size = init_size(_rank, _shape);
+	_data = static_cast<float*>(malloc(sizeof(float) * _size));
+	memcpy(_data, p_data, sizeof(float) * _size);
+	_end = 0;
+	_gpu_flag = false;
+	_gpu_data = nullptr;
+	_transpose_flag = false;
 }
 
 tensor::tensor(const int p_rank, int* p_shape, const INIT p_init, const float p_value)

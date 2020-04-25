@@ -34,15 +34,16 @@ void FFN::run() {
 
 	neural_network network;
 
-	network.add_layer(new dense_layer("hidden0", 400, activation_function::sigmoid(), tensor_initializer::lecun_uniform(), { 2 }));
-	network.add_layer(new dense_layer("hidden1", 300, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
+	network.add_layer(new dense_layer("hidden0", 8, activation_function::sigmoid(), tensor_initializer::lecun_uniform(), { 2 }));
+	network.add_layer(new dense_layer("hidden1", 4, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
 	network.add_layer(new dense_layer("output", 1, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
 	network.add_connection("hidden0", "hidden1");
 	network.add_connection("hidden1", "output");
 	network.init();
 
 	mse_function loss;
-	sgd optimizer(&network, 0.5f, 0.9f, true);
+	//sgd optimizer(&network, 0.5f, 0.9f, true);
+	adam optimizer(&network, 1e-2f);
 	//radam optimizer(&network, 1e-1);
 
 	map<string, tensor*> input_map;

@@ -27,6 +27,9 @@ public:
 	static tensor value(std::initializer_list<int> p_shape, float p_value);
 	static tensor value_like(tensor& p_copy, float p_value);
 
+	std::vector<float> to_vector() const;
+	std::vector<std::vector<float>> to_vector2d() const;
+	
 	// properties
 	int rank() const { return _rank; }
 	int shape(const int p_index) const { return _shape[p_index]; }
@@ -39,6 +42,7 @@ public:
 	void resize(int p_rank, int* p_shape, INIT p_init = ZERO, float p_value = 0.f);
 	void override(tensor& p_copy);
 	static void concat(std::vector<tensor*> &p_source, tensor& p_dest, int p_dim);
+	static void concat(std::vector<tensor> &p_source, tensor& p_dest, int p_dim);
 	static void split(tensor& p_source, std::vector<tensor*> &p_dest);
 
 	tensor mean(int p_dim) const;
@@ -75,6 +79,10 @@ public:
 	void to_gpu();
 	void to_cpu();
 
+	// io operations
+	static void save_numpy(std::string p_filename, tensor& p_tensor);
+	static tensor load_numpy(std::string p_filename);
+	
 	friend std::ostream &operator<<(std::ostream &output, const tensor &p_tensor) {
 		if (p_tensor.rank() == 1)
 		{
@@ -96,6 +104,7 @@ public:
 	}
 
 private:
+	tensor(std::vector<size_t> p_shape, float* p_data);
 	tensor(int p_rank, int* p_shape, INIT p_init = ZERO, float p_value = 0.f);
 
 	static void print_vector(std::ostream &output, const tensor &p_tensor);

@@ -14,6 +14,7 @@ public:
 	~neural_network();
 
 	tensor& forward(tensor* p_input);
+	tensor& forward(std::initializer_list<tensor*> p_input);
 	tensor& forward(std::map<std::string, tensor*> &p_input);
 	std::map<std::string, tensor*>& backward(tensor& p_delta);
 

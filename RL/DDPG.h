@@ -2,7 +2,6 @@
 #include "neural_network.h"
 #include "optimizer.h"
 #include "replay_buffer.h"
-#include "loss_functions.h"
 #include "forward_model.h"
 
 class __declspec(dllexport) DDPG

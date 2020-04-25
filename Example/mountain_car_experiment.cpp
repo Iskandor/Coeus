@@ -10,9 +10,32 @@
 #include "discrete_exploration.h"
 #include "linear_interpolation.h"
 
-
 mountain_car_experiment::mountain_car_experiment()
 {
+	_resolution = 20;
+	vector<tensor> state_list;
+
+	for (int i = 0; i < _resolution; i++)
+	{
+		float position = i * 1.8f / (_resolution - 1) - 1.2f;
+		float velocity = i * 0.14f / (_resolution - 1) - 0.07f;
+		_position.push_back(position);
+		_velocity.push_back(velocity);
+		
+	}
+
+	for(int i = 0; i < _resolution; i++)
+	{		
+		for (int j = 0; j < _resolution; j++)
+		{
+			tensor state({ 1,2 });
+			state[0] = _position[i];
+			state[1] = _velocity[j];
+			state_list.push_back(state);
+		}
+	}
+
+	tensor::concat(state_list, _states, 1);
 }
 
 
@@ -23,24 +46,24 @@ mountain_car_experiment::~mountain_car_experiment()
 void mountain_car_experiment::simple_ddpg(const int p_epochs)
 {
 	neural_network actor;
-	actor.add_layer(new dense_layer("hidden0", 64, activation_function::relu(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
-	actor.add_layer(new dense_layer("hidden1", 32, activation_function::relu(), tensor_initializer::xavier_uniform()));
-	actor.add_layer(new dense_layer("output", _simple_env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-3e-1f, 3e-1f)));
+	actor.add_layer(new dense_layer("hidden0", 16, activation_function::relu(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
+	actor.add_layer(new dense_layer("hidden1", 8, activation_function::relu(), tensor_initializer::xavier_uniform()));
+	actor.add_layer(new dense_layer("output", _simple_env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-1e-3f, 1e-3f)));
 	actor.add_connection("hidden0", "hidden1");
 	actor.add_connection("hidden1", "output");
 	actor.init();
 
-	adam actor_optimizer(&actor, 2e-4f);
+	adam actor_optimizer(&actor, 1e-4f);
 
 	neural_network critic;
-	critic.add_layer(new dense_layer("hidden0", 64, activation_function::relu(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
-	critic.add_layer(new dense_layer("hidden1", 32, activation_function::relu(), tensor_initializer::xavier_uniform(), { _simple_env.ACTION_DIM() }));
-	critic.add_layer(new dense_layer("output", 1, activation_function::tanh(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
+	critic.add_layer(new dense_layer("hidden0", 16, activation_function::relu(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 8, activation_function::relu(), tensor_initializer::xavier_uniform(), { _simple_env.ACTION_DIM() }));
+	critic.add_layer(new dense_layer("output", 1, activation_function::tanh(), tensor_initializer::uniform(-1e-4f, 1e-4f)));
 	critic.add_connection("hidden0", "hidden1");
 	critic.add_connection("hidden1", "output");
 	critic.init();
 
-	adam critic_optimizer(&critic, 1e-3f);
+	adam critic_optimizer(&critic, 2e-4f);
 
 	DDPG agent(&actor, &actor_optimizer, &critic, &critic_optimizer, 0.99f, 10000, 64);
 
@@ -121,9 +144,9 @@ void mountain_car_experiment::simple_ddpg(const int p_epochs)
 void mountain_car_experiment::simple_cacla(int p_epochs)
 {
 	neural_network actor;
-	actor.add_layer(new dense_layer("hidden0", 256, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
-	actor.add_layer(new dense_layer("hidden1", 256, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
-	actor.add_layer(new dense_layer("output", _simple_env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-3e-1f, 3e-1f)));
+	actor.add_layer(new dense_layer("hidden0", 16, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
+	actor.add_layer(new dense_layer("hidden1", 8, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
+	actor.add_layer(new dense_layer("output", _simple_env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-1e-1f, 1e-1f)));
 	actor.add_connection("hidden0", "hidden1");
 	actor.add_connection("hidden1", "output");
 	actor.init();
@@ -131,9 +154,9 @@ void mountain_car_experiment::simple_cacla(int p_epochs)
 	adam actor_optimizer(&actor, 1e-4f);
 
 	neural_network critic;
-	critic.add_layer(new dense_layer("hidden0", 256, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
-	critic.add_layer(new dense_layer("hidden1", 256, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
-	critic.add_layer(new dense_layer("output", 1, activation_function::tanh(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
+	critic.add_layer(new dense_layer("hidden0", 16, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _simple_env.STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 8, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
+	critic.add_layer(new dense_layer("output", 1, activation_function::tanh(), tensor_initializer::uniform(-1e-4f, 1e-4f)));
 	critic.add_connection("hidden0", "hidden1");
 	critic.add_connection("hidden1", "output");
 	critic.init();
@@ -169,6 +192,7 @@ void mountain_car_experiment::simple_cacla(int p_epochs)
 
 			agent.train(&state, &action, &next_state, reward, final);
 			train_reward += reward;
+			//cout << action[0] << " " << next_state[0] << " " << state[0] + action[0] * 0.1f << " " << reward << endl;
 		}
 		exploration.reset();
 
@@ -341,8 +365,8 @@ void mountain_car_experiment::simple_dqn(int p_epochs)
 void mountain_car_experiment::run_ddpg(const int p_epochs)
 {
 	neural_network actor;
-	actor.add_layer(new dense_layer("hidden0", 400, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	actor.add_layer(new dense_layer("hidden1", 300, activation_function::relu(), tensor_initializer::xavier_uniform()));
+	actor.add_layer(new dense_layer("hidden0", 80, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	actor.add_layer(new dense_layer("hidden1", 60, activation_function::relu(), tensor_initializer::xavier_uniform()));
 	actor.add_layer(new dense_layer("output", _env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-3e-1f,3e-1f)));
 	actor.add_connection("hidden0", "hidden1");
 	actor.add_connection("hidden1", "output");
@@ -351,8 +375,8 @@ void mountain_car_experiment::run_ddpg(const int p_epochs)
 	adam actor_optimizer(&actor, 1e-4f);
 
 	neural_network critic;
-	critic.add_layer(new dense_layer("hidden0", 400, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	critic.add_layer(new dense_layer("hidden1", 300, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
+	critic.add_layer(new dense_layer("hidden0", 80, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 60, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
 	critic.add_layer(new dense_layer("output", 1, activation_function::linear(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
 	critic.add_connection("hidden0", "hidden1");
 	critic.add_connection("hidden1", "output");
@@ -370,10 +394,11 @@ void mountain_car_experiment::run_ddpg(const int p_epochs)
 	{
 		float test_reward = 0;
 		float train_reward = 0;
-		_env.reset();
+		visualize_agent(actor, critic);
 
+		_env.reset();
 		while (!_env.is_finished())
-		{
+		{			
 			tensor state = _env.get_state();
 			tensor action = agent.get_action(&state);
 			action = exploration.explore(action);
@@ -398,6 +423,8 @@ void mountain_car_experiment::run_ddpg(const int p_epochs)
 		}
 		cout << "Episode " << e << " train reward " << train_reward << " test reward " << test_reward << endl;
 	}
+
+	save_visualization("test");
 }
 
 void mountain_car_experiment::run_ddpg_fm(const int p_epochs)
@@ -405,7 +432,7 @@ void mountain_car_experiment::run_ddpg_fm(const int p_epochs)
 	neural_network fm_network;
 	fm_network.add_layer(new dense_layer("hidden0", 50, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() + _env.ACTION_DIM() }));
 	fm_network.add_layer(new dense_layer("hidden1", 30, activation_function::relu(), tensor_initializer::xavier_uniform()));
-	fm_network.add_layer(new dense_layer("output", _env.STATE_DIM(), activation_function::linear(), tensor_initializer::uniform(-3e-1f, 3e-1f)));
+	fm_network.add_layer(new dense_layer("output", _env.STATE_DIM(), activation_function::linear(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
 	fm_network.add_connection("hidden0", "hidden1");
 	fm_network.add_connection("hidden1", "output");
 	fm_network.init();
@@ -415,8 +442,8 @@ void mountain_car_experiment::run_ddpg_fm(const int p_epochs)
 	forward_model fm_motivation(&fm_network, &fm_optimizer);
 
 	neural_network actor;
-	actor.add_layer(new dense_layer("hidden0", 400, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	actor.add_layer(new dense_layer("hidden1", 300, activation_function::relu(), tensor_initializer::xavier_uniform()));
+	actor.add_layer(new dense_layer("hidden0", 80, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	actor.add_layer(new dense_layer("hidden1", 60, activation_function::relu(), tensor_initializer::xavier_uniform()));
 	actor.add_layer(new dense_layer("output", _env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-3e-1f, 3e-1f)));
 	actor.add_connection("hidden0", "hidden1");
 	actor.add_connection("hidden1", "output");
@@ -425,9 +452,9 @@ void mountain_car_experiment::run_ddpg_fm(const int p_epochs)
 	adam actor_optimizer(&actor, 1e-4f);
 
 	neural_network critic;
-	critic.add_layer(new dense_layer("hidden0", 400, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	critic.add_layer(new dense_layer("hidden1", 300, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
-	critic.add_layer(new dense_layer("output", 1, activation_function::linear(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
+	critic.add_layer(new dense_layer("hidden0", 80, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 60, activation_function::relu(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
+	critic.add_layer(new dense_layer("output", 1, activation_function::linear(), tensor_initializer::uniform(-1e-4f, 1e-4f)));
 	critic.add_connection("hidden0", "hidden1");
 	critic.add_connection("hidden1", "output");
 	critic.init();
@@ -445,12 +472,13 @@ void mountain_car_experiment::run_ddpg_fm(const int p_epochs)
 	{
 		float test_reward = 0;
 		float train_reward = 0;
-		_env.reset();
+		visualize_agent(actor, critic, fm_motivation);
 
+		_env.reset();
 		while (!_env.is_finished())
 		{
 			tensor state = _env.get_state();
-			tensor action = agent.get_action(&state);
+			tensor action = agent.get_action(&state);			
 			action = exploration.explore(action);
 			action.reshape({ _env.ACTION_DIM() });
 			_env.do_action(action);
@@ -474,5 +502,70 @@ void mountain_car_experiment::run_ddpg_fm(const int p_epochs)
 			test_reward += _env.get_reward();
 		}
 		cout << "Episode " << e << " train reward " << train_reward << " test reward " << test_reward << endl;
+	}
+
+	save_visualization("test");
+}
+
+void mountain_car_experiment::visualize_agent(neural_network& p_actor, neural_network& p_critic)
+{
+	tensor& actions = p_actor.forward(&_states);
+	tensor& values = p_critic.forward({ &_states, &actions });
+	actions.reshape({ 1, _resolution * _resolution });
+	values.reshape({ 1, _resolution * _resolution });
+	_actor_outputs.push_back(actions);
+	_critic_outputs.push_back(values);
+}
+
+void mountain_car_experiment::visualize_agent(neural_network& p_actor, neural_network& p_critic, forward_model& p_forward_model)
+{
+	tensor& actions = p_actor.forward(&_states);	
+	tensor& values = p_critic.forward({ &_states, &actions });
+	actions.reshape({ 1, _resolution * _resolution });
+	values.reshape({ 1, _resolution * _resolution });
+	_actor_outputs.push_back(actions);
+	_critic_outputs.push_back(values);
+
+	tensor state({ 2 });
+	tensor action({ 1 });
+	vector<tensor> next_states_list;
+	
+	for(int i = 0; i < _resolution * _resolution; i++)
+	{
+		state[0] = _states[i * 2];
+		state[1] = _states[i * 2 + 1];
+		action[0] = actions[i];
+		_env.set_state(state);
+		_env.do_action(action);
+		tensor next_state = _env.get_state();
+		next_state.reshape({ 1, 2 });
+		next_states_list.push_back(next_state);
+	}
+
+	tensor next_states;
+	tensor::concat(next_states_list, next_states, 1);
+	
+	tensor& rewards = p_forward_model.reward(&_states, &actions, &next_states);
+	rewards.reshape({ 1, _resolution * _resolution });
+
+	_fm_outputs.push_back(rewards);
+}
+
+void mountain_car_experiment::save_visualization(const std::string p_filename)
+{
+	tensor actions;
+	tensor values;
+
+	tensor::concat(_actor_outputs, actions, 1);
+	tensor::concat(_critic_outputs, values, 1);
+
+	tensor::save_numpy(p_filename + "_actions.npy", actions);
+	tensor::save_numpy(p_filename + "_values.npy", values);
+
+	if (!_fm_outputs.empty())
+	{
+		tensor rewards;
+		tensor::concat(_fm_outputs, rewards, 1);
+		tensor::save_numpy(p_filename + "_fm_outputs.npy", rewards);
 	}
 }

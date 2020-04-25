@@ -23,7 +23,7 @@ neural_network::neural_network(neural_network& p_copy)
 
 neural_network& neural_network::operator=(const neural_network& p_copy)
 {
-	for (auto layer : _layers)
+	for (const auto& layer : _layers)
 	{
 		delete layer.second;
 	}
@@ -43,7 +43,7 @@ neural_network& neural_network::operator=(const neural_network& p_copy)
 
 neural_network::~neural_network()
 {
-	for(auto layer : _layers)
+	for(const auto& layer : _layers)
 	{
 		delete layer.second;
 	}
@@ -63,7 +63,7 @@ tensor& neural_network::forward(tensor* p_input)
 		}
 	}
 
-	for(auto layer : _forward_graph)
+	for(auto* layer : _forward_graph)
 	{
 		if (_layer_variables[layer->id()].input_list.size() > 1)
 		{
@@ -74,6 +74,43 @@ tensor& neural_network::forward(tensor* p_input)
 			_layer_variables[layer->id()].input.override(*_layer_variables[layer->id()].input_list[0]);
 		}
 		layer->forward(_layer_variables[layer->id()].input);		
+	}
+
+	return *_layers[_output_layer]->output();
+}
+
+tensor& neural_network::forward(std::initializer_list<tensor*> p_input)
+{
+	if (p_input.size() != _input_layer.size())
+	{
+		assert(0);
+	}
+	int index = 0;
+	
+	for (auto* input : p_input)
+	{
+		if (input->rank() == 1)
+		{
+			_input[_input_layer[index]].value() = tensor({ 1, input->size() }, input->data());
+		}
+		else
+		{
+			_input[_input_layer[index]].value() = *input;
+		}
+		index++;
+	}
+
+	for (auto* layer : _forward_graph)
+	{
+		if (_layer_variables[layer->id()].input_list.size() > 1)
+		{
+			tensor::concat(_layer_variables[layer->id()].input_list, _layer_variables[layer->id()].input, 0);
+		}
+		else
+		{
+			_layer_variables[layer->id()].input.override(*_layer_variables[layer->id()].input_list[0]);
+		}
+		layer->forward(_layer_variables[layer->id()].input);
 	}
 
 	return *_layers[_output_layer]->output();
@@ -93,7 +130,7 @@ tensor& neural_network::forward(std::map<std::string, tensor*>& p_input)
 		}
 	}
 
-	for (auto layer : _forward_graph)
+	for (auto* layer : _forward_graph)
 	{
 		if (_layer_variables[layer->id()].input_list.size() > 1)
 		{
@@ -114,7 +151,7 @@ std::map<std::string, tensor*>& neural_network::backward(tensor& p_delta)
 {
 	_layer_variables[_output_layer].delta = p_delta;
 
-	for (auto layer : _backward_graph)
+	for (auto* layer : _backward_graph)
 	{
 		tensor& delta = layer->backward(_layer_variables[layer->id()].delta);
 		if (_layer_variables[layer->id()].delta_list.size() > 1)

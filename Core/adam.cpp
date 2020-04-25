@@ -1,4 +1,7 @@
 #include "adam.h"
+
+#include <iostream>
+
 #include "CLAB.h"
 
 
@@ -19,13 +22,18 @@ void adam::update()
 {
 	optimizer::update();
 
+	float denb1 = 1;
+	float denb2 = 1;
+
+	_t = 1e5;
+	
 	if (_t < 1e4)
 	{
 		_t++;
+		denb1 -= pow(_beta1, _t);
+		denb2 -= pow(_beta2, _t);
 	}
 
-	float denb1 = 1 - pow(_beta1, _t);
-	float denb2 = 1 - pow(_beta2, _t);
 	float ib1 = 1 - _beta1;
 	float ib2 = 1 - _beta2;
 
@@ -43,6 +51,8 @@ void adam::update()
 	{
 		const int size = param.second->gradient().size() / segment;
 
+		tensor test1 = tensor::zero_like(param.second->params());
+		
 		float* mx = _m[param.first].data();
 		float* vx = _v[param.first].data();
 		float* px = param.second->params().data();
@@ -56,10 +66,10 @@ void adam::update()
 
 			mx256 = _mm256_add_ps(_mm256_mul_ps(beta1256, mx256), _mm256_mul_ps(ib1256, gx256));
 			vx256 = _mm256_add_ps(_mm256_mul_ps(beta2256, vx256), _mm256_mul_ps(ib2256, _mm256_mul_ps(gx256, gx256)));
-
+			
 			if (_t < 1e4)
 			{
-				__m256 m_meanx256 = _mm256_div_ps(mx256, denb1256);
+				const __m256 m_meanx256 = _mm256_div_ps(mx256, denb1256);
 				__m256 v_meanx256 = _mm256_div_ps(vx256, denb2256);
 				
 				for (float& vxi : v_meanx256.m256_f32)
@@ -77,7 +87,7 @@ void adam::update()
 				}
 				px256 = _mm256_sub_ps(px256, _mm256_mul_ps(alpha256, _mm256_div_ps(mx256, _mm256_add_ps(sqrtvx256, epsilon256))));
 			}
-
+			
 			_mm256_storeu_ps(px, px256);
 			_mm256_storeu_ps(mx, mx256);
 			_mm256_storeu_ps(vx, vx256);
@@ -87,17 +97,17 @@ void adam::update()
 			mx += segment;
 			vx += segment;
 		}
-
+		
 		for (int i = size * segment; i < param.second->gradient().size(); i++) {
-			*mx = _beta1 * *mx + ib1 * *gx;
-			*vx = _beta2 * *vx + ib2 * (*gx * *gx);
+			*mx = _beta1 * *mx + ib1 * *gx;			
+			*vx = _beta2 * *vx + ib2 * (*gx * *gx);			
 
 			if (_t < 1e4)
 			{
-				float m_meanx = *mx++ / denb1;
-				float v_meanx = *vx++ / denb2;
+				const float m_meanx = *mx++ / denb1;
+				const float v_meanx = *vx++ / denb2;
 
-				*px++ -= _alpha * m_meanx++ / (sqrt(v_meanx++) + _epsilon);
+				*px++ -= _alpha * m_meanx / (sqrt(v_meanx) + _epsilon);
 			}
 			else
 			{
