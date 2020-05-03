@@ -23,9 +23,7 @@ private:
 
 	const float POWER = 0.0015f;
 	const float MIN_POSITION = -1.2f;
-	const float MAX_POSITION = 0.6f;
-	
-	const float POSITION_LIMIT = 1.2f;
+	const float MAX_POSITION = 0.6f;	
 	const float VELOCITY_LIMIT = 0.07f;
 };
 

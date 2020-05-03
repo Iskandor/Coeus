@@ -3,6 +3,7 @@
 #include "optimizer.h"
 #include "replay_buffer.h"
 #include "forward_model.h"
+#include "metacritic.h"
 
 class __declspec(dllexport) DDPG
 {
@@ -13,6 +14,7 @@ public:
 	tensor& get_action(tensor* p_state) const;
 	void train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
 	void add_motivation(forward_model* p_motivation);
+	void add_motivation(metacritic* p_motivation);
 
 private:
 	void process_sample();
@@ -42,6 +44,7 @@ private:
 	tensor _critic_loss;
 	tensor _actor_loss;
 
-	forward_model* _motivation;
+	forward_model* _forward_model;
+	metacritic* _metacritic;
 };
 

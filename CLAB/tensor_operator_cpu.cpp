@@ -468,9 +468,8 @@ void tensor_operator_cpu::mul_abT(float* p_x, float* p_y, float* p_z, int p_rows
 
 void tensor_operator_cpu::add_broadcast_x(float* p_x, int p_x_size, float* p_y, int p_y_size, float* p_z)
 {
-	const int size = p_x_size >= segment ? p_y_size / p_x_size : 0;
-
-	float *px = p_x;
+	const int iteration = p_y_size / p_x_size;
+	const int size = p_x_size / segment;	
 
 	if (p_x == p_z)
 	{
@@ -480,49 +479,38 @@ void tensor_operator_cpu::add_broadcast_x(float* p_x, int p_x_size, float* p_y, 
 	{
 		if (size > 0)
 		{
-			int x_index = 0;
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				const __m256 xx = _mm256_load_ps(px);
-				const __m256 yx = _mm256_load_ps(p_y);
-				__m256 zx = _mm256_load_ps(p_z);
-
-				zx = _mm256_add_ps(xx, yx);
-
-				_mm256_storeu_ps(p_z, zx);
-
-				p_z += segment;
-				px += segment;
-				p_y += segment;
-				x_index += segment;
-
-				if (x_index == p_x_size)
+				float *px = p_x;
+				for (int j = 0; j < size; j++)
 				{
-					x_index = 0;
-					px = p_x;
+					const __m256 xx = _mm256_load_ps(px);
+					const __m256 yx = _mm256_load_ps(p_y);
+					__m256 zx = _mm256_load_ps(p_z);
+
+					zx = _mm256_add_ps(xx, yx);
+
+					_mm256_storeu_ps(p_z, zx);
+
+					px += segment;
+					p_y += segment;
+					p_z += segment;
 				}
-				else if (p_x_size - x_index < segment)
+
+				for (int j = size * segment; j < p_x_size; j++)
 				{
-					for (int j = 0; j < p_x_size - x_index; j++)
-					{
-						*p_z++ = *px++ + *p_y++;
-					}
-					x_index = 0;
-					px = p_x;
+					*p_z++ = *px++ + *p_y++;
 				}
 			}
 		}
 		else
 		{
-			int x_index = 0;
-			for (int i = 0; i < p_y_size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				*p_z++ = *px++ + *p_y++;
-				x_index++;
-				if (x_index == p_x_size)
+				float *px = p_x;
+				for (int j = 0; j < p_x_size; j++)
 				{
-					x_index = 0;
-					px = p_x;
+					*p_z++ = *px++ + *p_y++;
 				}
 			}
 		}
@@ -531,55 +519,43 @@ void tensor_operator_cpu::add_broadcast_x(float* p_x, int p_x_size, float* p_y, 
 
 void tensor_operator_cpu::add_broadcast_y(float* p_x, int p_x_size, float* p_y, int p_y_size, float* p_z)
 {
-	const int size = p_y_size >= segment ? p_x_size / p_y_size : 0;
-
-	float *py = p_y;
+	const int iteration = p_x_size / p_y_size;
+	const int size = p_y_size / segment;	
 
 	if (p_x == p_z)
 	{
 		if (size > 0)
 		{
-			int y_index = 0;
-			for (int i = 0; i < size; i++)
+			for(int i = 0; i < iteration; i++)
 			{
-				__m256 zx = _mm256_load_ps(p_z);
-				const __m256 yx = _mm256_load_ps(py);
-
-				zx = _mm256_add_ps(zx, yx);
-
-				_mm256_storeu_ps(p_z, zx);
-
-				p_z += segment;
-				py += segment;
-				y_index += segment;
-
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					__m256 zx = _mm256_load_ps(p_z);
+					const __m256 yx = _mm256_load_ps(py);
+
+					zx = _mm256_add_ps(zx, yx);
+
+					_mm256_storeu_ps(p_z, zx);
+
+					p_z += segment;
+					py += segment;
 				}
-				else if (p_y_size - y_index < segment)
+
+				for (int j = size * segment; j < p_y_size; j++)
 				{
-					for (int j = 0; j < p_y_size - y_index; j++)
-					{
-						*p_z++ += *py++;
-					}
-					y_index = 0;
-					py = p_y;
+					*p_z++ += *py++;
 				}
 			}
 		}
 		else
 		{
-			int y_index = 0;
-			for (int i = 0; i < p_x_size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				*p_z++ += *py++;
-				y_index++;
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < p_y_size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					*p_z++ += *py++;
 				}
 			}
 		}
@@ -588,49 +564,38 @@ void tensor_operator_cpu::add_broadcast_y(float* p_x, int p_x_size, float* p_y, 
 	{
 		if (size > 0)
 		{
-			int y_index = 0;
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				const __m256 xx = _mm256_load_ps(p_x);
-				const __m256 yx = _mm256_load_ps(py);
-				__m256 zx = _mm256_load_ps(p_z);
-
-				zx = _mm256_add_ps(xx, yx);
-
-				_mm256_storeu_ps(p_z, zx);
-
-				p_z += segment;
-				p_x += segment;
-				py += segment;
-				y_index += segment;
-
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					const __m256 xx = _mm256_load_ps(p_x);
+					const __m256 yx = _mm256_load_ps(py);
+					__m256 zx = _mm256_load_ps(p_z);
+
+					zx = _mm256_add_ps(xx, yx);
+
+					_mm256_storeu_ps(p_z, zx);
+
+					p_x += segment;
+					py += segment;
+					p_z += segment;
 				}
-				else if (p_y_size - y_index < segment)
+
+				for (int j = size * segment; j < p_y_size; j++)
 				{
-					for (int j = 0; j < p_y_size - y_index; j++)
-					{
-						*p_z++ = *p_x++ + *py++;
-					}
-					y_index = 0;
-					py = p_y;
+					*p_z++ = *p_x++ + *py++;
 				}
 			}
 		}
 		else
 		{
-			int y_index = 0;
-			for (int i = 0; i < p_x_size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				*p_z++ = *p_x++ + *py++;
-				y_index++;
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < p_y_size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					*p_z++ = *p_x++ + *py++;
 				}
 			}
 		}
@@ -639,7 +604,8 @@ void tensor_operator_cpu::add_broadcast_y(float* p_x, int p_x_size, float* p_y, 
 
 void tensor_operator_cpu::sub_broadcast_x(float* p_x, int p_x_size, float* p_y, int p_y_size, float* p_z)
 {
-	const int size = p_x_size >= segment ? p_y_size / p_x_size : 0;
+	const int iteration = p_x_size / p_y_size;
+	const int size = p_y_size / segment;
 
 	float *px = p_x;
 
@@ -651,49 +617,38 @@ void tensor_operator_cpu::sub_broadcast_x(float* p_x, int p_x_size, float* p_y, 
 	{
 		if (size > 0)
 		{
-			int x_index = 0;
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				const __m256 xx = _mm256_load_ps(px);
-				const __m256 yx = _mm256_load_ps(p_y);
-				__m256 zx = _mm256_load_ps(p_z);
-
-				zx = _mm256_sub_ps(xx, yx);
-
-				_mm256_storeu_ps(p_z, zx);
-
-				p_z += segment;
-				px += segment;
-				p_y += segment;
-				x_index += segment;
-
-				if (x_index == p_x_size)
+				float *px = p_x;
+				for (int j = 0; j < size; j++)
 				{
-					x_index = 0;
-					px = p_x;
+					const __m256 xx = _mm256_load_ps(px);
+					const __m256 yx = _mm256_load_ps(p_y);
+					__m256 zx = _mm256_load_ps(p_z);
+
+					zx = _mm256_sub_ps(xx, yx);
+
+					_mm256_storeu_ps(p_z, zx);
+
+					px += segment;
+					p_y += segment;
+					p_z += segment;
 				}
-				else if (p_x_size - x_index < segment)
+
+				for (int j = size * segment; j < p_x_size; j++)
 				{
-					for (int j = 0; j < p_x_size - x_index; j++)
-					{
-						*p_z++ = *px++ - *p_y++;
-					}
-					x_index = 0;
-					px = p_x;
+					*p_z++ = *px++ - *p_y++;
 				}
 			}
 		}
 		else
 		{
-			int x_index = 0;
-			for (int i = 0; i < p_y_size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				*p_z++ = *px++ - *p_y++;
-				x_index++;
-				if (x_index == p_x_size)
+				float *px = p_x;
+				for (int j = 0; j < p_x_size; j++)
 				{
-					x_index = 0;
-					px = p_x;
+					*p_z++ = *px++ - *p_y++;
 				}
 			}
 		}
@@ -702,55 +657,43 @@ void tensor_operator_cpu::sub_broadcast_x(float* p_x, int p_x_size, float* p_y, 
 
 void tensor_operator_cpu::sub_broadcast_y(float* p_x, int p_x_size, float* p_y, int p_y_size, float* p_z)
 {
-	const int size = p_y_size >= segment ? p_x_size / p_y_size : 0;
-
-	float *py = p_y;
+	const int iteration = p_y_size / p_x_size;
+	const int size = p_x_size / segment;
 
 	if (p_x == p_z)
 	{
 		if (size > 0)
 		{
-			int y_index = 0;
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				__m256 zx = _mm256_load_ps(p_z);
-				const __m256 yx = _mm256_load_ps(py);
-
-				zx = _mm256_sub_ps(zx, yx);
-
-				_mm256_storeu_ps(p_z, zx);
-
-				p_z += segment;
-				py += segment;
-				y_index += segment;
-
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					__m256 zx = _mm256_load_ps(p_z);
+					const __m256 yx = _mm256_load_ps(py);
+
+					zx = _mm256_sub_ps(zx, yx);
+
+					_mm256_storeu_ps(p_z, zx);
+
+					p_z += segment;
+					py += segment;
 				}
-				else if (p_y_size - y_index < segment)
+
+				for (int j = size * segment; j < p_y_size; j++)
 				{
-					for (int j = 0; j < p_y_size - y_index; j++)
-					{
-						*p_z++ -= *py++;
-					}
-					y_index = 0;
-					py = p_y;
+					*p_z++ -= *py++;
 				}
 			}
 		}
 		else
 		{
-			int y_index = 0;
-			for (int i = 0; i < p_x_size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				*p_z++ -= *py++;
-				y_index++;
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < p_y_size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					*p_z++ -= *py++;
 				}
 			}
 		}
@@ -759,49 +702,38 @@ void tensor_operator_cpu::sub_broadcast_y(float* p_x, int p_x_size, float* p_y, 
 	{
 		if (size > 0)
 		{
-			int y_index = 0;
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				const __m256 xx = _mm256_load_ps(p_x);
-				const __m256 yx = _mm256_load_ps(py);
-				__m256 zx = _mm256_load_ps(p_z);
-
-				zx = _mm256_sub_ps(xx, yx);
-
-				_mm256_storeu_ps(p_z, zx);
-
-				p_z += segment;
-				p_x += segment;
-				py += segment;
-				y_index += segment;
-
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					const __m256 xx = _mm256_load_ps(p_x);
+					const __m256 yx = _mm256_load_ps(py);
+					__m256 zx = _mm256_load_ps(p_z);
+
+					zx = _mm256_sub_ps(xx, yx);
+
+					_mm256_storeu_ps(p_z, zx);
+
+					p_x += segment;
+					py += segment;
+					p_z += segment;
 				}
-				else if (p_y_size - y_index < segment)
+
+				for (int j = size * segment; j < p_y_size; j++)
 				{
-					for (int j = 0; j < p_y_size - y_index; j++)
-					{
-						*p_z++ = *p_x++ - *py++;
-					}
-					y_index = 0;
-					py = p_y;
+					*p_z++ = *p_x++ - *py++;
 				}
 			}
 		}
 		else
 		{
-			int y_index = 0;
-			for (int i = 0; i < p_x_size; i++)
+			for (int i = 0; i < iteration; i++)
 			{
-				*p_z++ = *p_x++ - *py++;
-				y_index++;
-				if (y_index == p_y_size)
+				float *py = p_y;
+				for (int j = 0; j < p_y_size; j++)
 				{
-					y_index = 0;
-					py = p_y;
+					*p_z++ = *p_x++ - *py++;
 				}
 			}
 		}

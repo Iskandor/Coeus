@@ -24,9 +24,7 @@ void adam::update()
 
 	float denb1 = 1;
 	float denb2 = 1;
-
-	_t = 1e5;
-	
+		
 	if (_t < 1e4)
 	{
 		_t++;

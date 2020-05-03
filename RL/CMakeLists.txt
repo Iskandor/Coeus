@@ -15,6 +15,7 @@ set(INCLUDE_FILES
 	Qlearning.h
 	replay_buffer.h
 	SARSA.h
+	metacritic.h
 	)
 
 set(SOURCE_FILES
@@ -27,6 +28,7 @@ set(SOURCE_FILES
 	forward_model.cpp
 	Qlearning.cpp
 	SARSA.cpp
+	metacritic.cpp
 	)
 	
 include_directories(

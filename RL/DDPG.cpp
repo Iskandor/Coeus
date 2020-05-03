@@ -11,7 +11,8 @@ DDPG::DDPG(neural_network* p_actor, optimizer* p_actor_optimizer, neural_network
 	_actor_optimizer(p_actor_optimizer),
 	_critic_optimizer(p_critic_optimizer),
 	_sample_size(p_sample_size),
-	_motivation(nullptr)
+	_forward_model(nullptr),
+	_metacritic(nullptr)
 {
 	_memory = new replay_buffer<mdp_transition>(p_memory_size);
 	_actor_target = *p_actor;
@@ -49,7 +50,12 @@ void DDPG::train(tensor* p_state, tensor* p_action, tensor* p_next_state, const 
 
 void DDPG::add_motivation(forward_model* p_motivation)
 {
-	_motivation = p_motivation;
+	_forward_model = p_motivation;
+}
+
+void DDPG::add_motivation(metacritic* p_motivation)
+{
+	_metacritic = p_motivation;
 }
 
 void DDPG::process_sample()
@@ -76,10 +82,17 @@ void DDPG::process_sample()
 	tensor::concat(actions, batch_action, 1);
 	tensor::concat(next_states, batch_next_state, 1);
 
-	if (_motivation != nullptr)
+	if (_forward_model != nullptr)
 	{
-		tensor& internal_reward = _motivation->reward(&batch_state, &batch_action, &batch_next_state);
+		tensor& internal_reward = _forward_model->reward(&batch_state, &batch_action, &batch_next_state);
 		batch_reward += internal_reward;
+	}
+
+	if (_metacritic != nullptr)
+	{
+		tensor& internal_reward = _metacritic->reward(&batch_state, &batch_action, &batch_next_state);
+		batch_reward += internal_reward;
+		_metacritic->train(&batch_state, &batch_action, &batch_next_state);
 	}
 }
 
