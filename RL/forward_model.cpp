@@ -54,7 +54,7 @@ tensor& forward_model::error(tensor* p_state, tensor* p_action, tensor* p_next_s
 			const int index = i * predicted_state.shape(1) + j;
 			_error[i] += pow(predicted_state[index] - (*p_next_state)[index], 2);
 		}
-		_error[i] *= 0.5f;
+		_error[i] /= predicted_state.shape(1);
 	}
 
 	return _error;

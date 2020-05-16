@@ -15,6 +15,8 @@ set(INCLUDE_FILES
 	mountain_car.h
 	mountain_car_experiment.h
 	simple_continuous_env.h
+	cart_pole.h
+	cart_pole_experiment.h
 	)
 
 set(SOURCE_FILES
@@ -25,6 +27,8 @@ set(SOURCE_FILES
 	mountain_car.cpp
 	mountain_car_experiment.cpp
 	simple_continuous_env.cpp
+	cart_pole.cpp
+	cart_pole_experiment.cpp
 	)
 
 include_directories(${ZLIB_INCLUDE_DIRS} ${CNPY_DIR} ${CUCLAB_DIR} ${CLAB_DIR} ${CORE_DIR} ${RL_DIR})

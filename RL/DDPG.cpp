@@ -43,6 +43,18 @@ void DDPG::train(tensor* p_state, tensor* p_action, tensor* p_next_state, const 
 		_actor->backward(actor_loss_function());
 		_actor_optimizer->update();
 
+		/*
+		if (_forward_model != nullptr)
+		{
+			_forward_model->train(&batch_state, &batch_action, &batch_next_state);
+		}
+
+		if (_metacritic != nullptr)
+		{
+			_metacritic->train(&batch_state, &batch_action, &batch_next_state);
+		}
+		*/
+
 		_actor_target.copy_params(*_actor, _tau);
 		_critic_target.copy_params(*_critic, _tau);
 	}
@@ -86,13 +98,14 @@ void DDPG::process_sample()
 	{
 		tensor& internal_reward = _forward_model->reward(&batch_state, &batch_action, &batch_next_state);
 		batch_reward += internal_reward;
+		//_forward_model->train(&batch_state, &batch_action, &batch_next_state);
 	}
 
 	if (_metacritic != nullptr)
 	{
 		tensor& internal_reward = _metacritic->reward(&batch_state, &batch_action, &batch_next_state);
 		batch_reward += internal_reward;
-		_metacritic->train(&batch_state, &batch_action, &batch_next_state);
+		//_metacritic->train(&batch_state, &batch_action, &batch_next_state);
 	}
 }
 

@@ -21,13 +21,13 @@ void metacritic::train(tensor* p_state, tensor* p_action, tensor* p_next_state)
 	s0a.push_back(p_action);
 	tensor::concat(s0a, _input, 0);
 	
+	_forward_model->train(p_state, p_action, p_next_state);
+
 	tensor& target = _forward_model->error(p_state, p_action, p_next_state);
 	tensor& prediction = _network->forward(&_input);
 
 	_network->backward(_loss_function.backward(prediction, target));
-	_optimizer->update();
-
-	_forward_model->train(p_state, p_action, p_next_state);
+	_optimizer->update();	
 }
 
 tensor& metacritic::reward(tensor* p_state, tensor* p_action, tensor* p_next_state)
