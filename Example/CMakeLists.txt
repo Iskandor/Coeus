@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.8)
+
 project(Example)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -8,48 +9,28 @@ if (WIN32)
 endif(WIN32)
 
 set(INCLUDE_FILES
-	AddProblemDataset.h
-	CisLoader.h
-	PackDataset.h
-	PackDataset2.h
-	PackDefinition.h
-	RNN.h	
-	CNN.h
 	FFN.h
-	IrisDataset.h
-	IrisTest.h
-	ContinuousTest.h
-	SimpleContinuousEnv.h
-	CartPole.h
-	Maze.h
-	MazeAction.h
-	MazeExample.h
-	MountainCar.h
-	MotivationTest.h
+	maze_experiment.h
+	maze.h
+	mountain_car.h
+	mountain_car_experiment.h
+	simple_continuous_env.h
+	cart_pole.h
+	cart_pole_experiment.h
 	)
 
-set(SOURCE_FILES 
-	AddProblemDataset.cpp
-	CisLoader.cpp
-	PackDataset.cpp
-	PackDataset2.cpp
-	PackDefinition.cpp
-	RNN.cpp	
-	CNN.cpp
+set(SOURCE_FILES
 	FFN.cpp
-	IrisDataset.cpp
-	IrisTest.cpp
-	ContinuousTest.cpp
-	SimpleContinuousEnv.cpp
-	CartPole.cpp
-	Maze.cpp
-	MazeAction.cpp
-	MazeExample.cpp
-	MountainCar.cpp
-	MotivationTest.cpp
 	main.cpp
+	maze.cpp
+	maze_experiment.cpp
+	mountain_car.cpp
+	mountain_car_experiment.cpp
+	simple_continuous_env.cpp
+	cart_pole.cpp
+	cart_pole_experiment.cpp
 	)
 
-include_directories(${CLAB_DIR} ${CORE_DIR} ${RL_DIR})
+include_directories(${COEUS_DIR} ${ZLIB_INCLUDE_DIRS} ${CNPY_DIR} ${CUCLAB_DIR} ${CLAB_DIR} ${CORE_DIR} ${RL_DIR})
 add_executable(Example ${SOURCE_FILES} ${INCLUDE_FILES})
 target_link_libraries(Example Coeus)

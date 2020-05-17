@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['backprop_16',['BackProp',['../class_coeus_1_1_back_prop.html',1,'Coeus']]],
-  ['backproprule_17',['BackPropRule',['../class_coeus_1_1_back_prop_rule.html',1,'Coeus']]],
-  ['base64_18',['Base64',['../class_base64.html',1,'']]],
-  ['baselayer_19',['BaseLayer',['../class_coeus_1_1_base_layer.html',1,'Coeus']]],
-  ['binaryactivation_20',['BinaryActivation',['../class_coeus_1_1_binary_activation.html',1,'Coeus']]],
-  ['boltzmanexploration_21',['BoltzmanExploration',['../class_coeus_1_1_boltzman_exploration.html',1,'Coeus']]]
+  ['backward_5',['backward',['../classmse__function.html#a4093e44a4e756df286716438bea64f75',1,'mse_function::backward()'],['../classdense__layer.html#a59a33c0f71bab6037f8c86aa1c8016b1',1,'dense_layer::backward()']]],
+  ['base64_6',['Base64',['../class_base64.html',1,'']]],
+  ['binary_5fdistance_7',['binary_distance',['../classmetrics.html#abd981316c6b91c41ba51c8ac331a4e54',1,'metrics']]]
 ];

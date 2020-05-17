@@ -1,19 +1,6 @@
 var searchData=
 [
-  ['a2c_118',['A2C',['../class_coeus_1_1_a2_c.html',1,'Coeus']]],
-  ['a3c_119',['A3C',['../class_coeus_1_1_a3_c.html',1,'Coeus']]],
-  ['activationfunctionfactory_120',['ActivationFunctionFactory',['../class_coeus_1_1_activation_function_factory.html',1,'Coeus']]],
-  ['actorcritic_121',['ActorCritic',['../class_coeus_1_1_actor_critic.html',1,'Coeus']]],
-  ['adadelta_122',['Adadelta',['../class_coeus_1_1_adadelta.html',1,'Coeus']]],
-  ['adadeltarule_123',['AdadeltaRule',['../class_coeus_1_1_adadelta_rule.html',1,'Coeus']]],
-  ['adagrad_124',['Adagrad',['../class_coeus_1_1_adagrad.html',1,'Coeus']]],
-  ['adagradrule_125',['AdagradRule',['../class_coeus_1_1_adagrad_rule.html',1,'Coeus']]],
-  ['adam_126',['ADAM',['../class_coeus_1_1_a_d_a_m.html',1,'Coeus']]],
-  ['adamax_127',['AdaMax',['../class_coeus_1_1_ada_max.html',1,'Coeus']]],
-  ['adamaxrule_128',['AdaMaxRule',['../class_coeus_1_1_ada_max_rule.html',1,'Coeus']]],
-  ['adamrule_129',['ADAMRule',['../class_coeus_1_1_a_d_a_m_rule.html',1,'Coeus']]],
-  ['amsgrad_130',['AMSGrad',['../class_coeus_1_1_a_m_s_grad.html',1,'Coeus']]],
-  ['amsgradrule_131',['AMSGradRule',['../class_coeus_1_1_a_m_s_grad_rule.html',1,'Coeus']]],
-  ['annealingscheduler_132',['AnnealingScheduler',['../class_coeus_1_1_annealing_scheduler.html',1,'Coeus']]],
-  ['autodifferentiator_133',['AutoDifferentiator',['../class_coeus_1_1_auto_differentiator.html',1,'Coeus']]]
+  ['ac_71',['AC',['../class_a_c.html',1,'']]],
+  ['activation_5ffunction_72',['activation_function',['../classactivation__function.html',1,'']]],
+  ['adam_73',['adam',['../classadam.html',1,'']]]
 ];

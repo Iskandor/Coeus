@@ -1,14 +1,10 @@
 var searchData=
 [
-  ['radam_92',['RADAM',['../class_coeus_1_1_r_a_d_a_m.html',1,'Coeus']]],
-  ['radamrule_93',['RADAMRule',['../class_coeus_1_1_r_a_d_a_m_rule.html',1,'Coeus']]],
-  ['randomgenerator_94',['RandomGenerator',['../class_random_generator.html',1,'']]],
-  ['recurrentlayer_95',['RecurrentLayer',['../class_coeus_1_1_recurrent_layer.html',1,'Coeus']]],
-  ['reluactivation_96',['ReluActivation',['../class_coeus_1_1_relu_activation.html',1,'Coeus']]],
-  ['replaybuffer_97',['ReplayBuffer',['../class_coeus_1_1_replay_buffer.html',1,'Coeus']]],
-  ['replaybuffer_3c_20coeus_3a_3adqitem_20_3e_98',['ReplayBuffer&lt; Coeus::DQItem &gt;',['../class_coeus_1_1_replay_buffer.html',1,'Coeus']]],
-  ['replaybuffer_3c_20coeus_3a_3atransitionitem_20_3e_99',['ReplayBuffer&lt; Coeus::TransitionItem &gt;',['../class_coeus_1_1_replay_buffer.html',1,'Coeus']]],
-  ['rmsprop_100',['RMSProp',['../class_coeus_1_1_r_m_s_prop.html',1,'Coeus']]],
-  ['rmsproprule_101',['RMSPropRule',['../class_coeus_1_1_r_m_s_prop_rule.html',1,'Coeus']]],
-  ['rulefactory_102',['RuleFactory',['../class_coeus_1_1_rule_factory.html',1,'Coeus']]]
+  ['tanh_5ffunction_62',['tanh_function',['../classtanh__function.html',1,'']]],
+  ['tanhexp_5ffunction_63',['tanhexp_function',['../classtanhexp__function.html',1,'']]],
+  ['tensor_64',['tensor',['../classtensor.html',1,'']]],
+  ['tensor_5fgpu_65',['tensor_gpu',['../classtensor__gpu.html',1,'']]],
+  ['tensor_5finitializer_66',['tensor_initializer',['../classtensor__initializer.html',1,'']]],
+  ['tensor_5foperator_5fcpu_67',['tensor_operator_cpu',['../classtensor__operator__cpu.html',1,'']]],
+  ['tensor_5foperator_5fgpu_68',['tensor_operator_gpu',['../classtensor__operator__gpu.html',1,'']]]
 ];

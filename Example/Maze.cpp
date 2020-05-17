@@ -3,37 +3,39 @@
 //
 
 #include <iostream>
-#include "Maze.h"
-#include <RandomGenerator.h>
+#include "maze.h"
+#include "random_generator.h"
 
-Maze::Maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic)
+maze::maze(int *p_topology, unsigned int p_mazeX, unsigned int p_mazeY, int p_goal, bool p_stochastic)
 {
+	_state_dim = p_mazeY * p_mazeX;
+	_action_dim = 4;
 	_topology = nullptr;
 	init(p_topology, p_mazeX, p_mazeY, p_goal, p_stochastic);
 }
 
-Maze::Maze()
+maze::maze()
 {
 	_topology = nullptr;
 }
 
-Maze::Maze(Maze& p_copy) : IEnvironment(p_copy)
+maze::maze(maze& p_copy) : ienvironment(p_copy)
 {
 	init(p_copy._topology, p_copy._mazeX, p_copy._mazeY, p_copy._goal, p_copy._stochastic);
 }
 
-Maze::~Maze()
+maze::~maze()
 {
 	delete[] _topology;
 }
 
-Maze& Maze::operator=(const Maze& p_copy)
+maze& maze::operator=(const maze& p_copy)
 {
 	init(p_copy._topology, p_copy._mazeX, p_copy._mazeY, p_copy._goal, p_copy._stochastic);
 	return *this;
 }
 
-void Maze::init(int* p_topology, unsigned p_mazeX, unsigned p_mazeY, int p_goal, bool p_stochastic)
+void maze::init(int* p_topology, unsigned p_mazeX, unsigned p_mazeY, int p_goal, bool p_stochastic)
 {
 	delete[] _topology;
 	_topology = new int[p_mazeY * p_mazeX];
@@ -57,45 +59,66 @@ void Maze::init(int* p_topology, unsigned p_mazeX, unsigned p_mazeY, int p_goal,
 		if (free[i] != _goal) _init_pos.push_back(free[i]);
 	}
 
-	_actions.emplace_back("N", 0, -1);
-	_actions.emplace_back("E", 1, 0);
-	_actions.emplace_back("S", 0, 1);
-	_actions.emplace_back("W", -1, 0);
-
-	Maze::reset();
+	maze::reset();
 }
 
-Tensor Maze::get_state()
+tensor maze::get_state()
 {
-	Tensor res({ _state_dim }, Tensor::ZERO);
+	tensor res({ _state_dim }, tensor::ZERO);
 
 	res[_actor] = 1;
 
 	return res;
 }
 
-void Maze::set_state(Tensor& p_state)
+void maze::set_state(tensor& p_state)
 {
-	_actor = p_state.max_value_index();
+	_actor = p_state.max_index()[0];
 }
 
-void Maze::do_action(Tensor& p_action)
+void maze::do_action(tensor& p_action)
 {
-	int action = p_action.max_value_index();
-	//cout << _actions[p_action].Id() << endl;
+	int action = p_action.max_index()[0];
 	if (_stochastic) {
-		if (RandomGenerator::get_instance().random() >= 0.8f && RandomGenerator::get_instance().random() < 0.9f) {
+		if (random_generator::instance().random() >= 0.8f && random_generator::instance().random() < 0.9f) {
 			action++;
 			if (action == 4) action = 0;
 		}
-		if (RandomGenerator::get_instance().random() >= 0.9f && RandomGenerator::get_instance().random() < 1.0f) {
+		if (random_generator::instance().random() >= 0.9f && random_generator::instance().random() < 1.0f) {
 			action--;
 			if (action < 0) action = 3;
 		}
 	}
 
-	const int new_pos = moveInDir(_actions[action].X(), _actions[action].Y());
-	_a++;
+	int action_x;
+	int action_y;
+
+	switch(action)
+	{
+	case 0:
+		action_x = 0;
+		action_y = -1;
+		break;
+	case 1:
+		action_x = 1;
+		action_y = 0;
+		break;
+	case 2:
+		action_x = 0;
+		action_y = 1;
+		break;
+	case 3:
+		action_x = -1;
+		action_y = 0;
+		break;
+	default:
+		printf("Wrong action\n");
+		action_x = 0;
+		action_y = 0;
+	}
+
+	const int new_pos = move(action_x, action_y);
+	_steps++;
 
 	if (new_pos == _actor) {
 		_bang = true;
@@ -111,7 +134,7 @@ void Maze::do_action(Tensor& p_action)
 	}
 }
 
-float Maze::get_reward()
+float maze::get_reward()
 {
 	float reward = defautPenalty;
 
@@ -122,25 +145,25 @@ float Maze::get_reward()
 	return reward;
 }
 
-bool Maze::is_finished()
+bool maze::is_finished()
 {
 	return (is_winner() || _kill || moves() > 100);
 }
 
-void Maze::reset() {
-	_a = 0;
+void maze::reset() {
+	_steps = 0;
     _bang = false;
     _kill = false;
 	//_actor = RandomGenerator::getInstance().choice(&_init_pos)[0];
 	_actor = 0;
 }
 
-bool Maze::is_winner() const
+bool maze::is_winner() const
 {
 	return _actor == _goal;
 }
 
-vector<int> Maze::freePos() {
+vector<int> maze::freePos() {
     vector<int> res;
 
     for(unsigned int i = 0; i < _maze_table.size(); i++) {
@@ -152,7 +175,7 @@ vector<int> Maze::freePos() {
     return vector<int>(res);
 }
 
-int Maze::moveInDir(int p_x, int p_y) const
+int maze::move(int p_x, int p_y) const
 {
 	int pos = _actor;
 	const int x = _actor % _mazeX;
@@ -171,7 +194,7 @@ int Maze::moveInDir(int p_x, int p_y) const
     return pos;
 }
 
-string Maze::toString() {
+string maze::to_string() {
     string s;
 
     for(int i = 0; i < _mazeY; i++) {
@@ -202,7 +225,7 @@ string Maze::toString() {
     return s;
 }
 
-string Maze::toString(int p_row)
+string maze::to_string(int p_row)
 {
 	string s;
 

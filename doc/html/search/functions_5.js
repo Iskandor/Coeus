@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['train_238',['train',['../class_coeus_1_1_d_d_p_g.html#aa82fdfc825d0d8335e01a0124dc8a18f',1,'Coeus::DDPG::train()'],['../class_coeus_1_1_p_p_o.html#a616e457ebdf8084b922adf5ab2ff09c7',1,'Coeus::PPO::train()']]]
+  ['forward_136',['forward',['../classmse__function.html#af6265388cfe4be4db562f1e9d11a3113',1,'mse_function::forward()'],['../classdense__layer.html#a564efa5e6da5c6f877bf31d65ace28a9',1,'dense_layer::forward()']]]
 ];

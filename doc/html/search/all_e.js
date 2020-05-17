@@ -1,12 +1,9 @@
 var searchData=
 [
-  ['param_81',['Param',['../class_coeus_1_1_param.html',1,'Coeus']]],
-  ['parammodel_82',['ParamModel',['../class_coeus_1_1_param_model.html',1,'Coeus']]],
-  ['parammodelstorage_83',['ParamModelStorage',['../class_coeus_1_1_param_model_storage.html',1,'Coeus']]],
-  ['policygradient_84',['PolicyGradient',['../class_coeus_1_1_policy_gradient.html',1,'Coeus']]],
-  ['poolinglayer_85',['PoolingLayer',['../class_coeus_1_1_pooling_layer.html',1,'Coeus']]],
-  ['powersign_86',['PowerSign',['../class_coeus_1_1_power_sign.html',1,'Coeus']]],
-  ['powersignrule_87',['PowerSignRule',['../class_coeus_1_1_power_sign_rule.html',1,'Coeus']]],
-  ['pplbatchmodule_88',['PPLBatchModule',['../class_coeus_1_1_p_p_l_batch_module.html',1,'Coeus']]],
-  ['ppo_89',['PPO',['../class_coeus_1_1_p_p_o.html',1,'Coeus::PPO'],['../class_coeus_1_1_p_p_o.html#acb3f1a18acc0696adaa2bb9902d5005f',1,'Coeus::PPO::PPO()']]]
+  ['radam_50',['radam',['../classradam.html',1,'']]],
+  ['random_5fgenerator_51',['random_generator',['../classrandom__generator.html',1,'']]],
+  ['relu_5ffunction_52',['relu_function',['../classrelu__function.html',1,'']]],
+  ['replay_5fbuffer_53',['replay_buffer',['../classreplay__buffer.html',1,'']]],
+  ['replay_5fbuffer_3c_20mdp_5ftransition_20_3e_54',['replay_buffer&lt; mdp_transition &gt;',['../classreplay__buffer.html',1,'']]],
+  ['reset_55',['reset',['../classounoise.html#aa40aaa29ca9bf3a7f93d7e6bc369e4ae',1,'ounoise']]]
 ];

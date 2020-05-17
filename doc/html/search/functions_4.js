@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ppo_237',['PPO',['../class_coeus_1_1_p_p_o.html#acb3f1a18acc0696adaa2bb9902d5005f',1,'Coeus::PPO']]]
+  ['euclidean_5fdistance_134',['euclidean_distance',['../classmetrics.html#a252ee52306113e1d17d78af7eda11250',1,'metrics']]],
+  ['exponential_5finterpolation_135',['exponential_interpolation',['../classexponential__interpolation.html#ac4d7c1e3f9d27125252502a403be6513',1,'exponential_interpolation']]]
 ];

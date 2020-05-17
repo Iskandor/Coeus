@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['kldivergence_182',['KLDivergence',['../class_coeus_1_1_k_l_divergence.html',1,'Coeus']]]
+  ['neural_5fnetwork_103',['neural_network',['../classneural__network.html',1,'']]],
+  ['npyarray_104',['NpyArray',['../structcnpy_1_1_npy_array.html',1,'cnpy']]]
 ];

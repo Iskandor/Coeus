@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['neuralnetwork_236',['NeuralNetwork',['../class_coeus_1_1_neural_network.html#accce4a7728e89a009a9d4ca1758c9b9d',1,'Coeus::NeuralNetwork::NeuralNetwork()'],['../class_coeus_1_1_neural_network.html#acbd38cb3f73c83750fe91e252ffabb2d',1,'Coeus::NeuralNetwork::NeuralNetwork(json p_data)'],['../class_coeus_1_1_neural_network.html#a3b51cf4a65c57004932b1006cd1627e0',1,'Coeus::NeuralNetwork::NeuralNetwork(NeuralNetwork &amp;p_copy, bool p_clone=false)']]]
+  ['dense_5flayer_133',['dense_layer',['../classdense__layer.html#a63056a1936d443ee0d5c24aca8458020',1,'dense_layer::dense_layer(std::string p_id, int p_dim, activation_function *p_activation_function, tensor_initializer *p_initializer, std::initializer_list&lt; int &gt; p_input_shape={})'],['../classdense__layer.html#abb811453b91c03f4df963146dca22a86',1,'dense_layer::dense_layer(dense_layer &amp;p_copy)']]]
 ];
