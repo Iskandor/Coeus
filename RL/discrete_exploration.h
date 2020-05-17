@@ -2,7 +2,7 @@
 #include "iinterpolation.h"
 #include "tensor.h"
 
-class __declspec(dllexport) discrete_exploration
+class COEUS_DLL_API discrete_exploration
 {
 public:
 	enum METHOD

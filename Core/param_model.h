@@ -2,7 +2,7 @@
 #include "param.h"
 #include <map>
 
-class __declspec(dllexport) param_model
+class COEUS_DLL_API param_model
 {
 public:
 	param_model();

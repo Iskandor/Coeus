@@ -1,5 +1,7 @@
 #pragma once
-class __declspec(dllexport) iinterpolation
+#include "coeus.h"
+
+class COEUS_DLL_API iinterpolation
 {
 public:
 	iinterpolation(float p_point1, float p_point2, int p_interval);

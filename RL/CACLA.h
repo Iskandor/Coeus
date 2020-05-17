@@ -2,7 +2,7 @@
 #include "neural_network.h"
 #include "optimizer.h"
 
-class __declspec(dllexport) CACLA
+class COEUS_DLL_API CACLA
 {
 public:
 	CACLA(neural_network* p_actor, optimizer* p_actor_optimizer, neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma);

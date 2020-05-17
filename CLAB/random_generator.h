@@ -5,10 +5,11 @@
 
 #include <random>
 #include <vector>
+#include "coeus.h"
 
 using namespace std;
 
-class __declspec(dllexport) random_generator {
+class COEUS_DLL_API random_generator {
 public:
     static random_generator& instance();
     random_generator(random_generator const&) = delete;

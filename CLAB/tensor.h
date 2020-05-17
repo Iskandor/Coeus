@@ -3,8 +3,9 @@
 #include <ostream>
 #include "tensor_gpu.cuh"
 #include <vector>
+#include "coeus.h"
 
-class __declspec(dllexport) tensor
+class COEUS_DLL_API tensor
 {
 	friend class tensor_initializer;
 public:

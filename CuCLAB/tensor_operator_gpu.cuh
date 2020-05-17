@@ -1,6 +1,11 @@
 #pragma once
+#ifdef _WIN64
+#define COEUS_DLL_API __declspec(dllexport)
+#else
+#define COEUS_DLL_API 
+#endif
 
-class __declspec(dllexport) tensor_operator_gpu
+class COEUS_DLL_API tensor_operator_gpu
 {
 public:
 	static void add(float* p_x, float* p_y, float* p_z, int p_size);

@@ -18,10 +18,11 @@
 #include<memory>
 #include<stdint.h>
 #include<numeric>
+#include "coeus.h"
 
 namespace cnpy {
 
-    struct __declspec(dllexport) NpyArray {
+    struct COEUS_DLL_API NpyArray {
         NpyArray(const std::vector<size_t>& _shape, size_t _word_size, bool _fortran_order) :
             shape(_shape), word_size(_word_size), fortran_order(_fortran_order)
         {
@@ -62,15 +63,15 @@ namespace cnpy {
    
     using npz_t = std::map<std::string, NpyArray>; 
 
-	__declspec(dllexport) char BigEndianTest();
-	__declspec(dllexport) char map_type(const std::type_info& t);
+	COEUS_DLL_API char BigEndianTest();
+	COEUS_DLL_API char map_type(const std::type_info& t);
     template<typename T> std::vector<char> create_npy_header(const std::vector<size_t>& shape);
-	__declspec(dllexport) void parse_npy_header(FILE* fp,size_t& word_size, std::vector<size_t>& shape, bool& fortran_order);
+	COEUS_DLL_API void parse_npy_header(FILE* fp,size_t& word_size, std::vector<size_t>& shape, bool& fortran_order);
     void parse_npy_header(unsigned char* buffer,size_t& word_size, std::vector<size_t>& shape, bool& fortran_order);
     void parse_zip_footer(FILE* fp, uint16_t& nrecs, size_t& global_header_size, size_t& global_header_offset);
     npz_t npz_load(std::string fname);
     NpyArray npz_load(std::string fname, std::string varname);
-	__declspec(dllexport) NpyArray npy_load(std::string fname);
+	COEUS_DLL_API NpyArray npy_load(std::string fname);
 
     template<typename T> std::vector<char>& operator+=(std::vector<char>& lhs, const T rhs) {
         //write in little endian
@@ -81,8 +82,8 @@ namespace cnpy {
         return lhs;
     }
 
-    template<> __declspec(dllexport) std::vector<char>& operator+=(std::vector<char>& lhs, const std::string rhs);
-    template<> __declspec(dllexport) std::vector<char>& operator+=(std::vector<char>& lhs, const char* rhs);
+    template<> COEUS_DLL_API std::vector<char>& operator+=(std::vector<char>& lhs, const std::string rhs);
+    template<> COEUS_DLL_API std::vector<char>& operator+=(std::vector<char>& lhs, const char* rhs);
 
 
     template<typename T> void npy_save(std::string fname, const T* data, const std::vector<size_t> shape, std::string mode = "w") {

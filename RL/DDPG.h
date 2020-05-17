@@ -5,7 +5,7 @@
 #include "forward_model.h"
 #include "metacritic.h"
 
-class __declspec(dllexport) DDPG
+class COEUS_DLL_API DDPG
 {
 public:
 	DDPG(neural_network* p_actor, optimizer* p_actor_optimizer, neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma, int p_memory_size, int p_sample, float p_tau = 1e-3f);

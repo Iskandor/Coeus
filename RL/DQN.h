@@ -2,7 +2,7 @@
 #include "Qlearning.h"
 #include "replay_buffer.h"
 
-class __declspec(dllexport) DQN : public Qlearning
+class COEUS_DLL_API DQN : public Qlearning
 {
 public:
 	DQN(neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma, int p_memory_size, int p_sample, int p_target_update_frequency);

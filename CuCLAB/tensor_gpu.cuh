@@ -1,5 +1,11 @@
 #pragma once
-class __declspec(dllexport) tensor_gpu
+#ifdef _WIN64
+#define COEUS_DLL_API __declspec(dllexport)
+#else
+#define COEUS_DLL_API 
+#endif
+
+class COEUS_DLL_API tensor_gpu
 {
 	friend class tensor;
 private:

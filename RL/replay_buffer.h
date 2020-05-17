@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "random_generator.h"
 
-struct __declspec(dllexport) mdp_transition
+struct COEUS_DLL_API mdp_transition
 {
 	tensor s0;
 	tensor a;
@@ -22,7 +22,7 @@ struct __declspec(dllexport) mdp_transition
 };
 
 template <typename T>
-class __declspec(dllexport) replay_buffer
+class COEUS_DLL_API replay_buffer
 {
 public:
 	replay_buffer(const int p_size) {

@@ -1,7 +1,7 @@
 #pragma once
 #include "neural_network.h"
 
-class __declspec(dllexport) optimizer
+class COEUS_DLL_API optimizer
 {
 public:
 	optimizer(neural_network* p_model, float p_alpha, float p_weight_decay = 0.f);

@@ -1,5 +1,7 @@
 #pragma once
-class __declspec(dllexport) metrics
+#include "coeus.h"
+
+class COEUS_DLL_API metrics
 {
 public:
 	static float euclidean_distance(int p_x1, int p_y1, int p_x2, int p_y2);

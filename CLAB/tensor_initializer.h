@@ -1,7 +1,7 @@
 #pragma once
 #include "tensor.h"
 
-class __declspec(dllexport) tensor_initializer
+class COEUS_DLL_API tensor_initializer
 {
 public:
 	enum TYPE

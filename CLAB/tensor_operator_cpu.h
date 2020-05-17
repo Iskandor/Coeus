@@ -1,6 +1,7 @@
 #pragma once
+#include "coeus.h"
 
-class __declspec(dllexport) tensor_operator_cpu
+class COEUS_DLL_API tensor_operator_cpu
 {
 public:
 	static void add(float* p_x, int p_x_size, float* p_y, int p_y_size, float* p_z);

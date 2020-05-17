@@ -5,7 +5,7 @@
 #include <list>
 #include "variable.h"
 
-class __declspec(dllexport) neural_network : public param_model
+class COEUS_DLL_API neural_network : public param_model
 {
 public:
 	neural_network();

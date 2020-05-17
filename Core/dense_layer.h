@@ -4,7 +4,7 @@
 #include <vector>
 #include "param_model.h"
 
-class __declspec(dllexport) dense_layer : public igate
+class COEUS_DLL_API dense_layer : public igate
 {
 public:
 	dense_layer(std::string p_id, int p_dim, activation_function* p_activation_function, tensor_initializer* p_initializer, std::initializer_list<int> p_input_shape = {});

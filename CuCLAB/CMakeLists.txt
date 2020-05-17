@@ -14,7 +14,7 @@ set(SOURCE_FILES
 	tensor_gpu.cu
 	tensor_operator_gpu.cu
 	)
-	
+
 CUDA_ADD_LIBRARY(CuCLAB STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
 target_link_libraries(CuCLAB ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
 

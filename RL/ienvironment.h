@@ -1,7 +1,7 @@
 #pragma once
 #include "tensor.h"
 
-class __declspec(dllexport) ienvironment
+class COEUS_DLL_API ienvironment
 {
 public:
 	ienvironment()

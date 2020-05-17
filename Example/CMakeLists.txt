@@ -31,6 +31,6 @@ set(SOURCE_FILES
 	cart_pole_experiment.cpp
 	)
 
-include_directories(${ZLIB_INCLUDE_DIRS} ${CNPY_DIR} ${CUCLAB_DIR} ${CLAB_DIR} ${CORE_DIR} ${RL_DIR})
+include_directories(${COEUS_DIR} ${ZLIB_INCLUDE_DIRS} ${CNPY_DIR} ${CUCLAB_DIR} ${CLAB_DIR} ${CORE_DIR} ${RL_DIR})
 add_executable(Example ${SOURCE_FILES} ${INCLUDE_FILES})
 target_link_libraries(Example Coeus)

@@ -4,7 +4,7 @@
 #include "neural_network.h"
 #include "optimizer.h"
 
-class __declspec(dllexport) metacritic
+class COEUS_DLL_API metacritic
 {
 public:
 	metacritic(neural_network* p_network, optimizer* p_optimizer, forward_model* p_forward_model, float p_sigma);

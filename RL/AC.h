@@ -2,7 +2,7 @@
 #include "neural_network.h"
 #include "optimizer.h"
 
-class __declspec(dllexport) AC
+class COEUS_DLL_API AC
 {
 public:
 	AC(neural_network* p_actor, optimizer* p_actor_optimizer, neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma);

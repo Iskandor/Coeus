@@ -2,7 +2,7 @@
 #include "neural_network.h"
 #include "optimizer.h"
 
-class __declspec(dllexport) Qlearning
+class COEUS_DLL_API Qlearning
 {
 public:
 	Qlearning(neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma);

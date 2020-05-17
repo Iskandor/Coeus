@@ -3,7 +3,7 @@
 #include "iinterpolation.h"
 #include "ounoise.h"
 
-class __declspec(dllexport) continuous_exploration
+class COEUS_DLL_API continuous_exploration
 {
 public:
 	enum METHOD

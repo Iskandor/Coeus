@@ -32,6 +32,7 @@ set(SOURCE_FILES
 	)
 	
 include_directories(
+	${COEUS_DIR}
 	${CNPY_DIR}
 	${CUCLAB_DIR}
 	${CLAB_DIR}

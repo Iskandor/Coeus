@@ -1,7 +1,8 @@
 #pragma once
+#include "coeus.h"
 #include "tensor.h"
 
-class __declspec(dllexport) igate
+class COEUS_DLL_API igate
 {
 public:
 	igate() = default;

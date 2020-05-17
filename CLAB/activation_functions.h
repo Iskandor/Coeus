@@ -1,7 +1,8 @@
 #pragma once
+#include "coeus.h"
 #include "igate.h"
 
-class __declspec(dllexport) activation_function : public igate
+class COEUS_DLL_API activation_function : public igate
 {
 public:
 	enum TYPE

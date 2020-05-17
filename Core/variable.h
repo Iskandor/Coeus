@@ -1,7 +1,7 @@
 #pragma once
 #include "tensor.h"
 
-class __declspec(dllexport) variable
+class COEUS_DLL_API variable
 {
 public:
 	variable();

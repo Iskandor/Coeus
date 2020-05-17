@@ -1,7 +1,7 @@
 #pragma once
 #include "igate.h"
 
-class __declspec(dllexport) loss_function
+class COEUS_DLL_API loss_function
 {
 public:
 	loss_function() = default;
@@ -15,7 +15,7 @@ protected:
 	const int segment = 8;
 };
 
-class __declspec(dllexport) mse_function : public loss_function
+class COEUS_DLL_API mse_function : public loss_function
 {
 public:
 	mse_function() = default;
