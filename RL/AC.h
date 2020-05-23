@@ -12,8 +12,8 @@ public:
 	void train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
 
 private:
-	tensor& actor_loss_function();
-	tensor& critic_loss_function();
+	tensor& actor_loss_function(tensor* p_state, tensor* p_action, tensor& p_delta);
+	tensor& critic_loss_function(tensor* p_state, tensor* p_next_state, float p_reward, bool p_final);
 
 	neural_network* _actor;
 	optimizer* _actor_optimizer;
