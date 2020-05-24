@@ -6,6 +6,7 @@ Lightweight C++ Library for reinforcement learning algorithms
 
 ### Dependencies
 Intel Math Kernel Library (https://software.intel.com/en-us/mkl)
+
 ZLIB (https://github.com/madler/zlib)
 
 ### Features
@@ -30,6 +31,7 @@ ZLIB (https://github.com/madler/zlib)
 **Other features**
 - Simple model building demanding only few lines of code
 - Save/Load in numpy array format (CNPy library)
+- AVX2 support
 
 ### Example XOR problem
 ```cpp
