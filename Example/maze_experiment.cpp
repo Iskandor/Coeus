@@ -6,8 +6,11 @@
 #include "tensor_initializer.h"
 #include "linear_interpolation.h"
 #include <iostream>
+
+#include "AC.h"
 #include "SARSA.h"
 #include "DQN.h"
+#include "QAC.h"
 
 
 maze_experiment::maze_experiment()
@@ -229,6 +232,79 @@ void maze_experiment::run_dqn(int p_episodes)
 
 	cout << _maze->to_string() << endl;
 	test_agent(critic);
+}
+
+void maze_experiment::run_ac(int p_episodes)
+{
+	neural_network critic;
+	critic.add_layer(new dense_layer("hidden0", 64, activation_function::tanhexp(), tensor_initializer::lecun_uniform(), { _maze->STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 16, activation_function::tanhexp(), tensor_initializer::lecun_uniform()));
+	critic.add_layer(new dense_layer("output", 1, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
+	critic.add_connection("hidden0", "hidden1");
+	critic.add_connection("hidden1", "output");
+	critic.init();
+
+	adam critic_optimizer(&critic, 2e-4f);
+
+	neural_network actor;
+	actor.add_layer(new dense_layer("hidden0", 64, activation_function::tanhexp(), tensor_initializer::lecun_uniform(), { _maze->STATE_DIM() }));
+	actor.add_layer(new dense_layer("hidden1", 16, activation_function::tanhexp(), tensor_initializer::lecun_uniform()));
+	actor.add_layer(new dense_layer("output", _maze->ACTION_DIM(), activation_function::softmax(), tensor_initializer::lecun_uniform()));
+	actor.add_connection("hidden0", "hidden1");
+	actor.add_connection("hidden1", "output");
+	actor.init();
+
+	adam actor_optimizer(&actor, 1e-4f);
+
+	AC agent(&actor, &actor_optimizer, &critic, &critic_optimizer, 0.99f);
+
+	int success = 0;
+	int fail = 0;
+
+	tensor action({ _maze->ACTION_DIM() });
+
+	test_agent(actor);
+
+	for (int e = 0; e < p_episodes; e++)
+	{
+		float test_reward = 0;
+		float train_reward = 0;
+		_maze->reset();
+		tensor state = _maze->get_state();
+
+		while (!_maze->is_finished())
+		{
+			action.fill(0.f);
+			action[random_generator::instance().choice(agent.get_action(&state).data(), _maze->ACTION_DIM())] = 1.f;
+			//cout << action << endl;
+			_maze->do_action(action);
+
+			tensor next_state = _maze->get_state();
+			const float reward = _maze->get_reward();
+			const bool final = _maze->is_finished();
+
+			agent.train(&state, &action, &next_state, reward, final);
+			train_reward += reward;
+
+			state = next_state;
+		}
+
+		_maze->reset();
+		while (!_maze->is_finished())
+		{
+			tensor state = _maze->get_state();
+			action.fill(0.f);
+			action[agent.get_action(&state).max_index()[0]] = 1.f;
+			_maze->do_action(action);
+			test_reward += _maze->get_reward();
+		}
+		if (_maze->get_reward() == 1) success++; else fail++;
+
+		cout << "Episode " << e << " " << success << " / " << fail << endl;
+	}
+
+	cout << _maze->to_string() << endl;
+	test_agent(actor);
 }
 
 void maze_experiment::test_agent(neural_network& p_agent) const
