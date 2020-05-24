@@ -1,78 +1,85 @@
 # Coeus
 
-Lightweight C++ Library supporting deep and reinforcement learning algorithms
+Lightweight C++ Library for reinforcement learning algorithms
 
 ![](https://raw.githubusercontent.com/Iskandor/Coeus/master/Logo/logo.jpg)
 
 ### Dependencies
 Intel Math Kernel Library (https://software.intel.com/en-us/mkl)
+ZLIB (https://github.com/madler/zlib)
 
 ### Features
 **Neural Networks**
-- Feed-forward neural networks and recurrent neural networks (Elman, Jordna, LSTM)
-- Self-organizing maps (SOM) and recurrent self-organizing maps
-- Convolutional neural networks
+- Feed-forward neural networks
+- SGD, ADAM, RADAM optimizers
 
 **Reinforcement learning algorithms**
 - TD-learning
 - Q-Learning
 - SARSA
-- Double Q-learning
 - Deep Q-Learning
-- Actor-Critic algorithms (AC, A2C, A3C)
+- AC
 
 **Continuous reinforcement learning algorithms**
 - CACLA
 - DDPG
-- PPO
+ 
+**Motivation models**
+- Predictive error model
+- Surprise model
  
 **Other features**
-- BLAS backend
-- Supports parallelization across samples using OpenMP library
 - Simple model building demanding only few lines of code
+- Save/Load in numpy array format (CNPy library)
 
 ### Example XOR problem
 ```cpp
-	float data_i[8]{ 0,0,0,1,1,0,1,1 };
-	float data_t[4]{ 0,1,1,0 };
-	Tensor input({ 4, 2 }, Tensor::ZERO);
-	Tensor target({ 4, 1 }, Tensor::ZERO);
+#include "neural_network.h"
+#include "loss_functions.h"
+#include "tensor_initializer.h"
+#include "adam.h"
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 2; j++)
-		{
-			input.set(i, j, data_i[i * 2 + j]);
-		}
-		target.set(i, 0, data_t[i]);
-	}
-	
-	NeuralNetwork network;
+int main()
+{
+	float input_data[8] = {0,0,0,1,1,0,1,1};
+	float target_data[4] = { 0,1,1,0 };
 
-	network.add_layer(new CoreLayer("hidden", 4, SIGMOID, new TensorInitializer(LECUN_UNIFORM), 2));
-	network.add_layer(new CoreLayer("output", 1, SIGMOID, new TensorInitializer(LECUN_UNIFORM)));
-	network.add_connection("hidden", "output");
+	tensor input({ 4, 2 }, input_data);
+	tensor target({ 4, 1 }, target_data);
 
+	neural_network network;
+
+	network.add_layer(new dense_layer("hidden0", 8, activation_function::sigmoid(), tensor_initializer::lecun_uniform(), { 2 }));
+	network.add_layer(new dense_layer("hidden1", 4, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
+	network.add_layer(new dense_layer("output", 1, activation_function::sigmoid(), tensor_initializer::lecun_uniform()));
+	network.add_connection("hidden0", "hidden1");
+	network.add_connection("hidden1", "output");
 	network.init();
 
-	BackProp optimizer(&network);
-	optimizer.init(new QuadraticCost(), 0.5f /*lr*/, 0.9f /*momentum*/, true /*nesterov momentum*/);
-	
-	for (int t = 0; t < 1000; t++) {
-		float error = optimizer.train(&input, &target);
-		cout << "Error: " << error << endl;
+	mse_function loss;
+	adam optimizer(&network, 1e-2f);
+
+	for (int t = 0; t < 500; t++) {
+		tensor& output = network.forward(&input);
+		const float error = loss.forward(output, target);
+		network.backward(loss.backward(output, target));
+		optimizer.update();
+
+		cout << "Episode " << t;
+		cout << " error: " << error << endl;
 	}
+
+	cout << network.forward(&input) << endl;
+}
 ```
 
 ### Planned features
-- NAC, TRPO, CACER
-- Residual networks
-- Gated recurrent unit
-- CUDA support
-- Intrinsic motivation modules
-- ALE interface and examples
+- AC2,AC3
+- PPO
+- convolutional networks
+- ALE support
+- MuJoCo support
  
-
-
 ### Author
 Matej Pechac is doctoral student of informatics specializing in the area of reinforcement learning and intrinsic motivation
 - univeristy webpage: http://dai.fmph.uniba.sk/w/Matej_Pechac/en

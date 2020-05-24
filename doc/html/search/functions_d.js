@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['set_5fsigma_145',['set_sigma',['../classounoise.html#a292fdb547a05631e619371738b98874d',1,'ounoise']]]
+  ['reset_157',['reset',['../classounoise.html#aa40aaa29ca9bf3a7f93d7e6bc369e4ae',1,'ounoise']]]
 ];

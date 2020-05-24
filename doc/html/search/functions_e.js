@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zero_5fmodel_146',['zero_model',['../classparam__model.html#af283a32b8ab60a20f341c83effea6174',1,'param_model']]]
+  ['set_5fsigma_158',['set_sigma',['../classounoise.html#a292fdb547a05631e619371738b98874d',1,'ounoise']]]
 ];

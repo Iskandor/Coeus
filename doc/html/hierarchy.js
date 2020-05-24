@@ -53,6 +53,8 @@ var hierarchy =
     [ "param_model", "classparam__model.html", [
       [ "neural_network", "classneural__network.html", null ]
     ] ],
+    [ "policy_gradient", "classpolicy__gradient.html", null ],
+    [ "QAC", "class_q_a_c.html", null ],
     [ "Qlearning", "class_qlearning.html", [
       [ "DQN", "class_d_q_n.html", null ]
     ] ],
@@ -60,6 +62,7 @@ var hierarchy =
     [ "replay_buffer< T >", "classreplay__buffer.html", null ],
     [ "replay_buffer< mdp_transition >", "classreplay__buffer.html", null ],
     [ "SARSA", "class_s_a_r_s_a.html", null ],
+    [ "TD", "class_t_d.html", null ],
     [ "tensor", "classtensor.html", null ],
     [ "tensor_gpu", "classtensor__gpu.html", null ],
     [ "tensor_initializer", "classtensor__initializer.html", null ],

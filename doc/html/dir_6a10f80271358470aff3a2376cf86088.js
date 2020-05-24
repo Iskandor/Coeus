@@ -9,7 +9,10 @@ var dir_6a10f80271358470aff3a2376cf86088 =
     [ "forward_model.h", "forward__model_8h_source.html", null ],
     [ "ienvironment.h", "ienvironment_8h_source.html", null ],
     [ "metacritic.h", "metacritic_8h_source.html", null ],
+    [ "policy_gradient.h", "policy__gradient_8h_source.html", null ],
+    [ "QAC.h", "_q_a_c_8h_source.html", null ],
     [ "Qlearning.h", "_qlearning_8h_source.html", null ],
     [ "replay_buffer.h", "replay__buffer_8h_source.html", null ],
-    [ "SARSA.h", "_s_a_r_s_a_8h_source.html", null ]
+    [ "SARSA.h", "_s_a_r_s_a_8h_source.html", null ],
+    [ "TD.h", "_t_d_8h_source.html", null ]
 ];

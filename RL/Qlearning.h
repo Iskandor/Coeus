@@ -5,7 +5,7 @@
 class COEUS_DLL_API Qlearning
 {
 public:
-	Qlearning(neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma);
+	Qlearning(neural_network* p_network, optimizer* p_optimizer, float p_gamma);
 	virtual ~Qlearning();
 
 	tensor& get_action(tensor* p_state);

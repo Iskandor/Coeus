@@ -103,34 +103,201 @@ Inheritance diagram for Qlearning:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a42f231f9e06450d98dbc4d0b15c01ca4"><td class="memItemLeft" align="right" valign="top"><a id="a42f231f9e06450d98dbc4d0b15c01ca4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Qlearning</b> (<a class="el" href="classneural__network.html">neural_network</a> *p_critic, <a class="el" href="classoptimizer.html">optimizer</a> *p_critic_optimizer, float p_gamma)</td></tr>
-<tr class="separator:a42f231f9e06450d98dbc4d0b15c01ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79a89a8693f72e4a78dd3333d42d6105"><td class="memItemLeft" align="right" valign="top"><a id="a79a89a8693f72e4a78dd3333d42d6105"></a>
-<a class="el" href="classtensor.html">tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_action</b> (<a class="el" href="classtensor.html">tensor</a> *p_state)</td></tr>
+<tr class="memitem:a19eeb64fcd80cc5bb3215e2da5b41996"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qlearning.html#a19eeb64fcd80cc5bb3215e2da5b41996">Qlearning</a> (<a class="el" href="classneural__network.html">neural_network</a> *p_network, <a class="el" href="classoptimizer.html">optimizer</a> *p_optimizer, float p_gamma)</td></tr>
+<tr class="memdesc:a19eeb64fcd80cc5bb3215e2da5b41996"><td class="mdescLeft">&#160;</td><td class="mdescRight">Q-learning algorithm.  <a href="class_qlearning.html#a19eeb64fcd80cc5bb3215e2da5b41996">More...</a><br /></td></tr>
+<tr class="separator:a19eeb64fcd80cc5bb3215e2da5b41996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79a89a8693f72e4a78dd3333d42d6105"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtensor.html">tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qlearning.html#a79a89a8693f72e4a78dd3333d42d6105">get_action</a> (<a class="el" href="classtensor.html">tensor</a> *p_state)</td></tr>
+<tr class="memdesc:a79a89a8693f72e4a78dd3333d42d6105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function returning discrete action for critic-only scenario.  <a href="class_qlearning.html#a79a89a8693f72e4a78dd3333d42d6105">More...</a><br /></td></tr>
 <tr class="separator:a79a89a8693f72e4a78dd3333d42d6105"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18049132e53a629ed582d71e7aedc5b9"><td class="memItemLeft" align="right" valign="top"><a id="a18049132e53a629ed582d71e7aedc5b9"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>train</b> (<a class="el" href="classtensor.html">tensor</a> *p_state, <a class="el" href="classtensor.html">tensor</a> *p_action, <a class="el" href="classtensor.html">tensor</a> *p_next_state, float p_reward, bool p_final)</td></tr>
+<tr class="memitem:a18049132e53a629ed582d71e7aedc5b9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qlearning.html#a18049132e53a629ed582d71e7aedc5b9">train</a> (<a class="el" href="classtensor.html">tensor</a> *p_state, <a class="el" href="classtensor.html">tensor</a> *p_action, <a class="el" href="classtensor.html">tensor</a> *p_next_state, float p_reward, bool p_final)</td></tr>
+<tr class="memdesc:a18049132e53a629ed582d71e7aedc5b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Learning rule Q(s0,a0) = Q(s0,a0) + alpha * (reward + gamma * Q_max[a](s1,a) - Q(s0,a0))  <a href="class_qlearning.html#a18049132e53a629ed582d71e7aedc5b9">More...</a><br /></td></tr>
 <tr class="separator:a18049132e53a629ed582d71e7aedc5b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81cc54c2a651b04b53561846c47136a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtensor.html">tensor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_qlearning.html#a81cc54c2a651b04b53561846c47136a8">delta</a> ()</td></tr>
+<tr class="memdesc:a81cc54c2a651b04b53561846c47136a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns temporal difference error delta = reward + gamma * Q_max[a](s1,a) - Q(s0,a0)  <a href="class_qlearning.html#a81cc54c2a651b04b53561846c47136a8">More...</a><br /></td></tr>
+<tr class="separator:a81cc54c2a651b04b53561846c47136a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:aa39c1c23e895ddcb64bb6d723b3be643"><td class="memItemLeft" align="right" valign="top"><a id="aa39c1c23e895ddcb64bb6d723b3be643"></a>
-<a class="el" href="classneural__network.html">neural_network</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_critic</b></td></tr>
-<tr class="separator:aa39c1c23e895ddcb64bb6d723b3be643"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf8edf0bcd63adfb899688bb5e2787cd"><td class="memItemLeft" align="right" valign="top"><a id="acf8edf0bcd63adfb899688bb5e2787cd"></a>
-<a class="el" href="classoptimizer.html">optimizer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_critic_optimizer</b></td></tr>
-<tr class="separator:acf8edf0bcd63adfb899688bb5e2787cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94cbedfd2d0430cd9db6a64d3d54bf08"><td class="memItemLeft" align="right" valign="top"><a id="a94cbedfd2d0430cd9db6a64d3d54bf08"></a>
+<a class="el" href="classneural__network.html">neural_network</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_network</b></td></tr>
+<tr class="separator:a94cbedfd2d0430cd9db6a64d3d54bf08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43feead91d58d28e752e5fabd1405a49"><td class="memItemLeft" align="right" valign="top"><a id="a43feead91d58d28e752e5fabd1405a49"></a>
+<a class="el" href="classoptimizer.html">optimizer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_optimizer</b></td></tr>
+<tr class="separator:a43feead91d58d28e752e5fabd1405a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14e4a2fb5c96c98d66c84308fd7ed767"><td class="memItemLeft" align="right" valign="top"><a id="a14e4a2fb5c96c98d66c84308fd7ed767"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>_gamma</b></td></tr>
 <tr class="separator:a14e4a2fb5c96c98d66c84308fd7ed767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a990250e8e9dbdb7b47c4d9bb0967ad9c"><td class="memItemLeft" align="right" valign="top"><a id="a990250e8e9dbdb7b47c4d9bb0967ad9c"></a>
 <a class="el" href="classtensor.html">tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_action</b></td></tr>
 <tr class="separator:a990250e8e9dbdb7b47c4d9bb0967ad9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9172765f11bb737ba7555841c2b1c38f"><td class="memItemLeft" align="right" valign="top"><a id="a9172765f11bb737ba7555841c2b1c38f"></a>
-<a class="el" href="classtensor.html">tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_critic_loss</b></td></tr>
-<tr class="separator:a9172765f11bb737ba7555841c2b1c38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ec26a730490a8ee57b43482da0d0bc8"><td class="memItemLeft" align="right" valign="top"><a id="a2ec26a730490a8ee57b43482da0d0bc8"></a>
+<a class="el" href="classtensor.html">tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_delta</b></td></tr>
+<tr class="separator:a2ec26a730490a8ee57b43482da0d0bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d9913b1fb0ad03defa5d609f0203724"><td class="memItemLeft" align="right" valign="top"><a id="a6d9913b1fb0ad03defa5d609f0203724"></a>
+<a class="el" href="classtensor.html">tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_loss</b></td></tr>
+<tr class="separator:a6d9913b1fb0ad03defa5d609f0203724"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a19eeb64fcd80cc5bb3215e2da5b41996"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19eeb64fcd80cc5bb3215e2da5b41996">&#9670;&nbsp;</a></span>Qlearning()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Qlearning::Qlearning </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classneural__network.html">neural_network</a> *&#160;</td>
+          <td class="paramname"><em>p_network</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classoptimizer.html">optimizer</a> *&#160;</td>
+          <td class="paramname"><em>p_optimizer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>p_gamma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Q-learning algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p_network</td><td>neural network approximating Q-function </td></tr>
+    <tr><td class="paramname">p_optimizer</td><td>network optimization algorithm </td></tr>
+    <tr><td class="paramname">p_gamma</td><td>discount factor </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a81cc54c2a651b04b53561846c47136a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81cc54c2a651b04b53561846c47136a8">&#9670;&nbsp;</a></span>delta()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtensor.html">tensor</a> &amp; Qlearning::delta </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns temporal difference error delta = reward + gamma * Q_max[a](s1,a) - Q(s0,a0) </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_t_d.html">TD</a> error tensor with shape (1,1) </dd></dl>
+
+</div>
+</div>
+<a id="a79a89a8693f72e4a78dd3333d42d6105"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79a89a8693f72e4a78dd3333d42d6105">&#9670;&nbsp;</a></span>get_action()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtensor.html">tensor</a> &amp; Qlearning::get_action </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtensor.html">tensor</a> *&#160;</td>
+          <td class="paramname"><em>p_state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function returning discrete action for critic-only scenario. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p_state</td><td>state tensor in timestep t </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>tensor where Q-value with maximal value is set to 1. and the others to 0. (one-hot encoding) </dd></dl>
+
+</div>
+</div>
+<a id="a18049132e53a629ed582d71e7aedc5b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18049132e53a629ed582d71e7aedc5b9">&#9670;&nbsp;</a></span>train()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Qlearning::train </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtensor.html">tensor</a> *&#160;</td>
+          <td class="paramname"><em>p_state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtensor.html">tensor</a> *&#160;</td>
+          <td class="paramname"><em>p_action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtensor.html">tensor</a> *&#160;</td>
+          <td class="paramname"><em>p_next_state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>p_reward</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>p_final</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Learning rule Q(s0,a0) = Q(s0,a0) + alpha * (reward + gamma * Q_max[a](s1,a) - Q(s0,a0)) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p_state</td><td>state in timestep t </td></tr>
+    <tr><td class="paramname">p_action</td><td>action in timestep t </td></tr>
+    <tr><td class="paramname">p_next_state</td><td>state in timestep t+1 </td></tr>
+    <tr><td class="paramname">p_reward</td><td>reward value </td></tr>
+    <tr><td class="paramname">p_final</td><td>flag indicating the last step of episode </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="class_d_q_n.html#a9374e2f69c236170291c39b00ba23e57">DQN</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>RL/<a class="el" href="_qlearning_8h_source.html">Qlearning.h</a></li>
 <li>RL/Qlearning.cpp</li>

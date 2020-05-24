@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['optimizer_105',['optimizer',['../classoptimizer.html',1,'']]],
-  ['ounoise_106',['ounoise',['../classounoise.html',1,'']]]
+  ['optimizer_111',['optimizer',['../classoptimizer.html',1,'']]],
+  ['ounoise_112',['ounoise',['../classounoise.html',1,'']]]
 ];

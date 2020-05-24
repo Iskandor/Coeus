@@ -32,8 +32,8 @@ int main()
 	maze_experiment experiment;
 	//experiment.run_qlearning(5000);
 	//experiment.run_sarsa(5000);
-	//experiment.run_dqn(1000);
-	experiment.run_ac(1000);
+	experiment.run_dqn(1000);
+	//experiment.run_ac(1000);
 
 	getchar();
 
