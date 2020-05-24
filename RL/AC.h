@@ -1,6 +1,8 @@
 #pragma once
 #include "neural_network.h"
 #include "optimizer.h"
+#include "policy_gradient.h"
+#include "TD.h"
 
 class COEUS_DLL_API AC
 {
@@ -9,20 +11,11 @@ public:
 	~AC();
 
 	tensor& get_action(tensor* p_state) const;
-	void train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
+	void train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final) const;
 
 private:
-	tensor& actor_loss_function();
-	tensor& critic_loss_function();
+	policy_gradient*	_actor;
+	TD*					_critic;
 
-	neural_network* _actor;
-	optimizer* _actor_optimizer;
-	neural_network* _critic;
-	optimizer* _critic_optimizer;
-
-	float _gamma;
-
-	tensor _critic_loss;
-	tensor _actor_loss;
 };
 

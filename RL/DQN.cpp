@@ -22,13 +22,13 @@ void DQN::train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p
 	{
 		process_sample();
 
-		_critic->backward(critic_loss_function(&_batch_state, &_batch_action, &_batch_next_state, &_batch_reward, &_batch_mask));
-		_critic_optimizer->update();
+		_network->backward(critic_loss_function(&_batch_state, &_batch_action, &_batch_next_state, &_batch_reward, &_batch_mask));
+		_optimizer->update();
 
 		_target_update_step++;
 		if (_target_update_step == _target_update_frequency)
 		{
-			_critic_target.copy_params(*_critic);
+			_critic_target.copy_params(*_network);
 			_target_update_step = 0;
 		}
 	}
@@ -41,16 +41,16 @@ tensor& DQN::critic_loss_function(tensor* p_state, tensor* p_action, tensor* p_n
 	const tensor max_q_values = q_next_values.gather(a_max_index);
 
 	vector<int> a0_index = p_action->max_index(0);
-	const tensor q_values = _critic->forward(p_state).gather(a0_index);
+	const tensor q_values = _network->forward(p_state).gather(a0_index);
 
-	_critic_loss = tensor::zero_like(q_next_values);
+	_loss = tensor::zero_like(q_next_values);
 
 	for (int i = 0; i < _sample_size; i++)
 	{
-		_critic_loss[a0_index[i]] = (q_values[i] - ((*p_reward)[i] + _gamma * (*p_mask)[i] * max_q_values[i])) / _sample_size;
+		_loss[a0_index[i]] = (q_values[i] - ((*p_reward)[i] + _gamma * (*p_mask)[i] * max_q_values[i])) / _sample_size;
 	}
 
-	return _critic_loss;
+	return _loss;
 }
 
 void DQN::process_sample()

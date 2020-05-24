@@ -31,7 +31,7 @@ tensor::tensor(std::initializer_list<int> p_shape, const INIT p_init, const floa
 	_shape = init_shape(_rank, p_shape);
 	_size = init_size(_rank, _shape);
 	_stride = init_stride(_rank, _shape);
-	_data = init_data(_size, p_init, p_value);
+	_data = init_data(_rank, _shape, _size, p_init, p_value);
 	_end = 0;
 }
 
@@ -44,7 +44,7 @@ tensor::tensor(std::initializer_list<int> p_shape, float* p_data) :
 	_shape = init_shape(_rank, p_shape);
 	_size = init_size(_rank, _shape);
 	_stride = init_stride(_rank, _shape);
-	_data = init_data(_size, ZERO, 0.f);
+	_data = init_data(_rank, _shape, _size, ZERO, 0.f);
 	memcpy(_data, p_data, sizeof(float) * _size);
 	_end = 0;
 }
@@ -176,7 +176,7 @@ std::vector<std::vector<float>> tensor::to_vector2d() const
 
 void tensor::fill(const float p_value) const
 {
-	fill(_data, _size, VALUE, p_value);
+	fill(_data, _rank, _shape, _size, VALUE, p_value);
 }
 
 void tensor::reshape(std::initializer_list<int> p_new_shape)
@@ -212,7 +212,7 @@ void tensor::resize(std::initializer_list<int> p_shape, const INIT p_init, const
 		_stride = init_stride(_rank, _shape);
 		_size = init_size(_rank, _shape);
 		free(_data);
-		_data = init_data(_size, p_init, p_value);
+		_data = init_data(_rank, _shape, _size, p_init, p_value);
 		_end = 0;
 
 		if (_gpu_flag)
@@ -222,7 +222,7 @@ void tensor::resize(std::initializer_list<int> p_shape, const INIT p_init, const
 	}
 	if (shape_check == SHAPE_EQUAL)
 	{
-		fill(_data, _size, p_init, p_value);
+		fill(_data, _rank, _shape, _size, p_init, p_value);
 	}
 
 	_gpu_flag = false;
@@ -244,7 +244,7 @@ void tensor::resize(const int p_rank, int* p_shape, const INIT p_init, const flo
 		_stride = init_stride(_rank, _shape);
 		_size = init_size(_rank, _shape);
 		free(_data);
-		_data = init_data(_size, p_init, p_value);
+		_data = init_data(_rank, _shape, _size, p_init, p_value);
 		_end = 0;
 
 		if (_gpu_flag)
@@ -683,6 +683,23 @@ tensor tensor::operator/(const float p_rhs) const
 	return result /= p_rhs;
 }
 
+tensor tensor::operator()(const int p_index) const
+{
+	tensor result;
+	if (_rank == 1)
+	{
+		result.resize({ 1 });
+		result[0] = _data[p_index];
+	}
+	if (_rank == 2)
+	{
+		result.resize({ 1, _shape[1] });
+		memcpy(result._data, _data + p_index * _stride[0], sizeof(float) * _shape[1]);
+	}
+
+	return result;
+}
+
 float& tensor::operator[](const int p_index) const
 {
 	return _data[p_index];
@@ -857,7 +874,7 @@ tensor::tensor(const int p_rank, int* p_shape, const INIT p_init, const float p_
 	memcpy(_shape, p_shape, sizeof(int) * p_rank);
 	_stride = init_stride(_rank, _shape);
 	_size = init_size(_rank, _shape);
-	_data = init_data(_size, p_init, p_value);
+	_data = init_data(_rank, _shape, _size, p_init, p_value);
 	_end = 0;
 	_gpu_flag = false;
 	_gpu_data = nullptr;
@@ -1036,16 +1053,16 @@ int* tensor::init_stride(int& p_rank, const int* p_shape)
 	return result;
 }
 
-float* tensor::init_data(int& p_size, INIT p_init, float p_value)
+float* tensor::init_data(int& p_rank, const int* p_shape, int& p_size, INIT p_init, float p_value)
 {
 	float* result = static_cast<float*>(malloc(sizeof(float) * p_size));
 
-	fill(result, p_size, p_init, p_value);
+	fill(result, p_rank, p_shape, p_size, p_init, p_value);
 
 	return result;
 }
 
-void tensor::fill(float* p_data, const int p_size, const INIT p_init, const float p_value)
+void tensor::fill(float* p_data, int p_rank, const int* p_shape, const int p_size, const INIT p_init, const float p_value)
 {
 	float* x = p_data;
 	switch (p_init)
@@ -1067,6 +1084,25 @@ void tensor::fill(float* p_data, const int p_size, const INIT p_init, const floa
 			for (int i = 0; i < p_size; i++)
 			{
 				*x++ = p_value;
+			}
+		}
+		break;
+	case IDENTITY:
+		{
+			if (p_rank != 2 || p_shape[0] != p_shape[1])
+			{
+				assert(("Identity initialization used for non-square matrix", 0));
+			}
+			
+			for (int i = 0; i < p_size; i++)
+			{
+				*x++ = 0.f;
+			}
+			x = p_data;
+			for (int i = 0; i < p_shape[0]; i++)
+			{
+				*x = 1.f;
+				x += p_shape[0] + 1;
 			}
 		}
 		break;

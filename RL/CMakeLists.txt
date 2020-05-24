@@ -12,9 +12,12 @@ set(INCLUDE_FILES
 	DQN.h
 	forward_model.h
 	ienvironment.h
+	policy_gradient.h
+	QAC.h
 	Qlearning.h
 	replay_buffer.h
 	SARSA.h
+	TD.h
 	metacritic.h
 	)
 
@@ -26,8 +29,11 @@ set(SOURCE_FILES
 	discrete_exploration.cpp
 	DQN.cpp
 	forward_model.cpp
+	policy_gradient.cpp
+	QAC.cpp
 	Qlearning.cpp
 	SARSA.cpp
+	TD.cpp
 	metacritic.cpp
 	)
 	

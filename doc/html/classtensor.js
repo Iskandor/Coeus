@@ -3,7 +3,8 @@ var classtensor =
     [ "INIT", "classtensor.html#a8ad88a6030e060062cbdaa9e7b6aac58", [
       [ "NONE", "classtensor.html#a8ad88a6030e060062cbdaa9e7b6aac58a4e266202b4f1317d061ee30bde831f61", null ],
       [ "ZERO", "classtensor.html#a8ad88a6030e060062cbdaa9e7b6aac58af5d82da06db683e83d4643a4a45eef0e", null ],
-      [ "VALUE", "classtensor.html#a8ad88a6030e060062cbdaa9e7b6aac58ab50ad5ccf5c61260d836f12324a2669d", null ]
+      [ "VALUE", "classtensor.html#a8ad88a6030e060062cbdaa9e7b6aac58ab50ad5ccf5c61260d836f12324a2669d", null ],
+      [ "IDENTITY", "classtensor.html#a8ad88a6030e060062cbdaa9e7b6aac58abadd74cfafb2edacdbfbe9bea31dfdee", null ]
     ] ],
     [ "tensor", "classtensor.html#a65ff4c9a4dad6c91392d54025cca9b34", null ],
     [ "tensor", "classtensor.html#aa6e30203538a7c690863d74904170b79", null ],
@@ -17,6 +18,7 @@ var classtensor =
     [ "max_index", "classtensor.html#a0817fc6167090d4c3687fdfbf853b94b", null ],
     [ "mean", "classtensor.html#ab12f30b1632ccf5c53832fea43d31b4d", null ],
     [ "min", "classtensor.html#ae294ea63d69e9c63783dc9e365645f80", null ],
+    [ "operator()", "classtensor.html#af0cc6383ffb69ee24f625600fc344bbc", null ],
     [ "operator*", "classtensor.html#a5f87be59f2e17ddbd36c3817e290a689", null ],
     [ "operator*", "classtensor.html#af0176788dcc9c989413e4f6514d67ec0", null ],
     [ "operator*=", "classtensor.html#a74ae67f0c058b46dcf09fac71caa2902", null ],

@@ -5,22 +5,24 @@
 class COEUS_DLL_API Qlearning
 {
 public:
-	Qlearning(neural_network* p_critic, optimizer* p_critic_optimizer, float p_gamma);
+	Qlearning(neural_network* p_network, optimizer* p_optimizer, float p_gamma);
 	virtual ~Qlearning();
 
 	tensor& get_action(tensor* p_state);
 	virtual void train(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
+	tensor&	delta();
 
 protected:	
 
-	neural_network* _critic;
-	optimizer*		_critic_optimizer;
+	neural_network* _network;
+	optimizer*		_optimizer;
 	float			_gamma;
 
 	tensor			_action;
-	tensor			_critic_loss;
+	tensor			_delta;
+	tensor			_loss;
 
 private:
-	tensor&	critic_loss_function(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
+	tensor&	loss_function(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
 };
 

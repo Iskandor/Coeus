@@ -98,14 +98,12 @@ void DDPG::process_sample()
 	{
 		tensor& internal_reward = _forward_model->reward(&batch_state, &batch_action, &batch_next_state);
 		batch_reward += internal_reward;
-		//_forward_model->train(&batch_state, &batch_action, &batch_next_state);
 	}
 
 	if (_metacritic != nullptr)
 	{
 		tensor& internal_reward = _metacritic->reward(&batch_state, &batch_action, &batch_next_state);
 		batch_reward += internal_reward;
-		//_metacritic->train(&batch_state, &batch_action, &batch_next_state);
 	}
 }
 

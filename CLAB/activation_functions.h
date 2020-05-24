@@ -95,6 +95,5 @@ public:
 	tensor& backward(tensor& p_delta) override;
 
 private:
-	tensor _derivative;
 	float kronecker_delta(int p_i, int p_j) const;
 };

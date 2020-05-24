@@ -336,27 +336,55 @@ tensor& softmax_function::forward(tensor& p_input)
 
 tensor& softmax_function::backward(tensor& p_delta)
 {
-	/*
-	Tensor tg({ p_input->shape(1) }, Tensor::ZERO);
-	Tensor ti({ p_input->shape(1) }, Tensor::ZERO);
+	/* general form with jacobian
+	std::vector<tensor> gradients;
 
-	_derivative.resize({ p_delta.shape(1) , p_delta.shape(1) });
+	tensor output = _input;
+	output = forward(output);	
+	const tensor derivative({ p_delta.shape(1) , p_delta.shape(1) });
 
-	for (int i = 0; i < p_delta.shape(0); i++)
+	for (int n = 0; n < p_delta.shape(0); n++)
 	{
-		for (int r = 0; r < p_delta.shape(1); r++) {
-			for (int c = 0; c < p_delta.shape(1); c++) {
-				_derivative[r * p_delta.shape(1) + c] = _input[i * p_delta.shape(1) + r] * (kronecker_delta(r, c) - _input[i * p_delta.shape(1) + c]);
+		float* dx = derivative.data();
+		float* ix = output.data();
+		for (int i = 0; i < p_delta.shape(1); i++) {
+			float* jx = output.data();
+			for (int j = 0; j < p_delta.shape(1); j++) {
+				*dx++ = *ix * (kronecker_delta(i, j) - *jx++);
 			}
+			ix++;
+		}
+		gradients.push_back(p_delta(n) * derivative);
+	}	
+
+	tensor::concat(gradients, p_delta, 1);
+	*/
+	tensor output = _input;
+	output = forward(output);
+
+	float* dx1 = p_delta.data();
+	float* dx2 = p_delta.data();
+	float* ox1 = output.data();
+	float* ox2 = output.data();
+
+	float ot = 0.f;
+	
+	for (int n = 0; n < p_delta.shape(0); n++)
+	{
+		int t = 0;
+		for (int i = 0; i < p_delta.shape(1); i++) {			
+			if (*dx1++ != 0.f)
+			{
+				t = i;
+				ot = *ox1;
+			}
+			ox1++;
 		}
 
-		p_input->get_row(ti, b);
-
-		TensorOperator::instance().vM_prod(ti.arr(), deriv, tg.arr(), _output->shape(1), _output->shape(1));
-
-		_gradient->push_back(&tg);
+		for (int j = 0; j < p_delta.shape(1); j++) {
+			*dx2++ *= ot * (kronecker_delta(t, j) - *ox2++);
+		}
 	}
-	*/
 
 	return p_delta;
 }

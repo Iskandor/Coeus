@@ -1,19 +1,5 @@
 var searchData=
 [
-  ['padding_1470',['padding',['../class_tensor.html#aa318cabde4d5d75b93ea9bf8aa7d08f3',1,'Tensor']]],
-  ['param_1471',['Param',['../class_coeus_1_1_param.html#a3e483a2bec99c3525da1c827c377ae81',1,'Coeus::Param']]],
-  ['parammodel_1472',['ParamModel',['../class_coeus_1_1_param_model.html#ae2d8ea4fb55648592e569976b16e04c0',1,'Coeus::ParamModel']]],
-  ['parse_1473',['parse',['../classnlohmann_1_1basic__json.html#a35303ad045a06c2a79dc28ac29652e86',1,'nlohmann::basic_json::parse(const string_t &amp;s, parser_callback_t cb=nullptr)'],['../classnlohmann_1_1basic__json.html#a13c4d2ab4e7ee2f92be785a7b12948ff',1,'nlohmann::basic_json::parse(std::istream &amp;i, parser_callback_t cb=nullptr)'],['../classnlohmann_1_1basic__json.html#ab81f2801779e6cb9d98770860af2e39a',1,'nlohmann::basic_json::parse(std::istream &amp;&amp;i, parser_callback_t cb=nullptr)']]],
-  ['patch_1474',['patch',['../classnlohmann_1_1basic__json.html#aff9d131320db407da31304fb2b5cb7a5',1,'nlohmann::basic_json']]],
-  ['policygradient_1475',['PolicyGradient',['../class_coeus_1_1_policy_gradient.html#a27915086dab6d368f13598cb0d468724',1,'Coeus::PolicyGradient']]],
-  ['polyak_5faveraging_1476',['polyak_averaging',['../class_coeus_1_1_param_model.html#ad24d09722dcbce0a7d73d4a8ddabfa2f',1,'Coeus::ParamModel']]],
-  ['poolinglayer_1477',['PoolingLayer',['../class_coeus_1_1_pooling_layer.html#a0288ea74eef29bcea8194825fe6fadaf',1,'Coeus::PoolingLayer::PoolingLayer(const string &amp;p_id, int p_extent, int p_stride, initializer_list&lt; int &gt; p_in_dim={ 0 })'],['../class_coeus_1_1_pooling_layer.html#a37742840a44668a09300ae5040f5832c',1,'Coeus::PoolingLayer::PoolingLayer(PoolingLayer &amp;p_copy, bool p_clone)']]],
-  ['pop_5fcode_1478',['pop_code',['../class_coeus_1_1_encoder.html#a979914ca65e4112db1c776e12d33550e',1,'Coeus::Encoder']]],
-  ['pow_1479',['pow',['../class_tensor.html#a789a3c378e05b4fba9fe01d834f3b740',1,'Tensor']]],
-  ['powersign_1480',['PowerSign',['../class_coeus_1_1_power_sign.html#a549c8ef9a8f90acd78d0c7e7a3923974',1,'Coeus::PowerSign']]],
-  ['powersignrule_1481',['PowerSignRule',['../class_coeus_1_1_power_sign_rule.html#ae3ac53d7a54bff1c3cda2b956d6a748a',1,'Coeus::PowerSignRule']]],
-  ['pplbatchmodule_1482',['PPLBatchModule',['../class_coeus_1_1_p_p_l_batch_module.html#afdebaaa7bcca04ee8d0376f8e63e27a5',1,'Coeus::PPLBatchModule']]],
-  ['progress_5ffamiliarity_5fmotivation_1483',['progress_familiarity_motivation',['../class_coeus_1_1_count_module.html#a0712abcb8255bf598047c66dbafc4110',1,'Coeus::CountModule::progress_familiarity_motivation()'],['../class_coeus_1_1_i_motivation_module.html#a0e8a98d839e10ce747257c776431ef80',1,'Coeus::IMotivationModule::progress_familiarity_motivation()']]],
-  ['progress_5funcertainty_5fmotivation_1484',['progress_uncertainty_motivation',['../class_coeus_1_1_count_module.html#aaa4ff9917155437484873958821c0495',1,'Coeus::CountModule::progress_uncertainty_motivation()'],['../class_coeus_1_1_i_motivation_module.html#aff5483846a2c00b47b5e657ff5cf67df',1,'Coeus::IMotivationModule::progress_uncertainty_motivation()']]],
-  ['push_5fback_1485',['push_back',['../class_tensor.html#a915bc7740b713a687b723519f7078b3c',1,'Tensor::push_back(Tensor *p_tensor)'],['../class_tensor.html#a0307f7f007f07aa0b4f62792095b60cd',1,'Tensor::push_back(float p_value)'],['../classnlohmann_1_1basic__json.html#a486b96adbf4886c38e38c952394a220f',1,'nlohmann::basic_json::push_back(basic_json &amp;&amp;val)'],['../classnlohmann_1_1basic__json.html#a6f3dfd3e83a1e907d7946b47fcd7ceba',1,'nlohmann::basic_json::push_back(const basic_json &amp;val)'],['../classnlohmann_1_1basic__json.html#a5212588544f6d2266384c3be9bfda0c5',1,'nlohmann::basic_json::push_back(const typename object_t::value_type &amp;val)'],['../classnlohmann_1_1basic__json.html#a9c9b4932b26a9630e1a3f25ea42a2c43',1,'nlohmann::basic_json::push_back(std::initializer_list&lt; basic_json &gt; init)']]]
+  ['td_159',['TD',['../class_t_d.html#aa1a55021b253c0ed80e425973c3f5777',1,'TD']]],
+  ['train_160',['train',['../class_d_q_n.html#a9374e2f69c236170291c39b00ba23e57',1,'DQN::train()'],['../classpolicy__gradient.html#ad4bf5f850413245252f2125528540aab',1,'policy_gradient::train()'],['../class_qlearning.html#a18049132e53a629ed582d71e7aedc5b9',1,'Qlearning::train()'],['../class_t_d.html#abd2eddce78ff69cc6c6dc1ca7595e2b8',1,'TD::train()']]]
 ];

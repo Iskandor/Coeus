@@ -13,7 +13,8 @@ public:
 	{
 		NONE,
 		ZERO,
-		VALUE
+		VALUE,
+		IDENTITY
 	};
 
 	tensor();
@@ -69,6 +70,7 @@ public:
 	friend tensor operator / (float p_lhs, const tensor& p_rhs);
 
 	// operators
+	tensor operator()(int p_index) const;
 	float& operator[] (int p_index) const;
 	void T();
 	std::vector<int> max_index(int p_dim = 0) const;
@@ -121,9 +123,9 @@ private:
 	static int* init_shape(int &p_rank, int* p_shape);
 	static int	init_size(int &p_rank, const int* p_shape);
 	static int*	init_stride(int &p_rank, const int* p_shape);
-	static float* init_data(int &p_size, INIT p_init, float p_value);
+	static float* init_data(int &p_rank, const int* p_shape, int &p_size, INIT p_init, float p_value);
 
-	static void fill(float* p_data, int p_size, INIT p_init, float p_value = 0.f);
+	static void fill(float* p_data, int p_rank, const int* p_shape, int p_size, INIT p_init, float p_value = 0.f);
 
 	float* gpu_data() const;
 

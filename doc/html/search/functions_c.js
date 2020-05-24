@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reset_144',['reset',['../classounoise.html#aa40aaa29ca9bf3a7f93d7e6bc369e4ae',1,'ounoise']]]
+  ['qlearning_156',['Qlearning',['../class_qlearning.html#a19eeb64fcd80cc5bb3215e2da5b41996',1,'Qlearning']]]
 ];
