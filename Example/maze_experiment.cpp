@@ -10,6 +10,7 @@
 #include "AC.h"
 #include "SARSA.h"
 #include "DQN.h"
+#include "QAC.h"
 
 
 maze_experiment::maze_experiment()
@@ -293,7 +294,7 @@ void maze_experiment::run_ac(int p_episodes)
 		{
 			tensor state = _maze->get_state();
 			action.fill(0.f);
-			action[random_generator::instance().choice(agent.get_action(&state).data(), _maze->ACTION_DIM())] = 1.f;
+			action[agent.get_action(&state).max_index()[0]] = 1.f;
 			_maze->do_action(action);
 			test_reward += _maze->get_reward();
 		}

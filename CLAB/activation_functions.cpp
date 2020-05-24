@@ -2,8 +2,6 @@
 #include "CLAB.h"
 #include <algorithm>
 
-#include "tensor_operator_cpu.h"
-
 activation_function* activation_function::linear()
 {
 	return new linear_function();
@@ -338,7 +336,7 @@ tensor& softmax_function::forward(tensor& p_input)
 
 tensor& softmax_function::backward(tensor& p_delta)
 {
-	/*
+	/* general form with jacobian
 	std::vector<tensor> gradients;
 
 	tensor output = _input;

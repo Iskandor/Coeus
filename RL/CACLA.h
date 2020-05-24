@@ -1,6 +1,7 @@
 #pragma once
 #include "neural_network.h"
 #include "optimizer.h"
+#include "TD.h"
 
 class COEUS_DLL_API CACLA
 {
@@ -13,16 +14,13 @@ public:
 
 private:
 	tensor& actor_loss_function(tensor* p_state, tensor* p_action);
-	tensor& critic_loss_function(tensor* p_state, tensor* p_action, tensor* p_next_state, float p_reward, bool p_final);
 
 	neural_network* _actor;
 	optimizer* _actor_optimizer;
-	neural_network* _critic;	
-	optimizer* _critic_optimizer;
-	float _gamma;
-	float _delta;
 
-	tensor _critic_loss;
+	float _gamma;
 	tensor _actor_loss;
+
+	TD* _critic;
 };
 
