@@ -19,21 +19,22 @@ int main()
 	//FFN model;
 	//model.run();
 	
-	//mountain_car_experiment experiment;
+	mountain_car_experiment experiment;
 	//for (int i = 0; i < 10; i++) experiment.run_ddpg(i, 1000);
-	//for (int i = 0; i < 1; i++) experiment.run_ddpg_fm(i, 1000);
-	//for (int i = 0; i < 10; i++) experiment.run_ddpg_su(i, 1000);
+	//for (int i = 0; i < 10; i++) experiment.run_ddpg_fm(i, 1000);
+	for (int i = 0; i < 10; i++) experiment.run_ddpg_su(i, 1000);
 
 	//cart_pole_experiment experiment;
 	//for (int i = 0; i < 3; i++) experiment.run_ddpg(i, 5000);
 	//for (int i = 0; i < 3; i++) experiment.run_ddpg_fm(i, 5000);
 	//for (int i = 0; i < 3; i++) experiment.run_ddpg_su(i, 5000);
 
-	maze_experiment experiment;
+	//maze_experiment experiment;
 	//experiment.run_qlearning(5000);
 	//experiment.run_sarsa(5000);
-	experiment.run_dqn(1000);
+	//experiment.run_dqn(1000);
 	//experiment.run_ac(1000);
+	//experiment.run_ppo(1000);
 
 	getchar();
 

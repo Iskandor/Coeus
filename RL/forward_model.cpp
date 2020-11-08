@@ -26,9 +26,14 @@ void forward_model::train(tensor* p_state, tensor* p_action, tensor* p_next_stat
 tensor& forward_model::reward(tensor* p_state, tensor* p_action, tensor* p_next_state)
 {
 	tensor& error = this->error(p_state, p_action, p_next_state);
+	return reward(error);
+}
+
+tensor& forward_model::reward(tensor& error)
+{
 	_reward.resize({ 1, error.size() });
 
-	for(int i = 0; i < error.size(); i++)
+	for (int i = 0; i < error.size(); i++)
 	{
 		_reward[i] = tanh(error[i]);
 	}

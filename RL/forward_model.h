@@ -11,6 +11,7 @@ public:
 
 	void	train(tensor* p_state, tensor* p_action, tensor* p_next_state);
 	tensor&	reward(tensor* p_state, tensor* p_action, tensor* p_next_state);
+	tensor&	reward(tensor& error);
 	tensor&	error(tensor* p_state, tensor* p_action, tensor* p_next_state);
 
 private:

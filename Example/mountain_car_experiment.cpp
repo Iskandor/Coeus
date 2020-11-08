@@ -124,8 +124,8 @@ void mountain_car_experiment::run_ddpg(int p_experiment_id, const int p_epochs)
 	_data_outputs[VALUE].clear();
 	
 	neural_network actor;
-	actor.add_layer(new dense_layer("hidden0", 20, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	actor.add_layer(new dense_layer("hidden1", 15, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
+	actor.add_layer(new dense_layer("hidden0", 40, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	actor.add_layer(new dense_layer("hidden1", 30, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
 	actor.add_layer(new dense_layer("output", _env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-3e-1f,3e-1f)));
 	actor.add_connection("hidden0", "hidden1");
 	actor.add_connection("hidden1", "output");
@@ -134,8 +134,8 @@ void mountain_car_experiment::run_ddpg(int p_experiment_id, const int p_epochs)
 	radam actor_optimizer(&actor, 1e-4f);
 
 	neural_network critic;
-	critic.add_layer(new dense_layer("hidden0", 20, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	critic.add_layer(new dense_layer("hidden1", 15, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
+	critic.add_layer(new dense_layer("hidden0", 40, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 30, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
 	critic.add_layer(new dense_layer("output", 1, activation_function::linear(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
 	critic.add_connection("hidden0", "hidden1");
 	critic.add_connection("hidden1", "output");
@@ -154,7 +154,7 @@ void mountain_car_experiment::run_ddpg(int p_experiment_id, const int p_epochs)
 	{
 		float test_reward = 0;
 		float train_reward = 0;
-		ddpg_visualize_agent(actor, critic);
+		// ddpg_visualize_agent(actor, critic);
 
 		_env.reset();
 		while (!_env.is_finished())
@@ -185,8 +185,8 @@ void mountain_car_experiment::run_ddpg(int p_experiment_id, const int p_epochs)
 		log_rewards[e] = test_reward;
 	}
 
-	save_visualization("ddpg_baseline_" + to_string(p_experiment_id));
-	tensor::save_numpy("ddpg_baseline_" + to_string(p_experiment_id) + ".log", log_rewards);
+	// save_visualization("ddpg_baseline_" + to_string(p_experiment_id));
+	tensor::save_numpy("ddpg_baseline_" + to_string(p_experiment_id) + "_re.npy", log_rewards);
 }
 
 void mountain_car_experiment::run_ddpg_fm(int p_experiment_id, const int p_epochs)
@@ -203,7 +203,7 @@ void mountain_car_experiment::run_ddpg_fm(int p_experiment_id, const int p_epoch
 	fm_network.add_connection("hidden1", "output");
 	fm_network.init();
 
-	adam fm_optimizer(&fm_network, 2e-4f);
+	adam fm_optimizer(&fm_network, 1e-4f);
 
 	forward_model fm_motivation(&fm_network, &fm_optimizer);
 
@@ -239,7 +239,7 @@ void mountain_car_experiment::run_ddpg_fm(int p_experiment_id, const int p_epoch
 	{
 		float test_reward = 0;
 		float train_reward = 0;
-		ddpg_visualize_agent(actor, critic, fm_motivation);
+		// ddpg_visualize_agent(actor, critic, fm_motivation);
 
 		_env.reset();
 		while (!_env.is_finished())
@@ -272,8 +272,8 @@ void mountain_car_experiment::run_ddpg_fm(int p_experiment_id, const int p_epoch
 		cout << "Episode " << e << " train reward " << train_reward << " test reward " << test_reward << endl;
 	}
 
-	save_visualization("ddpg_fm_" + to_string(p_experiment_id));
-	tensor::save_numpy("ddpg_fm_" + to_string(p_experiment_id) + ".log", log_rewards);
+	// save_visualization("ddpg_fm_" + to_string(p_experiment_id));
+	tensor::save_numpy("ddpg_fm_" + to_string(p_experiment_id) + "_re.npy", log_rewards);
 }
 
 void mountain_car_experiment::run_ddpg_su(int p_experiment_id, int p_epochs)
@@ -292,25 +292,25 @@ void mountain_car_experiment::run_ddpg_su(int p_experiment_id, int p_epochs)
 	fm_network.add_connection("hidden1", "output");
 	fm_network.init();
 
-	radam fm_optimizer(&fm_network, 2e-4f);
+	radam fm_optimizer(&fm_network, 1e-4f);
 
 	forward_model fm_motivation(&fm_network, &fm_optimizer);
 
 	neural_network metacritic_network;
 	metacritic_network.add_layer(new dense_layer("hidden0", 50, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() + _env.ACTION_DIM() }));
 	metacritic_network.add_layer(new dense_layer("hidden1", 30, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
-	metacritic_network.add_layer(new dense_layer("output", 1, activation_function::linear(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
+	metacritic_network.add_layer(new dense_layer("output", 1, activation_function::sigmoid(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
 	metacritic_network.add_connection("hidden0", "hidden1");
 	metacritic_network.add_connection("hidden1", "output");
 	metacritic_network.init();
 
 	radam metacritic_optimizer(&metacritic_network, 2e-4f);
 
-	metacritic metacritic_motivation(&metacritic_network, &metacritic_optimizer, &fm_motivation, 1e-2f);
+	metacritic metacritic_motivation(&metacritic_network, &metacritic_optimizer, &fm_motivation, 1e-1f);
 
 	neural_network actor;
-	actor.add_layer(new dense_layer("hidden0", 20, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	actor.add_layer(new dense_layer("hidden1", 15, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
+	actor.add_layer(new dense_layer("hidden0", 40, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	actor.add_layer(new dense_layer("hidden1", 30, activation_function::tanhexp(), tensor_initializer::xavier_uniform()));
 	actor.add_layer(new dense_layer("output", _env.ACTION_DIM(), activation_function::tanh(), tensor_initializer::uniform(-3e-1f, 3e-1f)));
 	actor.add_connection("hidden0", "hidden1");
 	actor.add_connection("hidden1", "output");
@@ -319,8 +319,8 @@ void mountain_car_experiment::run_ddpg_su(int p_experiment_id, int p_epochs)
 	radam actor_optimizer(&actor, 1e-4f);
 
 	neural_network critic;
-	critic.add_layer(new dense_layer("hidden0", 20, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
-	critic.add_layer(new dense_layer("hidden1", 15, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
+	critic.add_layer(new dense_layer("hidden0", 40, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.STATE_DIM() }));
+	critic.add_layer(new dense_layer("hidden1", 30, activation_function::tanhexp(), tensor_initializer::xavier_uniform(), { _env.ACTION_DIM() }));
 	critic.add_layer(new dense_layer("output", 1, activation_function::linear(), tensor_initializer::uniform(-3e-3f, 3e-3f)));
 	critic.add_connection("hidden0", "hidden1");
 	critic.add_connection("hidden1", "output");
@@ -334,13 +334,15 @@ void mountain_car_experiment::run_ddpg_su(int p_experiment_id, int p_epochs)
 	continuous_exploration exploration;
 	exploration.init_ounoise(_env.ACTION_DIM(), 0.2f, 0.3f);
 
-	tensor log_rewards({ p_epochs });
+	tensor log_rewards_ext({ p_epochs });
+	tensor log_rewards_int({ p_epochs });
 
 	for (int e = 0; e < p_epochs; e++)
 	{
-		float test_reward = 0;
+		float test_reward_ext = 0;
+		float test_reward_int = 0;
 		float train_reward = 0;
-		ddpg_visualize_agent(actor, critic, fm_motivation, metacritic_motivation);
+		//ddpg_visualize_agent(actor, critic, fm_motivation, metacritic_motivation);
 
 		_env.reset();
 		while (!_env.is_finished())
@@ -365,16 +367,21 @@ void mountain_car_experiment::run_ddpg_su(int p_experiment_id, int p_epochs)
 		while (!_env.is_finished())
 		{
 			tensor state = _env.get_state();
+			state.reshape({ 1, _env.STATE_DIM() });
 			tensor action = agent.get_action(&state);
 			_env.do_action(action);
-			test_reward += _env.get_reward();
+			test_reward_ext += _env.get_reward();
+			tensor next_state = _env.get_state();
+			test_reward_int += metacritic_motivation.reward(&state, &action, &next_state)[0];
 		}
-		log_rewards[e] = test_reward;
-		cout << "Episode " << e << " train reward " << train_reward << " test reward " << test_reward << endl;
+		log_rewards_ext[e] = test_reward_ext;
+		log_rewards_int[e] = test_reward_int;
+		cout << "Episode " << e << " train reward " << train_reward << " test reward (ext)" << test_reward_ext << " (int)" << test_reward_int << endl;
 	}
 
-	save_visualization("ddpg_su_" + to_string(p_experiment_id));
-	tensor::save_numpy("ddpg_su_" + to_string(p_experiment_id) + ".log", log_rewards);
+	//save_visualization("ddpg_su_" + to_string(p_experiment_id));
+	tensor::save_numpy("ddpg_su_" + to_string(p_experiment_id) + "_re.npy", log_rewards_ext);
+	tensor::save_numpy("ddpg_su_" + to_string(p_experiment_id) + "_ri.npy", log_rewards_int);
 }
 
 void mountain_car_experiment::ddpg_visualize_agent(neural_network& p_actor, neural_network& p_critic)

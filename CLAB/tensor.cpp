@@ -1,4 +1,6 @@
 #include "tensor.h"
+
+#include <algorithm>
 #include <cstring>
 #include <cstdlib>
 #include <cassert>
@@ -650,6 +652,11 @@ tensor tensor::operator-(const float p_rhs) const
 	return result -= p_rhs;
 }
 
+tensor tensor::operator-() const
+{
+	return *this * -1;
+}
+
 tensor tensor::operator*(const tensor& p_rhs) const
 {
 	check_gpu(*this, p_rhs);
@@ -787,6 +794,52 @@ tensor tensor::gather(std::vector<int> &p_index) const
 	return result;
 }
 
+tensor tensor::gather(tensor& p_index, const int p_dim) const
+{
+	std::vector<int> index;
+	if (p_dim == 0)
+	{
+		
+	}
+	if (p_dim == 1)
+	{
+		for(int i = 0; i < p_index._size; i++)
+		{
+			index.push_back(i * _stride[0] + p_index[i]);
+		}
+	}
+
+	return gather(index);
+}
+
+void tensor::scatter(tensor& p_dest, std::vector<int>& p_index) const
+{
+	float *rx = _data;
+
+	for (int i = 0; i < _size; i++)
+	{
+		p_dest._data[p_index[i]] = *rx++;
+	}
+}
+
+void tensor::scatter(tensor& p_dest, tensor& p_index, const int p_dim) const
+{
+	std::vector<int> index;
+	if (p_dim == 0)
+	{
+
+	}
+	if (p_dim == 1)
+	{
+		for (int i = 0; i < p_index._size; i++)
+		{
+			index.push_back(i * p_dest._stride[0] + p_index[i]);
+		}
+	}
+
+	scatter(p_dest, index);
+}
+
 float tensor::max() const
 {
 	float max = _data[0];
@@ -819,6 +872,93 @@ float tensor::min() const
 	}
 
 	return min;
+}
+
+tensor tensor::min(tensor& p_t1, tensor& p_t2)
+{
+	if (p_t1._size != p_t2._size)
+	{
+		assert(("tensor::min >> sizes of arguments are not equal", 0));
+	}
+	
+	tensor result = zero_like(p_t1);
+
+	float* px = p_t1._data;
+	float* py = p_t2._data;
+	float* pz = result._data;
+
+	for (int i = 0; i < p_t1._size; i++)
+	{
+		*pz++ = std::min(*px++, *py++);
+	}
+	
+	return result;
+}
+
+tensor tensor::dot(tensor& p_t1, tensor& p_t2)
+{
+	if (p_t1._size != p_t2._size)
+	{
+		assert(("tensor::min >> sizes of arguments are not equal", 0));
+	}
+
+	tensor result = zero_like(p_t1);
+
+	float* px = p_t1._data;
+	float* py = p_t2._data;
+	float* pz = result._data;
+
+	for (int i = 0; i < p_t1._size; i++)
+	{
+		*pz++ = *px++ * *py++;
+	}
+
+	return result;
+}
+
+tensor tensor::log() const
+{
+	tensor result = zero_like(*this);
+
+	float* px = _data;
+	float* py = result._data;
+	
+	for (int i = 0; i < _size; i++)
+	{
+		*py++ = std::log(*px++);
+	}
+
+	return result;
+}
+
+tensor tensor::exp() const
+{
+	tensor result = zero_like(*this);
+
+	float* px = _data;
+	float* py = result._data;
+
+	for (int i = 0; i < _size; i++)
+	{
+		*py++ = std::exp(*px++);
+	}
+
+	return result;
+}
+
+tensor tensor::clamp(const float min, const float max) const
+{
+	tensor result = zero_like(*this);
+	
+	float* px = _data;
+	float* py = result._data;
+
+	for (int i = 0; i < _size; i++)
+	{
+		*py++ = std::min(std::max(*px++, min), max);
+	}
+
+	return result;
 }
 
 void tensor::to_gpu()

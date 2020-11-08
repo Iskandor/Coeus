@@ -38,8 +38,8 @@ tensor& metacritic::reward(tensor* p_state, tensor* p_action, tensor* p_next_sta
 	tensor::concat(s0a, _input, 0);
 
 	tensor& error = _forward_model->error(p_state, p_action, p_next_state);
+	tensor& pe_reward = _forward_model->reward(error);
 	tensor& error_estimate = _network->forward(&_input);
-	tensor& pe_reward = _forward_model->reward(p_state, p_action, p_next_state);
 
 	_reward.resize({ error.size() });
 
@@ -53,6 +53,7 @@ tensor& metacritic::reward(tensor* p_state, tensor* p_action, tensor* p_next_sta
 		{
 			_reward[i] = 0.f;
 		}
+		// _reward[i] = std::max(pe_reward[i] - error_estimate[i], _reward[i]);
 		_reward[i] = std::max(pe_reward[i], _reward[i]);
 	}
 	return _reward;

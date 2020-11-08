@@ -62,6 +62,7 @@ public:
 	friend tensor operator + (float p_lhs, const tensor& p_rhs);
 	tensor operator - (const tensor& p_rhs) const;
 	tensor operator - (float p_rhs) const;
+	tensor operator - () const;
 	friend tensor operator - (float p_lhs, const tensor& p_rhs);
 	tensor operator * (const tensor& p_rhs) const;
 	tensor operator * (float p_rhs) const;
@@ -75,9 +76,20 @@ public:
 	void T();
 	std::vector<int> max_index(int p_dim = 0) const;
 	tensor gather(std::vector<int> &p_index) const;
+	tensor gather(tensor &p_index, int p_dim) const;
+	void scatter(tensor& p_dest, std::vector<int> &p_index) const;
+	void scatter(tensor& p_dest, tensor &p_index, int p_dim) const;
 	float max() const;
 	float min() const;
 
+	static tensor min(tensor& p_t1, tensor& p_t2);
+	static tensor dot(tensor& p_t1, tensor& p_t2);
+
+	tensor log() const;
+	tensor exp() const;
+	
+	tensor clamp(float min, float max) const;
+	
 	//gpu operations
 	void to_gpu();
 	void to_cpu();
